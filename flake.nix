@@ -1,25 +1,19 @@
 {
-  description = "tex-fmt";
+  description = "A LaTeX formatter written in Rust";
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-23.11";
-    flake-utils.url = "github:numtide/flake-utils";
+      nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
   };
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-  }:
-    with flake-utils.lib;
-      eachSystem allSystems (
-        system: let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in {
-          defaultPackage = pkgs.rustPlatform.buildRustPackage {
-            pname = "tex-fmt";
-            version = "0.1.0";
-            cargoLock.lockFile = ./Cargo.lock;
-            src = pkgs.lib.cleanSource ./.;
-          };
-        }
-      );
+  outputs = { self, nixpkgs }:
+    let
+      supportedSystems = [ "x86_64-linux" ];
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      pkgsFor = nixpkgs.legacyPackages;
+    in {
+      packages = forAllSystems (system: {
+        default = pkgsFor.${system}.callPackage ./default.nix { };
+      });
+      devShells = forAllSystems (system: {
+        default = pkgsFor.${system}.callPackage ./shell.nix { };
+      });
+    };
 }
