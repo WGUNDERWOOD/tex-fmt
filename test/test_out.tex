@@ -1,0 +1,58 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}
+
+\title{Testing \texttt{texfmt}}
+\author{William G.\ Underwood}
+\begin{document}
+\maketitle
+
+\begin{align}
+  E = m c^2 \\
+  1 + 2
+  + (3 + 4)
+  + (5 + 6
+  + 7 + 8)
+  + (9 + 10
+    + 11 + 12
+  + 13 + 14)
+\end{align}
+
+\begin{itemize}
+  \item Item one % trailing comment with ]) brackets
+  \item Item two on
+    multiple lines
+  \item
+  \item Item three
+    \begin{itemize}
+      \item Subitem one of item two
+      \item Subitem two of item two
+    \end{itemize}
+  \item Item four % trailing comment with [( brackets
+\end{itemize}
+
+\begin{theorem}[Pythagoras]%
+  \label{thm:pythagoras}
+
+  For a right triangle with hypotenuse $c$ and other sides $a$ and $b$,
+  we have
+  %
+  \begin{align*}
+    a^2 + b^2 = c^2
+  \end{align*}
+  %
+  % some comments
+
+\end{theorem}
+
+This line contains \emph{emphasized} text.
+\emph{This line contains only emphasized text,
+and is broken over two lines}.
+\emph{This line contains only
+  emphasized text,
+and is broken over three lines}.
+
+\end{document}
