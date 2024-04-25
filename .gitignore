@@ -2,3 +2,4 @@ debug/
 target/
 **/*.rs.bk
 *.pdb
+result
