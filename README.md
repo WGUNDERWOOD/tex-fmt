@@ -46,46 +46,34 @@ It does *not* currently aim to provide the following:
 
 ## Comparison with existing tools
 
-### latexindent.pl
+### [latexindent.pl](https://github.com/cmhughes/latexindent.pl)
 - Perl script
-- Available on [GitHub](https://github.com/cmhughes/latexindent.pl)
 - TODO
 
-### LaTeX\_Tidy
-- Perl script
-- Available on Eric Hsu's [website](
+### [LaTeX\_Tidy](
 https://drerichsu.github.io/drerichsu-homepage/archive/hsu.pl@LaTeX_Tidy.html)
-- Link seems broken both here and on the older
-[website](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy)
+- Perl script
+- Download links seem to be broken
 
-### latex-pretty
+### [latex-pretty](https://c.albert-thompson.com/latex-pretty/)
+- Browser-based
 - Uses latexindent.pl as the backend
-- Available on Albert Thompson's [website](
-https://c.albert-thompson.com/latex-pretty/)
-- Browser-based only
 
-### latexformat.com
-- Also made by Albert Thompson
-- Available [online](https://latexformat.com/)
-- Browser-based only
+### [latexformat.com](https://latexformat.com/)
+- Browser-based
 
-### texpretty
-- Made by Nelson Beebe
+### [texpretty](http://ftp.math.utah.edu/pub/texpretty/)
 - C program
-- Available [online](http://ftp.math.utah.edu/pub/texpretty/)
 - This works sometimes and appears to be fast
-- However it often fails with certain keywords inside brackets
+- However it fails with certain keywords inside brackets
 
-### latex-editor
-- Available [online](https://latex-editor.pages.dev/formatter/)
+### [latex-editor](https://latex-editor.pages.dev/formatter/)
 - Browser-based only
 
-### vim-latexfmt
-- Available on [GitHub](https://github.com/engeljh/vim-latexfmt)
+### [vim-latexfmt](https://github.com/engeljh/vim-latexfmt)
+- Vim plugin
 - Does not apply indentation
-- Vim plugin only
 
-### latex-formatter
-- Available on [GitHub](https://github.com/nfode/latex-formatter)
-- Visual Studio plugin only
+### [latex-formatter](https://github.com/nfode/latex-formatter)
+- Visual Studio plugin
 - Uses latexindent.pl as the backend
