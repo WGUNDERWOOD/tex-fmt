@@ -27,9 +27,9 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ## Aims
 
 This project aims to provide a command-line tool for formatting
-LaTeX source code files with the following properties.
+LaTeX source code files with the following properties:
 
-- Handling of common file types: `.tex`, `.bib`, `.cls`, `.sty`
+- Handling of the common LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
 - Very good run-time performance
 - Basic configuration options
 - Sensible defaults
@@ -41,3 +41,7 @@ It does *not* currently aim to provide the following:
 - Compliance with any existing formatting guidelines
 - Editor integration
 - Spell checking
+
+## Performance
+
+## Comparison with existing tools
