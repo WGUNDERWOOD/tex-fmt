@@ -47,33 +47,35 @@ It does *not* currently aim to provide the following:
 ## Comparison with existing tools
 
 ### [latexindent.pl](https://github.com/cmhughes/latexindent.pl)
-- Perl script
-- TODO
+[Perl](https://www.perl.org/) script,
+TODO.
 
-### [LaTeX\_Tidy](
-https://drerichsu.github.io/drerichsu-homepage/archive/hsu.pl@LaTeX_Tidy.html)
-- Perl script
-- Download links seem to be broken
+### [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy)
+[Perl](https://www.perl.org/) script,
+download links seem to be broken.
 
 ### [latex-pretty](https://c.albert-thompson.com/latex-pretty/)
-- Browser-based
-- Uses latexindent.pl as the backend
+Browser-based, uses
+[latexindent.pl](https://github.com/cmhughes/latexindent.pl)
+as the backend.
 
 ### [latexformat.com](https://latexformat.com/)
-- Browser-based
+Browser-based.
 
 ### [texpretty](http://ftp.math.utah.edu/pub/texpretty/)
-- C program
-- This works sometimes and appears to be fast
-- However it fails with certain keywords inside brackets
+[C](https://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html)
+program, which works sometimes and appears to be fast.
+However, it fails with certain keywords inside brackets.
 
 ### [latex-editor](https://latex-editor.pages.dev/formatter/)
-- Browser-based only
+Browser-based.
 
 ### [vim-latexfmt](https://github.com/engeljh/vim-latexfmt)
-- Vim plugin
-- Does not apply indentation
+[Vim](https://www.vim.org/)
+plugin, does not apply indentation.
 
 ### [latex-formatter](https://github.com/nfode/latex-formatter)
-- Visual Studio plugin
-- Uses latexindent.pl as the backend
+[Visual Studio](https://visualstudio.microsoft.com/)
+plugin, uses
+[latexindent.pl](https://github.com/cmhughes/latexindent.pl)
+as the backend.
