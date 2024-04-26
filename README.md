@@ -1,7 +1,7 @@
 # tex-fmt
 
 [![CI](
-https://github.com/wgunderwood/tex-fmt/actions/workflows/CI.yml/badge.svg)](
+https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml/badge.svg)](
 https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml)
 [![license: MIT](
 https://shields.io/badge/license-MIT-blue.svg)](
