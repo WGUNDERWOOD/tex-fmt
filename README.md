@@ -44,9 +44,14 @@ It does *not* currently aim to provide the following:
 
 ## Performance
 
+| Lines | tex-fmt | latexindent | latexindent -m |
+| --- | --- | --- | --- |
+| 58 | 2.9ms | 92.0ms | 94.3ms |
+| 28k | 32.8ms | 9.78s | 13.5s |
+
 ## Comparison with existing tools
 
-### [latexindent.pl](https://github.com/cmhughes/latexindent.pl)
+### [latexindent](https://github.com/cmhughes/latexindent.pl)
 [Perl](https://www.perl.org/) script,
 TODO.
 
@@ -56,7 +61,7 @@ download links seem to be broken.
 
 ### [latex-pretty](https://c.albert-thompson.com/latex-pretty/)
 Browser-based, uses
-[latexindent.pl](https://github.com/cmhughes/latexindent.pl)
+[latexindent](https://github.com/cmhughes/latexindent.pl)
 as the backend.
 
 ### [latexformat.com](https://latexformat.com/)
@@ -70,12 +75,12 @@ However, it fails with certain keywords inside brackets.
 ### [latex-editor](https://latex-editor.pages.dev/formatter/)
 Browser-based.
 
-### [vim-latexfmt](https://github.com/engeljh/vim-latexfmt)
+### [LaTeXFmt](https://github.com/engeljh/vim-latexfmt)
 [Vim](https://www.vim.org/)
 plugin, does not apply indentation.
 
 ### [latex-formatter](https://github.com/nfode/latex-formatter)
 [Visual Studio](https://visualstudio.microsoft.com/)
 plugin, uses
-[latexindent.pl](https://github.com/cmhughes/latexindent.pl)
+[latexindent](https://github.com/cmhughes/latexindent.pl)
 as the backend.
