@@ -15,8 +15,15 @@ formatter written in
 
 ### Nix
 
+```
+nix build "github:wgunderwood/tex-fmt"
+```
+
 ### Cargo
 
+```
+cargo install --git "https://github.com/wgunderwood/tex-fmt"
+```
 ## Aims
 
 This project aims to provide a command-line tool for formatting
