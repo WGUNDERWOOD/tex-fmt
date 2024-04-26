@@ -20,5 +20,17 @@ formatter written in
 ## Aims
 
 This project aims to provide a command-line tool for formatting
-LaTeX source code files (`.tex`, `.bib`, `.cls`, `.sty`)
-with the following properties.
+LaTeX source code files with the following properties.
+
+- Handling of common file types: `.tex`, `.bib`, `.cls`, `.sty`
+- Very good run-time performance
+- Basic configuration options
+- Sensible defaults
+
+It does *not* currently aim to provide the following:
+
+- Semantic parsing of LaTeX code
+- Linting or correction of syntax errors
+- Compliance with any existing formatting guidelines
+- Editor integration
+- Spell checking
