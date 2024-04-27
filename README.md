@@ -90,29 +90,27 @@ Run `perf.sh` to format all test cases in the `tests/` directory.
 
 ## Comparison with existing tools
 
-- [latexindent](https://github.com/cmhughes/latexindent.pl)
-
+- [latexindent](https://github.com/cmhughes/latexindent.pl).
 Perl script, many configuration options, slow on large files.
 
-- [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy)
-
+- [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy).
 Perl script, download links seem to be broken.
 
-- [latex-pretty](https://c.albert-thompson.com/latex-pretty/)
+- [latex-pretty](https://c.albert-thompson.com/latex-pretty/).
 Browser-based, uses latexindent as the backend.
 
-- [latexformat.com](https://latexformat.com/)
+- [latexformat.com](https://latexformat.com/).
 Browser-based.
 
-- [texpretty](http://ftp.math.utah.edu/pub/texpretty/)
+- [texpretty](http://ftp.math.utah.edu/pub/texpretty/).
 C program which works sometimes and appears to be fast.
 Fails with certain keywords inside brackets.
 
-- [latex-editor](https://latex-editor.pages.dev/formatter/)
+- [latex-editor](https://latex-editor.pages.dev/formatter/).
 Browser-based.
 
-- [LaTeXFmt](https://github.com/engeljh/vim-latexfmt)
+- [LaTeXFmt](https://github.com/engeljh/vim-latexfmt).
 Vim plugin, does not apply indentation.
 
-- [latex-formatter](https://github.com/nfode/latex-formatter)
+- [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend.
