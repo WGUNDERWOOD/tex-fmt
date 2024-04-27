@@ -2,7 +2,6 @@ mod tests {
 
     use crate::format_file;
     use std::fs;
-    use indoc::indoc;
 
     const YELLOW: &str = "\x1b[33m\x1b[1m";
     const GREEN: &str = "\x1b[32m\x1b[1m";
@@ -18,16 +17,7 @@ mod tests {
         let fmt_file = format_file(in_file, false);
         assert!(
             fmt_file == out_file,
-            indoc! {
-                "\n
-                {}Test failed: {}{}{} -> {}{}{} \n
-                {}Output:{}
-                {}
-
-                {}Desired:{}
-                {}
-                "
-            },
+            "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
             &RED,
             &YELLOW,
             &in_filename,
