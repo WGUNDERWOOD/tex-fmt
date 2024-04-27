@@ -4,3 +4,4 @@ target/
 *.pdb
 result
 *.html
+*.log
