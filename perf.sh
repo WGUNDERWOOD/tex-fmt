@@ -1,6 +1,5 @@
 DIR="$(mktemp -d)"
 cp tests/*_in.tex $DIR
-rm "$DIR/example3_in.tex"
 
 echo "Test files:"
 for f in $DIR/*.tex; do
@@ -10,8 +9,12 @@ for f in $DIR/*.tex; do
 done
 echo -n "Total: $(wc -l --total=only $DIR/*.tex) lines, "
 echo "$(ls -lh $DIR | head -n 1 | cut --delimiter=" " --fields 2)"
+echo
 
 hyperfine --warmup 2 \
+    -n "tex-fmt" \
     "tex-fmt $DIR/*.tex" \
+    -n "latexindent" \
     "latexindent $DIR/*.tex" \
+    -n "latexindent -m" \
     "latexindent -m $DIR/*.tex" \

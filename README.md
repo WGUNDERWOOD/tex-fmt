@@ -44,10 +44,12 @@ It does *not* currently aim to provide the following:
 
 ## Performance
 
-| Lines | tex-fmt | latexindent | latexindent -m |
-| --- | --- | --- | --- |
-| 58 | 2.9ms | 92.0ms | 94.3ms |
-| 28k | 32.8ms | 9.78s | 13.5s |
+Running `perf.sh` gives the following results for formatting all of the
+test cases in the `tests/` directory.
+
+| **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
+| --- | --- | --- | --- | --- | --- |
+| 6 | 30k | 1M | **0.0362 s** | 11.6 s (x 322) | 15.3 s (x 424) |
 
 ## Comparison with existing tools
 
