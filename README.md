@@ -15,7 +15,7 @@ formatter written in
 
 Before formatting `example.tex`:
 
-```
+``` tex
 \documentclass{article}
 
 \begin{document}
@@ -34,7 +34,7 @@ E = m c^2
 
 After running `tex-fmt example.tex`
 
-```
+``` tex
 \documentclass{article}
 
 \begin{document}
