@@ -1,0 +1,2459 @@
+\documentclass[12pt]{ociamthesis}
+
+%TC:ignore
+
+% PDF Version
+\pdfminorversion=7
+
+% general typesetting
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{microtype}
+\usepackage[table]{xcolor}
+
+% lengths
+\usepackage{etoolbox}
+\usepackage{setspace}
+
+% mathematics typesetting
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{dsfont}
+
+% headers
+\usepackage{fancyhdr}
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt}
+
+% Lof, LoT
+\usepackage{tocloft}
+\setlength{\cftfigindent}{0pt}
+\setlength{\cfttabindent}{0pt}
+
+% algorithms
+\usepackage[boxruled,
+  linesnumbered,
+  commentsnumbered,
+  algochapter,
+]{algorithm2e}
+
+% graphics
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+
+% draft options
+\usepackage{ifdraft}
+\ifoptiondraft{
+  \usepackage{draftwatermark}
+  \SetWatermarkText{DRAFT}
+  \SetWatermarkScale{6}
+  \SetWatermarkColor[rgb]{1,0.9,0.9}
+  \usepackage{showframe}
+  \usepackage{layout}
+}{}
+%\usepackage[obeyDraft]{todonotes}
+
+% hyperlinks
+\usepackage[plainpages=false,draft=false
+  ,hidelinks
+]{hyperref}
+\usepackage{cite}
+
+% glossary
+\usepackage[nopostdot,nonumberlist]{glossaries}
+
+%TC:endignore
+% suppress pdf warnings
+\pdfsuppresswarningpagegroup=1
+
+\title{Motif\hspace*{0.05cm}-Based Spectral Clustering\\[1ex]
+of Weighted Directed Networks}
+
+\author{William George Underwood}
+\college{Department of Statistics}
+
+\renewcommand{\submittedtext}{}
+\degree{Part C Dissertation in Mathematics \& Statistics}
+\degreedate{Trinity 2019}
+%TC:ignore
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{example}{Example}[chapter]
+\newtheorem{prf}{Proof}[chapter]
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{notation}{Notation}
+
+% algorithms
+\DontPrintSemicolon
+
+% input output definitions
+\makeatletter
+\renewcommand{\SetKwInOut}[2]{%
+  \sbox\algocf@inoutbox{\KwSty{#2}\algocf@typo:}%
+  \expandafter\ifx\csname InOutSizeDefined\endcsname\relax%
+  \newcommand\InOutSizeDefined{}\setlength{\inoutsize}{\wd\algocf@inoutbox}%
+  \sbox\algocf@inoutbox{\parbox[t]{\inoutsize}%
+  {\KwSty{#2}\algocf@typo:\hfill}~}%
+  \setlength{\inoutindent}{\wd\algocf@inoutbox}%
+  \else% else keep the larger dimension
+  \ifdim\wd\algocf@inoutbox>\inoutsize%
+  \setlength{\inoutsize}{\wd\algocf@inoutbox}%
+  \sbox\algocf@inoutbox{\parbox[t]{\inoutsize}%
+  {\KwSty{#2}\algocf@typo:\hfill}~}%
+  \setlength{\inoutindent}{\wd\algocf@inoutbox}%
+  \fi%
+  \fi% the dimension of the box is now defined.
+  \algocf@newcommand{#1}[1]{%
+    \ifthenelse{\boolean{algocf@inoutnumbered}}{\relax}{\everypar={\relax}}%
+    {\let\\\algocf@newinout\hangindent=\inoutindent\hangafter=1\parbox[t]%
+    {\inoutsize}{\KwSty{#2}\algocf@typo:\hfill}~##1\par}%
+    \algocf@linesnumbered% reset the numbering of the lines
+}}%
+\makeatother
+
+% keywords
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\SetKw{In}{in}
+\SetKwProg{Function}{function}{:}{}
+
+% algorithm comment styles
+\newcommand\commfont[1]{\rmfamily{#1}}
+\SetCommentSty{commfont}
+\SetKwComment{Comm}{$\rhd\ $}{}
+
+% line spacing
+\AtBeginEnvironment{algorithm}{\setstretch{1.15}}
+
+% glossaries
+\setlength{\glsdescwidth}{0.92\hsize}
+\newglossarystyle{mystyle}{%
+  \setglossarystyle{long}%
+  \renewenvironment{theglossary}%
+  {\begin{longtable}{@{}p{2cm}p{\glsdescwidth}}}%
+  {\end{longtable}}%
+}
+\makeglossaries
+
+% macros
+\newcommand\bb[1]{\mathbb{#1}}
+\newcommand\ca[1]{\mathcal{#1}}
+\newcommand\Aut{\mathrm{Aut}}
+
+% for inputting tables
+\makeatletter\let\expandableinput\@@input\makeatother
+
+%TC:endignore
+% Glossary
+
+\newglossaryentry{MAM}{name=MAM, description={Motif adjacency matrix}}
+\newglossaryentry{DSBM}{name=DSBM,
+description={Directed stochastic block model}}
+\newglossaryentry{BSBM}{name=BSBM,
+description={Bipartite stochastic block model}}
+\newglossaryentry{Ncut}{name=Ncut, description={Normalised cut}}
+\newglossaryentry{ARI}{name=ARI, description={Adjusted Rand Index}}
+
+\glsaddall
+
+\begin{document}
+
+%TC:ignore
+% give sufficient line spacing for comment markup
+\baselineskip=18pt plus1pt
+
+% set how many section levels get numbers and appear in the contents
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+% do not hyphenate short words
+\lefthyphenmin4
+\righthyphenmin4
+
+\pagenumbering{Alph}
+%TC:endignore
+\maketitle
+\clearpage{}
+\begin{abstract}
+
+  Clustering is an essential technique for network analysis, with applications
+  in a diverse range of fields. Although spectral clustering is a popular and
+  effective method, it fails to consider higher-order structure and can perform
+  poorly on directed networks. We aim to address these shortcomings by
+  exploring motif-based spectral clustering methods. We present new matrix
+  formulae for motif adjacency matrices, and a motif-based approach for
+  clustering bipartite networks. Comprehensive experimental results from both
+  synthetic and real data demonstrate the effectiveness of our techniques on a
+  variety of networks. We conclude that motif-based spectral clustering is a
+  valuable tool for analysis of directed and bipartite weighted networks, which
+  is also scalable and easy to implement.
+
+\end{abstract}
+\clearpage{}
+%TC:ignore
+
+\pagenumbering{arabic}
+\begin{romanpages}
+
+  \tableofcontents
+
+  \newpage
+  \listoffigures
+
+  \newpage
+  \listoftables
+
+  \begingroup
+  \let\cleardoublepage\relax
+  \let\clearpage\relax
+  \printglossary[title=Abbreviations, style=mystyle]
+  \endgroup
+
+\end{romanpages}
+
+% fancy headers
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\fancyhead[RO]{\itshape{\nouppercase{Chapter \thechapter : \leftmark}}}
+
+%TC:endignore
+\clearpage{}
+\chapter{Introduction}
+
+% Importance of network analysis in the modern world
+Networks are ubiquitous in modern society; from the internet and online blogs
+to protein interactions and human migration, we are surrounded by inherently
+connected structures~\cite{kolaczyk2014statistical}.
+The mathematical and statistical analysis of networks is therefore a very
+important area of modern research, with applications in a diverse range of
+fields including biology~\cite{albert2005scale},
+chemistry~\cite{jacob2018statistics}, physics~\cite{newman2008physics} and
+sociology~\cite{adamic2005political}.
+
+% Clustering is a core technique
+A common problem in network analysis is that of
+\emph{clustering}~\cite{schaeffer2007graph}.
+Network clustering refers to the division of a network into several parts so
+that objects in the same part are similar, while those in different parts are
+dissimilar.
+
+%Spectral methods are good
+Spectral methods for network clustering have a long and successful
+history~\cite{cheeger1969lower,donath1972algorithms,guattery1995performance},
+and have become increasingly popular in recent years.
+These techniques exhibit many attractive properties including generality, ease
+of implementation and scalability~\cite{von2007tutorial}.
+
+% Shortcomings of spectral methods
+However traditional spectral methods have shortcomings, particularly involving
+their inability to consider higher-order network
+structures~\cite{benson2016higher}, and their insensitivity to edge
+direction~\cite{DirectedClustImbCuts}. These weaknesses can lead to
+unsatisfactory results, especially when working with directed networks.
+Motif-based spectral methods have proven more effective for clustering directed
+networks on the basis of higher-order
+structures~\cite{tsourakakis2017scalable}, with the introduction of the
+\emph{motif adjacency matrix} (MAM).
+
+% Problems we want to solve
+In this dissertation we will explore motif-based spectral clustering methods
+with a focus on addressing these shortcomings for weighted directed networks.
+Our main contributions include a collection of new matrix-based formulae for
+MAMs on weighted directed networks, and a motif-based approach for clustering
+bipartite networks. We also provide comprehensive experimental results both
+from synthetic data (stochastic block models) and from real-world network data.
+
+\section*{Dissertation layout}
+
+In Chapter~\ref{chap:graphs} we describe our graph-theoretic framework which
+provides a natural model for real-world weighted directed networks.
+We define motifs and instances, and then state and prove new matrix-based
+formulae for MAMs.
+%
+In Chapter~\ref{chap:spectral} we provide a summary of random-walk spectral
+clustering and discuss techniques for cluster extraction and evaluation.
+We state the algorithms for both traditional and motif-based spectral
+clustering.
+%
+In Chapter~\ref{chap:motif} we introduce directed stochastic block models
+(DSBMs), a family of generative models for directed networks, and evaluate the
+performance of motif-based clustering both on synthetic data and on real data
+(US Political Blogs network, US Migration network).
+%
+In Chapter~\ref{chap:bipartite} we propose a motif-based approach for
+clustering bipartite graphs and introduce bipartite stochastic block models
+(BSBMs), a family of generative models for bipartite networks. We again provide
+experimental results both on synthetic data and on real data (American
+Revolution network, Unicode Languages network).
+%
+Finally in Chapter~\ref{chap:conclusions} we present our conclusions, along
+with a discussion about limitations and potential extensions of our work.
+
+\clearpage{}
+\clearpage{}
+\chapter{Graphs and Motifs} \label{chap:graphs}
+
+We describe our graph-theoretic framework for network analysis and give
+matrix-based formulae for motif adjacency matrices (MAMs).
+In Section~\ref{sec:graphs_graph_definitions} we outline basic concepts
+relating to graphs and motifs.
+In Section~\ref{sec:graphs_adj_and_ind_matrices} we define the adjacency and
+indicator matrices of a graph.
+In Section~\ref{sec:graphs_motif_adj_matrices} we introduce MAMs and present
+the main results of this chapter,
+Proposition~\ref{prop:motif_adj_matrix_formula} and
+Proposition~\ref{prop:motif_adj_matrix_computation}.
+
+\section{Graph definitions} \label{sec:graphs_graph_definitions}
+
+Graph notation is notoriously inconsistent in the literature
+\cite{intro_to_graph_theory}, so we begin by giving all of the relevant
+notation and definitions.
+
+\begin{definition}[Graphs]
+  A \emph{graph} is a triple $\ca{G} = (\ca{V,E},W)$ where $\ca{V}$ is the
+  \emph{vertex set}, $\ca{E} \subseteq \left\{ (i,j) : i,j \in \ca{V}, i \neq j
+  \right\}$ is the \emph{edge set} and $W\colon \ca{E} \to (0,\infty)$ is the
+  \emph{weight map}.
+\end{definition}
+
+\begin{remark}
+  We consider weighted directed graphs without self-loops or multiple edges. We
+  can extend to undirected graphs by replacing undirected edges with
+  bidirectional edges. Where it is not relevant, we may sometimes omit the
+  weight map $W$.
+\end{remark}
+
+\begin{definition}[Underlying edges]
+  Let $\ca{G} = (\ca{V,E})$ be a graph. Its \emph{underlying edges} are
+  $\bar{\ca{E}} \vcentcolon = \big\{ \{i,j\} : (i,j) \in \ca{E} \big\}$.
+\end{definition}
+
+\begin{definition}[Subgraphs]
+  A graph $\ca{G'} = (\ca{V',E'})$ is a \emph{subgraph} of a graph $\ca{G} =
+  (\ca{V,E})$ (write $\ca{G'} \leq \ca{G}$) if $\ca{V'} \subseteq \ca{V}$ and
+  $\ca{E'} \subseteq \ca{E}$. It is an \emph{induced subgraph} (write $\ca{G'}
+  < \ca{G}$) if further $\ca{E'} = \ca{E} \cap ( \ca{V'} \times \ca{V'} )$.
+\end{definition}
+
+\begin{definition}[Connected components]
+  Let $\ca{G} = (\ca{V,E})$ be a graph. The \emph{connected components} of
+  $\ca{G}$ are the partition $\ca{C}$ generated by the transitive closure of
+  the relation $\sim$ on $\ca{V}$ defined by $i \sim j \iff \{i,j\} \in
+  \bar{\ca{E}}$. We say $\ca{G}$ is (weakly) \emph{connected} if $|\ca{C}| =
+  1$.
+\end{definition}
+
+\begin{definition}[Graph isomorphisms]
+  A graph $\ca{G'} = (\ca{V',E'})$ is \emph{isomorphic} to a graph $\ca{G} =
+  (\ca{V,E})$ (write $\ca{G'} \cong \ca{G}$) if there is a bijection
+  $\phi\colon \ca{V'} \rightarrow \ca{V}$ with $(u,v) \in \ca{E'} \iff
+  \big(\phi(u), \phi(v) \big) \in \ca{E}$.
+  An isomorphism from a graph to itself is called an \emph{automorphism}.
+\end{definition}
+
+\begin{definition}[Motifs and anchor sets]
+  A \emph{motif} is a pair $(\ca{M,A})$ where $\ca{M} = (\ca{V_M,E_M})$ is a
+  connected graph with $\ca{V_M} = \{ 1, \ldots, m \}$ for some small $m \geq
+  2$, and $\ca{A} \subseteq \ca{V_M}$ with $|\ca{A}| \geq 2$ is an \emph{anchor
+  set}. If $\ca{A} \neq \ca{V_M}$ we say the motif is \emph{anchored}, and if
+  $\ca{A=V_M}$ we say it is \emph{simple}.
+\end{definition}
+
+\begin{remark}
+  Anchor sets~\cite{benson2016higher} specify which r\^oles vertices play in
+  the motif, and are crucial for defining the collider and expander motifs
+  given in Section~\ref{sec:coll_expa}. When an anchor set is not given, it is
+  assumed that the motif is simple. Figure~\ref{fig:motif_definitions_directed}
+  shows all simple motifs (up to isomorphism) on at most three vertices.
+\end{remark}
+
+\begin{definition}[Instances]
+  Let $\ca{G}$ be a graph and $(\ca{M,A})$ a motif. We say that $\ca{H}$ is a
+  \emph{functional instance} of $\ca{M}$ in $\ca{G}$ if $\ca{M} \cong \ca{H}
+  \leq \ca{G}$. We say that $\ca{H}$ is a \emph{structural instance} of
+  $\ca{M}$ in $\ca{G}$ if $\ca{M} \cong \ca{H} < \ca{G}$.
+\end{definition}
+
+\begin{definition}[Anchored pairs]
+  Let $\ca{G}$ be a graph and $(\ca{M,A})$ a motif. Suppose $\ca{H}$ is an
+  instance of $\ca{M}$ in $\ca{G}$. Define the \emph{anchored pairs of the
+  instance} $\ca{H}$ as
+  $$ \ca{A(H)} \vcentcolon = \big\{ \{\phi(i),\phi(j)\} : i,j \in \ca{A}, \ i
+    \neq j, \ \phi \textrm{ is an isomorphism from } \ca{M} \textrm{ to } \ca{H}
+  \big\}\,.$$
+
+\end{definition}
+
+\begin{remark}
+  Example~\ref{ex:instances} demonstrates functional and structural instances.
+  Note that $\{i,j\} \in \ca{A(H)}$ if and only if $\ca{H}$ appears in $\ca{G}$
+  as an instance of $\ca{M}$ with $i \neq j$ co-appearing in the image of
+  $\ca{A}$ under isomorphism. The motivation for this is that clustering
+  methods should avoid separating vertices which appear as an anchored pair.
+\end{remark}
+%
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.7,draft=false]{%
+  ../tikz/motif_definitions_directed/motif_definitions_directed.pdf}
+  \caption{All simple motifs on at most three vertices}
+  \label{fig:motif_definitions_directed}
+\end{figure}
+
+\section{Adjacency and indicator matrices}
+\label{sec:graphs_adj_and_ind_matrices}
+
+Adjacency matrices provide a useful data structure for representing graphs and
+have many uses in calculating graph properties \cite{bapat2010graphs}.  We
+define several variants of the adjacency matrix, which appear in
+Proposition~\ref{prop:motif_adj_matrix_formula} and
+Table~\ref{tab:motif_adj_mat_table}.
+
+\begin{definition}[Adjacency matrices]
+  Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set $\ca{V} = \{1, \ldots,
+  n \}$. The \emph{adjacency matrix, single-edge adjacency matrix} and
+  \emph{double-edge adjacency matrix} of $\ca{G}$ are respectively the $n
+  \times n$ matrices
+  \begin{align*}
+    G_{i j} &\vcentcolon= W((i,j)) \ \bb{I} \{ (i,j) \in \ca{E} \}\,, \\
+    (G_\mathrm{s})_{i j} &\vcentcolon= W((i,j)) \ \bb{I} \{ (i,j) \in \ca{E}
+    \textrm{ and } (j,i) \notin \ca{E} \}\,, \\
+    (G_\mathrm{d})_{i j} &\vcentcolon= \big( W((i,j)) + W((j,i)) \big) \ \bb{I}
+    \{ (i,j) \in \ca{E} \textrm{ and } (j,i) \in \ca{E} \}\,.
+  \end{align*}
+\end{definition}
+
+\begin{definition}[Indicator matrices]
+  Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set $\ca{V} = \{1, \ldots,
+  n \}$. The \emph{indicator matrix, single-edge indicator matrix, double-edge
+  indicator matrix, missing-edge indicator matrix} and \emph{vertex-distinct
+  indicator matrix} of $\ca{G}$ are respectively the $n \times n$ matrices
+  \begin{align*}
+    J_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \}\,, \\
+    (J_\mathrm{s})_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \textrm{ and }
+    (j,i) \notin \ca{E} \}\,, \\
+    (J_\mathrm{d})_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \textrm{ and }
+    (j,i) \in \ca{E} \}\,, \\
+    (J_0)_{i j} &\vcentcolon= \bb{I} \{ (i,j) \notin \ca{E} \textrm{ and } (j,i)
+    \notin \ca{E} \textrm{ and } i \neq j \}\,, \\
+    (J_\mathrm{n})_{i j} &\vcentcolon= \bb{I} \{ i \neq j \}\,.
+  \end{align*}
+\end{definition}
+
+\section{Motif adjacency matrices} \label{sec:graphs_motif_adj_matrices}
+
+The central object in motif-based spectral clustering is the \emph{motif
+adjacency matrix} (MAM) \cite{benson2016higher}, which serves as a similarity
+matrix for spectral clustering (Chapter~\ref{chap:spectral}).
+We provide here our main results:
+Proposition~\ref{prop:motif_adj_matrix_formula} gives a computationally useful
+formula for MAMs, and Proposition~\ref{prop:motif_adj_matrix_computation} gives
+a complexity analysis of this formula.
+
+\pagebreak
+
+\subsection{Definitions}
+
+\begin{definition}[Motif adjacency matrices] \label{def:motif_adj_matrices}
+  %
+  Let $\ca{G} = (\ca{V,E},W)$ be a graph with $n$ vertices and let $\ca{(M,A)}$
+  be a motif. The \emph{functional} and \emph{structural motif adjacency
+  matrices} (MAMs) of $\ca{(M,A)}$ in $\ca{G}$ are respectively the $n \times
+  n$ matrices
+  %
+  \begin{align*}
+    M^\mathrm{func}_{i j} &\vcentcolon= \frac{1}{|\ca{E_M}|} \sum_{\ca{M} \cong
+    \ca{H} \leq \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e
+    \in \ca{E_H}} W(e)\,, \\
+    M^\mathrm{struc}_{i j} &\vcentcolon= \frac{1}{|\ca{E_M}|} \sum_{\ca{M} \cong
+    \ca{H} < \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e
+    \in \ca{E_H}} W(e)\,.
+  \end{align*}
+\end{definition}
+
+\begin{remark}
+  Example~\ref{ex:motif_adj_matrices} gives a simple illustration of
+  calculating an MAM.
+  When $W \equiv 1$ and $\ca{M}$ is simple, the (functional or structural) MAM
+  entry $M_{i j} \ (i \neq j)$ simply counts the (functional or structural)
+  instances of $\ca{M}$ in $\ca{G}$ containing $i$ and $j$.
+  When $\ca{M}$ is not simple, $M_{i j}$ counts only those instances with anchor
+  sets containing both $i$ and $j$.
+  MAMs are always symmetric, since the only dependency on $(i,j)$ is via the
+  unordered set $\{i,j\}$.
+\end{remark}
+
+\subsection{Computation} \label{sec:graphs_computation}
+
+In order to state Propositions \ref{prop:motif_adj_matrix_formula}
+and~\ref{prop:motif_adj_matrix_computation}, we need one more definition.
+
+\begin{definition}[Anchored automorphism classes]
+  Let $(\ca{M,A})$ be a motif.
+  Let $S_\ca{M}$ be the set of permutations on $ \ca{V_M} = \{ 1, \ldots, m \}$
+  and define the \emph{anchor-preserving permutations} $S_\ca{M,A} = \{ \sigma
+  \in S_\ca{M} : \{1,m\} \subseteq \sigma(\ca{A}) \}$.
+  Let $\sim$ be the equivalence relation defined on $S_\ca{M,A}$ by: $\sigma
+  \sim \tau \iff \tau^{-1} \sigma$ is an automorphism of $\ca{M}$.
+  Finally the \emph{anchored automorphism classes} are the quotient set
+  $S_\ca{M,A}^\sim \vcentcolon= S_\ca{M,A} \ \big/ \sim$\,.
+\end{definition}
+
+\begin{proposition}[MAM formula] \label{prop:motif_adj_matrix_formula}
+  Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set
+  ${\ca{V}=\{1,\ldots,n\}}$ and let $(\ca{M,A})$ be a motif on $m$ vertices.
+  Then for any $i,j \in \ca{V}$ and with $k_1 = i$, $k_m = j$, the functional
+  and structural MAMs of $\ca{(M,A)}$ in $\ca{G}$ are given by
+  %
+  %
+  \begin{align*}
+    M^\mathrm{func}_{i j} &= \frac{1}{|\ca{E_M}|} \sum_{\sigma \in
+    S_\ca{M,A}^\sim} \ \sum_{\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}} \
+    J^\mathrm{func}_{\mathbf{k},\sigma} \
+    G^\mathrm{func}_{\mathbf{k},\sigma}\,, &(1) \\
+    M^\mathrm{struc}_{i j} &= \frac{1}{|\ca{E_M}|} \sum_{\sigma \in
+    S_\ca{M,A}^\sim} \ \sum_{\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}} \
+    J^\mathrm{struc}_{\mathbf{k},\sigma} \
+    G^\mathrm{struc}_{\mathbf{k},\sigma}\,, &(2)
+  \end{align*}
+  %
+  where
+  %
+  \begin{align*}
+    \ca{E}_\ca{M}^0 &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m : (u,v) \notin
+    \ca{E_M}, (v,u) \notin \ca{E_M} \}\,, \\
+    \ca{E}_\ca{M}^\mathrm{s} &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m :
+    (u,v) \in \ca{E_M}, (v,u) \notin \ca{E_M} \}\,, \\
+    \ca{E}_\ca{M}^\mathrm{d} &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m :
+    (u,v) \in \ca{E_M}, (v,u) \in \ca{E_M} \}\,,
+  \end{align*}
+  %
+  are respectively the missing edges, single edges and double edges of
+  $\ca{E_M}$, and
+  %
+  %TC:ignore
+  \begin{alignat*}{3}
+    %
+    J^\mathrm{func}_{\mathbf{k},\sigma}
+    & \vcentcolon= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{n})_{k_{\sigma
+    u},k_{\sigma v}}
+    && && \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
+    v}}\,, \\
+    %
+    G^\mathrm{func}_{\mathbf{k},\sigma}
+    & \vcentcolon= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma
+    v}}
+    && + && \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma
+    u},k_{\sigma v}}\,, \\
+    %
+    J^\mathrm{struc}_{\mathbf{k},\sigma}
+    & \vcentcolon= \prod_{\ca{E}_\ca{M}^0} (J_0)_{k_{\sigma u},k_{\sigma v}}
+    && && \prod_{\ca{E}_\ca{M}^\mathrm{s}} (J_\mathrm{s})_{k_{\sigma
+    u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
+    v}}\,, \\
+    %
+    G^\mathrm{struc}_{\mathbf{k},\sigma}
+    &\vcentcolon= \sum_{\ca{E}_\ca{M}^\mathrm{s}} (G_\mathrm{s})_{k_{\sigma
+    u},k_{\sigma v}}
+    && + && \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma
+    u},k_{\sigma v}}\,.
+    %
+  \end{alignat*}
+  %TC:endignore
+\end{proposition}
+%
+\begin{proof}
+  See Proof~\ref{proof:motif_adj_matrix_formula}.
+\end{proof}
+
+\begin{proposition}[Complexity of MAM formula]
+  \label{prop:motif_adj_matrix_computation}
+  Suppose that ${m \leq 3}$, and the adjacency matrix $G$ of $\ca{G}$ is known.
+  Then computing adjacency and indicator matrices and calculating an MAM using
+  Equations $(1)$ and $(2)$ in Proposition~\ref{prop:motif_adj_matrix_formula}
+  involves at most 18 matrix multiplications, 22 entry-wise multiplications and
+  21 additions of (typically sparse) $n \times n$ matrices.
+\end{proposition}
+
+\begin{proof}
+  See Proof~\ref{proof:motif_adj_matrix_computation}.
+\end{proof}
+
+Hence for motifs on at most three vertices and with sparse adjacency matrices,
+Proposition~\ref{prop:motif_adj_matrix_formula} gives a fast and parallelisable
+matrix-based procedure for computing MAMs. In practice, additional symmetries
+of the motif often allow computation with even fewer matrix operations,
+demonstrated in Example~\ref{ex:motif_adj_calc}.
+
+A list of such MAM formulae for all simple motifs on at most three vertices (up
+to isomorphism), as well as for the \emph{collider} and \emph{expander} motifs
+(Section~\ref{sec:coll_expa}), is given in Table~\ref{tab:motif_adj_mat_table}.
+These formulae are generalisations of those stated in Table S6 in the
+supplementary materials for \cite{benson2016higher}, in an incomplete list of
+only \emph{structural} MAMs of \emph{unweighted} graphs. Note that the
+functional MAM formula for the two-vertex motif $\ca{M}_\mathrm{s}$ yields the
+symmetrised adjacency matrix $M = G + G^\top$ which is used for traditional
+spectral clustering (Section~\ref{sec:spectral_overview}). The question of
+whether to use functional or structural MAMs for motif-based spectral
+clustering will be addressed in Section~\ref{sec:spectral_motifrwspectclust}.
+
+\clearpage{}
+\clearpage{}
+\chapter{Spectral Clustering} \label{chap:spectral}
+
+We provide a summary of traditional random-walk spectral clustering and show
+how it applies to motif-based clustering.
+This chapter mostly follows the relevant sections in the tutorial by
+U.~Von~Luxburg~\cite{von2007tutorial}, which provides further explanations and
+proofs.
+In Section~\ref{sec:spectral_overview} we give an overview of the spectral
+clustering procedure.
+In Section~\ref{sec:spectral_laplacians} we define the random-walk Laplacian
+and state some of its useful properties (Proposition~\ref{prop:laplacian}).
+In Section~\ref{sec:spectral_graph_cut} we introduce normalised cut (Ncut) as
+an objective function for graph partitioning.
+In Section~\ref{sec:spectral_cluster_extraction} we explore methods of
+extracting clusters from $\bb{R}^l$-valued embeddings, and in
+Section~\ref{sec:spectral_algs} we present the algorithms for both traditional
+and motif-based random-walk spectral clustering.
+
+\section{Overview of spectral clustering} \label{sec:spectral_overview}
+
+Suppose $x_1, \ldots, x_n$ are data points with some associated symmetric
+similarity matrix $M$ with ${M_{i j} = \mathrm{similarity}(x_i,x_j)}$.
+The intuitive aim of clustering is to find a partition $\ca{P}_1, \ldots,
+\ca{P}_k$ of $\{ x_1, \ldots, x_n \}$ which places similar points in the same
+group and dissimilar points in different groups.
+Where other methods such as $k$-means++  \cite{arthur2007k} and GMM clustering
+\cite{duda1973pattern} demand some further structure on $x_i$ (such as taking
+values in $\bb{R}^l$), spectral clustering has no such requirements.
+
+In the context of \emph{undirected} graph clustering, the data points are the
+vertices of the graph, and a similarity matrix is provided by the graph's
+adjacency matrix $G$.
+To cluster directed graphs, the adjacency matrix must first be symmetrised,
+traditionally by the transformation $M = G + G^\top$
+\cite{Meila2007ClusteringBW}.
+This symmetrisation ignores information about edge direction and higher-order
+structures; and can lead to poor performance, as will be seen in
+Section~\ref{sec:motif_asymm_dsbms}.
+
+Spectral clustering consists of two steps. Firstly, eigendecomposition of a
+Laplacian matrix embeds the vertices into $\bb{R}^{l}$. The $k$ clusters are
+then extracted from this space.
+
+\section{Graph Laplacians} \label{sec:spectral_laplacians}
+
+The Laplacians of an undirected graph are a family of matrices which play a
+central r\^ole in spectral clustering. While many different graph Laplacians
+are available, we focus in this dissertation on just the \emph{random-walk
+Laplacian}, for reasons concerning objective functions, consistency and
+computation \cite{von2007tutorial, luxburg2004convergence}.
+
+\begin{definition}
+  Let $\ca{G}$ be an undirected graph with (symmetric) adjacency matrix $G$. The
+  \emph{random-walk Laplacian matrix} of $\ca{G}$ is
+  $$ L_\mathrm{rw} \vcentcolon= I - D^{-1} G $$
+  where $I$ is the identity and $D_{ii} \vcentcolon= \sum_j G_{i j}$ is the
+  diagonal matrix of weighted degrees.
+\end{definition}
+
+\begin{remark}
+  $D^{-1} G$ is the transition matrix of a random walk on the vertex set
+  $\ca{V}$
+  where the probability of the transition $v_i \to v_j$ is proportional to
+  $G_{i j}$.
+\end{remark}
+
+\begin{proposition}[Properties of the random-walk Laplacian]
+  \label{prop:laplacian}
+  $L_\mathrm{rw}$ is positive semi-definite with eigenvalues $0 = \lambda_1 \leq
+  \cdots \leq \lambda_n$.
+  The multiplicity $k$ of the eigenvalue $0$ is equal to the number of connected
+  components $\ca{P}_1, \ldots, \ca{P}_k$ of $\ca{G}$.
+  The eigenspace of the eigenvalue $0$ is spanned by the indicator vectors on
+  these components; $ \bb{I}_{\ca{P}_1}, \ldots, \bb{I}_{\ca{P}_k} $.
+\end{proposition}
+
+\begin{proof}
+  See \cite{von2007tutorial}.
+\end{proof}
+
+\section{Graph cuts} \label{sec:spectral_graph_cut}
+
+Graph cuts provide objective functions which we seek to minimise while
+clustering the vertices of a graph.
+We look at the normalised cut and its relationship with the random-walk
+Laplacian.
+
+\begin{definition}
+  Let $\ca{G}$ be a graph. Let $ \ca{P}_1, \ldots, \ca{P}_k $ be a partition of
+  $\ca{V}$. Then the \emph{normalised cut} \cite{shi2000normalized} of $\ca{G}$
+  with respect to $ \ca{P}_1, \ldots, \ca{P}_k $ is
+  %
+  $$ \mathrm{Ncut}_\ca{G}(\ca{P}_1, \ldots, \ca{P}_k) \vcentcolon= \frac{1}{2}
+  \sum_{i=1}^k
+  \frac{ \mathrm{cut}(\ca{P}_i,\bar{\ca{P}_i}) }{ \mathrm{vol}(\ca{P}_i) } $$
+  %
+  where $ \mathrm{cut}(\ca{P}_i,\bar{\ca{P}_i})
+  \vcentcolon= \sum_{u \in \ca{P}_i, \, v \in \ca{V} \setminus \ca{P}_i}
+  G_{u v}$
+  and $\mathrm{vol}(\ca{P}_i) \vcentcolon= \sum_{u \in \ca{P}_i} D_{u u}$.
+
+\end{definition}
+
+\begin{remark}
+  More desirable partitions have a lower Ncut value; the numerators penalise
+  partitions which cut a large number of heavily weighted edges, and the
+  denominators penalise partitions which have highly imbalanced cluster sizes.
+\end{remark}
+
+It can be shown \cite{von2007tutorial} that minimising Ncut over partitions
+$ \ca{P}_1, \ldots, \ca{P}_k $ is equivalent to finding the cluster indicator
+matrix $H \in \bb{R}^{n \times k}$ minimising
+$$ \mathrm{Tr} \big( H^\top (D-G) H \big) $$
+subject to
+$$ H_{i j} = \mathrm{vol}(\ca{P}_j)^{-\frac{1}{2}} \ \bb{I} \{ v_i \in \ca{P}_j
+\}\,, \qquad (\dagger) $$
+$$ H^\top D H = I\,. $$
+
+Solving this problem is in general \textsf{NP}-hard \cite{wagner1993between}.
+However, by dropping the constraint~$(\dagger)$ and applying the Rayleigh
+Principle \cite{lutkepohl1996handbook}, we find that the solution to this
+relaxed problem is that $H$ contains the first $k$ eigenvectors of
+$L_\mathrm{rw}$ as columns \cite{von2007tutorial}.
+In practice, to find $k$ clusters it is often sufficient to use only the first
+$l < k$ eigenvectors of $L_\mathrm{rw}$.
+
+\section{Cluster extraction} \label{sec:spectral_cluster_extraction}
+
+Once Laplacian eigendecomposition has been used to embed the data into
+$\bb{R}^l$, the clusters may be extracted using a variety of methods. We
+propose $k$-means++ and eigenvector sweep as two appropriate techniques.
+
+\subsection{\texorpdfstring{$k$}{k}-means++}
+
+$k$-means++ \cite{arthur2007k} is a popular clustering algorithm for data in
+$\bb{R}^l$.
+It aims to minimise the within-cluster sum of squares, based on the standard
+Euclidean metric on $\bb{R}^l$.
+This makes it a reasonable candidate for clustering spectral data, since the
+Euclidean metric corresponds to notions of `diffusion distance' in the original
+graph \cite{nadler2006diffusion}.
+
+\subsection{Eigenvector sweep} \label{sec:spectral_sweep}
+
+Eigenvector sweep
+(Algorithm~\ref{alg:eigenvector_sweep})~\cite{shi2000normalized} offers a more
+principled technique for cluster extraction when $k=2$ clusters are required,
+and a single eigenvector (usually the second eigenvector of $L_\mathrm{rw}$) is
+available. It works by sorting the eigenvector and selecting a splitting point
+to minimise the Ncut score of the partition generated.
+
+\pagebreak
+
+\begin{algorithm}[H]
+  \caption{Eigenvector sweep}
+  \label{alg:eigenvector_sweep}
+
+  \SetKwFunction{Main}{EigenvectorSweep}
+  \newcommand{\MainArgs}{$\ca{G}, x$}
+
+  \BlankLine
+  \Input{Graph $\ca{G}$, eigenvector $x$}
+  \Output{Partition $\ca{P}_1, \ca{P}_2$}
+  \BlankLine
+  \Function{\Main{\MainArgs}}{
+
+    $\hat{x} \leftarrow \mathtt{sort}(x)$ \;
+    $\mathrm{Score_{best}} \leftarrow \infty$ \;
+
+    \For{$i$ \In $1, \ldots, n-1$}{
+      $\ca{P} \leftarrow \{ \hat{x}_1, \ldots \hat{x}_i \}$ \;
+      $\mathrm{Score} \leftarrow \mathrm{Ncut}_\ca{G} (\ca{P}, \ca{V}
+      \setminus \ca{P})$ \;
+      \If{$\mathrm{Score} < \mathrm{Score_{best}}$}{
+        $\ca{P}_\mathrm{best} \leftarrow \ca{P}$ \;
+        $\mathrm{Score_{best}} \leftarrow \mathrm{Score}$ \;
+      }
+    }
+
+    $\ca{P}_1 \leftarrow \ca{P}_\mathrm{best}$ \;
+    $\ca{P}_2 \leftarrow \ca{V} \setminus \ca{P}_\mathrm{best}$ \;
+
+    \Return $\ca{P}_1, \ca{P}_2$
+  }
+\end{algorithm}
+\vspace*{0.5cm}
+
+Figure~\ref{fig:eigenvector_sweep_network} shows a small network with vertices
+labelled by position in the sorted second eigenvector $\hat{x}$ of
+$L_\mathrm{rw}$. Figure~\ref{fig:eigenvector_sweep_profile} shows the `sweep
+profile' of Ncut scores, which is minimised at the splitting point $i=5$. Hence
+eigenvector sweep chooses the final partition $\ca{P}_1 = \{1, \ldots,5\}, \
+\ca{P}_2 = \{6, \ldots,10\}$; as indicated by the vertex colours and dashed
+line in Figure~\ref{fig:eigenvector_sweep_network}.
+%
+%
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../tikz/eigenvector_sweep_network/eigenvector_sweep_network.pdf}
+    \caption{A small network}
+    \label{fig:eigenvector_sweep_network}
+  \end{subfigure}
+  %
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/eigenvector_sweep/eigenvector_sweep_scores.pdf}
+    \caption{Sweep profile of the network}
+    \label{fig:eigenvector_sweep_profile}
+  \end{subfigure}
+  \caption{Eigenvector sweep selects a partition by minimising Ncut}
+  \label{fig:eigenvector_sweep}
+\end{figure}
+%
+
+\subsection{Cluster evaluation}
+
+When a graph has been clustered, we assign a score to the partition. If the
+ground-truth clustering is available, we can compare it to our clustering using
+the \emph{adjusted Rand index} (ARI) \cite{hubert1985comparing}. The ARI
+between two clusterings has expected value $0$ under random cluster assignment,
+and maximum value $1$ denoting perfect agreement between the clusterings. A
+larger ARI indicates a more similar clustering.
+
+If the ground-truth clustering is not available, we can use the objective
+function Ncut. Clusterings with lower Ncut values partition the graph more
+agreeably.
+
+\section{Spectral clustering algorithms} \label{sec:spectral_algs}
+
+We present the full random-walk spectral clustering algorithm and show how it
+can be applied to motif-based random-walk spectral clustering.
+
+\subsection{Random-walk spectral clustering}
+
+Algorithm~\ref{alg:rwspectclust} gives random-walk spectral clustering
+\cite{von2007tutorial}, which takes a symmetric connected adjacency matrix as
+input. We use $k$-means++ rather than eigenvector sweep as the cluster
+extraction method, due to its superior flexibility and computational speed. We
+drop the first column of $H$ (the first eigenvector of $L_\mathrm{rw}$) since
+although it should be constant and uninformative
+(Proposition~\ref{prop:laplacian}), numerical imprecision may give unwanted
+artefacts. It is worth noting that although the relaxation used in
+Section~\ref{sec:spectral_graph_cut} is reasonable and often leads to good
+approximate solutions of the Ncut problem, there are cases where it performs
+poorly~\cite{guattery1998quality}. The Cheeger
+inequality~\cite{chung2005laplacians} gives a bound on the error introduced by
+this relaxation.
+
+\vspace*{0.5cm}
+\begin{algorithm}[H]
+  \caption{Random-walk spectral clustering}
+  \label{alg:rwspectclust}
+
+  \SetKwFunction{Main}{RWSpectClust}
+  \newcommand{\MainArgs}{$G,k,l$}
+
+  \BlankLine
+  \Input{Symmetric adjacency matrix $G$, number of clusters $k$, dimension
+  $l$}
+  \Output{Partition $\ca{P}_1, \ldots, \ca{P}_k$}
+  \BlankLine
+
+  \Function{\Main{\MainArgs}}{
+    Construct the weighted degree matrix $D_{ii} \leftarrow \sum_j G_{i j}$
+    \\
+    Construct the random walk Laplacian matrix $L_\mathrm{rw} \leftarrow
+    I-D^{-1}G$ \\
+    Let $H$ have the first $l$ eigenvectors of $L_\mathrm{rw}$ as columns
+    \\
+    Drop the first column of $H$ \\
+    Run $k$-means++ on the rows of $H$ with $k$ clusters to produce
+    $\ca{P}_1, \ldots, \ca{P}_k$ \\
+    \Return $\ca{P}_1, \ldots, \ca{P}_k$
+  }
+
+\end{algorithm}
+
+\subsection{Motif-based random-walk spectral clustering}
+\label{sec:spectral_motifrwspectclust}
+
+Algorithm~\ref{alg:motifrwspectclust} gives motif-based random-walk spectral
+clustering.
+Note that although $\ca{G}$ may be a connected graph, there is no guarantee
+that the MAM is connected too.
+Hence $M$ is restricted to its largest connected component $C$ before spectral
+clustering is applied.
+While this may initially seem to be a flaw with motif-based spectral clustering
+(since not all vertices are assigned to a cluster), in fact it can be very
+useful; restriction of $M$ can remove vertices which are in some sense not
+`well connected' to the rest of the graph, which means that only a `core' set
+of vertices are clustered.
+This can result in Algorithm~\ref{alg:motifrwspectclust} making fewer
+misclassifications with motif-based methods than with traditional spectral
+clustering, as seen in Section~\ref{sec:motif_polblogs}.
+
+There is ambiguity in whether to use functional or structural MAMs.
+While the authors in~\cite{benson2016higher} opt for structural MAMs, we
+propose to use functional MAMs, for a few reasons.
+Firstly, note that $ 0 \leq M^\mathrm{struc}_{i j} \leq M^\mathrm{func}_{i j}$
+for all $i,j \in \ca{V}$.
+This implies that the largest connected component of $M^\mathrm{func}$ is
+always at least as large as that of $M^\mathrm{struc}$, meaning that often more
+vertices can be assigned to a cluster.
+Secondly, we argue that functional instances are of more interest than
+structural motifs, since they specify only `existence' rather than
+`non-existence' of edges.
+For consistency we will therefore use functional MAMs throughout our
+experiments.
+
+The most computationally expensive part of
+Algorithm~\ref{alg:motifrwspectclust} is the calculation of the MAM using a
+formula from Table~\ref{tab:motif_adj_mat_table}. We found this to be feasible
+for graphs with up to around $n \approx 10 \, 000$ vertices. General notes on
+hardware and software are given in Section~\ref{sec:notes_hardware}, and
+timings for MAM computation across a range of graph sizes and sparsities are
+available in Section~\ref{sec:notes_timing}.
+
+\vspace*{0.5cm}
+\begin{algorithm}[H]
+  \caption{Motif-based random-walk spectral clustering}
+  \label{alg:motifrwspectclust}
+
+  \SetKwFunction{Main}{MotifRWSpectClust}
+  \newcommand{\MainArgs}{$\ca{G},\mathcal{M},k,l$}
+
+  \BlankLine
+  \Input{Graph $\ca{G}$, motif $\ca{M}$, number of clusters $k$, dimension
+  $l$}
+  \Output{Partition $\ca{P}_1, \ldots, \ca{P}_k$}
+  \BlankLine
+
+  \Function{\Main{\MainArgs}}{
+    Construct the motif adjacency matrix $M$ of the graph $\ca{G}$ with
+    motif $\ca{M}$ \\
+    Let $\tilde{M}$ be $M$ restricted to its largest connected component,
+    $C$ \\
+    $\ca{P}_1, \ldots, \ca{P}_k \leftarrow$
+    \texttt{RWSpectClust($\tilde{M},k,l$)} \\
+    \Return $\ca{P}_1, \ldots, \ca{P}_k$
+  }
+
+\end{algorithm}
+
+\clearpage{}
+\clearpage{}
+\chapter{Motif-Based Clustering} \label{chap:motif}
+
+We analyse the performance of motif-based random-walk spectral clustering on
+both synthetic and real data.
+In Section~\ref{sec:motif_dsbms} we propose a family of stochastic block models
+and perform experiments with a variety of motifs and parameters.
+In Section~\ref{sec:motif_polblogs} we analyse the US Political Blogs network
+and in Section~\ref{sec:motif_migration} we present results from the US
+Migration network.
+
+\section{Directed stochastic block models} \label{sec:motif_dsbms}
+
+We begin by describing \emph{directed stochastic block models} (DSBMs), a broad
+class of generative models for directed graphs. A DSBM is characterised by a
+block count $k$, a list of block sizes $(n_i)_{i=1}^k$ and a sparsity matrix $F
+\in [0,1]^{k \times k}$. We define the cumulative block sizes $N_i =
+\sum_{j=1}^i n_j$ with $N_0=0$, and the total graph size $N=N_k$. These are
+used to construct the expected adjacency matrix $A \in [0,1]^{N \times N}$
+given by $A_{i j} = F_{rs} \ \bb{I}\{i \neq j\}$ where $N_{r-1} < i \leq N_r$
+and $N_{s-1} < j \leq N_s$. Finally a graph $\ca{G}$ is generated with
+adjacency matrix entries $G_{i j} \sim \textrm{Ber}(A_{i j})$ sampled
+independently. We say that a DSBM is \emph{symmetric} if $F$ is a symmetric
+matrix.
+
+This DSBM definition is similar to that given by \cite{DirectedClustImbCuts},
+although we impose independence between all entries of the adjacency matrix,
+allowing for bidirectional edges.
+
+\subsection{Symmetric two-block DSBMs}
+
+We define the \emph{symmetric two-block DSBM} as the DSBM with $k=2$,
+$n_1=n_2=n$ and
+$F =
+\begin{psmallmatrix}
+  p & q \\ q & p
+\end{psmallmatrix}$
+where $p > q$. Figure~\ref{fig:sym_two_block_dsbm} illustrates the block
+structure and sparsity matrix of this model. Thicker lines indicate existence
+of edges with higher probability.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8,draft=false]{%
+  ../tikz/sym_two_block_dsbm/sym_two_block_dsbm.pdf}
+  \caption{Symmetric two-block DSBM block structure and sparsity matrix}
+  \label{fig:sym_two_block_dsbm}
+\end{figure}
+
+We test the performance of Algorithm~\ref{alg:motifrwspectclust} across various
+motifs with parameters $k=l=2$ on this model.
+Figure~\ref{fig:motifsym} shows violin plots over 20 trials of ARI against
+motif, for different sets of parameters $n,p,q$.
+Also shown is $|C|$, the average size of the largest connected component of
+each MAM.
+It can be seen that several motifs (such as $\ca{M}_5$ and $\ca{M}_9$) achieve
+a similar ARI to the traditional spectral clustering technique given by the
+symmetrised adjacency matrix $M=G+G^\top$ generated by the motif
+$\ca{M}_\mathrm{s}$ (Table~\ref{tab:motif_adj_mat_table}).
+However the strongly connected motifs (particularly $\ca{M}_4$) generate MAMs
+with small connected components, especially when $\ca{G}$ is sparse, and hence
+only cluster a subset of the vertices of $\ca{G}$.
+
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/motifsym/motifsym_1.pdf}
+    \caption{$n=50$, $p=0.3$, $q=0.2$}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/motifsym/motifsym_2.pdf}
+    \caption{$n=100$, $p=0.15$, $q=0.1$}
+  \end{subfigure}
+  \caption{ARI violin plots for the symmetric two-block DSBM}
+  \label{fig:motifsym}
+\end{figure}
+
+\subsection{Asymmetric two-block DSBMs} \label{sec:motif_asymm_dsbms}
+
+We define the \emph{asymmetric two-block DSBM} as the DSBM with $k=2$,
+$n_1=n_2=n$ and
+$F =
+\begin{psmallmatrix}
+  p & q_1 \\ q_2 & p
+\end{psmallmatrix}$
+where $q_1 > q_2$ and $p = \frac{1}{2}(q_1+q_2)$.
+Figure~\ref{fig:asym_two_block_dsbm} shows this model.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8,draft=false]{%
+  ../tikz/asym_two_block_dsbm/asym_two_block_dsbm.pdf}
+  \caption{Asymmetric two-block DSBM block structure and sparsity matrix}
+  \label{fig:asym_two_block_dsbm}
+\end{figure}
+
+We test the performance of Algorithm~\ref{alg:motifrwspectclust} across various
+motifs with parameters $k=l=2$ on this model.
+Figure~\ref{fig:motifasym} shows violin plots over 20 trials of ARI against
+motif, for different sets of parameters $n,p,q_1,q_2$, and $|C|$ is shown.
+It is apparent that motif-based clustering with $\ca{M}_1$ is the best method,
+consistently achieving the highest ARI and keeping $|C|$ at its maximum value
+of $2n$.
+It is unsurprising that $\ca{M}_1$ (feed-back loop) performs well on this
+model; large $p$ makes feed-back loops within clusters likely, and small $q_2$
+makes feed-back loops spanning the clusters unlikely. Motif $\ca{M}_2$ also
+performs reasonably well since it contains $\ca{M}_1$ as a submotif.
+Furthermore, the constraint $p = \frac{1}{2}(q_1+q_2)$ ensures that the na\"ive
+symmetrisation $M=G+G^\top$ produces indistinguishable clusters, and hence the
+traditional method performs extremely poorly.
+
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/motifasym/motifasym_1.pdf}
+    \caption{$n=100$, $p=0.2$, $q_1=0.35$, $q_2=0.05$}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/motifasym/motifasym_2.pdf}
+    \caption{$n=200$, $p=0.15$, $q_1=0.25$, $q_2=0.05$}
+  \end{subfigure}
+  \caption{ARI violin plots for the asymmetric two-block DSBM}
+  \label{fig:motifasym}
+\end{figure}
+
+\section{US Political Blogs network} \label{sec:motif_polblogs}
+
+Our first real data set is the US Political Blogs network
+\cite{adamic2005political}, consisting of data collected two months before the
+2004 US election. Vertices represent blogs, and are labelled by their political
+leaning (`liberal' or `conservative'). Weighted directed edges represent the
+number of citations from one blog to another. After preprocessing
+(Section~\ref{sec:notes_preprocessing}) there are $536$ liberal blogs, $636$
+conservative blogs (total 1222) and $19 \, 024$ edges. The network is plotted
+in Figure~\ref{fig:polblogs_network}.
+
+We test the performance of Algorithm~\ref{alg:motifrwspectclust} across various
+motifs with parameters $k=l=2$ on this network.
+Figure~\ref{fig:polblogs_ariplot} plots ARI against component size $|C|$.
+There is an apparent trade-off between ARI and connected component size.
+Motif $\ca{M}_9$ clusters many vertices with $|C|=1197$ and an ARI of 0.82,
+while the more strongly connected $\ca{M}_4$ only clusters $378$ vertices, with
+an improved ARI of 0.92.
+Finally, the poor performance of traditional spectral clustering is due to a
+small number of very weakly connected vertices being partitioned off, indicated
+by the dashed line and circled vertices in Figure~\ref{fig:polblogs_network}.
+
+\vspace*{0.5cm}
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/polblogs/polblogs_network.pdf}
+    \caption{The US Political Blogs network}
+    \label{fig:polblogs_network}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/polblogs/polblogs_ari_conn.pdf}
+    \caption{ARI against $|C|$ across motifs}
+    \label{fig:polblogs_ariplot}
+  \end{subfigure}
+  \caption{Plots relating to the US Political Blogs network}
+\end{figure}
+
+Figure~\ref{fig:polblogs_embedding} shows the embedding given by eigenvectors 2
+and 3 of the random-walk Laplacian of the MAM generated by motif $\ca{M}_{12}$.
+An instance of this motif in the network indicates the presence of a pair of
+mutually citing blogs with an incoming citation from a third (see
+Figure~\ref{fig:motif_definitions_directed}). Colourings are provided for
+Figure~\ref{fig:polblogs_embedding_truth} by the truth labels and for
+Figure~\ref{fig:polblogs_embedding_kmeans} by the $k$-means++ clustering of
+eigenvector 2. The clusterings are very similar, giving an ARI of $0.82$.
+
+\vspace*{0.5cm}
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/polblogs/polblogs_M12_truth.pdf}
+    \caption{Colouring by truth label}
+    \label{fig:polblogs_embedding_truth}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/polblogs/polblogs_M12_clusts.pdf}
+    \caption{Colouring by $k$-means++ cluster}
+    \label{fig:polblogs_embedding_kmeans}
+  \end{subfigure}
+  \caption{Eigendecomposition embedding of the US Political Blogs network}
+  \label{fig:polblogs_embedding}
+\end{figure}
+
+\pagebreak
+
+\section{US Migration network} \label{sec:motif_migration}
+
+The next data set is the US Migration network \cite{census2000}, consisting of
+data collected during the US Census in 2000. Vertices represent the 3075
+counties in 49 contiguous states (excluding Alaska and Hawaii, and including
+the District of Columbia). The $721\,432$ weighted directed edges represent the
+number of people migrating from county to county, capped at $10 \, 000$ (the
+99.9th percentile) to control large entries, as in \cite{DirectedClustImbCuts}.
+
+We test the performance of Algorithm~\ref{alg:motifrwspectclust} with three
+selected motifs: $\ca{M}_\mathrm{s}$, $\ca{M}_6$ and $\ca{M}_9$ (see
+Figure~\ref{fig:motif_definitions_directed}).
+$\ca{M}_\mathrm{s}$ gives the traditional spectral clustering method with
+na\"ive symmetrisation.
+$\ca{M}_6$ represents a pair of counties exchanging migrants, with both also
+receiving migrants from a third.
+$\ca{M}_9$ is a path of length two, allowing counties to be deemed similar if
+there is migration between them via another.
+
+Firstly, we plot sweep profiles of the graph using the second eigenvector of
+the random-walk Laplacian of the MAM associated with each motif, in
+Figure~\ref{fig:migration_sweep}. Note that all three display clear minima,
+indicating that these motifs produce well-defined clusters. The two-part
+clusterings produced by eigenvector sweep are somewhat similar across the three
+motifs, with pairwise ARIs equal to $\textrm{ARI}(\ca{M}_\mathrm{s}, \ca{M}_6)
+= 0.67$, $\textrm{ARI}(\ca{M}_\mathrm{s}, \ca{M}_9) = 0.92$ and
+$\textrm{ARI}(\ca{M}_6, \ca{M}_9) = 0.73$.
+
+\begin{figure}[H]
+  \begin{subfigure}{.325\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/us_migration/us_migration_sweep_profile_Ms.pdf}
+    \caption{$\ca{M}_\mathrm{s}$}
+  \end{subfigure}
+  \begin{subfigure}{.325\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/us_migration/us_migration_sweep_profile_M6.pdf}
+    \caption{$\ca{M}_6$}
+  \end{subfigure}
+  \begin{subfigure}{.325\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/us_migration/us_migration_sweep_profile_M9.pdf}
+    \caption{$\ca{M}_9$}
+  \end{subfigure}
+  \caption{Sweep profiles of the US Migration network}
+  \label{fig:migration_sweep}
+\end{figure}
+
+Next, Figure~\ref{fig:us_migration} plots maps of the US, with counties
+coloured initially by the first six non-trivial eigenvectors $x_2, \ldots, x_7$
+of the random-walk Laplacian of the associated MAM, and then by the clustering
+$C$ obtained by Algorithm~\ref{alg:motifrwspectclust} with $k=l=7$.
+
+For the eigenvector colourings, note how the coloured regions often line up
+with state boundaries, indicating that many migrants stay within the same
+state.
+It is also apparent that the motifs $\ca{M}_6$ and $\ca{M}_9$ produce `noisier'
+embeddings than traditional spectral clustering, due to their reliance on
+three-vertex motifs.
+Eigenvector~2 approximately differentiates counties by longitude, although
+$\ca{M}_9$ achieves a clearer division between east and west, while
+$\ca{M}_\mathrm{s}$ and $\ca{M}_6$ colour California (CA, see
+Figure~\ref{fig:notes_us_map}) more similarly to the East Coast.
+Eigenvector 3 tends to differentiate by latitude, though $\ca{M}_\mathrm{s}$
+and $\ca{M}_6$ particularly isolate the states of North Dakota (ND), South
+Dakota (SD), Minnesota (MN), Wisconsin (WI) and Michigan (MI).
+Further structure is visible across all three motifs for eigenvectors 4--7.
+
+The clusterings $C$ partition the counties into $k=7$ regions, and there are
+some interesting differences between the motifs.
+Since there is no ground-truth clustering, we record the Ncut score associated
+with each clustering.
+It is apparent that motifs $\ca{M}_6$ and $\ca{M}_9$ give a similar partition,
+although with some differences:
+$\ca{M}_6$ clusters the East Coast together with western Florida (FL) and the
+counties containing Los Angeles (CA), San Diego (CA), Las Vegas (NV), Phoenix
+(AZ), Tucson (AZ), Denver (CO), Chicago (IL) and Nashville (TN).
+$\ca{M}_6$ favours a larger `central' region, which includes significant parts
+of Colorado (CO), Oklahoma (OK), Arkansas (AR) and Illinois (IL).
+$\ca{M}_\mathrm{s}$ gives a somewhat different partition, with one of the
+clusters allocated to Michigan (MI) and Wisconsin (WI) rather than Mississippi
+(MS), Alabama (AL), Georgia (GA) and Tennessee (TN). As with the eigenvectors,
+the clustering is smoother for $\ca{M}_\mathrm{s}$ than for $\ca{M}_6$ and
+$\ca{M}_9$.
+
+\pagebreak
+
+\vspace*{-1cm}
+\begin{figure}[H]
+  \begin{table}[H]
+    \centering
+    \setlength{\tabcolsep}{0em}
+    \begin{tabular}{ |c|c|c|c| }
+      \expandableinput ../../results/us_migration/us_migration_table.txt
+    \end{tabular}
+  \end{table}
+  \vspace*{-0.5cm}
+  \caption{Motif-based colourings of the US Migration network}
+  \label{fig:us_migration}
+\end{figure}
+\clearpage{}
+\clearpage{}
+\addtocontents{toc}{\protect\newpage}
+\chapter{Bipartite Clustering} \label{chap:bipartite}
+
+We propose a technique for spectral clustering of bipartite graphs and test its
+performance on both real and synthetic data.
+In Section~\ref{sec:bipartite_graphs} we define bipartite graphs and present
+our clustering technique.
+In Section~\ref{sec:bipartite_sbms} we propose a bipartite stochastic block
+model (BSBM) and perform experiments with varying parameters.
+In Section~\ref{sec:bipartite_american_revolution} we demonstrate our method
+using the American Revolution network.
+In Section~\ref{sec:bipartite_languages} we analyse the Unicode Languages
+network.
+
+\section{Bipartite graphs} \label{sec:bipartite_graphs}
+
+\begin{definition}
+  A \emph{bipartite graph} is a graph $\ca{G}=(\ca{V,E})$ where $\ca{V}$ can be
+  partitioned into $\ca{V} = \ca{S} \sqcup \ca{D}$ such that $\ca{E} \subseteq
+  \ca{S} \times \ca{D}$. That is, every edge starts in $\ca{S}$ and ends in
+  $\ca{D}$. We refer to $\ca{S}$ as the \emph{source vertices} and to $\ca{D}$
+  as the \emph{destination vertices}.
+\end{definition}
+
+\subsection{Collider and expander motifs} \label{sec:coll_expa}
+
+Our method for clustering bipartite graphs revolves around two \emph{anchored}
+motifs; the \emph{collider} and the \emph{expander}
+(Figure~\ref{fig:expa_coll}). For each motif the anchor set is $\ca{A}=\{ 1,3
+\}$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8,draft=false]{../tikz/expa_coll/expa_coll.pdf}
+  \caption{The collider and expander motifs}
+  \label{fig:expa_coll}
+\end{figure}
+
+These motifs are useful for bipartite clustering because of
+Proposition~\ref{prop:coll_expa_formulae}, which states that their restricted
+MAMs are the adjacency matrices of the
+projections~\cite{kolaczyk2014statistical} of the graph $\ca{G}$.
+In particular they can be used as similarity matrices for the source and
+destination vertices respectively.
+The similarity of two distinct source (resp. destination) vertices is the sum
+over their mutual neighbours of the average weights of their edges to (resp.
+from) that neighbour.
+
+\begin{proposition}[Colliders and expanders in bipartite graphs]
+  \label{prop:coll_expa_formulae}
+  Let $\ca{G} = (\ca{V,E},W)$ be a directed bipartite graph. Let
+  $M_\mathrm{coll}$ and $M_\mathrm{expa}$ be the structural or functional MAMs
+  of $\ca{M}_\mathrm{coll}$ and $\ca{M}_\mathrm{expa}$ respectively in
+  $\ca{G}$. Then
+  %
+  \begin{align*}
+    (M_\mathrm{coll})_{i j} &= \bb{I} \{i \neq j\} \hspace*{-0.4cm}
+    \sum_{\substack{k \in \ca{D} \\ (i,k), (j,k) \in \ca{E}}} \hspace*{-0.2cm}
+    \frac{1}{2} \Big[ W((i,k)) + W((j,k)) \Big]\,, &(1)\\
+    (M_\mathrm{expa})_{i j} &= \bb{I} \{i \neq j\} \hspace*{-0.4cm}
+    \sum_{\substack{k \in \ca{S} \\ (k,i), (k,j) \in \ca{E}}}
+    \hspace*{-0.2cm}\frac{1}{2} \Big[ W((k,i)) + W((k,j)) \Big]\,. &(2)
+  \end{align*}
+  %
+\end{proposition}
+%
+\begin{proof}
+  See Proof~\ref{proof:coll_expa_formulae}.
+\end{proof}
+
+\subsection{Bipartite spectral clustering algorithm}
+
+Algorithm~\ref{alg:bipartite_clustering} gives our procedure for clustering a
+bipartite graph. The algorithm uses the collider and expander motifs to create
+similarity matrices for the source and destination vertices respectively (as in
+Section~\ref{sec:coll_expa}), and then applies random-walk spectral clustering
+(Algorithm~\ref{alg:rwspectclust}) to produce the partitions.
+
+\vspace*{0.5cm}
+\begin{algorithm}[H]
+
+  \SetKwFunction{Main}{BipartiteRWSpectClust}
+  \newcommand{\MainArgs}{$\ca{G},k_\ca{S},k_\ca{D},l_\ca{S},l_\ca{D}$}
+
+  \BlankLine
+  \Input{Bipartite graph $\ca{G}$, source clusters $k_\ca{S}$, destination
+    clusters $k_\ca{D}$, source dimension $l_\ca{S}$, destination dimension
+  $l_\ca{D}$}
+  \Output{Source partition $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}}$, destination
+  partition $\ca{D}_1, \ldots, \ca{D}_{k_\ca{D}}$}
+  \BlankLine
+
+  \Function{\Main{\MainArgs}}{
+    Construct the collider motif adjacency matrix $M_\mathrm{coll}$ of the
+    graph $\ca{G}$ \\
+    Construct the expander motif adjacency matrix $M_\mathrm{expa}$ of the
+    graph $\ca{G}$ \\
+    $M_\mathrm{coll} \leftarrow M_\mathrm{coll}[\ca{S,S}]$ \Comm*{restrict rows
+    and columns of $M_\mathrm{coll}$ to $\ca{S}$ \hspace*{0.07cm}}
+    $M_\mathrm{expa} \leftarrow M_\mathrm{expa}[\ca{D,D}]$ \Comm*{restrict rows
+    and columns of $M_\mathrm{expa}$ to $\ca{D}$}
+    $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}} \leftarrow$
+    \texttt{RWSpectClust($M_\mathrm{coll},k_\ca{S},l_\ca{S}$)} \\
+    $\ca{D}_1, \ldots, \ca{D}_{k_\ca{D}} \leftarrow$
+    \texttt{RWSpectClust($M_\mathrm{expa},k_\ca{D},l_\ca{D}$)} \\
+    \Return $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}}$ and $\ca{D}_1, \ldots,
+    \ca{D}_{k_\ca{D}}$
+  }
+
+  \caption{Bipartite random walk spectral clustering}
+  \label{alg:bipartite_clustering}
+\end{algorithm}
+
+\section{Bipartite stochastic block models} \label{sec:bipartite_sbms}
+
+We define the \emph{bipartite stochastic block model} (BSBM)
+\cite{florescu2016spectral} as the DSBM with $k=4$, $n_1 = \dots = n_4=n$ and
+$F =
+\begin{psmallmatrix}
+  0 & 0 & p & q \\ 0 & 0 & q & p \\ 0 & 0 & 0 & 0 \\ 0
+  & 0 & 0 & 0
+\end{psmallmatrix}$
+where $p > q$. Figure~\ref{fig:bipartite_bsbm} illustrates the block structure
+and sparsity matrix of this model. This model partitions the source vertices as
+$\ca{S} = \ca{S}_1 \sqcup \ca{S}_2$ and the destination vertices as
+$\ca{D}=\ca{D}_1 \sqcup \ca{D}_2$. Edges exist with high probability from
+$\ca{S}_1$ to $\ca{D}_1$ and from $\ca{S}_2$ to $\ca{D}_2$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.8,draft=false]{%
+  ../tikz/bipartite_dsbm/bipartite_dsbm.pdf}
+  \caption{BSBM block structure and sparsity matrix}
+  \label{fig:bipartite_bsbm}
+\end{figure}
+
+We test the performance of Algorithm~\ref{alg:bipartite_clustering} with
+parameters $k_\ca{S} = k_\ca{D} = l_\ca{S} = l_\ca{D} = 2$ on this model.
+For comparison we implement the co-clustering method from \cite{dhillon2001co},
+which is based on random-walk spectral clustering of the symmetrised adjacency
+matrix $G+G^\top$.
+Figure~\ref{fig:bipartite} shows violin plots over 20 trials of ARI against
+method, for different sets of parameters $n,p,q$.
+Note that if a bipartite graph is connected, then so are $M_\mathrm{coll}$ and
+$M_\mathrm{expa}$, so we need not consider the largest connected component size
+$|C|$.
+Performance of the two methods is very similar, for source and destination
+vertices.
+
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/bipartite/bipartite1.pdf}
+    \caption{$n=100$, $p=0.2$, $q=0.1$}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/bipartite/bipartite2.pdf}
+    \caption{$n=200$, $p=0.1$, $q=0.06$}
+  \end{subfigure}
+  \caption{ARI violin plots for the BSBM}
+  \label{fig:bipartite}
+\end{figure}
+
+\section{American Revolution network} \label{sec:bipartite_american_revolution}
+
+As an example of application of our bipartite clustering method to real data,
+we consider the American Revolution network \cite{konect:brunson_revolution}.
+This consists of data collected from before the American Revolution. Source
+vertices are people, and destination vertices are organisations. Edges
+represent membership of a person to an organisation. There are 136 people, 5
+organisations and 160 edges.
+
+Algorithm~\ref{alg:bipartite_clustering} is run on the American Revolution
+network, with parameters $k_\ca{S} = l_\ca{S} = 5$ and $k_\ca{D} = l_\ca{D} =
+2$. Figure~\ref{fig:bipartite_revolution_source} plots the network with people
+coloured by source cluster, and Figure~\ref{fig:bipartite_revolution_dest}
+plots the network with organisations coloured by destination cluster. The
+algorithm succeeds in clustering people based on their common memberships, and
+in clustering organisations based on their common members.
+
+\begin{figure}[H]
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/american_revolution/american_revolution_source.pdf}
+    \caption{Grouping people into 5 clusters}
+    \label{fig:bipartite_revolution_source}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[scale=0.4,draft=false]{%
+    ../../results/american_revolution/american_revolution_dest.pdf}
+    \caption{Grouping organisations into 2 clusters}
+    \label{fig:bipartite_revolution_dest}
+  \end{subfigure}
+  \caption{Bipartite clustering of the American Revolution network}
+  \label{fig:bipartite_revolution}
+\end{figure}
+
+\section{Unicode Languages network} \label{sec:bipartite_languages}
+
+The final data set is the Unicode Languages network \cite{konect:unicodelang},
+consisting of data collected in 2014 on languages spoken around the world.
+Source vertices are territories, and destination vertices are languages.
+Weighted directed edges from territory to language indicate the number of
+inhabitants in that territory who speak the specified language (territory
+population data taken from \cite{geonames}).
+After preprocessing (Section~\ref{sec:notes_preprocessing}) there are $155$
+territories, $270$ languages and $705$ edges.
+
+We test Algorithm~\ref{alg:bipartite_clustering} with parameters $k_\ca{S} =
+l_\ca{S} = k_\ca{D} = l_\ca{D} = 6$ on this network.
+For the source vertices, Figure~\ref{fig:bipartite_languages_map} plots maps of
+the world with territories coloured by the clustering obtained. The top 20
+territories (by population) in each cluster are given in
+Table~\ref{tab:bipartite_languages_source_clusters}.
+Cluster~1 is by far the largest cluster, and includes a wide variety of
+territories, of which many but not all speak some English.
+Cluster~2 contains the Persian-speaking territories of Iran and Afghanistan,
+the Arabic territories of Saudi Arabia and Syria, and the African
+French-speaking DR Congo, C\^ote d'Ivoire, Burkina Faso, Niger and others. It
+also includes Haiti, another French-speaking territory.
+Cluster~3 mostly captures Spanish-speaking territories in the Americas and also
+contains Equatorial Guinea, another Spanish-speaking territory in Africa.
+Cluster~4 includes the Slavic territories of Russia and some of its neighbours.
+The absence of Kazakhstan may be due to the $981 \, 760$ Kazakhs who speak
+German which is not a Slavic or Turkic language.
+Cluster~5 covers China, Hong Kong, Mongolia and some of South-East Asia. The
+inclusion of Panama might be due to the $6821$ Panamanians who speak Chinese.
+Cluster~6 is the smallest cluster and contains only Japan and the Koreas, which
+are connected by the $636 \, 440$ Japanese who speak Korean.
+
+There are a few territories and languages which are not contained in the large
+connected component of the network due to their linguistic isolation. These
+territories are Laos, Norway and Timor-Leste, and the languages are Lao,
+Norwegian Bokm{\aa}l and Norwegian Nynorsk.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6, draft=false]{%
+  ../../results/languages/languages_source_map_clusts.pdf}
+  \caption{Clustering the territories from the Unicode Languages network}
+  \label{fig:bipartite_languages_map}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \begin{tabular}{ |c|c|c|c|c|c| }
+    \hline
+    \rule{0pt}{1.2em}
+    \cellcolor[HTML]{8DD3C7} Cluster 1 &
+    \cellcolor[HTML]{FFFFB3} Cluster 2 &
+    \cellcolor[HTML]{BEBADA} Cluster 3 &
+    \cellcolor[HTML]{FB8072} Cluster 4 &
+    \cellcolor[HTML]{80B1D3} Cluster 5 &
+    \cellcolor[HTML]{FDB462} Cluster 6 \\[0.1cm]
+    \hline \rule{0pt}{1.2em}
+    India & Iran & Mexico & Russia & China & Japan \\
+    United States & DR Congo & Colombia & Ukraine & Indonesia & S.\ Korea \\
+    Brazil & Afghanistan & Argentina & Uzbekistan & Vietnam & N.\ Korea \\
+    Pakistan & Saudi Arabia & Peru & Belarus & Malaysia & \\
+    Bangladesh & Syria & Venezuela & Tajikistan & Taiwan & \\
+    Nigeria & C\^ote d'Ivoire & Ecuador & Kyrgyzstan & Cambodia & \\
+    Philippines & Burkina Faso & Guatemala & Turkmenistan & Hong Kong & \\
+    Ethiopia & Niger & Cuba & Georgia & Singapore & \\
+    Germany & Mali & Bolivia & Moldova & Panama & \\
+    Egypt & Senegal & Paraguay & Latvia & Mongolia & \\
+    Turkey & Tunisia & El Salvador & Estonia & & \\
+    Thailand & Chad & Nicaragua & & & \\
+    France & Guinea & Costa Rica & & & \\
+    United Kingdom & Somalia & Uruguay & & & \\
+    Italy & Burundi & Eq.\ Guinea & & & \\
+    Myanmar & Haiti & & & & \\
+    South Africa & Benin & & & & \\
+    Spain & Azerbaijan & & & & \\
+    Tanzania & Togo & & & & \\
+    Kenya & Libya & & & & \\
+    $\cdots$ & $\cdots$ & & & & \\
+    $|\textrm{Cluster\ } 1 |$ = 87 &
+    $|\textrm{Cluster\ } 2 |$ = 29 &
+    $|\textrm{Cluster\ } 3 |$ = 15 &
+    $|\textrm{Cluster\ } 4 |$ = 11 &
+    $|\textrm{Cluster\ } 5 |$ = 10 &
+    $|\textrm{Cluster\ } 6 |$ = 3
+    \\[0.1cm]
+    \hline
+  \end{tabular}
+  \caption{Clustering the territories from the Unicode Languages network}
+  \label{tab:bipartite_languages_source_clusters}
+\end{table}
+
+For the destination vertices, we present the six clusters obtained by
+Algorithm~\ref{alg:bipartite_clustering}.
+Table~\ref{tab:bipartite_languages_dest_clusters} contains the top 20 languages
+(by number of speakers) in each cluster.
+Cluster~1 is the largest cluster and contains the European languages of
+Spanish, Portuguese and French, as well as dialects of Arabic.
+Cluster~2 is also large and includes English as well as several South Asian
+languages such as Hindi, Bengali, Urdu and Punjabi.
+Cluster~3 consists of many indigenous African languages such as Swahili,
+Kinyarwanda and Somali.
+Cluster~4 captures languages from South-East Asia, mostly spoken in Indonesia
+and Malaysia.
+Cluster~5 identifies several varieties of Chinese and a few other Central and
+East Asian languages such as Kazakh and Uighur. Interestingly Korean is also
+placed in this group and not with Japanese, even though the Koreas are
+clustered together with Japan in
+Table~\ref{tab:bipartite_languages_source_clusters}.
+Cluster~6 captures more South-East Asian languages, this time from Thailand,
+Myanmar and Cambodia. Pattani Malay is in this cluster because despite its name
+it is spoken more in Thailand than in Malaysia.
+
+\vspace*{0.5cm}
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \begin{tabular}{ |c|c|c|c|c|c| }
+    \hline
+    \rule{0pt}{1.2em}
+    Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 &
+    Cluster 5 & Cluster 6 \\[0.1cm]
+    \hline \rule{0pt}{1.2em}
+    Spanish & English & Swahili & Indonesian & Chinese & Thai \\
+    Arabic & Hindi & Kinyarwanda & Javanese & Wu Chinese & N.E.\ Thai \\
+    Portuguese & Bengali & Somali & Malay & Korean & Khmer \\
+    French & Urdu & Luba-Lulua & Sundanese & Xiang Chinese & N.\ Thai \\
+    Russian & Punjabi & Kikuyu & Madurese & Hakka Chinese & S.\ Thai \\
+    Japanese & Telugu & Congo Swahili & Minangkabau & Minnan Chinese & Shan \\
+    German & Marathi & Luyia & Betawi & Gan Chinese & Pattani Malay \\
+    Turkish & Vietnamese & Ganda & Balinese & Kazakh & \\
+    Persian & Tamil & Luo & Buginese & Uighur & \\
+    Italian & Lahnda & Sukuma & Banjar & Sichuan Yi & \\
+    Egyptian Arabic & Filipino & Kalenjin & Achinese & Mongolian & \\
+    Polish & Gujarati & Lingala & Sasak & Zhuang & \\
+    Nigerian Pidgin & Kannada & Nyankole & Makasar & Tibetan & \\
+    Ukrainian & Pushto & Gusii & Lampung Api & & \\
+    Dutch & Malayalam & Kiga & Rejang & & \\
+    Algerian Arabic & Oriya & Soga & & & \\
+    Moroccan Arabic & Burmese & Luba-Katanga & & & \\
+    Hausa & Bhojpuri & Meru & & & \\
+    Azerbaijani & Amharic & Teso & & & \\
+    Uzbek & Oromo & Nyamwezi & & & \\
+    $\cdots$ & $\cdots$ & $\cdots$ & & & \\
+    $|\textrm{Cluster\ } 1 |$ = 120 &
+    $|\textrm{Cluster\ } 2 |$ = 90 &
+    $|\textrm{Cluster\ } 3 |$ = 25 &
+    $|\textrm{Cluster\ } 4 |$ = 15 &
+    $|\textrm{Cluster\ } 5 |$ = 13 &
+    $|\textrm{Cluster\ } 6 |$ = 7
+    \\[0.1cm]
+    \hline
+  \end{tabular}
+  \caption{Clustering the languages from the Unicode Languages network}
+  \label{tab:bipartite_languages_dest_clusters}
+\end{table}
+
+\clearpage{}
+\clearpage{}
+\chapter{Conclusion} \label{chap:conclusions}
+
+With this dissertation we have introduced a graph-theoretic framework for
+analysis of weighted directed networks, and presented new matrix-based formulae
+for MAMs (Chapter~\ref{chap:graphs}).
+We have summarised the method of random-walk spectral clustering and shown how
+it can be used with motif-based techniques (Chapter~\ref{chap:spectral}).
+We have presented results from the application of a motif-based method both to
+synthetic data (DSBMs) and to real data (US Political Blogs network, US
+Migration network). We have demonstrated that this technique outperforms
+traditional spectral clustering methods on several occasions
+(Chapter~\ref{chap:motif}).
+We have introduced a motif-based spectral method for clustering bipartite
+graphs and presented results both from synthetic data (BSBMs) and from real
+data (American Revolution network, Unicode Languages network).
+
+In particular we have shown that motif-based spectral clustering is a valuable
+tool for clustering weighted directed networks, which is scalable and easy to
+implement.
+Superior performance has been demonstrated especially with asymmetric DSBMs in
+Section~\ref{sec:motif_asymm_dsbms}, and with the US Political Blogs network in
+Section~\ref{sec:motif_polblogs}.
+
+\section*{Limitations}
+
+There are limitations to our work.
+While our matrix-based formulae for MAMs are simple to implement and moderately
+scalable, they are computationally unwieldy for large networks (see
+Section~\ref{sec:notes_computation} for details).
+As mentioned in~\cite{benson2016higher}, fast triangle enumeration
+algorithms~\cite{demeyer2013ISMA,wernicke2006efficient,wernicke2006fanmod}
+offer increased performance, at the expense of methodological simplicity.
+Another shortcoming of the matrix-based formulae is that unlike motif detection
+algorithms such as~\cite{wernicke2006fanmod}, they do not extend to motifs on
+four or more vertices.
+
+\section*{Future work}
+
+There is plenty of scope for methodological investigation related to our work.
+Simple extensions could involve an analysis of the differences between
+clustering methods based on functional and structural MAMs respectively.
+One could also experiment with the effects of replacing the random-walk
+Laplacian with the unnormalised Laplacian or symmetric normalised Laplacian
+\cite{von2007tutorial}.
+Similarly one might try replacing Ncut with RatioCut \cite{hagen1992new}. We
+note that although our methods apply to weighted graphs, we have only discussed
+unweighted DSBMs. Therefore it would be interesting to investigate weighted
+DSBMs (perhaps following the exponential family method detailed in
+\cite{aicher2013adapting}) and to use them for evaluation of motif-based
+spectral clustering procedures.
+
+Further experimental work is also desirable. We would like to conduct
+experiments on more real data, and suggest that collaboration networks such
+as~\cite{snap:astro}, and bipartite preference networks such
+as~\cite{icon:movie} could be interesting.
+Comparison with other clustering methods could also be insightful; the
+Hermitian matrices method in~\cite{DirectedClustImbCuts}, the PageRank method
+in~\cite{yin2017local} and \textsc{Tectonic}
+from~\cite{tsourakakis2017scalable} may give suitable benchmarks for
+performance.
+
+\clearpage{}
+%TC:ignore
+
+% enable appendix numbering format and include appendices
+\appendix
+\fancyhead[RO]{\itshape{\nouppercase{Appendix \thechapter : \leftmark}}}
+
+%TC:endignore
+\clearpage{}
+\chapter{Proofs and Examples}\label{chap:appendix_proofs}
+
+\section{Proofs}
+
+\begin{prf}[Proposition~\ref{prop:motif_adj_matrix_formula}, MAM formula]
+  \label{proof:motif_adj_matrix_formula}
+  %
+  Consider $(1)$. We sum over functional instances $\ca{M} \cong \ca{H} \leq
+  \ca{G}$ such that $\{i,j\} \in \ca{A(H)}$.
+  This is equivalent to summing over $\{k_2, \ldots, k_{m-1}\} \subseteq
+  \ca{V}$ and $\sigma \in S_\ca{M,A}^\sim$, such that $k_u$ are all distinct
+  and
+  %
+  $$ (u,v) \in \ca{E_M} \implies (k_{\sigma u}, k_{\sigma v}) \in \ca{E}\,.
+  \qquad (\dagger) $$
+  %
+  This is because the vertex set $\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}$
+  indicates which vertices are present in the instance $\ca{H}$, and $\sigma$
+  describes the mapping from $\ca{V_M}$ onto those vertices: $u \mapsto
+  k_{\sigma u}$. We take $\sigma \in S_\ca{M,A}^\sim$ to ensure that $\{i,j\}
+  \in \ca{A(H)}$ (since $i=k_1, \ j=k_m$), and that instances are counted
+  exactly once.
+  The condition $(\dagger)$ is to check that $\ca{H}$ is a functional instance
+  of $\ca{M}$ in $\ca{G}$. Hence
+  %
+  \begin{align*}
+    M^\mathrm{func}_{i j} &= \frac{1}{|\ca{E_M}|}
+    \sum_{\ca{M} \cong \ca{H} \leq
+    \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e \in
+    \ca{E_H}} W(e) \\
+    %
+    &=  \frac{1}{|\ca{E_M}|} \sum_{\{ k_2, \ldots, k_{m-1} \}} \sum_{\sigma \in
+    S_\ca{M,A}^\sim} \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\dagger)
+    \big\} \sum_{e \in \ca{E_H}} W(e)\,.
+  \end{align*}
+  %
+  For the first term, by conditioning on the types of edge in $\ca{E_M}$:
+  \begin{align*}
+    %
+    \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\dagger) \big\}
+    &= \prod_{\ca{E}_\ca{M}^0} \bb{I} \{ k_{\sigma u} \neq k_{\sigma v} \} \\
+    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{s}} \bb{I} \{ (k_{\sigma u},
+    k_{\sigma v}) \in \ca{E} \} \\
+    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{d}} \bb{I} \{(k_{\sigma u},
+      k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \in
+    \ca{E}\} \\
+    %
+    &= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{n})_{k_{\sigma u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma v}}
+    \\
+    %
+    &= J^\mathrm{func}_{\mathbf{k},\sigma}\,.
+    %
+  \end{align*}
+  %
+  Assuming $\big\{ k_u \textrm{ all distinct}, \, (\dagger) \big\}$, the second
+  term is
+  %
+  \begin{align*}
+    %
+    \sum_{e \in \ca{E_H}} W(e)
+    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} W((k_{\sigma u},k_{\sigma v}))
+    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} \big( W((k_{\sigma u},k_{\sigma v})) +
+    W((k_{\sigma v},k_{\sigma u})) \big) \\
+    %
+    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma v}}
+    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
+    v}} \\
+    %
+    &= G^\mathrm{func}_{\mathbf{k},\sigma}
+  \end{align*}
+  %
+  as required. For $(2)$, we simply change $(\dagger)$ to $(\ddagger)$ to check
+  that an instance is a \emph{structural} instance:
+  %
+  $$ (u,v) \in \ca{E_M} \iff (k_{\sigma u}, k_{\sigma v}) \in \ca{E} \qquad
+  (\ddagger) $$
+  %
+  Now for the first term:
+  %
+  \begin{align*}
+    %
+    \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\ddagger) \big\}
+    &= \prod_{\ca{E}_\ca{M}^0} \bb{I} \{(k_{\sigma u}, k_{\sigma v}) \notin
+    \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \notin \ca{E}\} \\
+    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{s}} \bb{I} \{(k_{\sigma u},
+      k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u})
+      \notin
+    \ca{E}\} \\
+    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{d}} \bb{I} \{(k_{\sigma u},
+      k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \in
+    \ca{E}\} \\
+    %
+    &= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{0})_{k_{\sigma u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{s}} (J_\mathrm{s})_{k_{\sigma u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma v}}
+    \\
+    %
+    &= J^\mathrm{struc}_{\mathbf{k},\sigma}\,.
+    %
+  \end{align*}
+  %
+  Assuming $\big\{ k_u \textrm{ all distinct}, \, (\ddagger) \big\}$, the
+  second term is
+  %
+  \begin{align*}
+    %
+    \sum_{e \in \ca{E_H}} W(e)
+    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} W((k_{\sigma u},k_{\sigma v}))
+    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} \big( W((k_{\sigma u},k_{\sigma v})) +
+    W((k_{\sigma v},k_{\sigma u})) \big) \\
+    %
+    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} (G_\mathrm{s})_{k_{\sigma u},k_{\sigma
+    v}}
+    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
+    v}} \\
+    %
+    &= G^\mathrm{struc}_{\mathbf{k},\sigma}\,.
+  \end{align*}
+
+  \hfill $\square$
+\end{prf}
+
+\pagebreak
+
+\begin{prf}[Proposition~\ref{prop:motif_adj_matrix_computation},
+  Complexity of MAM formula]
+  \label{proof:motif_adj_matrix_computation}
+  Suppose ${m \leq 3}$ and consider $M^\mathrm{func}$. The adjacency and
+  indicator matrices of $\ca{G}$ are
+  %
+  \begin{equation*}
+    \begin{aligned}[c]
+      &(1) \quad J = \bb{I} \{ G>0 \}\,, \\
+      &(2) \quad J_0 = \bb{I} \{ G + G^\top = 0 \} \circ J_\mathrm{n}\,, \\
+      &(3) \quad J_\mathrm{s} = J - J_\mathrm{d}\,, \\
+      &(4) \quad G_\mathrm{d} = (G + G^\top) \circ J_\mathrm{d} \,,
+    \end{aligned}
+    \hspace*{2cm}
+    \begin{aligned}[c]
+      &(5) \quad J_\mathrm{n} = \bb{I} \{I_{n \times n} = 0 \}\,, \\
+      &(6) \quad J_\mathrm{d} = J \circ J^\top\,, \\
+      &(7) \quad G_\mathrm{s} = G \circ J_\mathrm{s}\,, \\
+      &
+    \end{aligned}
+  \end{equation*}
+  %
+  and are computed using four additions and four element-wise multiplications.
+  $J^\mathrm{func}_{\mathbf{k},\sigma}$ is a product of at most three factors,
+  and $G^\mathrm{func}_{\mathbf{k},\sigma}$ contains at most three summands, so
+  %
+  $$ \sum_{k_2 \in \ca{V}} J^\mathrm{func}_{\mathbf{k},\sigma} \
+  G^\mathrm{func}_{\mathbf{k},\sigma} $$
+  %
+  is expressible as a sum of at most three matrices, each of which is
+  constructed with at most one matrix multiplication (where $\{k_{\sigma
+  r},k_{\sigma s}\} \neq \{i,j\}$) and one entry-wise multiplication (where
+  $\{k_{\sigma r},k_{\sigma s}\} = \{i,j\}$). This is repeated for each $\sigma
+  \in S_\ca{M,A}^\sim$ (at most six times) and the results are summed.
+  Calculations are identical for $M^\mathrm{struc}$.
+
+  \hfill $\square$
+\end{prf}
+
+\begin{prf}[Proposition~\ref{prop:coll_expa_formulae},
+  Colliders and expanders in bipartite graphs]
+  \label{proof:coll_expa_formulae}
+  %
+  Consider (1) and the collider motif $\ca{M}_\mathrm{coll}$. Since $\ca{G}$ is
+  bipartite, $M_\mathrm{coll}^\mathrm{func} = M_\mathrm{coll}^\mathrm{struc} =
+  \vcentcolon M_\mathrm{coll}$, and by Table~\ref{tab:motif_adj_mat_table},
+  $M_\mathrm{coll} = \frac{1}{2} J_\mathrm{n} \circ (J G^\top + G J^\top)$.
+  Hence
+  %
+  \begin{align*}
+    (M_\mathrm{coll})_{i j} &= \frac{1}{2} (J_\mathrm{n})_{i j} \ (J G^\top + G
+    J^\top)_{i j} \\
+    &= \bb{I}\{i \neq j\} \sum_{k \in \ca{V}} \ \frac{1}{2} \Big(J_{i k} G_{j k}
+    + G_{i k} J_{j k} \Big) \\
+    &= \bb{I}\{i \neq j\} \sum_{k \in \ca{V}} \ \frac{1}{2} \,\bb{I} \, \Big\{
+    (i,k),(j,k) \in \ca{E} \Big\} \Big[W((i,k)) + W((j,k))\Big] \\
+    &= \bb{I} \{i \neq j\} \hspace*{-0.4cm} \sum_{\substack{k \in \ca{D} \\
+    (i,k), (j,k) \in \ca{E}}} \hspace*{-0.2cm} \frac{1}{2} \Big[ W((i,k)) +
+    W((j,k)) \Big]\,.
+  \end{align*}
+  %
+  Similarly for the expander motif, $M_\mathrm{expa} = \frac{1}{2} J_\mathrm{n}
+  \circ (J^\top G + G^\top J)$ so
+  %
+  \begin{align*}
+    (M_\mathrm{expa})_{i j} &= \frac{1}{2} (J_\mathrm{n})_{i j} \ (J^\top G +
+    G^\top J)_{i j} \\
+    &= \bb{I} \{i \neq j\} \hspace*{-0.4cm} \sum_{\substack{k \in \ca{S} \\
+    (k,i), (k,j) \in \ca{E}}} \hspace*{-0.2cm} \frac{1}{2} \Big[ W((k,i)) +
+    W((k,j)) \Big]\,.
+  \end{align*}
+  %
+  \hfill $\square$
+\end{prf}
+
+\section{Examples}
+
+\begin{example}[Functional and structural instances]
+  \label{ex:instances}
+  Let $\ca{G}=(\ca{V,E})$ be the graph with $\ca{V} = \{ 1,2,3,4 \}$ and
+  $\ca{E} = \{ (1,2),(1,3),(1,4),(2,3),(3,4),(4,3) \}$. Let $(\ca{M,A})$ be the
+  anchored motif with $\ca{V_M} = \{1,2,3\}$, $\ca{E_M} =
+  \{(1,2),(1,3),(2,3)\}$ and $\ca{A} = \{1,3\}$ as defined in Figure
+  \ref{fig:instance_example_1}.
+  %
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7,draft=false]{%
+    ../tikz/instance_example_1/instance_example_1.pdf}
+    \caption{The specified graph $\ca{G}$ and anchored motif $\ca{M}$}
+    \label{fig:instance_example_1}
+  \end{figure}
+  %
+  There are three functional instances of $\ca{M}$ in $\ca{G}$, shown in
+  Figure~\ref{fig:instance_example_2}. However there is just one structural
+  instance of $\ca{M}$ in $\ca{G}$, given by $\ca{H}_1$. This is because the
+  double edge $3 \leftrightarrow 4$ in $\ca{G}$ prevents the subgraphs on
+  $\{1,3,4\}$ from being induced subgraphs.
+  %
+  \begin{align*}
+    \ca{H}_1 &: \quad \ca{V}_1 = \{ 1,2,3 \} ; \quad \ca{E}_1 = \{ (1,2) ,
+    (2,3) , (1,3) \} ; \quad \ca{A(H}_1) =  \big\{\{1,3\}\big\}\,, \\
+    \ca{H}_2 &: \quad \ca{V}_2 = \{ 1,3,4 \} ; \quad \ca{E}_2 = \{ (1,3) ,
+    (1,4) , (3,4) \} ; \quad \ca{A(H}_2) =  \big\{\{1,4\}\big\}\,, \\
+    \ca{H}_3 &: \quad \ca{V}_3 = \{ 1,3,4 \} ; \quad \ca{E}_3 = \{ (1,3) ,
+    (1,4) , (4,3) \} ; \quad \ca{A(H}_3) =  \big\{\{1,3\}\big\}\,.
+  \end{align*}
+  %
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7,draft=false]{%
+    ../tikz/instance_example_2/instance_example_2.pdf}
+    \caption{Functional instances $\ca{H}_1,\ca{H}_2$ and $\ca{H}_3$}
+    \label{fig:instance_example_2}
+  \end{figure}
+
+\end{example}
+
+\begin{example}[Motif adjacency matrices]
+  \label{ex:motif_adj_matrices}
+  Let $\ca{G}$ and $\ca{(M,A)}$ be as in Example~\ref{ex:instances}, and
+  suppose $\ca{G}$ has weight map $W((i,j)) \vcentcolon = i + j$. Then using
+  Definition~\ref{def:motif_adj_matrices} directly, the functional and
+  structural MAMs of $\ca{(M,A)}$ in $\ca{G}$ are respectively
+
+  \vspace*{0.2cm}
+  $$ %
+  M^\mathrm{func} =
+  \begin{pmatrix}
+    0  & 0  & 28 & 16 \\
+    0  & 0  & 0  & 0  \\
+    28 & 0  & 0  & 0  \\
+    16 & 0  & 0  & 0
+  \end{pmatrix} \,,
+  \qquad
+  M^\mathrm{struc} =
+  \begin{pmatrix}
+    0  & 0  & 12 & 0  \\
+    0  & 0  & 0  & 0  \\
+    12 & 0  & 0  & 0  \\
+    0  & 0  & 0  & 0
+  \end{pmatrix}\,.
+  $$
+\end{example}
+
+\pagebreak
+
+\begin{example}[Calculating an explicit formula for an MAM]
+  \label{ex:motif_adj_calc}
+  Consider the functional MAM of the simple motif $\ca{M}_6$
+  (Figure~\ref{fig:M6}).
+  %
+  \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7,draft=false]{../tikz/M6/M6.pdf}
+    \caption{The motif $\ca{M}_6$}
+    \label{fig:M6}
+  \end{figure}
+  %
+  We use Equation (1) in Proposition~\ref{prop:motif_adj_matrix_formula}.
+  Firstly, $m = |\ca{V_M}| = 3$ and $|\ca{E_M}| = 4$. The automorphism group of
+  $\ca{M}_6$ has order 2, corresponding to swapping vertices 1 and 3. Hence
+  $|S_\ca{M,A}^\sim| = |S_m| / 2 = 6/2 = 3$, and suitable representatives from
+  $S_\ca{M,A}^\sim$ are
+
+  $$ S_\ca{M,A}^\sim = \left\{
+    %
+    \sigma_1 =
+    \begin{pmatrix}
+      1 & 2 & 3 \\
+      1 & 2 & 3
+    \end{pmatrix},
+    %
+    \sigma_2 =
+    \begin{pmatrix}
+      1 & 2 & 3 \\
+      2 & 1 & 3
+    \end{pmatrix},
+    %
+    \sigma_3 =
+    \begin{pmatrix}
+      1 & 2 & 3 \\
+      1 & 3 & 2
+    \end{pmatrix}
+  \right\}\,. \vspace*{0.2cm}$$
+  %
+  So by Proposition~\ref{prop:motif_adj_matrix_formula}, with $i=k_1$ and
+  $j=k_3$, and writing $k$ for $k_2$:
+
+  $$
+  M^\mathrm{func}_{i j} = \frac{1}{4} \sum_{\sigma \in S_\ca{M,A}^\sim} \
+  \sum_{k \in \ca{V}} J^\mathrm{func}_{\mathbf{k},\sigma} \
+  G^\mathrm{func}_{\mathbf{k},\sigma}
+  $$
+  %
+  where since there are no missing edges in $\ca{M}_6$:
+  %
+  \begin{align*}
+    %
+    J^\mathrm{func}_{\mathbf{k},\sigma}
+    &= \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
+    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
+    v}}\,, \\
+    %
+    G^\mathrm{func}_{\mathbf{k},\sigma}
+    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma v}}
+    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
+    v}}\,.
+    %
+  \end{align*}
+  %
+  Writing out the sum over $\sigma$:
+  %
+  \begingroup
+  \allowdisplaybreaks
+  \begin{align*}
+    M^\mathrm{func}_{i j}
+    &= \frac{1}{4} \sum_{k=1}^n J^\mathrm{func}_{\mathbf{k},\sigma_1} \
+    G^\mathrm{func}_{\mathbf{k},\sigma_1} + \frac{1}{4} \sum_{k=1}^n
+    J^\mathrm{func}_{\mathbf{k},\sigma_2} \
+    G^\mathrm{func}_{\mathbf{k},\sigma_2} + \frac{1}{4} \sum_{k=1}^n
+    J^\mathrm{func}_{\mathbf{k},\sigma_3} \
+    G^\mathrm{func}_{\mathbf{k},\sigma_3} \\
+    %
+    &=         \frac{1}{4} \sum_{k=1}^n J_{j i} J_{j k} (J_\mathrm{d})_{i k}
+    \big(G_{j i} + G_{j k} + (G_\mathrm{d})_{i k}\big) \\
+    & \qquad + \frac{1}{4} \sum_{k=1}^n J_{i j} J_{i k} (J_\mathrm{d})_{j k}
+    \big(G_{i j} + G_{i k} + (G_\mathrm{d})_{j k}\big) \\
+    & \qquad + \frac{1}{4} \sum_{k=1}^n J_{k i} J_{k j} (J_\mathrm{d})_{i j}
+    \big(G_{k i} + G_{k j} + (G_\mathrm{d})_{i j}\big) \\
+    %
+    & \\
+    & \\
+    & \\
+    &=         \frac{1}{4} J^\top_{i j} \sum_{k=1}^n (J_\mathrm{d})_{i k}
+    J^\top_{k j} \big(G^\top_{i j} + (G_\mathrm{d})_{i k} + G^\top_{k j}\big) \\
+    & \qquad + \frac{1}{4} J_{i j} \sum_{k=1}^n J_{i k}
+    (J_\mathrm{d})_{k j} \big(G_{i j} + G_{i k} + (G_\mathrm{d})_{k j}\big) \\
+    & \qquad + \frac{1}{4} (J_\mathrm{d})_{i j}
+    \sum_{k=1}^n J^\top_{i k} J_{k j}
+    \big((G_\mathrm{d})_{i j} + G^\top_{i k} + G_{k j}\big) \,,
+  \end{align*}
+  \endgroup
+  %
+  and writing this as a sum of entry-wise and matrix products:
+  %
+  \begin{align*}
+    M^\textrm{func} &= \frac{1}{4} \Big[ J^\top \circ (J_\mathrm{d} G^\top) +
+      J^\top \circ (G_\mathrm{d} J^\top) + G^\top \circ (J_\mathrm{d} J^\top)
+    \Big] \\
+    & \qquad + \frac{1}{4} \Big[ J \circ (J G_\mathrm{d}) + J \circ (G
+    J_\mathrm{d}) + G \circ (J J_\mathrm{d}) \Big] \\
+    & \qquad + \frac{1}{4} \Big[ J_\mathrm{d} \circ (J^\top G) + J_\mathrm{d}
+    \circ (G^\top J) + G_\mathrm{d} \circ (J^\top J) \Big]
+  \end{align*}
+  %
+  where $A \circ B$ is an entry-wise product and $AB$ is a matrix product.
+  Finally, setting
+  $$C = J \circ (J G_\mathrm{d}) + J \circ (G J_\mathrm{d}) + G \circ (J
+  J_\mathrm{d}) + J_\mathrm{d} \circ (J^\top G)\,, $$
+  and
+  $$ C' = G_\mathrm{d} \circ (J^\top J)\,, $$
+  then we have that
+  $$ M^\mathrm{func} = \frac{1}{4} \big(C + C^\top + C' \big)\,. $$
+  as in Table~\ref{tab:motif_adj_mat_table}, achieved with just five matrix
+  multiplications, nine entry-wise multiplications and nine matrix additions
+  (including the four entry-wise multiplications and four additions needed to
+  construct the adjacency and indicator matrices).
+\end{example}
+\clearpage{}
+\clearpage{}
+\chapter{Motif Adjacency Matrix Formulae}
+\label{chap:appendix_matrices}
+
+We give explicit matrix-based formulae for functional motif adjacency matrices
+$M^\mathrm{func}$ for all simple motifs $\ca{M}$ on at most three vertices,
+along with the anchored motifs $\ca{M}_\mathrm{coll}$ and
+$\ca{M}_\mathrm{expa}$. For structural motif adjacency matrices, simply replace
+$J_\mathrm{n}$, $J$ and $G$ with $J_0$, $J_\mathrm{s}$ and $G_\mathrm{s}$
+respectively. Entry-wise products are denoted by $\circ$.
+
+\vspace*{0.2cm}
+\begin{table}[H]
+
+  \centering
+  \renewcommand{\arraystretch}{1.8}
+  \tiny
+
+  \begin{tabular}{ |c|c|c|c| }
+
+    \hline
+
+    Motif & $C$ & $C'$ & $M^\mathrm{func}$ \\
+
+    \hline
+
+    $\ca{M}_\mathrm{s}$ & & & $G + G^\top$ \\
+
+    \hline
+
+    $\ca{M}_\mathrm{d}$ & & & $\frac{1}{2} G_\mathrm{d}$ \\
+
+    \hline
+
+    $\ca{M}_1$ & $J^\top \circ (J G) + J^\top \circ (G J) + G^\top \circ (J J)$
+    & & $\frac{1}{3} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_2$ & \rule{0pt}{2.7em}$\displaystyle
+    \begin{aligned}
+      & J^\top \circ (J_\mathrm{d} G) + J^\top \circ (G_\mathrm{d} J) + G^\top
+      \circ (J_\mathrm{d} J) \\
+      & + J^\top \circ (J G_\mathrm{d}) + J^\top \circ (G J_\mathrm{d}) +
+      G^\top \circ (J J_\mathrm{d}) \\
+      & + J_\mathrm{d} \circ (J G) + J_\mathrm{d} \circ (G J) + G_\mathrm{d}
+      \circ (J J)
+    \end{aligned}
+    $\rule[-2em]{0pt}{1em} & & $\frac{1}{4} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_3$ & \rule{0pt}{2.7em}$\displaystyle
+    \begin{aligned}
+      & J \circ (J_\mathrm{d} G_\mathrm{d}) + J \circ (G_\mathrm{d}
+      J_\mathrm{d}) + G \circ (J_\mathrm{d} J_\mathrm{d}) \\
+      & + J_\mathrm{d} \circ (J_\mathrm{d} G) + J_\mathrm{d} \circ
+      (G_\mathrm{d} J) + G_\mathrm{d} \circ (J_\mathrm{d} J) \\
+      & + J_\mathrm{d} \circ (J G_\mathrm{d}) + J_\mathrm{d} \circ (G
+      J_\mathrm{d}) + G_\mathrm{d} \circ (J J_\mathrm{d})
+    \end{aligned}
+    $\rule[-2em]{0pt}{1em} & & $\frac{1}{5} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_4$ & $ J_\mathrm{d} \circ (J_\mathrm{d} G_\mathrm{d}) +
+    J_\mathrm{d} \circ (G_\mathrm{d} J_\mathrm{d}) + G_\mathrm{d} \circ
+    (J_\mathrm{d} J_\mathrm{d}) $ & & $ \frac{1}{6} C$ \\
+
+    \hline
+
+    $\ca{M}_5$ & \rule{0pt}{2.7em}$\displaystyle
+    \begin{aligned}
+      & J \circ (J G) + J \circ (G J) + G \circ (J J) \\
+      & + J \circ (J G^\top) + J \circ (G J^\top) + G \circ (J J^\top) \\
+      & + J \circ (J^\top G) + J \circ (G^\top J) + G \circ (J^\top J)
+    \end{aligned}
+    $\rule[-2em]{0pt}{1em} & & $\frac{1}{3} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_6$ & $J \circ (J G_\mathrm{d}) + J \circ (G J_\mathrm{d}) + G \circ
+    (J J_\mathrm{d}) + J_\mathrm{d} \circ (J^\top G)$ & $G_\mathrm{d} \circ
+    (J^\top J)$ & $\frac{1}{4} \big(C + C^\top + C' \big)$ \\
+
+    \hline
+
+    $\ca{M}_7$ & $J \circ (J_\mathrm{d} G) + J \circ (G_\mathrm{d} J) + G \circ
+    (J_\mathrm{d} J)$ & $J_\mathrm{d} \circ (J G^\top) + J_\mathrm{d} \circ (G
+    J^\top) + G_\mathrm{d} \circ (J J^\top)$ & $ \frac{1}{4} \big(C + C^\top +
+    C' \big)$ \\
+
+    \hline
+
+    $\ca{M}_8$ & $J \circ (G J_\mathrm{n}) + G \circ (J J_\mathrm{n})$ &
+    $J_\mathrm{n} \circ (J^\top G) + J_\mathrm{n} \circ (G^\top J)$ &
+    $\frac{1}{2} \big(C + C^\top + C' \big)$ \\
+
+    \hline
+
+    $\ca{M}_9$ & \rule{0pt}{1.9em}$\displaystyle
+    \begin{aligned}
+      & J \circ (J_\mathrm{n} G^\top) + G \circ (J_\mathrm{n} J^\top) +
+      J_\mathrm{n} \circ (J G) \\
+      & + J_\mathrm{n} \circ (G J) + J \circ (G^\top J_\mathrm{n}) + G \circ
+      (J^\top J_\mathrm{n})
+    \end{aligned}
+    $\rule[-1.3em]{0pt}{1em} & & $\frac{1}{2} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_{10}$ & $J \circ (J_\mathrm{n} G) + G \circ (J_\mathrm{n} J)$ &
+    $J_\mathrm{n} \circ (J G^\top) + J_\mathrm{n} \circ (G J^\top)$ &
+    $\frac{1}{2} \big(C + C^\top + C' \big)$ \\
+
+    \hline
+
+    $\ca{M}_{11}$ & \rule{0pt}{1.9em}$\displaystyle
+    \begin{aligned}
+      & J_\mathrm{d} \circ (G J_\mathrm{n}) + G_\mathrm{d} \circ (J
+      J_\mathrm{n}) + J_\mathrm{n} \circ (J_\mathrm{d} G) \\
+      &  + J_\mathrm{n} \circ (G_\mathrm{d} J) + J \circ (G_\mathrm{d}
+      J_\mathrm{n}) + G \circ (J_\mathrm{d} J_\mathrm{n})
+    \end{aligned}
+    $\rule[-1.3em]{0pt}{1em} & & $\frac{1}{3} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_{12}$ & \rule{0pt}{1.9em}$\displaystyle
+    \begin{aligned}
+      & J_\mathrm{d} \circ (J_\mathrm{n} G) + G_\mathrm{d} \circ (J_\mathrm{n}
+      J) + J_\mathrm{n} \circ (J G_\mathrm{d}) \\
+      & + J_\mathrm{n} \circ (G J_\mathrm{d}) + J \circ (J_\mathrm{n}
+      G_\mathrm{d}) + G \circ (J_\mathrm{n} J_\mathrm{d})
+    \end{aligned}
+    $\rule[-1.3em]{0pt}{1em} & & $ \frac{1}{3} \big(C + C^\top\big)$ \\
+
+    \hline
+
+    $\ca{M}_{13}$ & $J_\mathrm{d} \circ (G_\mathrm{d} J_\mathrm{n}) +
+    G_\mathrm{d} \circ (J_\mathrm{d} J_\mathrm{n}) + J_\mathrm{n} \circ
+    (J_\mathrm{d} G_\mathrm{d})$ & & $\frac{1}{4} \big(C + C^\top \big)$ \\
+
+    \hline
+
+    $\ca{M}_\mathrm{coll}$ & $J_\mathrm{n} \circ (J G^\top)$ & & $\frac{1}{2}
+    \big( C + C^\top \big)$ \\
+
+    \hline
+
+    $\ca{M}_\mathrm{expa}$ & $J_\mathrm{n} \circ (J^\top G)$ & & $\frac{1}{2}
+    \big( C + C^\top \big)$ \\
+
+    \hline
+
+  \end{tabular}
+  \caption{Functional motif adjacency matrix formulae}
+  \label{tab:motif_adj_mat_table}
+\end{table}
+\clearpage{}
+\clearpage{}
+\chapter{Further Notes}
+
+\section{Computation} \label{sec:notes_computation}
+
+\subsection{Hardware and software} \label{sec:notes_hardware}
+
+The hardware used for computation was an \emph{Intel Core i7-4790} CPU at
+3.60\,GHz, with 32\,GB of RAM. The software used was R 3.5.1
+\cite{r_rsoftware}, along with several R packages:
+%
+%
+\begin{itemize}
+  \item \textbf{igraph} \cite{r_igraph} for plotting networks
+  \item \textbf{LICORS} \cite{r_LICORS} for an implementation of $k$-means++
+  \item \textbf{mclust} \cite{r_mclust} for an implementation of ARI
+  \item
+    \textbf{rnaturalearth} \cite{r_rnaturalearth} for world territory boundary
+    data
+  \item \textbf{RSpectra} \cite{r_RSpectra} for eigendecomposition of
+    sparse matrices
+  \item \textbf{USAboundaries} \cite{r_USAboundaries} for US
+    county and state boundary data
+\end{itemize}
+
+\subsection{Timings for MAM computations} \label{sec:notes_timing}
+
+We record timings (in seconds) for the MAM formulae given in
+Table~\ref{tab:motif_adj_mat_table}. We test on DSBMs
+(Section~\ref{sec:motif_dsbms}) with $k=1$, and vary the graph size $n$ and
+sparsity parameter $p$.
+
+\vspace*{0.3cm}
+\begin{table}[H]
+  \centering \renewcommand{\arraystretch}{1.5}
+  \setlength\tabcolsep{0.2em} \scriptsize
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline
+    \cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{s}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{d}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_1$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_2$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_3$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_4$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_5$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_6$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_7$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_8$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_9$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{10}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{11}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{12}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{13}$ \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.0001 & 0.013 & 0.012 & 0.017 & 0.029 & 0.034 & 0.015 & 0.028 &
+    0.022 & 0.022 & 0.019 & 0.030 & 0.019 & 0.042 & 0.021 & 0.016 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.001 & 0.013 & 0.011 & 0.016 & 0.035 & 0.027 & 0.017 & 0.028 &0.024 &
+    0.023 & 0.026 & 0.027 & 0.018 & 0.021 & 0.022 & 0.016 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.01 & 0.013 & 0.012 & 0.024 & 0.028 & 0.028 & 0.016 & 0.028 & 0.022 &
+    0.032 & 0.021 & 0.026 & 0.020 & 0.023 & 0.023 & 0.017 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.1 & 0.014 & 0.019 & 0.019 & 0.031 & 0.029 & 0.019 & 0.033 & 0.025 &
+    0.032 & 0.023 & 0.028 & 0.023 & 0.026 & 0.025 & 0.019
+    \\ \hline
+  \end{tabular}
+  \caption{Timings for MAM computation with $n=100$}%
+  \label{tab:timing_n_100}%
+\end{table}
+
+\begin{table}[H]
+  \centering \renewcommand{\arraystretch}{1.5}
+  \setlength\tabcolsep{0.2em} \scriptsize
+  \begin{tabular}{
+    |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } \hline
+    \cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{s}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{d}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_1$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_2$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_3$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_4$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_5$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_6$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_7$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_8$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_9$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{10}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{11}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{12}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{13}$ \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.0001 & 0.13 & 0.14 & 0.14 & 0.32 & 0.14 & 0.13 & 0.14 & 0.31 &
+    0.13 & 0.21 & 0.22 & 0.21 & 0.20 & 0.34 & 0.16 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.001 & 0.30 & 0.13 & 0.15 & 0.16 & 0.16 & 0.14 & 0.16 & 0.32 & 0.14 &
+    0.48 & 0.37 & 0.29 & 0.31 & 0.29 & 0.17 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.01 & 0.11 & 0.14 & 0.17 & 0.19 & 0.14 & 0.13 & 0.21 & 0.18 & 0.18 &
+    0.64 & 0.73 & 0.89 & 0.46 & 0.56 & 0.18 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.1 & 0.23 & 0.22 & 0.60 & 1.1 & 0.57 & 0.24 & 1.4 & 0.86 & 0.69 &
+    1.5 & 2.3 & 1.6 & 1.6 & 1.6 & 0.67
+    \\ \hline
+  \end{tabular}
+  \caption{Timings
+  for MAM computation with $n=1000$} \label{tab:timing_n_1000}
+\end{table}
+
+\begin{table}[H] \centering \renewcommand{\arraystretch}{1.5}
+  \setlength\tabcolsep{0.2em} \scriptsize
+  \begin{tabular}{
+    |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } \hline
+    \cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{s}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{d}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_1$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_2$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_3$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_4$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_5$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_6$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_7$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_8$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_9$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{10}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{11}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{12}$ &
+    \cellcolor[HTML]{E9E9E9} $\ca{M}_{13}$ \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.0001 & 11 & 12 & 12 & 12 & 12 & 12 & 12 & 12 & 12 &
+    41 & 55 & 37 & 38 & 34 & 15 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.001 & 13 & 12 & 13 & 13 & 12 & 12 & 13 & 12 &
+    12 & 61 & 89 & 54 & 56 & 48 & 15 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.01 & 13 & 13 & 36 & 36 & 14 & 13 & 82 & 36 & 36 &
+    150 & 230 & 130 & 130 & 99 & 36 \\
+    \hline \cellcolor[HTML]{E9E9E9}
+    0.1 & 33 & 31 & 170 & 260 & 160 & 53 & 410 &
+    210 & 210 & 700 & 1100 & 520 & 760 & 580 & 150
+    \\ \hline
+  \end{tabular}
+  \caption{Timings
+  for MAM computation with $n=10 \, 000$} \label{tab:timing_n_10000}
+\end{table}
+
+\section{Data preprocessing} \label{sec:notes_preprocessing}
+
+All real networks were preprocessed by restriction to their largest connected
+component. The Unicode Languages network in
+Section~\ref{sec:bipartite_languages} was also preprocessed to remove
+territories with under one million inhabitants and languages with under one
+million speakers. Vertex and edge counts of all networks are stated
+\emph{after} this preprocessing.
+
+\section{US map} \label{sec:notes_us_map}
+%
+\vspace*{-0.8cm}
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.6,draft=false]{%
+  ../../results/us_migration/us_migration_map_state_names.pdf}
+  \vspace*{-0.5cm} \caption{US map with state boundaries and state
+  abbreviations} \label{fig:notes_us_map}
+\end{figure}
+
+\section{Word count}
+
+The word count of this dissertation is 6230
+\unskip, obtained
+using \TeX \hspace*{-0.15cm} count by running
+%
+\begin{center}
+  \texttt{texcount -relaxed -inc -0 -sum=1,1,1,0,0,0,0\,}.
+\end{center}
+%
+%The final dissertation should be no longer than 7,500 words, this usually
+%equates to 25--30 pages. The word count may exclude any table of contents,
+%all mathematical equations and symbols, diagrams, tables, bibliography and
+%the texts of computer programs. However any preface, footnotes, and
+%appendices must be included
+
+\clearpage{}
+%TC:ignore
+
+% add the bibliography to the contents page
+\pagestyle{empty}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+% change bibliography name to References
+\renewcommand{\bibname}{References}
+\pagestyle{fancy}
+\fancyhead[RO]{\itshape{\nouppercase{References}}}
+\bibliography{refs}
+\bibliographystyle{abbrv}
+
+%TC:endignore
+\end{document}
