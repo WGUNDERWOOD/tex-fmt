@@ -196,58 +196,7 @@ fn format_file(file: String, debug: bool) -> String {
 }
 
 #[cfg(test)]
-mod tests {
-
-    use crate::format_file;
-    use crate::fs;
-    use indoc::indoc;
-
-    fn test_file(filename: &str) {
-        let in_filename = format!("tests/{}_in.tex", filename);
-        let out_filename = format!("tests/{}_out.tex", filename);
-        //dbg!(&in_filename);
-        let in_file = fs::read_to_string(&in_filename).expect("");
-        //println!("{}", &in_file.to_string());
-        let out_file = fs::read_to_string(&out_filename).expect("");
-        let fmt_file = format_file(in_file, false);
-        assert!(
-            fmt_file == out_file,
-            indoc! {
-                "\n
-                Test failed: {} -> {} \n
-                -----------------------
-                Output
-                -----------------------
-                {}
-                ----------------------- \n
-
-                -----------------------
-                Desired
-                -----------------------
-                {}
-                ----------------------- \n
-                "
-            },
-            &in_filename,
-            &out_filename,
-            &fmt_file,
-            &out_file
-        );
-    }
-
-    #[test]
-    fn test() {
-        let filenames: Vec<String> = fs::read_dir("tests/")
-            .unwrap()
-            .map(|f| f.unwrap().file_name().into_string().unwrap())
-            .filter(|f| f.ends_with("_in.tex"))
-            .map(|f| f.strip_suffix("_in.tex").unwrap().to_string())
-            .collect();
-        for filename in filenames {
-            test_file(&filename);
-        }
-    }
-}
+mod tests;
 
 fn main() {
     // get arguments
