@@ -11,6 +11,46 @@ A [LaTeX](https://www.latex-project.org/)
 formatter written in
 [Rust](https://www.rust-lang.org/)
 
+## Example
+
+Before formatting `example.tex`:
+
+```
+\documentclass{article}
+
+\begin{document}
+
+\begin{itemize}
+\item Lists with items
+over multiple lines
+\end{itemize}
+
+\begin{align}
+E = m c^2
+\end{align}
+
+\end{document}
+```
+
+After running `tex-fmt example.tex`
+
+```
+\documentclass{article}
+
+\begin{document}
+
+\begin{itemize}
+  \item Lists with items
+    over multiple lines
+\end{itemize}
+
+\begin{align}
+  E = m c^2
+\end{align}
+
+\end{document}
+```
+
 ## Installation
 
 ### Nix
@@ -31,21 +71,20 @@ LaTeX source code files with the following properties:
 
 - Handling of the common LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
 - Very good run-time performance
-- Basic configuration options
-- Sensible defaults
+- No configuration necessary
 
 It does *not* currently aim to provide the following:
 
 - Semantic parsing of LaTeX code
 - Linting or correction of syntax errors
-- Compliance with any existing formatting guidelines
+- Customization via configuration files
+- Compliance with existing formatting guidelines
 - Editor integration
 - Spell checking
 
 ## Performance
 
-Running `perf.sh` gives the following results for formatting all of the
-test cases in the `tests/` directory.
+Run `perf.sh` to format all test cases in the `tests/` directory.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
@@ -55,7 +94,8 @@ test cases in the `tests/` directory.
 
 ### [latexindent](https://github.com/cmhughes/latexindent.pl)
 [Perl](https://www.perl.org/) script,
-TODO.
+many configuration options,
+slow on large files.
 
 ### [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy)
 [Perl](https://www.perl.org/) script,
