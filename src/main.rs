@@ -203,8 +203,8 @@ mod tests {
     use indoc::indoc;
 
     fn test_file(filename: &str) {
-        let in_filename = format!("test/{}_in.tex", filename);
-        let out_filename = format!("test/{}_out.tex", filename);
+        let in_filename = format!("tests/{}_in.tex", filename);
+        let out_filename = format!("tests/{}_out.tex", filename);
         //dbg!(&in_filename);
         let in_file = fs::read_to_string(&in_filename).expect("");
         //println!("{}", &in_file.to_string());
@@ -237,7 +237,7 @@ mod tests {
 
     #[test]
     fn test() {
-        let filenames: Vec<String> = fs::read_dir("test/")
+        let filenames: Vec<String> = fs::read_dir("tests/")
             .unwrap()
             .map(|f| f.unwrap().file_name().into_string().unwrap())
             .filter(|f| f.ends_with("_in.tex"))
