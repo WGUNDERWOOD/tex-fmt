@@ -7,11 +7,9 @@ https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml)
 https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
 
-A [LaTeX](https://www.latex-project.org/)
-formatter written in
-[Rust](https://www.rust-lang.org/)
+A LaTeX formatter written in Rust.
 
-## Example
+## Formatting style example
 
 Before formatting `example.tex`:
 
@@ -55,13 +53,13 @@ After running `tex-fmt example.tex`
 
 ### Nix
 
-```
+``` shell
 nix build "github:wgunderwood/tex-fmt"
 ```
 
 ### Cargo
 
-```
+``` shell
 cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ```
 ## Aims
@@ -92,37 +90,29 @@ Run `perf.sh` to format all test cases in the `tests/` directory.
 
 ## Comparison with existing tools
 
-### [latexindent](https://github.com/cmhughes/latexindent.pl)
-[Perl](https://www.perl.org/) script,
-many configuration options,
-slow on large files.
+- [latexindent](https://github.com/cmhughes/latexindent.pl)
 
-### [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy)
-[Perl](https://www.perl.org/) script,
-download links seem to be broken.
+Perl script, many configuration options, slow on large files.
 
-### [latex-pretty](https://c.albert-thompson.com/latex-pretty/)
-Browser-based, uses
-[latexindent](https://github.com/cmhughes/latexindent.pl)
-as the backend.
+- [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy)
 
-### [latexformat.com](https://latexformat.com/)
+Perl script, download links seem to be broken.
+
+- [latex-pretty](https://c.albert-thompson.com/latex-pretty/)
+Browser-based, uses latexindent as the backend.
+
+- [latexformat.com](https://latexformat.com/)
 Browser-based.
 
-### [texpretty](http://ftp.math.utah.edu/pub/texpretty/)
-[C](https://www.gnu.org/software/gnu-c-manual/gnu-c-manual.html)
-program, which works sometimes and appears to be fast.
-However, it fails with certain keywords inside brackets.
+- [texpretty](http://ftp.math.utah.edu/pub/texpretty/)
+C program which works sometimes and appears to be fast.
+Fails with certain keywords inside brackets.
 
-### [latex-editor](https://latex-editor.pages.dev/formatter/)
+- [latex-editor](https://latex-editor.pages.dev/formatter/)
 Browser-based.
 
-### [LaTeXFmt](https://github.com/engeljh/vim-latexfmt)
-[Vim](https://www.vim.org/)
-plugin, does not apply indentation.
+- [LaTeXFmt](https://github.com/engeljh/vim-latexfmt)
+Vim plugin, does not apply indentation.
 
-### [latex-formatter](https://github.com/nfode/latex-formatter)
-[Visual Studio](https://visualstudio.microsoft.com/)
-plugin, uses
-[latexindent](https://github.com/cmhughes/latexindent.pl)
-as the backend.
+- [latex-formatter](https://github.com/nfode/latex-formatter)
+Visual Studio plugin, uses latexindent as the backend.
