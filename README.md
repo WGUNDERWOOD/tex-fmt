@@ -49,7 +49,7 @@ test cases in the `tests/` directory.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 6 | 30k | 1M | **0.0362 s** | 11.6 s (x 322) | 15.3 s (x 424) |
+| 6 | 30k | 1M | **0.0362s** | 11.6s [x322] | 15.3s [x424] |
 
 ## Comparison with existing tools
 
