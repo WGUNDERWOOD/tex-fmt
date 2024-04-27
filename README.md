@@ -92,14 +92,14 @@ Run `perf.sh` to format all test cases in the `tests/` directory.
 gantt
     title tex-fmt vs latexindent
     dateFormat X
-    axisFormat %s
+    axisFormat X
 
     section tex-fmt
-    0.0362 : 0, 0.0362
+    0.0362s : 0, 362
     section latexindent
-    11.6 : 0, 11.6
+    11.6s : 0, 116000
     section latexindent -m
-    15.3 : 0, 15.3
+    15.3s : 0, 153000
 ```
 
 ## Comparison with existing tools
