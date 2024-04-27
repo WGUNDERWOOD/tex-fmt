@@ -83,31 +83,18 @@ It does *not* currently aim to provide the following:
 ## Performance
 
 Run `perf.sh` to format all test cases in the `tests/` directory.
+For larger files, tex-fmt is hundreds of times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
 | 6 | 30k | 1M | **0.0362s** | 11.6s [x322] | 15.3s [x424] |
-
-```mermaid
-gantt
-    title tex-fmt vs latexindent
-    dateFormat X
-    axisFormat X
-
-    section tex-fmt
-    0.0362s : 0, 362
-    section latexindent
-    11.6s : 0, 116000
-    section latexindent -m
-    15.3s : 0, 153000
-```
 
 ## Comparison with existing tools
 
 - [latexindent](https://github.com/cmhughes/latexindent.pl).
 Perl script, many configuration options, slow on large files.
 
-- [LaTeX\_Tidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy).
+- [LaTeXTidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy).
 Perl script, download links seem to be broken.
 
 - [latex-pretty](https://c.albert-thompson.com/latex-pretty/).
