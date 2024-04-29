@@ -25,3 +25,7 @@
 *** Print to STDOUT
 *** Debug (display log file)
 ** Log file
+* Bugs
+** Better errors including line numbers in source file
+** Check multiple begins or ends on the same line
+** Check begins or ends with more brackets on the same line
