@@ -11,18 +11,18 @@ A LaTeX formatter written in Rust.
 
 <table width="100%">
 <tr>
-<th>
+<td>
 
-```
+``` shell
 example.tex
 ```
-</th>
-<th>
+</td>
+<td>
 
-```
+``` shell
 tex-fmt example.tex
 ```
-</th>
+</td>
 </tr>
 <tr>
 <td>
