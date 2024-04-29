@@ -11,7 +11,13 @@ A LaTeX formatter written in Rust.
 
 ## Formatting style example
 
-Before formatting `example.tex`:
+<table>
+<tr>
+<th>Input file `example.tex`</th>
+<th>After `tex-fmt example.tex`</th>
+</tr>
+<tr>
+<td>
 
 ``` tex
 \documentclass{article}
@@ -30,7 +36,8 @@ E = m c^2
 \end{document}
 ```
 
-After running `tex-fmt example.tex`
+</td>
+<td>
 
 ``` tex
 \documentclass{article}
@@ -48,6 +55,10 @@ After running `tex-fmt example.tex`
 
 \end{document}
 ```
+
+</td>
+</tr>
+</table>
 
 ## Installation
 
