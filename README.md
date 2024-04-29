@@ -9,12 +9,10 @@ https://mit-license.org/)
 
 A LaTeX formatter written in Rust.
 
-## Formatting style example
-
-<table border="1" width="100%">
+<table width="100%">
 <tr>
-<th>Input file <code>example.tex</code></th>
-<th>After <code>tex-fmt example.tex</code></th>
+<th><code>example.tex</code></th>
+<th><code>tex-fmt example.tex</code></th>
 </tr>
 <tr>
 <td>
