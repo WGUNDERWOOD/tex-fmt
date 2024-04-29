@@ -11,10 +11,10 @@ A LaTeX formatter written in Rust.
 
 ## Formatting style example
 
-<table>
+<table border="1" width="100%">
 <tr>
-<th>Input file `example.tex`</th>
-<th>After `tex-fmt example.tex`</th>
+<th>Input file <code>example.tex</code></th>
+<th>After <code>tex-fmt example.tex</code></th>
 </tr>
 <tr>
 <td>
