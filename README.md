@@ -11,8 +11,18 @@ A LaTeX formatter written in Rust.
 
 <table width="100%">
 <tr>
-<th><code>example.tex</code></th>
-<th><code>tex-fmt example.tex</code></th>
+<th>
+
+```
+example.tex
+```
+</th>
+<th>
+
+```
+tex-fmt example.tex
+```
+</th>
 </tr>
 <tr>
 <td>
@@ -33,7 +43,6 @@ E = m c^2
 
 \end{document}
 ```
-
 </td>
 <td>
 
@@ -53,7 +62,6 @@ E = m c^2
 
 \end{document}
 ```
-
 </td>
 </tr>
 </table>
