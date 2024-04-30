@@ -34,9 +34,9 @@
 
 % algorithms
 \usepackage[boxruled,
-  linesnumbered,
-  commentsnumbered,
-  algochapter,
+linesnumbered,
+commentsnumbered,
+algochapter,
 ]{algorithm2e}
 
 % graphics
@@ -47,18 +47,18 @@
 % draft options
 \usepackage{ifdraft}
 \ifoptiondraft{
-  \usepackage{draftwatermark}
-  \SetWatermarkText{DRAFT}
-  \SetWatermarkScale{6}
-  \SetWatermarkColor[rgb]{1,0.9,0.9}
-  \usepackage{showframe}
-  \usepackage{layout}
+\usepackage{draftwatermark}
+\SetWatermarkText{DRAFT}
+\SetWatermarkScale{6}
+\SetWatermarkColor[rgb]{1,0.9,0.9}
+\usepackage{showframe}
+\usepackage{layout}
 }{}
 %\usepackage[obeyDraft]{todonotes}
 
 % hyperlinks
 \usepackage[plainpages=false,draft=false
-  ,hidelinks
+,hidelinks
 ]{hyperref}
 \usepackage{cite}
 
@@ -66,7 +66,7 @@
 \usepackage[nopostdot,nonumberlist]{glossaries}
 
 %TC:endignore
- % suppress pdf warnings
+% suppress pdf warnings
 \pdfsuppresswarningpagegroup=1
 
 \title{Motif\hspace*{0.05cm}-Based Spectral Clustering\\[1ex]
@@ -99,25 +99,25 @@ of Weighted Directed Networks}
 % input output definitions
 \makeatletter
 \renewcommand{\SetKwInOut}[2]{%
-  \sbox\algocf@inoutbox{\KwSty{#2}\algocf@typo:}%
-  \expandafter\ifx\csname InOutSizeDefined\endcsname\relax%
-  \newcommand\InOutSizeDefined{}\setlength{\inoutsize}{\wd\algocf@inoutbox}%
-  \sbox\algocf@inoutbox{\parbox[t]{\inoutsize}%
-  {\KwSty{#2}\algocf@typo:\hfill}~}%
-  \setlength{\inoutindent}{\wd\algocf@inoutbox}%
-  \else% else keep the larger dimension
-  \ifdim\wd\algocf@inoutbox>\inoutsize%
-  \setlength{\inoutsize}{\wd\algocf@inoutbox}%
-  \sbox\algocf@inoutbox{\parbox[t]{\inoutsize}%
-  {\KwSty{#2}\algocf@typo:\hfill}~}%
-  \setlength{\inoutindent}{\wd\algocf@inoutbox}%
-  \fi%
-  \fi% the dimension of the box is now defined.
-  \algocf@newcommand{#1}[1]{%
-    \ifthenelse{\boolean{algocf@inoutnumbered}}{\relax}{\everypar={\relax}}%
-    {\let\\\algocf@newinout\hangindent=\inoutindent\hangafter=1\parbox[t]%
-    {\inoutsize}{\KwSty{#2}\algocf@typo:\hfill}~##1\par}%
-    \algocf@linesnumbered% reset the numbering of the lines
+\sbox\algocf@inoutbox{\KwSty{#2}\algocf@typo:}%
+\expandafter\ifx\csname InOutSizeDefined\endcsname\relax%
+\newcommand\InOutSizeDefined{}\setlength{\inoutsize}{\wd\algocf@inoutbox}%
+\sbox\algocf@inoutbox{\parbox[t]{\inoutsize}%
+{\KwSty{#2}\algocf@typo:\hfill}~}%
+\setlength{\inoutindent}{\wd\algocf@inoutbox}%
+\else% else keep the larger dimension
+\ifdim\wd\algocf@inoutbox>\inoutsize%
+\setlength{\inoutsize}{\wd\algocf@inoutbox}%
+\sbox\algocf@inoutbox{\parbox[t]{\inoutsize}%
+{\KwSty{#2}\algocf@typo:\hfill}~}%
+\setlength{\inoutindent}{\wd\algocf@inoutbox}%
+\fi%
+\fi% the dimension of the box is now defined.
+\algocf@newcommand{#1}[1]{%
+\ifthenelse{\boolean{algocf@inoutnumbered}}{\relax}{\everypar={\relax}}%
+{\let\\\algocf@newinout\hangindent=\inoutindent\hangafter=1\parbox[t]%
+{\inoutsize}{\KwSty{#2}\algocf@typo:\hfill}~##1\par}%
+\algocf@linesnumbered% reset the numbering of the lines
 }}%
 \makeatother
 
@@ -138,10 +138,10 @@ of Weighted Directed Networks}
 % glossaries
 \setlength{\glsdescwidth}{0.92\hsize}
 \newglossarystyle{mystyle}{%
-  \setglossarystyle{long}%
-  \renewenvironment{theglossary}%
-  {\begin{longtable}{@{}p{2cm}p{\glsdescwidth}}}%
-  {\end{longtable}}%
+\setglossarystyle{long}%
+\renewenvironment{theglossary}%
+{\begin{longtable}{@{}p{2cm}p{\glsdescwidth}}}%
+{\end{longtable}}%
 }
 \makeglossaries
 
@@ -154,7 +154,7 @@ of Weighted Directed Networks}
 \makeatletter\let\expandableinput\@@input\makeatother
 
 %TC:endignore
- % Glossary
+% Glossary
 
 \newglossaryentry{MAM}{name=MAM, description={Motif adjacency matrix}}
 \newglossaryentry{DSBM}{name=DSBM,
@@ -186,17 +186,17 @@ description={Bipartite stochastic block model}}
 \clearpage{}
 \begin{abstract}
 
-  Clustering is an essential technique for network analysis, with applications
-  in a diverse range of fields. Although spectral clustering is a popular and
-  effective method, it fails to consider higher-order structure and can perform
-  poorly on directed networks. We aim to address these shortcomings by
-  exploring motif-based spectral clustering methods. We present new matrix
-  formulae for motif adjacency matrices, and a motif-based approach for
-  clustering bipartite networks. Comprehensive experimental results from both
-  synthetic and real data demonstrate the effectiveness of our techniques on a
-  variety of networks. We conclude that motif-based spectral clustering is a
-  valuable tool for analysis of directed and bipartite weighted networks, which
-  is also scalable and easy to implement.
+Clustering is an essential technique for network analysis, with applications
+in a diverse range of fields. Although spectral clustering is a popular and
+effective method, it fails to consider higher-order structure and can perform
+poorly on directed networks. We aim to address these shortcomings by
+exploring motif-based spectral clustering methods. We present new matrix
+formulae for motif adjacency matrices, and a motif-based approach for
+clustering bipartite networks. Comprehensive experimental results from both
+synthetic and real data demonstrate the effectiveness of our techniques on a
+variety of networks. We conclude that motif-based spectral clustering is a
+valuable tool for analysis of directed and bipartite weighted networks, which
+is also scalable and easy to implement.
 
 \end{abstract}
 \clearpage{}
@@ -205,19 +205,19 @@ description={Bipartite stochastic block model}}
 \pagenumbering{arabic}
 \begin{romanpages}
 
-  \tableofcontents
+\tableofcontents
 
-  \newpage
-  \listoffigures
+\newpage
+\listoffigures
 
-  \newpage
-  \listoftables
+\newpage
+\listoftables
 
-  \begingroup
-  \let\cleardoublepage\relax
-  \let\clearpage\relax
-  \printglossary[title=Abbreviations, style=mystyle]
-  \endgroup
+\begingroup
+\let\cleardoublepage\relax
+\let\clearpage\relax
+\printglossary[title=Abbreviations, style=mystyle]
+\endgroup
 
 \end{romanpages}
 
@@ -321,94 +321,94 @@ Graph notation is notoriously inconsistent in the literature
 notation and definitions.
 
 \begin{definition}[Graphs]
-  A \emph{graph} is a triple $\ca{G} = (\ca{V,E},W)$ where $\ca{V}$ is the
-  \emph{vertex set}, $\ca{E} \subseteq \left\{ (i,j) : i,j \in \ca{V}, i \neq j
-  \right\}$ is the \emph{edge set} and $W\colon \ca{E} \to (0,\infty)$ is the
-  \emph{weight map}.
+A \emph{graph} is a triple $\ca{G} = (\ca{V,E},W)$ where $\ca{V}$ is the
+\emph{vertex set}, $\ca{E} \subseteq \left\{ (i,j) : i,j \in \ca{V}, i \neq j
+\right\}$ is the \emph{edge set} and $W\colon \ca{E} \to (0,\infty)$ is the
+\emph{weight map}.
 \end{definition}
 
 \begin{remark}
-  We consider weighted directed graphs without self-loops or multiple edges. We
-  can extend to undirected graphs by replacing undirected edges with
-  bidirectional edges. Where it is not relevant, we may sometimes omit the
-  weight map $W$.
+We consider weighted directed graphs without self-loops or multiple edges. We
+can extend to undirected graphs by replacing undirected edges with
+bidirectional edges. Where it is not relevant, we may sometimes omit the
+weight map $W$.
 \end{remark}
 
 \begin{definition}[Underlying edges]
-  Let $\ca{G} = (\ca{V,E})$ be a graph. Its \emph{underlying edges} are
-  $\bar{\ca{E}} \vcentcolon = \big\{ \{i,j\} : (i,j) \in \ca{E} \big\}$.
+Let $\ca{G} = (\ca{V,E})$ be a graph. Its \emph{underlying edges} are
+$\bar{\ca{E}} \vcentcolon = \big\{ \{i,j\} : (i,j) \in \ca{E} \big\}$.
 \end{definition}
 
 \begin{definition}[Subgraphs]
-  A graph $\ca{G'} = (\ca{V',E'})$ is a \emph{subgraph} of a graph $\ca{G} =
-  (\ca{V,E})$ (write $\ca{G'} \leq \ca{G}$) if $\ca{V'} \subseteq \ca{V}$ and
-  $\ca{E'} \subseteq \ca{E}$. It is an \emph{induced subgraph} (write $\ca{G'}
-  < \ca{G}$) if further $\ca{E'} = \ca{E} \cap ( \ca{V'} \times \ca{V'} )$.
+A graph $\ca{G'} = (\ca{V',E'})$ is a \emph{subgraph} of a graph $\ca{G} =
+(\ca{V,E})$ (write $\ca{G'} \leq \ca{G}$) if $\ca{V'} \subseteq \ca{V}$ and
+$\ca{E'} \subseteq \ca{E}$. It is an \emph{induced subgraph} (write $\ca{G'}
+< \ca{G}$) if further $\ca{E'} = \ca{E} \cap ( \ca{V'} \times \ca{V'} )$.
 \end{definition}
 
 \begin{definition}[Connected components]
-  Let $\ca{G} = (\ca{V,E})$ be a graph. The \emph{connected components} of
-  $\ca{G}$ are the partition $\ca{C}$ generated by the transitive closure of
-  the relation $\sim$ on $\ca{V}$ defined by $i \sim j \iff \{i,j\} \in
-  \bar{\ca{E}}$. We say $\ca{G}$ is (weakly) \emph{connected} if $|\ca{C}| =
-  1$.
+Let $\ca{G} = (\ca{V,E})$ be a graph. The \emph{connected components} of
+$\ca{G}$ are the partition $\ca{C}$ generated by the transitive closure of
+the relation $\sim$ on $\ca{V}$ defined by $i \sim j \iff \{i,j\} \in
+\bar{\ca{E}}$. We say $\ca{G}$ is (weakly) \emph{connected} if $|\ca{C}| =
+1$.
 \end{definition}
 
 \begin{definition}[Graph isomorphisms]
-  A graph $\ca{G'} = (\ca{V',E'})$ is \emph{isomorphic} to a graph $\ca{G} =
-  (\ca{V,E})$ (write $\ca{G'} \cong \ca{G}$) if there is a bijection
-  $\phi\colon \ca{V'} \rightarrow \ca{V}$ with $(u,v) \in \ca{E'} \iff
-  \big(\phi(u), \phi(v) \big) \in \ca{E}$.
-  An isomorphism from a graph to itself is called an \emph{automorphism}.
+A graph $\ca{G'} = (\ca{V',E'})$ is \emph{isomorphic} to a graph $\ca{G} =
+(\ca{V,E})$ (write $\ca{G'} \cong \ca{G}$) if there is a bijection
+$\phi\colon \ca{V'} \rightarrow \ca{V}$ with $(u,v) \in \ca{E'} \iff
+\big(\phi(u), \phi(v) \big) \in \ca{E}$.
+An isomorphism from a graph to itself is called an \emph{automorphism}.
 \end{definition}
 
 \begin{definition}[Motifs and anchor sets]
-  A \emph{motif} is a pair $(\ca{M,A})$ where $\ca{M} = (\ca{V_M,E_M})$ is a
-  connected graph with $\ca{V_M} = \{ 1, \ldots, m \}$ for some small $m \geq
-  2$, and $\ca{A} \subseteq \ca{V_M}$ with $|\ca{A}| \geq 2$ is an \emph{anchor
-  set}. If $\ca{A} \neq \ca{V_M}$ we say the motif is \emph{anchored}, and if
-  $\ca{A=V_M}$ we say it is \emph{simple}.
+A \emph{motif} is a pair $(\ca{M,A})$ where $\ca{M} = (\ca{V_M,E_M})$ is a
+connected graph with $\ca{V_M} = \{ 1, \ldots, m \}$ for some small $m \geq
+2$, and $\ca{A} \subseteq \ca{V_M}$ with $|\ca{A}| \geq 2$ is an \emph{anchor
+set}. If $\ca{A} \neq \ca{V_M}$ we say the motif is \emph{anchored}, and if
+$\ca{A=V_M}$ we say it is \emph{simple}.
 \end{definition}
 
 \begin{remark}
-  Anchor sets~\cite{benson2016higher} specify which r\^oles vertices play in
-  the motif, and are crucial for defining the collider and expander motifs
-  given in Section~\ref{sec:coll_expa}. When an anchor set is not given, it is
-  assumed that the motif is simple. Figure~\ref{fig:motif_definitions_directed}
-  shows all simple motifs (up to isomorphism) on at most three vertices.
+Anchor sets~\cite{benson2016higher} specify which r\^oles vertices play in
+the motif, and are crucial for defining the collider and expander motifs
+given in Section~\ref{sec:coll_expa}. When an anchor set is not given, it is
+assumed that the motif is simple. Figure~\ref{fig:motif_definitions_directed}
+shows all simple motifs (up to isomorphism) on at most three vertices.
 \end{remark}
 
 \begin{definition}[Instances]
-  Let $\ca{G}$ be a graph and $(\ca{M,A})$ a motif. We say that $\ca{H}$ is a
-  \emph{functional instance} of $\ca{M}$ in $\ca{G}$ if $\ca{M} \cong \ca{H}
-  \leq \ca{G}$. We say that $\ca{H}$ is a \emph{structural instance} of
-  $\ca{M}$ in $\ca{G}$ if $\ca{M} \cong \ca{H} < \ca{G}$.
+Let $\ca{G}$ be a graph and $(\ca{M,A})$ a motif. We say that $\ca{H}$ is a
+\emph{functional instance} of $\ca{M}$ in $\ca{G}$ if $\ca{M} \cong \ca{H}
+\leq \ca{G}$. We say that $\ca{H}$ is a \emph{structural instance} of
+$\ca{M}$ in $\ca{G}$ if $\ca{M} \cong \ca{H} < \ca{G}$.
 \end{definition}
 
 \begin{definition}[Anchored pairs]
-  Let $\ca{G}$ be a graph and $(\ca{M,A})$ a motif. Suppose $\ca{H}$ is an
-  instance of $\ca{M}$ in $\ca{G}$. Define the \emph{anchored pairs of the
-  instance} $\ca{H}$ as
-  $$ \ca{A(H)} \vcentcolon = \big\{ \{\phi(i),\phi(j)\} : i,j \in \ca{A}, \ i
-    \neq j, \ \phi \textrm{ is an isomorphism from } \ca{M} \textrm{ to } \ca{H}
-  \big\}\,.$$
+Let $\ca{G}$ be a graph and $(\ca{M,A})$ a motif. Suppose $\ca{H}$ is an
+instance of $\ca{M}$ in $\ca{G}$. Define the \emph{anchored pairs of the
+instance} $\ca{H}$ as
+$$ \ca{A(H)} \vcentcolon = \big\{ \{\phi(i),\phi(j)\} : i,j \in \ca{A}, \ i
+\neq j, \ \phi \textrm{ is an isomorphism from } \ca{M} \textrm{ to } \ca{H}
+\big\}\,.$$
 
 \end{definition}
 
 \begin{remark}
-  Example~\ref{ex:instances} demonstrates functional and structural instances.
-  Note that $\{i,j\} \in \ca{A(H)}$ if and only if $\ca{H}$ appears in $\ca{G}$
-  as an instance of $\ca{M}$ with $i \neq j$ co-appearing in the image of
-  $\ca{A}$ under isomorphism. The motivation for this is that clustering
-  methods should avoid separating vertices which appear as an anchored pair.
+Example~\ref{ex:instances} demonstrates functional and structural instances.
+Note that $\{i,j\} \in \ca{A(H)}$ if and only if $\ca{H}$ appears in $\ca{G}$
+as an instance of $\ca{M}$ with $i \neq j$ co-appearing in the image of
+$\ca{A}$ under isomorphism. The motivation for this is that clustering
+methods should avoid separating vertices which appear as an anchored pair.
 \end{remark}
 %
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.7,draft=false]{%
-  ../tikz/motif_definitions_directed/motif_definitions_directed.pdf}
-  \caption{All simple motifs on at most three vertices}
-  \label{fig:motif_definitions_directed}
+\centering
+\includegraphics[scale=0.7,draft=false]{%
+../tikz/motif_definitions_directed/motif_definitions_directed.pdf}
+\caption{All simple motifs on at most three vertices}
+\label{fig:motif_definitions_directed}
 \end{figure}
 
 \section{Adjacency and indicator matrices}
@@ -421,34 +421,34 @@ Proposition~\ref{prop:motif_adj_matrix_formula} and
 Table~\ref{tab:motif_adj_mat_table}.
 
 \begin{definition}[Adjacency matrices]
-  Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set $\ca{V} = \{1, \ldots,
-  n \}$. The \emph{adjacency matrix, single-edge adjacency matrix} and
-  \emph{double-edge adjacency matrix} of $\ca{G}$ are respectively the $n
-  \times n$ matrices
-  \begin{align*}
-    G_{i j} &\vcentcolon= W((i,j)) \ \bb{I} \{ (i,j) \in \ca{E} \}\,, \\
-    (G_\mathrm{s})_{i j} &\vcentcolon= W((i,j)) \ \bb{I} \{ (i,j) \in \ca{E}
-    \textrm{ and } (j,i) \notin \ca{E} \}\,, \\
-    (G_\mathrm{d})_{i j} &\vcentcolon= \big( W((i,j)) + W((j,i)) \big) \ \bb{I}
-    \{ (i,j) \in \ca{E} \textrm{ and } (j,i) \in \ca{E} \}\,.
-  \end{align*}
+Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set $\ca{V} = \{1, \ldots,
+n \}$. The \emph{adjacency matrix, single-edge adjacency matrix} and
+\emph{double-edge adjacency matrix} of $\ca{G}$ are respectively the $n
+\times n$ matrices
+\begin{align*}
+G_{i j} &\vcentcolon= W((i,j)) \ \bb{I} \{ (i,j) \in \ca{E} \}\,, \\
+(G_\mathrm{s})_{i j} &\vcentcolon= W((i,j)) \ \bb{I} \{ (i,j) \in \ca{E}
+\textrm{ and } (j,i) \notin \ca{E} \}\,, \\
+(G_\mathrm{d})_{i j} &\vcentcolon= \big( W((i,j)) + W((j,i)) \big) \ \bb{I}
+\{ (i,j) \in \ca{E} \textrm{ and } (j,i) \in \ca{E} \}\,.
+\end{align*}
 \end{definition}
 
 \begin{definition}[Indicator matrices]
-  Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set $\ca{V} = \{1, \ldots,
-  n \}$. The \emph{indicator matrix, single-edge indicator matrix, double-edge
-  indicator matrix, missing-edge indicator matrix} and \emph{vertex-distinct
-  indicator matrix} of $\ca{G}$ are respectively the $n \times n$ matrices
-  \begin{align*}
-    J_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \}\,, \\
-    (J_\mathrm{s})_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \textrm{ and }
-    (j,i) \notin \ca{E} \}\,, \\
-    (J_\mathrm{d})_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \textrm{ and }
-    (j,i) \in \ca{E} \}\,, \\
-    (J_0)_{i j} &\vcentcolon= \bb{I} \{ (i,j) \notin \ca{E} \textrm{ and } (j,i)
-    \notin \ca{E} \textrm{ and } i \neq j \}\,, \\
-    (J_\mathrm{n})_{i j} &\vcentcolon= \bb{I} \{ i \neq j \}\,.
-  \end{align*}
+Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set $\ca{V} = \{1, \ldots,
+n \}$. The \emph{indicator matrix, single-edge indicator matrix, double-edge
+indicator matrix, missing-edge indicator matrix} and \emph{vertex-distinct
+indicator matrix} of $\ca{G}$ are respectively the $n \times n$ matrices
+\begin{align*}
+J_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \}\,, \\
+(J_\mathrm{s})_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \textrm{ and }
+(j,i) \notin \ca{E} \}\,, \\
+(J_\mathrm{d})_{i j} &\vcentcolon= \bb{I} \{ (i,j) \in \ca{E} \textrm{ and }
+(j,i) \in \ca{E} \}\,, \\
+(J_0)_{i j} &\vcentcolon= \bb{I} \{ (i,j) \notin \ca{E} \textrm{ and } (j,i)
+\notin \ca{E} \textrm{ and } i \neq j \}\,, \\
+(J_\mathrm{n})_{i j} &\vcentcolon= \bb{I} \{ i \neq j \}\,.
+\end{align*}
 \end{definition}
 
 \section{Motif adjacency matrices} \label{sec:graphs_motif_adj_matrices}
@@ -466,32 +466,32 @@ a complexity analysis of this formula.
 \subsection{Definitions}
 
 \begin{definition}[Motif adjacency matrices] \label{def:motif_adj_matrices}
-  %
-  Let $\ca{G} = (\ca{V,E},W)$ be a graph with $n$ vertices and let $\ca{(M,A)}$
-  be a motif. The \emph{functional} and \emph{structural motif adjacency
-  matrices} (MAMs) of $\ca{(M,A)}$ in $\ca{G}$ are respectively the $n \times
-  n$ matrices
-  %
-  \begin{align*}
-    M^\mathrm{func}_{i j} &\vcentcolon= \frac{1}{|\ca{E_M}|} \sum_{\ca{M} \cong
-    \ca{H} \leq \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e
-    \in \ca{E_H}} W(e)\,, \\
-    M^\mathrm{struc}_{i j} &\vcentcolon= \frac{1}{|\ca{E_M}|} \sum_{\ca{M} \cong
-    \ca{H} < \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e
-    \in \ca{E_H}} W(e)\,.
-  \end{align*}
+%
+Let $\ca{G} = (\ca{V,E},W)$ be a graph with $n$ vertices and let $\ca{(M,A)}$
+be a motif. The \emph{functional} and \emph{structural motif adjacency
+matrices} (MAMs) of $\ca{(M,A)}$ in $\ca{G}$ are respectively the $n \times
+n$ matrices
+%
+\begin{align*}
+M^\mathrm{func}_{i j} &\vcentcolon= \frac{1}{|\ca{E_M}|} \sum_{\ca{M} \cong
+\ca{H} \leq \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e
+\in \ca{E_H}} W(e)\,, \\
+M^\mathrm{struc}_{i j} &\vcentcolon= \frac{1}{|\ca{E_M}|} \sum_{\ca{M} \cong
+\ca{H} < \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e
+\in \ca{E_H}} W(e)\,.
+\end{align*}
 \end{definition}
 
 \begin{remark}
-  Example~\ref{ex:motif_adj_matrices} gives a simple illustration of
-  calculating an MAM.
-  When $W \equiv 1$ and $\ca{M}$ is simple, the (functional or structural) MAM
-  entry $M_{i j} \ (i \neq j)$ simply counts the (functional or structural)
-  instances of $\ca{M}$ in $\ca{G}$ containing $i$ and $j$.
-  When $\ca{M}$ is not simple, $M_{i j}$ counts only those instances with anchor
-  sets containing both $i$ and $j$.
-  MAMs are always symmetric, since the only dependency on $(i,j)$ is via the
-  unordered set $\{i,j\}$.
+Example~\ref{ex:motif_adj_matrices} gives a simple illustration of
+calculating an MAM.
+When $W \equiv 1$ and $\ca{M}$ is simple, the (functional or structural) MAM
+entry $M_{i j} \ (i \neq j)$ simply counts the (functional or structural)
+instances of $\ca{M}$ in $\ca{G}$ containing $i$ and $j$.
+When $\ca{M}$ is not simple, $M_{i j}$ counts only those instances with anchor
+sets containing both $i$ and $j$.
+MAMs are always symmetric, since the only dependency on $(i,j)$ is via the
+unordered set $\{i,j\}$.
 \end{remark}
 
 \subsection{Computation} \label{sec:graphs_computation}
@@ -500,96 +500,96 @@ In order to state Propositions \ref{prop:motif_adj_matrix_formula}
 and~\ref{prop:motif_adj_matrix_computation}, we need one more definition.
 
 \begin{definition}[Anchored automorphism classes]
-  Let $(\ca{M,A})$ be a motif.
-  Let $S_\ca{M}$ be the set of permutations on $ \ca{V_M} = \{ 1, \ldots, m \}$
-  and define the \emph{anchor-preserving permutations} $S_\ca{M,A} = \{ \sigma
-  \in S_\ca{M} : \{1,m\} \subseteq \sigma(\ca{A}) \}$.
-  Let $\sim$ be the equivalence relation defined on $S_\ca{M,A}$ by: $\sigma
-  \sim \tau \iff \tau^{-1} \sigma$ is an automorphism of $\ca{M}$.
-  Finally the \emph{anchored automorphism classes} are the quotient set
-  $S_\ca{M,A}^\sim \vcentcolon= S_\ca{M,A} \ \big/ \sim$\,.
+Let $(\ca{M,A})$ be a motif.
+Let $S_\ca{M}$ be the set of permutations on $ \ca{V_M} = \{ 1, \ldots, m \}$
+and define the \emph{anchor-preserving permutations} $S_\ca{M,A} = \{ \sigma
+\in S_\ca{M} : \{1,m\} \subseteq \sigma(\ca{A}) \}$.
+Let $\sim$ be the equivalence relation defined on $S_\ca{M,A}$ by: $\sigma
+\sim \tau \iff \tau^{-1} \sigma$ is an automorphism of $\ca{M}$.
+Finally the \emph{anchored automorphism classes} are the quotient set
+$S_\ca{M,A}^\sim \vcentcolon= S_\ca{M,A} \ \big/ \sim$\,.
 \end{definition}
 
 \begin{proposition}[MAM formula] \label{prop:motif_adj_matrix_formula}
-  Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set
-  ${\ca{V}=\{1,\ldots,n\}}$ and let $(\ca{M,A})$ be a motif on $m$ vertices.
-  Then for any $i,j \in \ca{V}$ and with $k_1 = i$, $k_m = j$, the functional
-  and structural MAMs of $\ca{(M,A)}$ in $\ca{G}$ are given by
-  %
-  %
-  \begin{align*}
-    M^\mathrm{func}_{i j} &= \frac{1}{|\ca{E_M}|} \sum_{\sigma \in
-    S_\ca{M,A}^\sim} \ \sum_{\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}} \
-    J^\mathrm{func}_{\mathbf{k},\sigma} \
-    G^\mathrm{func}_{\mathbf{k},\sigma}\,, &(1) \\
-    M^\mathrm{struc}_{i j} &= \frac{1}{|\ca{E_M}|} \sum_{\sigma \in
-    S_\ca{M,A}^\sim} \ \sum_{\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}} \
-    J^\mathrm{struc}_{\mathbf{k},\sigma} \
-    G^\mathrm{struc}_{\mathbf{k},\sigma}\,, &(2)
-  \end{align*}
-  %
-  where
-  %
-  \begin{align*}
-    \ca{E}_\ca{M}^0 &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m : (u,v) \notin
-    \ca{E_M}, (v,u) \notin \ca{E_M} \}\,, \\
-    \ca{E}_\ca{M}^\mathrm{s} &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m :
-    (u,v) \in \ca{E_M}, (v,u) \notin \ca{E_M} \}\,, \\
-    \ca{E}_\ca{M}^\mathrm{d} &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m :
-    (u,v) \in \ca{E_M}, (v,u) \in \ca{E_M} \}\,,
-  \end{align*}
-  %
-  are respectively the missing edges, single edges and double edges of
-  $\ca{E_M}$, and
-  %
-  %TC:ignore
-  \begin{alignat*}{3}
-    %
-    J^\mathrm{func}_{\mathbf{k},\sigma}
-    & \vcentcolon= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{n})_{k_{\sigma
-    u},k_{\sigma v}}
-    && && \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
-    v}}\,, \\
-    %
-    G^\mathrm{func}_{\mathbf{k},\sigma}
-    & \vcentcolon= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma
-    v}}
-    && + && \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma
-    u},k_{\sigma v}}\,, \\
-    %
-    J^\mathrm{struc}_{\mathbf{k},\sigma}
-    & \vcentcolon= \prod_{\ca{E}_\ca{M}^0} (J_0)_{k_{\sigma u},k_{\sigma v}}
-    && && \prod_{\ca{E}_\ca{M}^\mathrm{s}} (J_\mathrm{s})_{k_{\sigma
-    u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
-    v}}\,, \\
-    %
-    G^\mathrm{struc}_{\mathbf{k},\sigma}
-    &\vcentcolon= \sum_{\ca{E}_\ca{M}^\mathrm{s}} (G_\mathrm{s})_{k_{\sigma
-    u},k_{\sigma v}}
-    && + && \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma
-    u},k_{\sigma v}}\,.
-    %
-  \end{alignat*}
-  %TC:endignore
+Let $\ca{G} = (\ca{V,E},W)$ be a graph with vertex set
+${\ca{V}=\{1,\ldots,n\}}$ and let $(\ca{M,A})$ be a motif on $m$ vertices.
+Then for any $i,j \in \ca{V}$ and with $k_1 = i$, $k_m = j$, the functional
+and structural MAMs of $\ca{(M,A)}$ in $\ca{G}$ are given by
+%
+%
+\begin{align*}
+M^\mathrm{func}_{i j} &= \frac{1}{|\ca{E_M}|} \sum_{\sigma \in
+S_\ca{M,A}^\sim} \ \sum_{\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}} \
+J^\mathrm{func}_{\mathbf{k},\sigma} \
+G^\mathrm{func}_{\mathbf{k},\sigma}\,, &(1) \\
+M^\mathrm{struc}_{i j} &= \frac{1}{|\ca{E_M}|} \sum_{\sigma \in
+S_\ca{M,A}^\sim} \ \sum_{\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}} \
+J^\mathrm{struc}_{\mathbf{k},\sigma} \
+G^\mathrm{struc}_{\mathbf{k},\sigma}\,, &(2)
+\end{align*}
+%
+where
+%
+\begin{align*}
+\ca{E}_\ca{M}^0 &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m : (u,v) \notin
+\ca{E_M}, (v,u) \notin \ca{E_M} \}\,, \\
+\ca{E}_\ca{M}^\mathrm{s} &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m :
+(u,v) \in \ca{E_M}, (v,u) \notin \ca{E_M} \}\,, \\
+\ca{E}_\ca{M}^\mathrm{d} &\vcentcolon= \{ (u,v) : 1 \leq u < v \leq m :
+(u,v) \in \ca{E_M}, (v,u) \in \ca{E_M} \}\,,
+\end{align*}
+%
+are respectively the missing edges, single edges and double edges of
+$\ca{E_M}$, and
+%
+%TC:ignore
+\begin{alignat*}{3}
+%
+J^\mathrm{func}_{\mathbf{k},\sigma}
+& \vcentcolon= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{n})_{k_{\sigma
+u},k_{\sigma v}}
+&& && \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
+v}}\,, \\
+%
+G^\mathrm{func}_{\mathbf{k},\sigma}
+& \vcentcolon= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma
+v}}
+&& + && \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma
+u},k_{\sigma v}}\,, \\
+%
+J^\mathrm{struc}_{\mathbf{k},\sigma}
+& \vcentcolon= \prod_{\ca{E}_\ca{M}^0} (J_0)_{k_{\sigma u},k_{\sigma v}}
+&& && \prod_{\ca{E}_\ca{M}^\mathrm{s}} (J_\mathrm{s})_{k_{\sigma
+u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
+v}}\,, \\
+%
+G^\mathrm{struc}_{\mathbf{k},\sigma}
+&\vcentcolon= \sum_{\ca{E}_\ca{M}^\mathrm{s}} (G_\mathrm{s})_{k_{\sigma
+u},k_{\sigma v}}
+&& + && \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma
+u},k_{\sigma v}}\,.
+%
+\end{alignat*}
+%TC:endignore
 \end{proposition}
 %
 \begin{proof}
-  See Proof~\ref{proof:motif_adj_matrix_formula}.
+See Proof~\ref{proof:motif_adj_matrix_formula}.
 \end{proof}
 
 \begin{proposition}[Complexity of MAM formula]
-  \label{prop:motif_adj_matrix_computation}
-  Suppose that ${m \leq 3}$, and the adjacency matrix $G$ of $\ca{G}$ is known.
-  Then computing adjacency and indicator matrices and calculating an MAM using
-  Equations $(1)$ and $(2)$ in Proposition~\ref{prop:motif_adj_matrix_formula}
-  involves at most 18 matrix multiplications, 22 entry-wise multiplications and
-  21 additions of (typically sparse) $n \times n$ matrices.
+\label{prop:motif_adj_matrix_computation}
+Suppose that ${m \leq 3}$, and the adjacency matrix $G$ of $\ca{G}$ is known.
+Then computing adjacency and indicator matrices and calculating an MAM using
+Equations $(1)$ and $(2)$ in Proposition~\ref{prop:motif_adj_matrix_formula}
+involves at most 18 matrix multiplications, 22 entry-wise multiplications and
+21 additions of (typically sparse) $n \times n$ matrices.
 \end{proposition}
 
 \begin{proof}
-  See Proof~\ref{proof:motif_adj_matrix_computation}.
+See Proof~\ref{proof:motif_adj_matrix_computation}.
 \end{proof}
 
 Hence for motifs on at most three vertices and with sparse adjacency matrices,
@@ -664,32 +664,32 @@ Laplacian}, for reasons concerning objective functions, consistency and
 computation \cite{von2007tutorial, luxburg2004convergence}.
 
 \begin{definition}
-  Let $\ca{G}$ be an undirected graph with (symmetric) adjacency matrix $G$. The
-  \emph{random-walk Laplacian matrix} of $\ca{G}$ is
-  $$ L_\mathrm{rw} \vcentcolon= I - D^{-1} G $$
-  where $I$ is the identity and $D_{ii} \vcentcolon= \sum_j G_{i j}$ is the
-  diagonal matrix of weighted degrees.
+Let $\ca{G}$ be an undirected graph with (symmetric) adjacency matrix $G$. The
+\emph{random-walk Laplacian matrix} of $\ca{G}$ is
+$$ L_\mathrm{rw} \vcentcolon= I - D^{-1} G $$
+where $I$ is the identity and $D_{ii} \vcentcolon= \sum_j G_{i j}$ is the
+diagonal matrix of weighted degrees.
 \end{definition}
 
 \begin{remark}
-  $D^{-1} G$ is the transition matrix of a random walk on the vertex set
-  $\ca{V}$
-  where the probability of the transition $v_i \to v_j$ is proportional to
-  $G_{i j}$.
+$D^{-1} G$ is the transition matrix of a random walk on the vertex set
+$\ca{V}$
+where the probability of the transition $v_i \to v_j$ is proportional to
+$G_{i j}$.
 \end{remark}
 
 \begin{proposition}[Properties of the random-walk Laplacian]
-  \label{prop:laplacian}
-  $L_\mathrm{rw}$ is positive semi-definite with eigenvalues $0 = \lambda_1 \leq
-  \cdots \leq \lambda_n$.
-  The multiplicity $k$ of the eigenvalue $0$ is equal to the number of connected
-  components $\ca{P}_1, \ldots, \ca{P}_k$ of $\ca{G}$.
-  The eigenspace of the eigenvalue $0$ is spanned by the indicator vectors on
-  these components; $ \bb{I}_{\ca{P}_1}, \ldots, \bb{I}_{\ca{P}_k} $.
+\label{prop:laplacian}
+$L_\mathrm{rw}$ is positive semi-definite with eigenvalues $0 = \lambda_1 \leq
+\cdots \leq \lambda_n$.
+The multiplicity $k$ of the eigenvalue $0$ is equal to the number of connected
+components $\ca{P}_1, \ldots, \ca{P}_k$ of $\ca{G}$.
+The eigenspace of the eigenvalue $0$ is spanned by the indicator vectors on
+these components; $ \bb{I}_{\ca{P}_1}, \ldots, \bb{I}_{\ca{P}_k} $.
 \end{proposition}
 
 \begin{proof}
-  See \cite{von2007tutorial}.
+See \cite{von2007tutorial}.
 \end{proof}
 
 \section{Graph cuts} \label{sec:spectral_graph_cut}
@@ -700,25 +700,25 @@ We look at the normalised cut and its relationship with the random-walk
 Laplacian.
 
 \begin{definition}
-  Let $\ca{G}$ be a graph. Let $ \ca{P}_1, \ldots, \ca{P}_k $ be a partition of
-  $\ca{V}$. Then the \emph{normalised cut} \cite{shi2000normalized} of $\ca{G}$
-  with respect to $ \ca{P}_1, \ldots, \ca{P}_k $ is
-  %
-  $$ \mathrm{Ncut}_\ca{G}(\ca{P}_1, \ldots, \ca{P}_k) \vcentcolon= \frac{1}{2}
-  \sum_{i=1}^k
-  \frac{ \mathrm{cut}(\ca{P}_i,\bar{\ca{P}_i}) }{ \mathrm{vol}(\ca{P}_i) } $$
-  %
-  where $ \mathrm{cut}(\ca{P}_i,\bar{\ca{P}_i})
-  \vcentcolon= \sum_{u \in \ca{P}_i, \, v \in \ca{V} \setminus \ca{P}_i}
-  G_{u v}$
-  and $\mathrm{vol}(\ca{P}_i) \vcentcolon= \sum_{u \in \ca{P}_i} D_{u u}$.
+Let $\ca{G}$ be a graph. Let $ \ca{P}_1, \ldots, \ca{P}_k $ be a partition of
+$\ca{V}$. Then the \emph{normalised cut} \cite{shi2000normalized} of $\ca{G}$
+with respect to $ \ca{P}_1, \ldots, \ca{P}_k $ is
+%
+$$ \mathrm{Ncut}_\ca{G}(\ca{P}_1, \ldots, \ca{P}_k) \vcentcolon= \frac{1}{2}
+\sum_{i=1}^k
+\frac{ \mathrm{cut}(\ca{P}_i,\bar{\ca{P}_i}) }{ \mathrm{vol}(\ca{P}_i) } $$
+%
+where $ \mathrm{cut}(\ca{P}_i,\bar{\ca{P}_i})
+\vcentcolon= \sum_{u \in \ca{P}_i, \, v \in \ca{V} \setminus \ca{P}_i}
+G_{u v}$
+and $\mathrm{vol}(\ca{P}_i) \vcentcolon= \sum_{u \in \ca{P}_i} D_{u u}$.
 
 \end{definition}
 
 \begin{remark}
-  More desirable partitions have a lower Ncut value; the numerators penalise
-  partitions which cut a large number of heavily weighted edges, and the
-  denominators penalise partitions which have highly imbalanced cluster sizes.
+More desirable partitions have a lower Ncut value; the numerators penalise
+partitions which cut a large number of heavily weighted edges, and the
+denominators penalise partitions which have highly imbalanced cluster sizes.
 \end{remark}
 
 It can be shown \cite{von2007tutorial} that minimising Ncut over partitions
@@ -766,36 +766,36 @@ to minimise the Ncut score of the partition generated.
 \pagebreak
 
 \begin{algorithm}[H]
-  \caption{Eigenvector sweep}
-  \label{alg:eigenvector_sweep}
+\caption{Eigenvector sweep}
+\label{alg:eigenvector_sweep}
 
-  \SetKwFunction{Main}{EigenvectorSweep}
-  \newcommand{\MainArgs}{$\ca{G}, x$}
+\SetKwFunction{Main}{EigenvectorSweep}
+\newcommand{\MainArgs}{$\ca{G}, x$}
 
-  \BlankLine
-  \Input{Graph $\ca{G}$, eigenvector $x$}
-  \Output{Partition $\ca{P}_1, \ca{P}_2$}
-  \BlankLine
-  \Function{\Main{\MainArgs}}{
+\BlankLine
+\Input{Graph $\ca{G}$, eigenvector $x$}
+\Output{Partition $\ca{P}_1, \ca{P}_2$}
+\BlankLine
+\Function{\Main{\MainArgs}}{
 
-    $\hat{x} \leftarrow \mathtt{sort}(x)$ \;
-    $\mathrm{Score_{best}} \leftarrow \infty$ \;
+$\hat{x} \leftarrow \mathtt{sort}(x)$ \;
+$\mathrm{Score_{best}} \leftarrow \infty$ \;
 
-    \For{$i$ \In $1, \ldots, n-1$}{
-      $\ca{P} \leftarrow \{ \hat{x}_1, \ldots \hat{x}_i \}$ \;
-      $\mathrm{Score} \leftarrow \mathrm{Ncut}_\ca{G} (\ca{P}, \ca{V}
-      \setminus \ca{P})$ \;
-      \If{$\mathrm{Score} < \mathrm{Score_{best}}$}{
-        $\ca{P}_\mathrm{best} \leftarrow \ca{P}$ \;
-        $\mathrm{Score_{best}} \leftarrow \mathrm{Score}$ \;
-      }
-    }
+\For{$i$ \In $1, \ldots, n-1$}{
+$\ca{P} \leftarrow \{ \hat{x}_1, \ldots \hat{x}_i \}$ \;
+$\mathrm{Score} \leftarrow \mathrm{Ncut}_\ca{G} (\ca{P}, \ca{V}
+\setminus \ca{P})$ \;
+\If{$\mathrm{Score} < \mathrm{Score_{best}}$}{
+$\ca{P}_\mathrm{best} \leftarrow \ca{P}$ \;
+$\mathrm{Score_{best}} \leftarrow \mathrm{Score}$ \;
+}
+}
 
-    $\ca{P}_1 \leftarrow \ca{P}_\mathrm{best}$ \;
-    $\ca{P}_2 \leftarrow \ca{V} \setminus \ca{P}_\mathrm{best}$ \;
+$\ca{P}_1 \leftarrow \ca{P}_\mathrm{best}$ \;
+$\ca{P}_2 \leftarrow \ca{V} \setminus \ca{P}_\mathrm{best}$ \;
 
-    \Return $\ca{P}_1, \ca{P}_2$
-  }
+\Return $\ca{P}_1, \ca{P}_2$
+}
 \end{algorithm}
 \vspace*{0.5cm}
 
@@ -809,23 +809,23 @@ line in Figure~\ref{fig:eigenvector_sweep_network}.
 %
 %
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../tikz/eigenvector_sweep_network/eigenvector_sweep_network.pdf}
-    \caption{A small network}
-    \label{fig:eigenvector_sweep_network}
-  \end{subfigure}
-  %
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/eigenvector_sweep/eigenvector_sweep_scores.pdf}
-    \caption{Sweep profile of the network}
-    \label{fig:eigenvector_sweep_profile}
-  \end{subfigure}
-  \caption{Eigenvector sweep selects a partition by minimising Ncut}
-  \label{fig:eigenvector_sweep}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../tikz/eigenvector_sweep_network/eigenvector_sweep_network.pdf}
+\caption{A small network}
+\label{fig:eigenvector_sweep_network}
+\end{subfigure}
+%
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/eigenvector_sweep/eigenvector_sweep_scores.pdf}
+\caption{Sweep profile of the network}
+\label{fig:eigenvector_sweep_profile}
+\end{subfigure}
+\caption{Eigenvector sweep selects a partition by minimising Ncut}
+\label{fig:eigenvector_sweep}
 \end{figure}
 %
 
@@ -865,30 +865,30 @@ this relaxation.
 
 \vspace*{0.5cm}
 \begin{algorithm}[H]
-  \caption{Random-walk spectral clustering}
-  \label{alg:rwspectclust}
+\caption{Random-walk spectral clustering}
+\label{alg:rwspectclust}
 
-  \SetKwFunction{Main}{RWSpectClust}
-  \newcommand{\MainArgs}{$G,k,l$}
+\SetKwFunction{Main}{RWSpectClust}
+\newcommand{\MainArgs}{$G,k,l$}
 
-  \BlankLine
-  \Input{Symmetric adjacency matrix $G$, number of clusters $k$, dimension
-  $l$}
-  \Output{Partition $\ca{P}_1, \ldots, \ca{P}_k$}
-  \BlankLine
+\BlankLine
+\Input{Symmetric adjacency matrix $G$, number of clusters $k$, dimension
+$l$}
+\Output{Partition $\ca{P}_1, \ldots, \ca{P}_k$}
+\BlankLine
 
-  \Function{\Main{\MainArgs}}{
-    Construct the weighted degree matrix $D_{ii} \leftarrow \sum_j G_{i j}$
-    \\
-    Construct the random walk Laplacian matrix $L_\mathrm{rw} \leftarrow
-    I-D^{-1}G$ \\
-    Let $H$ have the first $l$ eigenvectors of $L_\mathrm{rw}$ as columns
-    \\
-    Drop the first column of $H$ \\
-    Run $k$-means++ on the rows of $H$ with $k$ clusters to produce
-    $\ca{P}_1, \ldots, \ca{P}_k$ \\
-    \Return $\ca{P}_1, \ldots, \ca{P}_k$
-  }
+\Function{\Main{\MainArgs}}{
+Construct the weighted degree matrix $D_{ii} \leftarrow \sum_j G_{i j}$
+\\
+Construct the random walk Laplacian matrix $L_\mathrm{rw} \leftarrow
+I-D^{-1}G$ \\
+Let $H$ have the first $l$ eigenvectors of $L_\mathrm{rw}$ as columns
+\\
+Drop the first column of $H$ \\
+Run $k$-means++ on the rows of $H$ with $k$ clusters to produce
+$\ca{P}_1, \ldots, \ca{P}_k$ \\
+\Return $\ca{P}_1, \ldots, \ca{P}_k$
+}
 
 \end{algorithm}
 
@@ -934,27 +934,27 @@ available in Section~\ref{sec:notes_timing}.
 
 \vspace*{0.5cm}
 \begin{algorithm}[H]
-  \caption{Motif-based random-walk spectral clustering}
-  \label{alg:motifrwspectclust}
+\caption{Motif-based random-walk spectral clustering}
+\label{alg:motifrwspectclust}
 
-  \SetKwFunction{Main}{MotifRWSpectClust}
-  \newcommand{\MainArgs}{$\ca{G},\mathcal{M},k,l$}
+\SetKwFunction{Main}{MotifRWSpectClust}
+\newcommand{\MainArgs}{$\ca{G},\mathcal{M},k,l$}
 
-  \BlankLine
-  \Input{Graph $\ca{G}$, motif $\ca{M}$, number of clusters $k$, dimension
-  $l$}
-  \Output{Partition $\ca{P}_1, \ldots, \ca{P}_k$}
-  \BlankLine
+\BlankLine
+\Input{Graph $\ca{G}$, motif $\ca{M}$, number of clusters $k$, dimension
+$l$}
+\Output{Partition $\ca{P}_1, \ldots, \ca{P}_k$}
+\BlankLine
 
-  \Function{\Main{\MainArgs}}{
-    Construct the motif adjacency matrix $M$ of the graph $\ca{G}$ with
-    motif $\ca{M}$ \\
-    Let $\tilde{M}$ be $M$ restricted to its largest connected component,
-    $C$ \\
-    $\ca{P}_1, \ldots, \ca{P}_k \leftarrow$
-    \texttt{RWSpectClust($\tilde{M},k,l$)} \\
-    \Return $\ca{P}_1, \ldots, \ca{P}_k$
-  }
+\Function{\Main{\MainArgs}}{
+Construct the motif adjacency matrix $M$ of the graph $\ca{G}$ with
+motif $\ca{M}$ \\
+Let $\tilde{M}$ be $M$ restricted to its largest connected component,
+$C$ \\
+$\ca{P}_1, \ldots, \ca{P}_k \leftarrow$
+\texttt{RWSpectClust($\tilde{M},k,l$)} \\
+\Return $\ca{P}_1, \ldots, \ca{P}_k$
+}
 
 \end{algorithm}
 
@@ -994,18 +994,18 @@ We define the \emph{symmetric two-block DSBM} as the DSBM with $k=2$,
 $n_1=n_2=n$ and
 $F =
 \begin{psmallmatrix}
-  p & q \\ q & p
+p & q \\ q & p
 \end{psmallmatrix}$
 where $p > q$. Figure~\ref{fig:sym_two_block_dsbm} illustrates the block
 structure and sparsity matrix of this model. Thicker lines indicate existence
 of edges with higher probability.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.8,draft=false]{%
-  ../tikz/sym_two_block_dsbm/sym_two_block_dsbm.pdf}
-  \caption{Symmetric two-block DSBM block structure and sparsity matrix}
-  \label{fig:sym_two_block_dsbm}
+\centering
+\includegraphics[scale=0.8,draft=false]{%
+../tikz/sym_two_block_dsbm/sym_two_block_dsbm.pdf}
+\caption{Symmetric two-block DSBM block structure and sparsity matrix}
+\label{fig:sym_two_block_dsbm}
 \end{figure}
 
 We test the performance of Algorithm~\ref{alg:motifrwspectclust} across various
@@ -1023,20 +1023,20 @@ with small connected components, especially when $\ca{G}$ is sparse, and hence
 only cluster a subset of the vertices of $\ca{G}$.
 
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifsym/motifsym_1.pdf}
-    \caption{$n=50$, $p=0.3$, $q=0.2$}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifsym/motifsym_2.pdf}
-    \caption{$n=100$, $p=0.15$, $q=0.1$}
-  \end{subfigure}
-  \caption{ARI violin plots for the symmetric two-block DSBM}
-  \label{fig:motifsym}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/motifsym/motifsym_1.pdf}
+\caption{$n=50$, $p=0.3$, $q=0.2$}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/motifsym/motifsym_2.pdf}
+\caption{$n=100$, $p=0.15$, $q=0.1$}
+\end{subfigure}
+\caption{ARI violin plots for the symmetric two-block DSBM}
+\label{fig:motifsym}
 \end{figure}
 
 \subsection{Asymmetric two-block DSBMs} \label{sec:motif_asymm_dsbms}
@@ -1045,17 +1045,17 @@ We define the \emph{asymmetric two-block DSBM} as the DSBM with $k=2$,
 $n_1=n_2=n$ and
 $F =
 \begin{psmallmatrix}
-  p & q_1 \\ q_2 & p
+p & q_1 \\ q_2 & p
 \end{psmallmatrix}$
 where $q_1 > q_2$ and $p = \frac{1}{2}(q_1+q_2)$.
 Figure~\ref{fig:asym_two_block_dsbm} shows this model.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.8,draft=false]{%
-  ../tikz/asym_two_block_dsbm/asym_two_block_dsbm.pdf}
-  \caption{Asymmetric two-block DSBM block structure and sparsity matrix}
-  \label{fig:asym_two_block_dsbm}
+\centering
+\includegraphics[scale=0.8,draft=false]{%
+../tikz/asym_two_block_dsbm/asym_two_block_dsbm.pdf}
+\caption{Asymmetric two-block DSBM block structure and sparsity matrix}
+\label{fig:asym_two_block_dsbm}
 \end{figure}
 
 We test the performance of Algorithm~\ref{alg:motifrwspectclust} across various
@@ -1074,20 +1074,20 @@ symmetrisation $M=G+G^\top$ produces indistinguishable clusters, and hence the
 traditional method performs extremely poorly.
 
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifasym/motifasym_1.pdf}
-    \caption{$n=100$, $p=0.2$, $q_1=0.35$, $q_2=0.05$}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifasym/motifasym_2.pdf}
-    \caption{$n=200$, $p=0.15$, $q_1=0.25$, $q_2=0.05$}
-  \end{subfigure}
-  \caption{ARI violin plots for the asymmetric two-block DSBM}
-  \label{fig:motifasym}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/motifasym/motifasym_1.pdf}
+\caption{$n=100$, $p=0.2$, $q_1=0.35$, $q_2=0.05$}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/motifasym/motifasym_2.pdf}
+\caption{$n=200$, $p=0.15$, $q_1=0.25$, $q_2=0.05$}
+\end{subfigure}
+\caption{ARI violin plots for the asymmetric two-block DSBM}
+\label{fig:motifasym}
 \end{figure}
 
 \section{US Political Blogs network} \label{sec:motif_polblogs}
@@ -1114,21 +1114,21 @@ by the dashed line and circled vertices in Figure~\ref{fig:polblogs_network}.
 
 \vspace*{0.5cm}
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_network.pdf}
-    \caption{The US Political Blogs network}
-    \label{fig:polblogs_network}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_ari_conn.pdf}
-    \caption{ARI against $|C|$ across motifs}
-    \label{fig:polblogs_ariplot}
-  \end{subfigure}
-  \caption{Plots relating to the US Political Blogs network}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/polblogs/polblogs_network.pdf}
+\caption{The US Political Blogs network}
+\label{fig:polblogs_network}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/polblogs/polblogs_ari_conn.pdf}
+\caption{ARI against $|C|$ across motifs}
+\label{fig:polblogs_ariplot}
+\end{subfigure}
+\caption{Plots relating to the US Political Blogs network}
 \end{figure}
 
 Figure~\ref{fig:polblogs_embedding} shows the embedding given by eigenvectors 2
@@ -1142,22 +1142,22 @@ eigenvector 2. The clusterings are very similar, giving an ARI of $0.82$.
 
 \vspace*{0.5cm}
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_M12_truth.pdf}
-    \caption{Colouring by truth label}
-    \label{fig:polblogs_embedding_truth}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_M12_clusts.pdf}
-    \caption{Colouring by $k$-means++ cluster}
-    \label{fig:polblogs_embedding_kmeans}
-  \end{subfigure}
-  \caption{Eigendecomposition embedding of the US Political Blogs network}
-  \label{fig:polblogs_embedding}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/polblogs/polblogs_M12_truth.pdf}
+\caption{Colouring by truth label}
+\label{fig:polblogs_embedding_truth}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/polblogs/polblogs_M12_clusts.pdf}
+\caption{Colouring by $k$-means++ cluster}
+\label{fig:polblogs_embedding_kmeans}
+\end{subfigure}
+\caption{Eigendecomposition embedding of the US Political Blogs network}
+\label{fig:polblogs_embedding}
 \end{figure}
 
 \pagebreak
@@ -1191,26 +1191,26 @@ motifs, with pairwise ARIs equal to $\textrm{ARI}(\ca{M}_\mathrm{s}, \ca{M}_6)
 $\textrm{ARI}(\ca{M}_6, \ca{M}_9) = 0.73$.
 
 \begin{figure}[H]
-  \begin{subfigure}{.325\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/us_migration/us_migration_sweep_profile_Ms.pdf}
-    \caption{$\ca{M}_\mathrm{s}$}
-  \end{subfigure}
-  \begin{subfigure}{.325\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/us_migration/us_migration_sweep_profile_M6.pdf}
-    \caption{$\ca{M}_6$}
-  \end{subfigure}
-  \begin{subfigure}{.325\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/us_migration/us_migration_sweep_profile_M9.pdf}
-    \caption{$\ca{M}_9$}
-  \end{subfigure}
-  \caption{Sweep profiles of the US Migration network}
-  \label{fig:migration_sweep}
+\begin{subfigure}{.325\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/us_migration/us_migration_sweep_profile_Ms.pdf}
+\caption{$\ca{M}_\mathrm{s}$}
+\end{subfigure}
+\begin{subfigure}{.325\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/us_migration/us_migration_sweep_profile_M6.pdf}
+\caption{$\ca{M}_6$}
+\end{subfigure}
+\begin{subfigure}{.325\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/us_migration/us_migration_sweep_profile_M9.pdf}
+\caption{$\ca{M}_9$}
+\end{subfigure}
+\caption{Sweep profiles of the US Migration network}
+\label{fig:migration_sweep}
 \end{figure}
 
 Next, Figure~\ref{fig:us_migration} plots maps of the US, with counties
@@ -1254,16 +1254,16 @@ $\ca{M}_9$.
 
 \vspace*{-1cm}
 \begin{figure}[H]
-  \begin{table}[H]
-    \centering
-    \setlength{\tabcolsep}{0em}
-    \begin{tabular}{ |c|c|c|c| }
-      \expandableinput ../../results/us_migration/us_migration_table.txt
-    \end{tabular}
-  \end{table}
-  \vspace*{-0.5cm}
-  \caption{Motif-based colourings of the US Migration network}
-  \label{fig:us_migration}
+\begin{table}[H]
+\centering
+\setlength{\tabcolsep}{0em}
+\begin{tabular}{ |c|c|c|c| }
+\expandableinput ../../results/us_migration/us_migration_table.txt
+\end{tabular}
+\end{table}
+\vspace*{-0.5cm}
+\caption{Motif-based colourings of the US Migration network}
+\label{fig:us_migration}
 \end{figure}
 \clearpage{}
 \clearpage{}
@@ -1284,11 +1284,11 @@ network.
 \section{Bipartite graphs} \label{sec:bipartite_graphs}
 
 \begin{definition}
-  A \emph{bipartite graph} is a graph $\ca{G}=(\ca{V,E})$ where $\ca{V}$ can be
-  partitioned into $\ca{V} = \ca{S} \sqcup \ca{D}$ such that $\ca{E} \subseteq
-  \ca{S} \times \ca{D}$. That is, every edge starts in $\ca{S}$ and ends in
-  $\ca{D}$. We refer to $\ca{S}$ as the \emph{source vertices} and to $\ca{D}$
-  as the \emph{destination vertices}.
+A \emph{bipartite graph} is a graph $\ca{G}=(\ca{V,E})$ where $\ca{V}$ can be
+partitioned into $\ca{V} = \ca{S} \sqcup \ca{D}$ such that $\ca{E} \subseteq
+\ca{S} \times \ca{D}$. That is, every edge starts in $\ca{S}$ and ends in
+$\ca{D}$. We refer to $\ca{S}$ as the \emph{source vertices} and to $\ca{D}$
+as the \emph{destination vertices}.
 \end{definition}
 
 \subsection{Collider and expander motifs} \label{sec:coll_expa}
@@ -1299,10 +1299,10 @@ motifs; the \emph{collider} and the \emph{expander}
 \}$.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.8,draft=false]{../tikz/expa_coll/expa_coll.pdf}
-  \caption{The collider and expander motifs}
-  \label{fig:expa_coll}
+\centering
+\includegraphics[scale=0.8,draft=false]{../tikz/expa_coll/expa_coll.pdf}
+\caption{The collider and expander motifs}
+\label{fig:expa_coll}
 \end{figure}
 
 These motifs are useful for bipartite clustering because of
@@ -1316,25 +1316,25 @@ over their mutual neighbours of the average weights of their edges to (resp.
 from) that neighbour.
 
 \begin{proposition}[Colliders and expanders in bipartite graphs]
-  \label{prop:coll_expa_formulae}
-  Let $\ca{G} = (\ca{V,E},W)$ be a directed bipartite graph. Let
-  $M_\mathrm{coll}$ and $M_\mathrm{expa}$ be the structural or functional MAMs
-  of $\ca{M}_\mathrm{coll}$ and $\ca{M}_\mathrm{expa}$ respectively in
-  $\ca{G}$. Then
-  %
-  \begin{align*}
-    (M_\mathrm{coll})_{i j} &= \bb{I} \{i \neq j\} \hspace*{-0.4cm}
-    \sum_{\substack{k \in \ca{D} \\ (i,k), (j,k) \in \ca{E}}} \hspace*{-0.2cm}
-    \frac{1}{2} \Big[ W((i,k)) + W((j,k)) \Big]\,, &(1)\\
-    (M_\mathrm{expa})_{i j} &= \bb{I} \{i \neq j\} \hspace*{-0.4cm}
-    \sum_{\substack{k \in \ca{S} \\ (k,i), (k,j) \in \ca{E}}}
-    \hspace*{-0.2cm}\frac{1}{2} \Big[ W((k,i)) + W((k,j)) \Big]\,. &(2)
-  \end{align*}
-  %
+\label{prop:coll_expa_formulae}
+Let $\ca{G} = (\ca{V,E},W)$ be a directed bipartite graph. Let
+$M_\mathrm{coll}$ and $M_\mathrm{expa}$ be the structural or functional MAMs
+of $\ca{M}_\mathrm{coll}$ and $\ca{M}_\mathrm{expa}$ respectively in
+$\ca{G}$. Then
+%
+\begin{align*}
+(M_\mathrm{coll})_{i j} &= \bb{I} \{i \neq j\} \hspace*{-0.4cm}
+\sum_{\substack{k \in \ca{D} \\ (i,k), (j,k) \in \ca{E}}} \hspace*{-0.2cm}
+\frac{1}{2} \Big[ W((i,k)) + W((j,k)) \Big]\,, &(1)\\
+(M_\mathrm{expa})_{i j} &= \bb{I} \{i \neq j\} \hspace*{-0.4cm}
+\sum_{\substack{k \in \ca{S} \\ (k,i), (k,j) \in \ca{E}}}
+\hspace*{-0.2cm}\frac{1}{2} \Big[ W((k,i)) + W((k,j)) \Big]\,. &(2)
+\end{align*}
+%
 \end{proposition}
 %
 \begin{proof}
-  See Proof~\ref{proof:coll_expa_formulae}.
+See Proof~\ref{proof:coll_expa_formulae}.
 \end{proof}
 
 \subsection{Bipartite spectral clustering algorithm}
@@ -1348,36 +1348,36 @@ Section~\ref{sec:coll_expa}), and then applies random-walk spectral clustering
 \vspace*{0.5cm}
 \begin{algorithm}[H]
 
-  \SetKwFunction{Main}{BipartiteRWSpectClust}
-  \newcommand{\MainArgs}{$\ca{G},k_\ca{S},k_\ca{D},l_\ca{S},l_\ca{D}$}
+\SetKwFunction{Main}{BipartiteRWSpectClust}
+\newcommand{\MainArgs}{$\ca{G},k_\ca{S},k_\ca{D},l_\ca{S},l_\ca{D}$}
 
-  \BlankLine
-  \Input{Bipartite graph $\ca{G}$, source clusters $k_\ca{S}$, destination
-    clusters $k_\ca{D}$, source dimension $l_\ca{S}$, destination dimension
-  $l_\ca{D}$}
-  \Output{Source partition $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}}$, destination
-  partition $\ca{D}_1, \ldots, \ca{D}_{k_\ca{D}}$}
-  \BlankLine
+\BlankLine
+\Input{Bipartite graph $\ca{G}$, source clusters $k_\ca{S}$, destination
+clusters $k_\ca{D}$, source dimension $l_\ca{S}$, destination dimension
+$l_\ca{D}$}
+\Output{Source partition $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}}$, destination
+partition $\ca{D}_1, \ldots, \ca{D}_{k_\ca{D}}$}
+\BlankLine
 
-  \Function{\Main{\MainArgs}}{
-    Construct the collider motif adjacency matrix $M_\mathrm{coll}$ of the
-    graph $\ca{G}$ \\
-    Construct the expander motif adjacency matrix $M_\mathrm{expa}$ of the
-    graph $\ca{G}$ \\
-    $M_\mathrm{coll} \leftarrow M_\mathrm{coll}[\ca{S,S}]$ \Comm*{restrict rows
-    and columns of $M_\mathrm{coll}$ to $\ca{S}$ \hspace*{0.07cm}}
-    $M_\mathrm{expa} \leftarrow M_\mathrm{expa}[\ca{D,D}]$ \Comm*{restrict rows
-    and columns of $M_\mathrm{expa}$ to $\ca{D}$}
-    $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}} \leftarrow$
-    \texttt{RWSpectClust($M_\mathrm{coll},k_\ca{S},l_\ca{S}$)} \\
-    $\ca{D}_1, \ldots, \ca{D}_{k_\ca{D}} \leftarrow$
-    \texttt{RWSpectClust($M_\mathrm{expa},k_\ca{D},l_\ca{D}$)} \\
-    \Return $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}}$ and $\ca{D}_1, \ldots,
-    \ca{D}_{k_\ca{D}}$
-  }
+\Function{\Main{\MainArgs}}{
+Construct the collider motif adjacency matrix $M_\mathrm{coll}$ of the
+graph $\ca{G}$ \\
+Construct the expander motif adjacency matrix $M_\mathrm{expa}$ of the
+graph $\ca{G}$ \\
+$M_\mathrm{coll} \leftarrow M_\mathrm{coll}[\ca{S,S}]$ \Comm*{restrict rows
+and columns of $M_\mathrm{coll}$ to $\ca{S}$ \hspace*{0.07cm}}
+$M_\mathrm{expa} \leftarrow M_\mathrm{expa}[\ca{D,D}]$ \Comm*{restrict rows
+and columns of $M_\mathrm{expa}$ to $\ca{D}$}
+$\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}} \leftarrow$
+\texttt{RWSpectClust($M_\mathrm{coll},k_\ca{S},l_\ca{S}$)} \\
+$\ca{D}_1, \ldots, \ca{D}_{k_\ca{D}} \leftarrow$
+\texttt{RWSpectClust($M_\mathrm{expa},k_\ca{D},l_\ca{D}$)} \\
+\Return $\ca{S}_1, \ldots, \ca{S}_{k_\ca{S}}$ and $\ca{D}_1, \ldots,
+\ca{D}_{k_\ca{D}}$
+}
 
-  \caption{Bipartite random walk spectral clustering}
-  \label{alg:bipartite_clustering}
+\caption{Bipartite random walk spectral clustering}
+\label{alg:bipartite_clustering}
 \end{algorithm}
 
 \section{Bipartite stochastic block models} \label{sec:bipartite_sbms}
@@ -1386,8 +1386,8 @@ We define the \emph{bipartite stochastic block model} (BSBM)
 \cite{florescu2016spectral} as the DSBM with $k=4$, $n_1 = \dots = n_4=n$ and
 $F =
 \begin{psmallmatrix}
-  0 & 0 & p & q \\ 0 & 0 & q & p \\ 0 & 0 & 0 & 0 \\ 0
-  & 0 & 0 & 0
+0 & 0 & p & q \\ 0 & 0 & q & p \\ 0 & 0 & 0 & 0 \\ 0
+& 0 & 0 & 0
 \end{psmallmatrix}$
 where $p > q$. Figure~\ref{fig:bipartite_bsbm} illustrates the block structure
 and sparsity matrix of this model. This model partitions the source vertices as
@@ -1396,11 +1396,11 @@ $\ca{D}=\ca{D}_1 \sqcup \ca{D}_2$. Edges exist with high probability from
 $\ca{S}_1$ to $\ca{D}_1$ and from $\ca{S}_2$ to $\ca{D}_2$.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.8,draft=false]{%
-  ../tikz/bipartite_dsbm/bipartite_dsbm.pdf}
-  \caption{BSBM block structure and sparsity matrix}
-  \label{fig:bipartite_bsbm}
+\centering
+\includegraphics[scale=0.8,draft=false]{%
+../tikz/bipartite_dsbm/bipartite_dsbm.pdf}
+\caption{BSBM block structure and sparsity matrix}
+\label{fig:bipartite_bsbm}
 \end{figure}
 
 We test the performance of Algorithm~\ref{alg:bipartite_clustering} with
@@ -1417,20 +1417,20 @@ Performance of the two methods is very similar, for source and destination
 vertices.
 
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/bipartite/bipartite1.pdf}
-    \caption{$n=100$, $p=0.2$, $q=0.1$}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/bipartite/bipartite2.pdf}
-    \caption{$n=200$, $p=0.1$, $q=0.06$}
-  \end{subfigure}
-  \caption{ARI violin plots for the BSBM}
-  \label{fig:bipartite}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/bipartite/bipartite1.pdf}
+\caption{$n=100$, $p=0.2$, $q=0.1$}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/bipartite/bipartite2.pdf}
+\caption{$n=200$, $p=0.1$, $q=0.06$}
+\end{subfigure}
+\caption{ARI violin plots for the BSBM}
+\label{fig:bipartite}
 \end{figure}
 
 \section{American Revolution network} \label{sec:bipartite_american_revolution}
@@ -1451,22 +1451,22 @@ algorithm succeeds in clustering people based on their common memberships, and
 in clustering organisations based on their common members.
 
 \begin{figure}[H]
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/american_revolution/american_revolution_source.pdf}
-    \caption{Grouping people into 5 clusters}
-    \label{fig:bipartite_revolution_source}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/american_revolution/american_revolution_dest.pdf}
-    \caption{Grouping organisations into 2 clusters}
-    \label{fig:bipartite_revolution_dest}
-  \end{subfigure}
-  \caption{Bipartite clustering of the American Revolution network}
-  \label{fig:bipartite_revolution}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/american_revolution/american_revolution_source.pdf}
+\caption{Grouping people into 5 clusters}
+\label{fig:bipartite_revolution_source}
+\end{subfigure}
+\begin{subfigure}{.49\textwidth}
+\centering
+\includegraphics[scale=0.4,draft=false]{%
+../../results/american_revolution/american_revolution_dest.pdf}
+\caption{Grouping organisations into 2 clusters}
+\label{fig:bipartite_revolution_dest}
+\end{subfigure}
+\caption{Bipartite clustering of the American Revolution network}
+\label{fig:bipartite_revolution}
 \end{figure}
 
 \section{Unicode Languages network} \label{sec:bipartite_languages}
@@ -1508,20 +1508,20 @@ territories are Laos, Norway and Timor-Leste, and the languages are Lao,
 Norwegian Bokm{\aa}l and Norwegian Nynorsk.
 
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.6, draft=false]{%
-  ../../results/languages/languages_source_map_clusts.pdf}
-  \caption{Clustering the territories from the Unicode Languages network}
-  \label{fig:bipartite_languages_map}
+\centering
+\includegraphics[scale=0.6, draft=false]{%
+../../results/languages/languages_source_map_clusts.pdf}
+\caption{Clustering the territories from the Unicode Languages network}
+\label{fig:bipartite_languages_map}
 \end{figure}
 
 \begin{table}[H]
-  \centering
-  \scriptsize
-  \begin{tabular}{ |c|c|c|c|c|c| }
-    \hline
-    \rule{0pt}{1.2em}
-    \cellcolor[HTML]{8DD3C7} Cluster 1 &
+\centering
+\scriptsize
+\begin{tabular}{ |c|c|c|c|c|c| }
+\hline
+\rule{0pt}{1.2em}
+\cellcolor[HTML]{8DD3C7} Cluster 1 &
 \cellcolor[HTML]{FFFFB3} Cluster 2 &
 \cellcolor[HTML]{BEBADA} Cluster 3 &
 \cellcolor[HTML]{FB8072} Cluster 4 &
@@ -1555,11 +1555,11 @@ $|\textrm{Cluster\ } 3 |$ = 15 &
 $|\textrm{Cluster\ } 4 |$ = 11 &
 $|\textrm{Cluster\ } 5 |$ = 10 &
 $|\textrm{Cluster\ } 6 |$ = 3
-  \\[0.1cm]
-    \hline
-  \end{tabular}
-  \caption{Clustering the territories from the Unicode Languages network}
-  \label{tab:bipartite_languages_source_clusters}
+\\[0.1cm]
+\hline
+\end{tabular}
+\caption{Clustering the territories from the Unicode Languages network}
+\label{tab:bipartite_languages_source_clusters}
 \end{table}
 
 For the destination vertices, we present the six clusters obtained by
@@ -1585,13 +1585,13 @@ it is spoken more in Thailand than in Malaysia.
 
 \vspace*{0.5cm}
 \begin{table}[H]
-  \centering
-  \scriptsize
-  \begin{tabular}{ |c|c|c|c|c|c| }
-    \hline
-    \rule{0pt}{1.2em}
-    Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 &
-    Cluster 5 & Cluster 6 \\[0.1cm]
+\centering
+\scriptsize
+\begin{tabular}{ |c|c|c|c|c|c| }
+\hline
+\rule{0pt}{1.2em}
+Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 &
+Cluster 5 & Cluster 6 \\[0.1cm]
 \hline \rule{0pt}{1.2em}
 Spanish & English & Swahili & Indonesian & Chinese & Thai \\
 Arabic & Hindi & Kinyarwanda & Javanese & Wu Chinese & N.E.\ Thai \\
@@ -1620,11 +1620,11 @@ $|\textrm{Cluster\ } 3 |$ = 25 &
 $|\textrm{Cluster\ } 4 |$ = 15 &
 $|\textrm{Cluster\ } 5 |$ = 13 &
 $|\textrm{Cluster\ } 6 |$ = 7
-  \\[0.1cm]
-    \hline
-  \end{tabular}
-  \caption{Clustering the languages from the Unicode Languages network}
-  \label{tab:bipartite_languages_dest_clusters}
+\\[0.1cm]
+\hline
+\end{tabular}
+\caption{Clustering the languages from the Unicode Languages network}
+\label{tab:bipartite_languages_dest_clusters}
 \end{table}
 
 \clearpage{}
@@ -1704,395 +1704,395 @@ performance.
 \section{Proofs}
 
 \begin{prf}[Proposition~\ref{prop:motif_adj_matrix_formula}, MAM formula]
-  \label{proof:motif_adj_matrix_formula}
-  %
-  Consider $(1)$. We sum over functional instances $\ca{M} \cong \ca{H} \leq
-  \ca{G}$ such that $\{i,j\} \in \ca{A(H)}$.
-  This is equivalent to summing over $\{k_2, \ldots, k_{m-1}\} \subseteq
-  \ca{V}$ and $\sigma \in S_\ca{M,A}^\sim$, such that $k_u$ are all distinct
-  and
-  %
-  $$ (u,v) \in \ca{E_M} \implies (k_{\sigma u}, k_{\sigma v}) \in \ca{E}\,.
-  \qquad (\dagger) $$
-  %
-  This is because the vertex set $\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}$
-  indicates which vertices are present in the instance $\ca{H}$, and $\sigma$
-  describes the mapping from $\ca{V_M}$ onto those vertices: $u \mapsto
-  k_{\sigma u}$. We take $\sigma \in S_\ca{M,A}^\sim$ to ensure that $\{i,j\}
-  \in \ca{A(H)}$ (since $i=k_1, \ j=k_m$), and that instances are counted
-  exactly once.
-  The condition $(\dagger)$ is to check that $\ca{H}$ is a functional instance
-  of $\ca{M}$ in $\ca{G}$. Hence
-  %
-  \begin{align*}
-    M^\mathrm{func}_{i j} &= \frac{1}{|\ca{E_M}|}
-    \sum_{\ca{M} \cong \ca{H} \leq
-    \ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e \in
-    \ca{E_H}} W(e) \\
-    %
-    &=  \frac{1}{|\ca{E_M}|} \sum_{\{ k_2, \ldots, k_{m-1} \}} \sum_{\sigma \in
-    S_\ca{M,A}^\sim} \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\dagger)
-    \big\} \sum_{e \in \ca{E_H}} W(e)\,.
-  \end{align*}
-  %
-  For the first term, by conditioning on the types of edge in $\ca{E_M}$:
-  \begin{align*}
-    %
-    \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\dagger) \big\}
-    &= \prod_{\ca{E}_\ca{M}^0} \bb{I} \{ k_{\sigma u} \neq k_{\sigma v} \} \\
-    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{s}} \bb{I} \{ (k_{\sigma u},
-    k_{\sigma v}) \in \ca{E} \} \\
-    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{d}} \bb{I} \{(k_{\sigma u},
-      k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \in
-    \ca{E}\} \\
-    %
-    &= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{n})_{k_{\sigma u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma v}}
-    \\
-    %
-    &= J^\mathrm{func}_{\mathbf{k},\sigma}\,.
-    %
-  \end{align*}
-  %
-  Assuming $\big\{ k_u \textrm{ all distinct}, \, (\dagger) \big\}$, the second
-  term is
-  %
-  \begin{align*}
-    %
-    \sum_{e \in \ca{E_H}} W(e)
-    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} W((k_{\sigma u},k_{\sigma v}))
-    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} \big( W((k_{\sigma u},k_{\sigma v})) +
-    W((k_{\sigma v},k_{\sigma u})) \big) \\
-    %
-    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma v}}
-    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
-    v}} \\
-    %
-    &= G^\mathrm{func}_{\mathbf{k},\sigma}
-  \end{align*}
-  %
-  as required. For $(2)$, we simply change $(\dagger)$ to $(\ddagger)$ to check
-  that an instance is a \emph{structural} instance:
-  %
-  $$ (u,v) \in \ca{E_M} \iff (k_{\sigma u}, k_{\sigma v}) \in \ca{E} \qquad
-  (\ddagger) $$
-  %
-  Now for the first term:
-  %
-  \begin{align*}
-    %
-    \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\ddagger) \big\}
-    &= \prod_{\ca{E}_\ca{M}^0} \bb{I} \{(k_{\sigma u}, k_{\sigma v}) \notin
-    \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \notin \ca{E}\} \\
-    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{s}} \bb{I} \{(k_{\sigma u},
-      k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u})
-      \notin
-    \ca{E}\} \\
-    & \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{d}} \bb{I} \{(k_{\sigma u},
-      k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \in
-    \ca{E}\} \\
-    %
-    &= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{0})_{k_{\sigma u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{s}} (J_\mathrm{s})_{k_{\sigma u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma v}}
-    \\
-    %
-    &= J^\mathrm{struc}_{\mathbf{k},\sigma}\,.
-    %
-  \end{align*}
-  %
-  Assuming $\big\{ k_u \textrm{ all distinct}, \, (\ddagger) \big\}$, the
-  second term is
-  %
-  \begin{align*}
-    %
-    \sum_{e \in \ca{E_H}} W(e)
-    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} W((k_{\sigma u},k_{\sigma v}))
-    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} \big( W((k_{\sigma u},k_{\sigma v})) +
-    W((k_{\sigma v},k_{\sigma u})) \big) \\
-    %
-    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} (G_\mathrm{s})_{k_{\sigma u},k_{\sigma
-    v}}
-    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
-    v}} \\
-    %
-    &= G^\mathrm{struc}_{\mathbf{k},\sigma}\,.
-  \end{align*}
+\label{proof:motif_adj_matrix_formula}
+%
+Consider $(1)$. We sum over functional instances $\ca{M} \cong \ca{H} \leq
+\ca{G}$ such that $\{i,j\} \in \ca{A(H)}$.
+This is equivalent to summing over $\{k_2, \ldots, k_{m-1}\} \subseteq
+\ca{V}$ and $\sigma \in S_\ca{M,A}^\sim$, such that $k_u$ are all distinct
+and
+%
+$$ (u,v) \in \ca{E_M} \implies (k_{\sigma u}, k_{\sigma v}) \in \ca{E}\,.
+\qquad (\dagger) $$
+%
+This is because the vertex set $\{k_2, \ldots, k_{m-1}\} \subseteq \ca{V}$
+indicates which vertices are present in the instance $\ca{H}$, and $\sigma$
+describes the mapping from $\ca{V_M}$ onto those vertices: $u \mapsto
+k_{\sigma u}$. We take $\sigma \in S_\ca{M,A}^\sim$ to ensure that $\{i,j\}
+\in \ca{A(H)}$ (since $i=k_1, \ j=k_m$), and that instances are counted
+exactly once.
+The condition $(\dagger)$ is to check that $\ca{H}$ is a functional instance
+of $\ca{M}$ in $\ca{G}$. Hence
+%
+\begin{align*}
+M^\mathrm{func}_{i j} &= \frac{1}{|\ca{E_M}|}
+\sum_{\ca{M} \cong \ca{H} \leq
+\ca{G}} \bb{I} \big\{ \{i,j\} \in \ca{A}(\ca{H}) \big\} \sum_{e \in
+\ca{E_H}} W(e) \\
+%
+&=  \frac{1}{|\ca{E_M}|} \sum_{\{ k_2, \ldots, k_{m-1} \}} \sum_{\sigma \in
+S_\ca{M,A}^\sim} \bb{I} \big\{ k_u \textrm{ all distinct}, \, (\dagger)
+\big\} \sum_{e \in \ca{E_H}} W(e)\,.
+\end{align*}
+%
+For the first term, by conditioning on the types of edge in $\ca{E_M}$:
+\begin{align*}
+%
+\bb{I} \big\{ k_u \textrm{ all distinct}, \, (\dagger) \big\}
+&= \prod_{\ca{E}_\ca{M}^0} \bb{I} \{ k_{\sigma u} \neq k_{\sigma v} \} \\
+& \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{s}} \bb{I} \{ (k_{\sigma u},
+k_{\sigma v}) \in \ca{E} \} \\
+& \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{d}} \bb{I} \{(k_{\sigma u},
+k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \in
+\ca{E}\} \\
+%
+&= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{n})_{k_{\sigma u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma v}}
+\\
+%
+&= J^\mathrm{func}_{\mathbf{k},\sigma}\,.
+%
+\end{align*}
+%
+Assuming $\big\{ k_u \textrm{ all distinct}, \, (\dagger) \big\}$, the second
+term is
+%
+\begin{align*}
+%
+\sum_{e \in \ca{E_H}} W(e)
+&= \sum_{\ca{E}_\ca{M}^\mathrm{s}} W((k_{\sigma u},k_{\sigma v}))
++ \sum_{\ca{E}_\ca{M}^\mathrm{d}} \big( W((k_{\sigma u},k_{\sigma v})) +
+W((k_{\sigma v},k_{\sigma u})) \big) \\
+%
+&= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma v}}
++ \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
+v}} \\
+%
+&= G^\mathrm{func}_{\mathbf{k},\sigma}
+\end{align*}
+%
+as required. For $(2)$, we simply change $(\dagger)$ to $(\ddagger)$ to check
+that an instance is a \emph{structural} instance:
+%
+$$ (u,v) \in \ca{E_M} \iff (k_{\sigma u}, k_{\sigma v}) \in \ca{E} \qquad
+(\ddagger) $$
+%
+Now for the first term:
+%
+\begin{align*}
+%
+\bb{I} \big\{ k_u \textrm{ all distinct}, \, (\ddagger) \big\}
+&= \prod_{\ca{E}_\ca{M}^0} \bb{I} \{(k_{\sigma u}, k_{\sigma v}) \notin
+\ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \notin \ca{E}\} \\
+& \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{s}} \bb{I} \{(k_{\sigma u},
+k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u})
+\notin
+\ca{E}\} \\
+& \qquad \times \prod_{\ca{E}_\ca{M}^\mathrm{d}} \bb{I} \{(k_{\sigma u},
+k_{\sigma v}) \in \ca{E} \textrm{ and } (k_{\sigma v}, k_{\sigma u}) \in
+\ca{E}\} \\
+%
+&= \prod_{\ca{E}_\ca{M}^0} (J_\mathrm{0})_{k_{\sigma u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{s}} (J_\mathrm{s})_{k_{\sigma u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma v}}
+\\
+%
+&= J^\mathrm{struc}_{\mathbf{k},\sigma}\,.
+%
+\end{align*}
+%
+Assuming $\big\{ k_u \textrm{ all distinct}, \, (\ddagger) \big\}$, the
+second term is
+%
+\begin{align*}
+%
+\sum_{e \in \ca{E_H}} W(e)
+&= \sum_{\ca{E}_\ca{M}^\mathrm{s}} W((k_{\sigma u},k_{\sigma v}))
++ \sum_{\ca{E}_\ca{M}^\mathrm{d}} \big( W((k_{\sigma u},k_{\sigma v})) +
+W((k_{\sigma v},k_{\sigma u})) \big) \\
+%
+&= \sum_{\ca{E}_\ca{M}^\mathrm{s}} (G_\mathrm{s})_{k_{\sigma u},k_{\sigma
+v}}
++ \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
+v}} \\
+%
+&= G^\mathrm{struc}_{\mathbf{k},\sigma}\,.
+\end{align*}
 
-  \hfill $\square$
+\hfill $\square$
 \end{prf}
 
 \pagebreak
 
 \begin{prf}[Proposition~\ref{prop:motif_adj_matrix_computation},
-  Complexity of MAM formula]
-  \label{proof:motif_adj_matrix_computation}
-  Suppose ${m \leq 3}$ and consider $M^\mathrm{func}$. The adjacency and
-  indicator matrices of $\ca{G}$ are
-  %
-  \begin{equation*}
-    \begin{aligned}[c]
-      &(1) \quad J = \bb{I} \{ G>0 \}\,, \\
-      &(2) \quad J_0 = \bb{I} \{ G + G^\top = 0 \} \circ J_\mathrm{n}\,, \\
-      &(3) \quad J_\mathrm{s} = J - J_\mathrm{d}\,, \\
-      &(4) \quad G_\mathrm{d} = (G + G^\top) \circ J_\mathrm{d} \,,
-    \end{aligned}
-    \hspace*{2cm}
-    \begin{aligned}[c]
-      &(5) \quad J_\mathrm{n} = \bb{I} \{I_{n \times n} = 0 \}\,, \\
-      &(6) \quad J_\mathrm{d} = J \circ J^\top\,, \\
-      &(7) \quad G_\mathrm{s} = G \circ J_\mathrm{s}\,, \\
-      &
-    \end{aligned}
-  \end{equation*}
-  %
-  and are computed using four additions and four element-wise multiplications.
-  $J^\mathrm{func}_{\mathbf{k},\sigma}$ is a product of at most three factors,
-  and $G^\mathrm{func}_{\mathbf{k},\sigma}$ contains at most three summands, so
-  %
-  $$ \sum_{k_2 \in \ca{V}} J^\mathrm{func}_{\mathbf{k},\sigma} \
-  G^\mathrm{func}_{\mathbf{k},\sigma} $$
-  %
-  is expressible as a sum of at most three matrices, each of which is
-  constructed with at most one matrix multiplication (where $\{k_{\sigma
-  r},k_{\sigma s}\} \neq \{i,j\}$) and one entry-wise multiplication (where
-  $\{k_{\sigma r},k_{\sigma s}\} = \{i,j\}$). This is repeated for each $\sigma
-  \in S_\ca{M,A}^\sim$ (at most six times) and the results are summed.
-  Calculations are identical for $M^\mathrm{struc}$.
+Complexity of MAM formula]
+\label{proof:motif_adj_matrix_computation}
+Suppose ${m \leq 3}$ and consider $M^\mathrm{func}$. The adjacency and
+indicator matrices of $\ca{G}$ are
+%
+\begin{equation*}
+\begin{aligned}[c]
+&(1) \quad J = \bb{I} \{ G>0 \}\,, \\
+&(2) \quad J_0 = \bb{I} \{ G + G^\top = 0 \} \circ J_\mathrm{n}\,, \\
+&(3) \quad J_\mathrm{s} = J - J_\mathrm{d}\,, \\
+&(4) \quad G_\mathrm{d} = (G + G^\top) \circ J_\mathrm{d} \,,
+\end{aligned}
+\hspace*{2cm}
+\begin{aligned}[c]
+&(5) \quad J_\mathrm{n} = \bb{I} \{I_{n \times n} = 0 \}\,, \\
+&(6) \quad J_\mathrm{d} = J \circ J^\top\,, \\
+&(7) \quad G_\mathrm{s} = G \circ J_\mathrm{s}\,, \\
+&
+\end{aligned}
+\end{equation*}
+%
+and are computed using four additions and four element-wise multiplications.
+$J^\mathrm{func}_{\mathbf{k},\sigma}$ is a product of at most three factors,
+and $G^\mathrm{func}_{\mathbf{k},\sigma}$ contains at most three summands, so
+%
+$$ \sum_{k_2 \in \ca{V}} J^\mathrm{func}_{\mathbf{k},\sigma} \
+G^\mathrm{func}_{\mathbf{k},\sigma} $$
+%
+is expressible as a sum of at most three matrices, each of which is
+constructed with at most one matrix multiplication (where $\{k_{\sigma
+r},k_{\sigma s}\} \neq \{i,j\}$) and one entry-wise multiplication (where
+$\{k_{\sigma r},k_{\sigma s}\} = \{i,j\}$). This is repeated for each $\sigma
+\in S_\ca{M,A}^\sim$ (at most six times) and the results are summed.
+Calculations are identical for $M^\mathrm{struc}$.
 
-  \hfill $\square$
+\hfill $\square$
 \end{prf}
 
 \begin{prf}[Proposition~\ref{prop:coll_expa_formulae},
-  Colliders and expanders in bipartite graphs]
-  \label{proof:coll_expa_formulae}
-  %
-  Consider (1) and the collider motif $\ca{M}_\mathrm{coll}$. Since $\ca{G}$ is
-  bipartite, $M_\mathrm{coll}^\mathrm{func} = M_\mathrm{coll}^\mathrm{struc} =
-  \vcentcolon M_\mathrm{coll}$, and by Table~\ref{tab:motif_adj_mat_table},
-  $M_\mathrm{coll} = \frac{1}{2} J_\mathrm{n} \circ (J G^\top + G J^\top)$.
-  Hence
-  %
-  \begin{align*}
-    (M_\mathrm{coll})_{i j} &= \frac{1}{2} (J_\mathrm{n})_{i j} \ (J G^\top + G
-    J^\top)_{i j} \\
-    &= \bb{I}\{i \neq j\} \sum_{k \in \ca{V}} \ \frac{1}{2} \Big(J_{i k} G_{j k}
-    + G_{i k} J_{j k} \Big) \\
-    &= \bb{I}\{i \neq j\} \sum_{k \in \ca{V}} \ \frac{1}{2} \,\bb{I} \, \Big\{
-    (i,k),(j,k) \in \ca{E} \Big\} \Big[W((i,k)) + W((j,k))\Big] \\
-    &= \bb{I} \{i \neq j\} \hspace*{-0.4cm} \sum_{\substack{k \in \ca{D} \\
-    (i,k), (j,k) \in \ca{E}}} \hspace*{-0.2cm} \frac{1}{2} \Big[ W((i,k)) +
-    W((j,k)) \Big]\,.
-  \end{align*}
-  %
-  Similarly for the expander motif, $M_\mathrm{expa} = \frac{1}{2} J_\mathrm{n}
-  \circ (J^\top G + G^\top J)$ so
-  %
-  \begin{align*}
-    (M_\mathrm{expa})_{i j} &= \frac{1}{2} (J_\mathrm{n})_{i j} \ (J^\top G +
-    G^\top J)_{i j} \\
-    &= \bb{I} \{i \neq j\} \hspace*{-0.4cm} \sum_{\substack{k \in \ca{S} \\
-    (k,i), (k,j) \in \ca{E}}} \hspace*{-0.2cm} \frac{1}{2} \Big[ W((k,i)) +
-    W((k,j)) \Big]\,.
-  \end{align*}
-  %
-  \hfill $\square$
+Colliders and expanders in bipartite graphs]
+\label{proof:coll_expa_formulae}
+%
+Consider (1) and the collider motif $\ca{M}_\mathrm{coll}$. Since $\ca{G}$ is
+bipartite, $M_\mathrm{coll}^\mathrm{func} = M_\mathrm{coll}^\mathrm{struc} =
+\vcentcolon M_\mathrm{coll}$, and by Table~\ref{tab:motif_adj_mat_table},
+$M_\mathrm{coll} = \frac{1}{2} J_\mathrm{n} \circ (J G^\top + G J^\top)$.
+Hence
+%
+\begin{align*}
+(M_\mathrm{coll})_{i j} &= \frac{1}{2} (J_\mathrm{n})_{i j} \ (J G^\top + G
+J^\top)_{i j} \\
+&= \bb{I}\{i \neq j\} \sum_{k \in \ca{V}} \ \frac{1}{2} \Big(J_{i k} G_{j k}
++ G_{i k} J_{j k} \Big) \\
+&= \bb{I}\{i \neq j\} \sum_{k \in \ca{V}} \ \frac{1}{2} \,\bb{I} \, \Big\{
+(i,k),(j,k) \in \ca{E} \Big\} \Big[W((i,k)) + W((j,k))\Big] \\
+&= \bb{I} \{i \neq j\} \hspace*{-0.4cm} \sum_{\substack{k \in \ca{D} \\
+(i,k), (j,k) \in \ca{E}}} \hspace*{-0.2cm} \frac{1}{2} \Big[ W((i,k)) +
+W((j,k)) \Big]\,.
+\end{align*}
+%
+Similarly for the expander motif, $M_\mathrm{expa} = \frac{1}{2} J_\mathrm{n}
+\circ (J^\top G + G^\top J)$ so
+%
+\begin{align*}
+(M_\mathrm{expa})_{i j} &= \frac{1}{2} (J_\mathrm{n})_{i j} \ (J^\top G +
+G^\top J)_{i j} \\
+&= \bb{I} \{i \neq j\} \hspace*{-0.4cm} \sum_{\substack{k \in \ca{S} \\
+(k,i), (k,j) \in \ca{E}}} \hspace*{-0.2cm} \frac{1}{2} \Big[ W((k,i)) +
+W((k,j)) \Big]\,.
+\end{align*}
+%
+\hfill $\square$
 \end{prf}
 
 \section{Examples}
 
 \begin{example}[Functional and structural instances]
-  \label{ex:instances}
-  Let $\ca{G}=(\ca{V,E})$ be the graph with $\ca{V} = \{ 1,2,3,4 \}$ and
-  $\ca{E} = \{ (1,2),(1,3),(1,4),(2,3),(3,4),(4,3) \}$. Let $(\ca{M,A})$ be the
-  anchored motif with $\ca{V_M} = \{1,2,3\}$, $\ca{E_M} =
-  \{(1,2),(1,3),(2,3)\}$ and $\ca{A} = \{1,3\}$ as defined in Figure
-  \ref{fig:instance_example_1}.
-  %
-  \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.7,draft=false]{%
-    ../tikz/instance_example_1/instance_example_1.pdf}
-    \caption{The specified graph $\ca{G}$ and anchored motif $\ca{M}$}
-    \label{fig:instance_example_1}
-  \end{figure}
-  %
-  There are three functional instances of $\ca{M}$ in $\ca{G}$, shown in
-  Figure~\ref{fig:instance_example_2}. However there is just one structural
-  instance of $\ca{M}$ in $\ca{G}$, given by $\ca{H}_1$. This is because the
-  double edge $3 \leftrightarrow 4$ in $\ca{G}$ prevents the subgraphs on
-  $\{1,3,4\}$ from being induced subgraphs.
-  %
-  \begin{align*}
-    \ca{H}_1 &: \quad \ca{V}_1 = \{ 1,2,3 \} ; \quad \ca{E}_1 = \{ (1,2) ,
-    (2,3) , (1,3) \} ; \quad \ca{A(H}_1) =  \big\{\{1,3\}\big\}\,, \\
-    \ca{H}_2 &: \quad \ca{V}_2 = \{ 1,3,4 \} ; \quad \ca{E}_2 = \{ (1,3) ,
-    (1,4) , (3,4) \} ; \quad \ca{A(H}_2) =  \big\{\{1,4\}\big\}\,, \\
-    \ca{H}_3 &: \quad \ca{V}_3 = \{ 1,3,4 \} ; \quad \ca{E}_3 = \{ (1,3) ,
-    (1,4) , (4,3) \} ; \quad \ca{A(H}_3) =  \big\{\{1,3\}\big\}\,.
-  \end{align*}
-  %
-  \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.7,draft=false]{%
-    ../tikz/instance_example_2/instance_example_2.pdf}
-    \caption{Functional instances $\ca{H}_1,\ca{H}_2$ and $\ca{H}_3$}
-    \label{fig:instance_example_2}
-  \end{figure}
+\label{ex:instances}
+Let $\ca{G}=(\ca{V,E})$ be the graph with $\ca{V} = \{ 1,2,3,4 \}$ and
+$\ca{E} = \{ (1,2),(1,3),(1,4),(2,3),(3,4),(4,3) \}$. Let $(\ca{M,A})$ be the
+anchored motif with $\ca{V_M} = \{1,2,3\}$, $\ca{E_M} =
+\{(1,2),(1,3),(2,3)\}$ and $\ca{A} = \{1,3\}$ as defined in Figure
+\ref{fig:instance_example_1}.
+%
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7,draft=false]{%
+../tikz/instance_example_1/instance_example_1.pdf}
+\caption{The specified graph $\ca{G}$ and anchored motif $\ca{M}$}
+\label{fig:instance_example_1}
+\end{figure}
+%
+There are three functional instances of $\ca{M}$ in $\ca{G}$, shown in
+Figure~\ref{fig:instance_example_2}. However there is just one structural
+instance of $\ca{M}$ in $\ca{G}$, given by $\ca{H}_1$. This is because the
+double edge $3 \leftrightarrow 4$ in $\ca{G}$ prevents the subgraphs on
+$\{1,3,4\}$ from being induced subgraphs.
+%
+\begin{align*}
+\ca{H}_1 &: \quad \ca{V}_1 = \{ 1,2,3 \} ; \quad \ca{E}_1 = \{ (1,2) ,
+(2,3) , (1,3) \} ; \quad \ca{A(H}_1) =  \big\{\{1,3\}\big\}\,, \\
+\ca{H}_2 &: \quad \ca{V}_2 = \{ 1,3,4 \} ; \quad \ca{E}_2 = \{ (1,3) ,
+(1,4) , (3,4) \} ; \quad \ca{A(H}_2) =  \big\{\{1,4\}\big\}\,, \\
+\ca{H}_3 &: \quad \ca{V}_3 = \{ 1,3,4 \} ; \quad \ca{E}_3 = \{ (1,3) ,
+(1,4) , (4,3) \} ; \quad \ca{A(H}_3) =  \big\{\{1,3\}\big\}\,.
+\end{align*}
+%
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7,draft=false]{%
+../tikz/instance_example_2/instance_example_2.pdf}
+\caption{Functional instances $\ca{H}_1,\ca{H}_2$ and $\ca{H}_3$}
+\label{fig:instance_example_2}
+\end{figure}
 
 \end{example}
 
 \begin{example}[Motif adjacency matrices]
-  \label{ex:motif_adj_matrices}
-  Let $\ca{G}$ and $\ca{(M,A)}$ be as in Example~\ref{ex:instances}, and
-  suppose $\ca{G}$ has weight map $W((i,j)) \vcentcolon = i + j$. Then using
-  Definition~\ref{def:motif_adj_matrices} directly, the functional and
-  structural MAMs of $\ca{(M,A)}$ in $\ca{G}$ are respectively
+\label{ex:motif_adj_matrices}
+Let $\ca{G}$ and $\ca{(M,A)}$ be as in Example~\ref{ex:instances}, and
+suppose $\ca{G}$ has weight map $W((i,j)) \vcentcolon = i + j$. Then using
+Definition~\ref{def:motif_adj_matrices} directly, the functional and
+structural MAMs of $\ca{(M,A)}$ in $\ca{G}$ are respectively
 
-  \vspace*{0.2cm}
-  $$ %
-  M^\mathrm{func} =
-  \begin{pmatrix}
-    0  & 0  & 28 & 16 \\
-    0  & 0  & 0  & 0  \\
-    28 & 0  & 0  & 0  \\
-    16 & 0  & 0  & 0
-  \end{pmatrix} \,,
-  \qquad
-  M^\mathrm{struc} =
-  \begin{pmatrix}
-    0  & 0  & 12 & 0  \\
-    0  & 0  & 0  & 0  \\
-    12 & 0  & 0  & 0  \\
-    0  & 0  & 0  & 0
-  \end{pmatrix}\,.
-  $$
+\vspace*{0.2cm}
+$$ %
+M^\mathrm{func} =
+\begin{pmatrix}
+0  & 0  & 28 & 16 \\
+0  & 0  & 0  & 0  \\
+28 & 0  & 0  & 0  \\
+16 & 0  & 0  & 0
+\end{pmatrix} \,,
+\qquad
+M^\mathrm{struc} =
+\begin{pmatrix}
+0  & 0  & 12 & 0  \\
+0  & 0  & 0  & 0  \\
+12 & 0  & 0  & 0  \\
+0  & 0  & 0  & 0
+\end{pmatrix}\,.
+$$
 \end{example}
 
 \pagebreak
 
 \begin{example}[Calculating an explicit formula for an MAM]
-  \label{ex:motif_adj_calc}
-  Consider the functional MAM of the simple motif $\ca{M}_6$
-  (Figure~\ref{fig:M6}).
-  %
-  \begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.7,draft=false]{../tikz/M6/M6.pdf}
-    \caption{The motif $\ca{M}_6$}
-    \label{fig:M6}
-  \end{figure}
-  %
-  We use Equation (1) in Proposition~\ref{prop:motif_adj_matrix_formula}.
-  Firstly, $m = |\ca{V_M}| = 3$ and $|\ca{E_M}| = 4$. The automorphism group of
-  $\ca{M}_6$ has order 2, corresponding to swapping vertices 1 and 3. Hence
-  $|S_\ca{M,A}^\sim| = |S_m| / 2 = 6/2 = 3$, and suitable representatives from
-  $S_\ca{M,A}^\sim$ are
+\label{ex:motif_adj_calc}
+Consider the functional MAM of the simple motif $\ca{M}_6$
+(Figure~\ref{fig:M6}).
+%
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7,draft=false]{../tikz/M6/M6.pdf}
+\caption{The motif $\ca{M}_6$}
+\label{fig:M6}
+\end{figure}
+%
+We use Equation (1) in Proposition~\ref{prop:motif_adj_matrix_formula}.
+Firstly, $m = |\ca{V_M}| = 3$ and $|\ca{E_M}| = 4$. The automorphism group of
+$\ca{M}_6$ has order 2, corresponding to swapping vertices 1 and 3. Hence
+$|S_\ca{M,A}^\sim| = |S_m| / 2 = 6/2 = 3$, and suitable representatives from
+$S_\ca{M,A}^\sim$ are
 
-  $$ S_\ca{M,A}^\sim = \left\{
-    %
-    \sigma_1 =
-    \begin{pmatrix}
-      1 & 2 & 3 \\
-      1 & 2 & 3
-    \end{pmatrix},
-    %
-    \sigma_2 =
-    \begin{pmatrix}
-      1 & 2 & 3 \\
-      2 & 1 & 3
-    \end{pmatrix},
-    %
-    \sigma_3 =
-    \begin{pmatrix}
-      1 & 2 & 3 \\
-      1 & 3 & 2
-    \end{pmatrix}
-  \right\}\,. \vspace*{0.2cm}$$
-  %
-  So by Proposition~\ref{prop:motif_adj_matrix_formula}, with $i=k_1$ and
-  $j=k_3$, and writing $k$ for $k_2$:
+$$ S_\ca{M,A}^\sim = \left\{
+%
+\sigma_1 =
+\begin{pmatrix}
+1 & 2 & 3 \\
+1 & 2 & 3
+\end{pmatrix},
+%
+\sigma_2 =
+\begin{pmatrix}
+1 & 2 & 3 \\
+2 & 1 & 3
+\end{pmatrix},
+%
+\sigma_3 =
+\begin{pmatrix}
+1 & 2 & 3 \\
+1 & 3 & 2
+\end{pmatrix}
+\right\}\,. \vspace*{0.2cm}$$
+%
+So by Proposition~\ref{prop:motif_adj_matrix_formula}, with $i=k_1$ and
+$j=k_3$, and writing $k$ for $k_2$:
 
-  $$
-  M^\mathrm{func}_{i j} = \frac{1}{4} \sum_{\sigma \in S_\ca{M,A}^\sim} \
-  \sum_{k \in \ca{V}} J^\mathrm{func}_{\mathbf{k},\sigma} \
-  G^\mathrm{func}_{\mathbf{k},\sigma}
-  $$
-  %
-  where since there are no missing edges in $\ca{M}_6$:
-  %
-  \begin{align*}
-    %
-    J^\mathrm{func}_{\mathbf{k},\sigma}
-    &= \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
-    \prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
-    v}}\,, \\
-    %
-    G^\mathrm{func}_{\mathbf{k},\sigma}
-    &= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma v}}
-    + \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
-    v}}\,.
-    %
-  \end{align*}
-  %
-  Writing out the sum over $\sigma$:
-  %
-  \begingroup
-  \allowdisplaybreaks
-  \begin{align*}
-    M^\mathrm{func}_{i j}
-    &= \frac{1}{4} \sum_{k=1}^n J^\mathrm{func}_{\mathbf{k},\sigma_1} \
-    G^\mathrm{func}_{\mathbf{k},\sigma_1} + \frac{1}{4} \sum_{k=1}^n
-    J^\mathrm{func}_{\mathbf{k},\sigma_2} \
-    G^\mathrm{func}_{\mathbf{k},\sigma_2} + \frac{1}{4} \sum_{k=1}^n
-    J^\mathrm{func}_{\mathbf{k},\sigma_3} \
-    G^\mathrm{func}_{\mathbf{k},\sigma_3} \\
-    %
-    &=         \frac{1}{4} \sum_{k=1}^n J_{j i} J_{j k} (J_\mathrm{d})_{i k}
-    \big(G_{j i} + G_{j k} + (G_\mathrm{d})_{i k}\big) \\
-    & \qquad + \frac{1}{4} \sum_{k=1}^n J_{i j} J_{i k} (J_\mathrm{d})_{j k}
-    \big(G_{i j} + G_{i k} + (G_\mathrm{d})_{j k}\big) \\
-    & \qquad + \frac{1}{4} \sum_{k=1}^n J_{k i} J_{k j} (J_\mathrm{d})_{i j}
-    \big(G_{k i} + G_{k j} + (G_\mathrm{d})_{i j}\big) \\
-    %
-    & \\
-    & \\
-    & \\
-    &=         \frac{1}{4} J^\top_{i j} \sum_{k=1}^n (J_\mathrm{d})_{i k}
-    J^\top_{k j} \big(G^\top_{i j} + (G_\mathrm{d})_{i k} + G^\top_{k j}\big) \\
-    & \qquad + \frac{1}{4} J_{i j} \sum_{k=1}^n J_{i k}
-    (J_\mathrm{d})_{k j} \big(G_{i j} + G_{i k} + (G_\mathrm{d})_{k j}\big) \\
-    & \qquad + \frac{1}{4} (J_\mathrm{d})_{i j}
-    \sum_{k=1}^n J^\top_{i k} J_{k j}
-    \big((G_\mathrm{d})_{i j} + G^\top_{i k} + G_{k j}\big) \,,
-  \end{align*}
-  \endgroup
-  %
-  and writing this as a sum of entry-wise and matrix products:
-  %
-  \begin{align*}
-    M^\textrm{func} &= \frac{1}{4} \Big[ J^\top \circ (J_\mathrm{d} G^\top) +
-      J^\top \circ (G_\mathrm{d} J^\top) + G^\top \circ (J_\mathrm{d} J^\top)
-    \Big] \\
-    & \qquad + \frac{1}{4} \Big[ J \circ (J G_\mathrm{d}) + J \circ (G
-    J_\mathrm{d}) + G \circ (J J_\mathrm{d}) \Big] \\
-    & \qquad + \frac{1}{4} \Big[ J_\mathrm{d} \circ (J^\top G) + J_\mathrm{d}
-    \circ (G^\top J) + G_\mathrm{d} \circ (J^\top J) \Big]
-  \end{align*}
-  %
-  where $A \circ B$ is an entry-wise product and $AB$ is a matrix product.
-  Finally, setting
-  $$C = J \circ (J G_\mathrm{d}) + J \circ (G J_\mathrm{d}) + G \circ (J
-  J_\mathrm{d}) + J_\mathrm{d} \circ (J^\top G)\,, $$
-  and
-  $$ C' = G_\mathrm{d} \circ (J^\top J)\,, $$
-  then we have that
-  $$ M^\mathrm{func} = \frac{1}{4} \big(C + C^\top + C' \big)\,. $$
-  as in Table~\ref{tab:motif_adj_mat_table}, achieved with just five matrix
-  multiplications, nine entry-wise multiplications and nine matrix additions
-  (including the four entry-wise multiplications and four additions needed to
-  construct the adjacency and indicator matrices).
+$$
+M^\mathrm{func}_{i j} = \frac{1}{4} \sum_{\sigma \in S_\ca{M,A}^\sim} \
+\sum_{k \in \ca{V}} J^\mathrm{func}_{\mathbf{k},\sigma} \
+G^\mathrm{func}_{\mathbf{k},\sigma}
+$$
+%
+where since there are no missing edges in $\ca{M}_6$:
+%
+\begin{align*}
+%
+J^\mathrm{func}_{\mathbf{k},\sigma}
+&= \prod_{\ca{E}_\ca{M}^\mathrm{s}} J_{k_{\sigma u},k_{\sigma v}}
+\prod_{\ca{E}_\ca{M}^\mathrm{d}} (J_\mathrm{d})_{k_{\sigma u},k_{\sigma
+v}}\,, \\
+%
+G^\mathrm{func}_{\mathbf{k},\sigma}
+&= \sum_{\ca{E}_\ca{M}^\mathrm{s}} G_{k_{\sigma u},k_{\sigma v}}
++ \sum_{\ca{E}_\ca{M}^\mathrm{d}} (G_\mathrm{d})_{k_{\sigma u},k_{\sigma
+v}}\,.
+%
+\end{align*}
+%
+Writing out the sum over $\sigma$:
+%
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+M^\mathrm{func}_{i j}
+&= \frac{1}{4} \sum_{k=1}^n J^\mathrm{func}_{\mathbf{k},\sigma_1} \
+G^\mathrm{func}_{\mathbf{k},\sigma_1} + \frac{1}{4} \sum_{k=1}^n
+J^\mathrm{func}_{\mathbf{k},\sigma_2} \
+G^\mathrm{func}_{\mathbf{k},\sigma_2} + \frac{1}{4} \sum_{k=1}^n
+J^\mathrm{func}_{\mathbf{k},\sigma_3} \
+G^\mathrm{func}_{\mathbf{k},\sigma_3} \\
+%
+&=         \frac{1}{4} \sum_{k=1}^n J_{j i} J_{j k} (J_\mathrm{d})_{i k}
+\big(G_{j i} + G_{j k} + (G_\mathrm{d})_{i k}\big) \\
+& \qquad + \frac{1}{4} \sum_{k=1}^n J_{i j} J_{i k} (J_\mathrm{d})_{j k}
+\big(G_{i j} + G_{i k} + (G_\mathrm{d})_{j k}\big) \\
+& \qquad + \frac{1}{4} \sum_{k=1}^n J_{k i} J_{k j} (J_\mathrm{d})_{i j}
+\big(G_{k i} + G_{k j} + (G_\mathrm{d})_{i j}\big) \\
+%
+& \\
+& \\
+& \\
+&=         \frac{1}{4} J^\top_{i j} \sum_{k=1}^n (J_\mathrm{d})_{i k}
+J^\top_{k j} \big(G^\top_{i j} + (G_\mathrm{d})_{i k} + G^\top_{k j}\big) \\
+& \qquad + \frac{1}{4} J_{i j} \sum_{k=1}^n J_{i k}
+(J_\mathrm{d})_{k j} \big(G_{i j} + G_{i k} + (G_\mathrm{d})_{k j}\big) \\
+& \qquad + \frac{1}{4} (J_\mathrm{d})_{i j}
+\sum_{k=1}^n J^\top_{i k} J_{k j}
+\big((G_\mathrm{d})_{i j} + G^\top_{i k} + G_{k j}\big) \,,
+\end{align*}
+\endgroup
+%
+and writing this as a sum of entry-wise and matrix products:
+%
+\begin{align*}
+M^\textrm{func} &= \frac{1}{4} \Big[ J^\top \circ (J_\mathrm{d} G^\top) +
+J^\top \circ (G_\mathrm{d} J^\top) + G^\top \circ (J_\mathrm{d} J^\top)
+\Big] \\
+& \qquad + \frac{1}{4} \Big[ J \circ (J G_\mathrm{d}) + J \circ (G
+J_\mathrm{d}) + G \circ (J J_\mathrm{d}) \Big] \\
+& \qquad + \frac{1}{4} \Big[ J_\mathrm{d} \circ (J^\top G) + J_\mathrm{d}
+\circ (G^\top J) + G_\mathrm{d} \circ (J^\top J) \Big]
+\end{align*}
+%
+where $A \circ B$ is an entry-wise product and $AB$ is a matrix product.
+Finally, setting
+$$C = J \circ (J G_\mathrm{d}) + J \circ (G J_\mathrm{d}) + G \circ (J
+J_\mathrm{d}) + J_\mathrm{d} \circ (J^\top G)\,, $$
+and
+$$ C' = G_\mathrm{d} \circ (J^\top J)\,, $$
+then we have that
+$$ M^\mathrm{func} = \frac{1}{4} \big(C + C^\top + C' \big)\,. $$
+as in Table~\ref{tab:motif_adj_mat_table}, achieved with just five matrix
+multiplications, nine entry-wise multiplications and nine matrix additions
+(including the four entry-wise multiplications and four additions needed to
+construct the adjacency and indicator matrices).
 \end{example}
 \clearpage{}
 \clearpage{}
@@ -2109,150 +2109,150 @@ respectively. Entry-wise products are denoted by $\circ$.
 \vspace*{0.2cm}
 \begin{table}[H]
 
-  \centering
-  \renewcommand{\arraystretch}{1.8}
-  \tiny
+\centering
+\renewcommand{\arraystretch}{1.8}
+\tiny
 
-  \begin{tabular}{ |c|c|c|c| }
+\begin{tabular}{ |c|c|c|c| }
 
-    \hline
+\hline
 
-    Motif & $C$ & $C'$ & $M^\mathrm{func}$ \\
+Motif & $C$ & $C'$ & $M^\mathrm{func}$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_\mathrm{s}$ & & & $G + G^\top$ \\
+$\ca{M}_\mathrm{s}$ & & & $G + G^\top$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_\mathrm{d}$ & & & $\frac{1}{2} G_\mathrm{d}$ \\
+$\ca{M}_\mathrm{d}$ & & & $\frac{1}{2} G_\mathrm{d}$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_1$ & $J^\top \circ (J G) + J^\top \circ (G J) + G^\top \circ (J J)$
-    & & $\frac{1}{3} \big(C + C^\top\big)$ \\
+$\ca{M}_1$ & $J^\top \circ (J G) + J^\top \circ (G J) + G^\top \circ (J J)$
+& & $\frac{1}{3} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_2$ & \rule{0pt}{2.7em}$\displaystyle
-    \begin{aligned}
-      & J^\top \circ (J_\mathrm{d} G) + J^\top \circ (G_\mathrm{d} J) + G^\top
-      \circ (J_\mathrm{d} J) \\
-      & + J^\top \circ (J G_\mathrm{d}) + J^\top \circ (G J_\mathrm{d}) +
-      G^\top \circ (J J_\mathrm{d}) \\
-      & + J_\mathrm{d} \circ (J G) + J_\mathrm{d} \circ (G J) + G_\mathrm{d}
-      \circ (J J)
-    \end{aligned}
-    $\rule[-2em]{0pt}{1em} & & $\frac{1}{4} \big(C + C^\top\big)$ \\
+$\ca{M}_2$ & \rule{0pt}{2.7em}$\displaystyle
+\begin{aligned}
+& J^\top \circ (J_\mathrm{d} G) + J^\top \circ (G_\mathrm{d} J) + G^\top
+\circ (J_\mathrm{d} J) \\
+& + J^\top \circ (J G_\mathrm{d}) + J^\top \circ (G J_\mathrm{d}) +
+G^\top \circ (J J_\mathrm{d}) \\
+& + J_\mathrm{d} \circ (J G) + J_\mathrm{d} \circ (G J) + G_\mathrm{d}
+\circ (J J)
+\end{aligned}
+$\rule[-2em]{0pt}{1em} & & $\frac{1}{4} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_3$ & \rule{0pt}{2.7em}$\displaystyle
-    \begin{aligned}
-      & J \circ (J_\mathrm{d} G_\mathrm{d}) + J \circ (G_\mathrm{d}
-      J_\mathrm{d}) + G \circ (J_\mathrm{d} J_\mathrm{d}) \\
-      & + J_\mathrm{d} \circ (J_\mathrm{d} G) + J_\mathrm{d} \circ
-      (G_\mathrm{d} J) + G_\mathrm{d} \circ (J_\mathrm{d} J) \\
-      & + J_\mathrm{d} \circ (J G_\mathrm{d}) + J_\mathrm{d} \circ (G
-      J_\mathrm{d}) + G_\mathrm{d} \circ (J J_\mathrm{d})
-    \end{aligned}
-    $\rule[-2em]{0pt}{1em} & & $\frac{1}{5} \big(C + C^\top\big)$ \\
+$\ca{M}_3$ & \rule{0pt}{2.7em}$\displaystyle
+\begin{aligned}
+& J \circ (J_\mathrm{d} G_\mathrm{d}) + J \circ (G_\mathrm{d}
+J_\mathrm{d}) + G \circ (J_\mathrm{d} J_\mathrm{d}) \\
+& + J_\mathrm{d} \circ (J_\mathrm{d} G) + J_\mathrm{d} \circ
+(G_\mathrm{d} J) + G_\mathrm{d} \circ (J_\mathrm{d} J) \\
+& + J_\mathrm{d} \circ (J G_\mathrm{d}) + J_\mathrm{d} \circ (G
+J_\mathrm{d}) + G_\mathrm{d} \circ (J J_\mathrm{d})
+\end{aligned}
+$\rule[-2em]{0pt}{1em} & & $\frac{1}{5} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_4$ & $ J_\mathrm{d} \circ (J_\mathrm{d} G_\mathrm{d}) +
-    J_\mathrm{d} \circ (G_\mathrm{d} J_\mathrm{d}) + G_\mathrm{d} \circ
-    (J_\mathrm{d} J_\mathrm{d}) $ & & $ \frac{1}{6} C$ \\
+$\ca{M}_4$ & $ J_\mathrm{d} \circ (J_\mathrm{d} G_\mathrm{d}) +
+J_\mathrm{d} \circ (G_\mathrm{d} J_\mathrm{d}) + G_\mathrm{d} \circ
+(J_\mathrm{d} J_\mathrm{d}) $ & & $ \frac{1}{6} C$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_5$ & \rule{0pt}{2.7em}$\displaystyle
-    \begin{aligned}
-      & J \circ (J G) + J \circ (G J) + G \circ (J J) \\
-      & + J \circ (J G^\top) + J \circ (G J^\top) + G \circ (J J^\top) \\
-      & + J \circ (J^\top G) + J \circ (G^\top J) + G \circ (J^\top J)
-    \end{aligned}
-    $\rule[-2em]{0pt}{1em} & & $\frac{1}{3} \big(C + C^\top\big)$ \\
+$\ca{M}_5$ & \rule{0pt}{2.7em}$\displaystyle
+\begin{aligned}
+& J \circ (J G) + J \circ (G J) + G \circ (J J) \\
+& + J \circ (J G^\top) + J \circ (G J^\top) + G \circ (J J^\top) \\
+& + J \circ (J^\top G) + J \circ (G^\top J) + G \circ (J^\top J)
+\end{aligned}
+$\rule[-2em]{0pt}{1em} & & $\frac{1}{3} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_6$ & $J \circ (J G_\mathrm{d}) + J \circ (G J_\mathrm{d}) + G \circ
-    (J J_\mathrm{d}) + J_\mathrm{d} \circ (J^\top G)$ & $G_\mathrm{d} \circ
-    (J^\top J)$ & $\frac{1}{4} \big(C + C^\top + C' \big)$ \\
+$\ca{M}_6$ & $J \circ (J G_\mathrm{d}) + J \circ (G J_\mathrm{d}) + G \circ
+(J J_\mathrm{d}) + J_\mathrm{d} \circ (J^\top G)$ & $G_\mathrm{d} \circ
+(J^\top J)$ & $\frac{1}{4} \big(C + C^\top + C' \big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_7$ & $J \circ (J_\mathrm{d} G) + J \circ (G_\mathrm{d} J) + G \circ
-    (J_\mathrm{d} J)$ & $J_\mathrm{d} \circ (J G^\top) + J_\mathrm{d} \circ (G
-    J^\top) + G_\mathrm{d} \circ (J J^\top)$ & $ \frac{1}{4} \big(C + C^\top +
-    C' \big)$ \\
+$\ca{M}_7$ & $J \circ (J_\mathrm{d} G) + J \circ (G_\mathrm{d} J) + G \circ
+(J_\mathrm{d} J)$ & $J_\mathrm{d} \circ (J G^\top) + J_\mathrm{d} \circ (G
+J^\top) + G_\mathrm{d} \circ (J J^\top)$ & $ \frac{1}{4} \big(C + C^\top +
+C' \big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_8$ & $J \circ (G J_\mathrm{n}) + G \circ (J J_\mathrm{n})$ &
-    $J_\mathrm{n} \circ (J^\top G) + J_\mathrm{n} \circ (G^\top J)$ &
-    $\frac{1}{2} \big(C + C^\top + C' \big)$ \\
+$\ca{M}_8$ & $J \circ (G J_\mathrm{n}) + G \circ (J J_\mathrm{n})$ &
+$J_\mathrm{n} \circ (J^\top G) + J_\mathrm{n} \circ (G^\top J)$ &
+$\frac{1}{2} \big(C + C^\top + C' \big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_9$ & \rule{0pt}{1.9em}$\displaystyle
-    \begin{aligned}
-      & J \circ (J_\mathrm{n} G^\top) + G \circ (J_\mathrm{n} J^\top) +
-      J_\mathrm{n} \circ (J G) \\
-      & + J_\mathrm{n} \circ (G J) + J \circ (G^\top J_\mathrm{n}) + G \circ
-      (J^\top J_\mathrm{n})
-    \end{aligned}
-    $\rule[-1.3em]{0pt}{1em} & & $\frac{1}{2} \big(C + C^\top\big)$ \\
+$\ca{M}_9$ & \rule{0pt}{1.9em}$\displaystyle
+\begin{aligned}
+& J \circ (J_\mathrm{n} G^\top) + G \circ (J_\mathrm{n} J^\top) +
+J_\mathrm{n} \circ (J G) \\
+& + J_\mathrm{n} \circ (G J) + J \circ (G^\top J_\mathrm{n}) + G \circ
+(J^\top J_\mathrm{n})
+\end{aligned}
+$\rule[-1.3em]{0pt}{1em} & & $\frac{1}{2} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_{10}$ & $J \circ (J_\mathrm{n} G) + G \circ (J_\mathrm{n} J)$ &
-    $J_\mathrm{n} \circ (J G^\top) + J_\mathrm{n} \circ (G J^\top)$ &
-    $\frac{1}{2} \big(C + C^\top + C' \big)$ \\
+$\ca{M}_{10}$ & $J \circ (J_\mathrm{n} G) + G \circ (J_\mathrm{n} J)$ &
+$J_\mathrm{n} \circ (J G^\top) + J_\mathrm{n} \circ (G J^\top)$ &
+$\frac{1}{2} \big(C + C^\top + C' \big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_{11}$ & \rule{0pt}{1.9em}$\displaystyle
-    \begin{aligned}
-      & J_\mathrm{d} \circ (G J_\mathrm{n}) + G_\mathrm{d} \circ (J
-      J_\mathrm{n}) + J_\mathrm{n} \circ (J_\mathrm{d} G) \\
-      &  + J_\mathrm{n} \circ (G_\mathrm{d} J) + J \circ (G_\mathrm{d}
-      J_\mathrm{n}) + G \circ (J_\mathrm{d} J_\mathrm{n})
-    \end{aligned}
-    $\rule[-1.3em]{0pt}{1em} & & $\frac{1}{3} \big(C + C^\top\big)$ \\
+$\ca{M}_{11}$ & \rule{0pt}{1.9em}$\displaystyle
+\begin{aligned}
+& J_\mathrm{d} \circ (G J_\mathrm{n}) + G_\mathrm{d} \circ (J
+J_\mathrm{n}) + J_\mathrm{n} \circ (J_\mathrm{d} G) \\
+&  + J_\mathrm{n} \circ (G_\mathrm{d} J) + J \circ (G_\mathrm{d}
+J_\mathrm{n}) + G \circ (J_\mathrm{d} J_\mathrm{n})
+\end{aligned}
+$\rule[-1.3em]{0pt}{1em} & & $\frac{1}{3} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_{12}$ & \rule{0pt}{1.9em}$\displaystyle
-    \begin{aligned}
-      & J_\mathrm{d} \circ (J_\mathrm{n} G) + G_\mathrm{d} \circ (J_\mathrm{n}
-      J) + J_\mathrm{n} \circ (J G_\mathrm{d}) \\
-      & + J_\mathrm{n} \circ (G J_\mathrm{d}) + J \circ (J_\mathrm{n}
-      G_\mathrm{d}) + G \circ (J_\mathrm{n} J_\mathrm{d})
-    \end{aligned}
-    $\rule[-1.3em]{0pt}{1em} & & $ \frac{1}{3} \big(C + C^\top\big)$ \\
+$\ca{M}_{12}$ & \rule{0pt}{1.9em}$\displaystyle
+\begin{aligned}
+& J_\mathrm{d} \circ (J_\mathrm{n} G) + G_\mathrm{d} \circ (J_\mathrm{n}
+J) + J_\mathrm{n} \circ (J G_\mathrm{d}) \\
+& + J_\mathrm{n} \circ (G J_\mathrm{d}) + J \circ (J_\mathrm{n}
+G_\mathrm{d}) + G \circ (J_\mathrm{n} J_\mathrm{d})
+\end{aligned}
+$\rule[-1.3em]{0pt}{1em} & & $ \frac{1}{3} \big(C + C^\top\big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_{13}$ & $J_\mathrm{d} \circ (G_\mathrm{d} J_\mathrm{n}) +
-    G_\mathrm{d} \circ (J_\mathrm{d} J_\mathrm{n}) + J_\mathrm{n} \circ
-    (J_\mathrm{d} G_\mathrm{d})$ & & $\frac{1}{4} \big(C + C^\top \big)$ \\
+$\ca{M}_{13}$ & $J_\mathrm{d} \circ (G_\mathrm{d} J_\mathrm{n}) +
+G_\mathrm{d} \circ (J_\mathrm{d} J_\mathrm{n}) + J_\mathrm{n} \circ
+(J_\mathrm{d} G_\mathrm{d})$ & & $\frac{1}{4} \big(C + C^\top \big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_\mathrm{coll}$ & $J_\mathrm{n} \circ (J G^\top)$ & & $\frac{1}{2}
-    \big( C + C^\top \big)$ \\
+$\ca{M}_\mathrm{coll}$ & $J_\mathrm{n} \circ (J G^\top)$ & & $\frac{1}{2}
+\big( C + C^\top \big)$ \\
 
-    \hline
+\hline
 
-    $\ca{M}_\mathrm{expa}$ & $J_\mathrm{n} \circ (J^\top G)$ & & $\frac{1}{2}
-    \big( C + C^\top \big)$ \\
+$\ca{M}_\mathrm{expa}$ & $J_\mathrm{n} \circ (J^\top G)$ & & $\frac{1}{2}
+\big( C + C^\top \big)$ \\
 
-    \hline
+\hline
 
-  \end{tabular}
-  \caption{Functional motif adjacency matrix formulae}
-  \label{tab:motif_adj_mat_table}
+\end{tabular}
+\caption{Functional motif adjacency matrix formulae}
+\label{tab:motif_adj_mat_table}
 \end{table}
 \clearpage{}
 \clearpage{}
@@ -2268,16 +2268,16 @@ The hardware used for computation was an \emph{Intel Core i7-4790} CPU at
 %
 %
 \begin{itemize}
-  \item \textbf{igraph} \cite{r_igraph} for plotting networks
-  \item \textbf{LICORS} \cite{r_LICORS} for an implementation of $k$-means++
-  \item \textbf{mclust} \cite{r_mclust} for an implementation of ARI
-  \item
-    \textbf{rnaturalearth} \cite{r_rnaturalearth} for world territory boundary
-    data
-  \item \textbf{RSpectra} \cite{r_RSpectra} for eigendecomposition of
-    sparse matrices
-  \item \textbf{USAboundaries} \cite{r_USAboundaries} for US
-    county and state boundary data
+\item \textbf{igraph} \cite{r_igraph} for plotting networks
+\item \textbf{LICORS} \cite{r_LICORS} for an implementation of $k$-means++
+\item \textbf{mclust} \cite{r_mclust} for an implementation of ARI
+\item
+\textbf{rnaturalearth} \cite{r_rnaturalearth} for world territory boundary
+data
+\item \textbf{RSpectra} \cite{r_RSpectra} for eigendecomposition of
+sparse matrices
+\item \textbf{USAboundaries} \cite{r_USAboundaries} for US
+county and state boundary data
 \end{itemize}
 
 \subsection{Timings for MAM computations} \label{sec:notes_timing}
@@ -2289,11 +2289,11 @@ sparsity parameter $p$.
 
 \vspace*{0.3cm}
 \begin{table}[H]
-  \centering \renewcommand{\arraystretch}{1.5}
-  \setlength\tabcolsep{0.2em} \scriptsize
-  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-    \hline
-    \cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
+\centering \renewcommand{\arraystretch}{1.5}
+\setlength\tabcolsep{0.2em} \scriptsize
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{s}$ &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{d}$ &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_1$ &
@@ -2321,18 +2321,18 @@ sparsity parameter $p$.
 \hline \cellcolor[HTML]{E9E9E9}
 0.1 & 0.014 & 0.019 & 0.019 & 0.031 & 0.029 & 0.019 & 0.033 & 0.025 &
 0.032 & 0.023 & 0.028 & 0.023 & 0.026 & 0.025 & 0.019
-     \\ \hline
-  \end{tabular}
-  \caption{Timings for MAM computation with $n=100$}%
-  \label{tab:timing_n_100}%
+\\ \hline
+\end{tabular}
+\caption{Timings for MAM computation with $n=100$}%
+\label{tab:timing_n_100}%
 \end{table}
 
 \begin{table}[H]
-  \centering \renewcommand{\arraystretch}{1.5}
-  \setlength\tabcolsep{0.2em} \scriptsize
-  \begin{tabular}{
-    |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } \hline
-    \cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
+\centering \renewcommand{\arraystretch}{1.5}
+\setlength\tabcolsep{0.2em} \scriptsize
+\begin{tabular}{
+|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } \hline
+\cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{s}$ &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{d}$ &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_1$ &
@@ -2360,17 +2360,17 @@ sparsity parameter $p$.
 \hline \cellcolor[HTML]{E9E9E9}
 0.1 & 0.23 & 0.22 & 0.60 & 1.1 & 0.57 & 0.24 & 1.4 & 0.86 & 0.69 &
 1.5 & 2.3 & 1.6 & 1.6 & 1.6 & 0.67
-     \\ \hline
-  \end{tabular}
-  \caption{Timings
-  for MAM computation with $n=1000$} \label{tab:timing_n_1000}
+\\ \hline
+\end{tabular}
+\caption{Timings
+for MAM computation with $n=1000$} \label{tab:timing_n_1000}
 \end{table}
 
 \begin{table}[H] \centering \renewcommand{\arraystretch}{1.5}
-  \setlength\tabcolsep{0.2em} \scriptsize
-  \begin{tabular}{
-    |c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } \hline
-    \cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
+\setlength\tabcolsep{0.2em} \scriptsize
+\begin{tabular}{
+|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c| } \hline
+\cellcolor[HTML]{E9E9E9} \smash{\raisebox{0.7pt}{$p$}} &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{s}$ &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_\mathrm{d}$ &
 \cellcolor[HTML]{E9E9E9} $\ca{M}_1$ &
@@ -2398,10 +2398,10 @@ sparsity parameter $p$.
 \hline \cellcolor[HTML]{E9E9E9}
 0.1 & 33 & 31 & 170 & 260 & 160 & 53 & 410 &
 210 & 210 & 700 & 1100 & 520 & 760 & 580 & 150
-     \\ \hline
-  \end{tabular}
-  \caption{Timings
-  for MAM computation with $n=10 \, 000$} \label{tab:timing_n_10000}
+\\ \hline
+\end{tabular}
+\caption{Timings
+for MAM computation with $n=10 \, 000$} \label{tab:timing_n_10000}
 \end{table}
 
 \section{Data preprocessing} \label{sec:notes_preprocessing}
@@ -2417,21 +2417,21 @@ million speakers. Vertex and edge counts of all networks are stated
 %
 \vspace*{-0.8cm}
 \begin{figure}[H]
-  \centering
-  \includegraphics[scale=0.6,draft=false]{%
-  ../../results/us_migration/us_migration_map_state_names.pdf}
-  \vspace*{-0.5cm} \caption{US map with state boundaries and state
-  abbreviations} \label{fig:notes_us_map}
+\centering
+\includegraphics[scale=0.6,draft=false]{%
+../../results/us_migration/us_migration_map_state_names.pdf}
+\vspace*{-0.5cm} \caption{US map with state boundaries and state
+abbreviations} \label{fig:notes_us_map}
 \end{figure}
 
 \section{Word count}
 
 The word count of this dissertation is 6230
- \unskip, obtained
+\unskip, obtained
 using \TeX \hspace*{-0.15cm} count by running
 %
 \begin{center}
-  \texttt{texcount -relaxed -inc -0 -sum=1,1,1,0,0,0,0\,}.
+\texttt{texcount -relaxed -inc -0 -sum=1,1,1,0,0,0,0\,}.
 \end{center}
 %
 %The final dissertation should be no longer than 7,500 words, this usually
