@@ -1,0 +1,34 @@
+TODO
+
+% regular long line
+This line is too long because it has more than eighty characters inside it. Therefore it should be split.
+
+% indented long line
+(
+  This line is too long because it has more than eighty characters inside it. Therefore it should be split.
+)
+
+% long line in environment
+\begin{equation}
+  1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890
+\end{equation}
+
+% long line in environment only after indenting
+\begin{equation}
+  1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 123
+\end{equation}
+
+% long line with no breaks should throw a warning
+\begin{equation}
+  123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+\end{equation}
+
+This line is too long because it has more than eighty characters in it % but only including the comment
+
+This line is too long because it has more than eighty characters inside it % but only just including the comment
+
+This line is too long because it has more than eighty characters inside it. It should be split. % also a comment
+
+This line has a long comment. % This comment is very long so needs to be split over three lines which is another edge case which should be checked here with all these extra words
+
+% This line is all a long comment. This comment is very long so needs to be split over three lines which is another edge case which should be checked here with all these extra words

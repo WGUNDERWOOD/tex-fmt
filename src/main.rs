@@ -1,6 +1,4 @@
 use clap::Parser;
-//use lazy_static::lazy_static;
-//use regex::Regex;
 use std::env::temp_dir;
 use std::fs;
 use std::path;
@@ -26,28 +24,12 @@ struct Cli {
 }
 
 pub mod regexes;
-use crate::regexes::regexes::*;
 
-fn remove_extra_newlines(file: &str) -> String {
-    RE_NEWLINES.replace_all(file, "\n\n").to_string()
-}
-
-fn remove_tabs(file: &str) -> String {
-    let replace = (0..TAB).map(|_| " ").collect::<String>();
-    RE_TABS.replace_all(file, replace).to_string()
-}
-
-fn remove_trailing_spaces(file: &str) -> String {
-    RE_TRAIL.replace_all(file, "\n").to_string()
-}
-
-fn remove_comment(line: &str) -> String {
-    let new_line = RE_PERCENT.replace_all(line, "").to_string();
-    RE_COMMENT.replace_all(&new_line, "").to_string()
-}
+mod subs;
+use crate::subs::*;
 
 mod indent;
-use crate::indent::indent::*;
+use crate::indent::*;
 
 fn format_file(file: String, debug: bool) -> String {
     // preformat
@@ -57,9 +39,8 @@ fn format_file(file: String, debug: bool) -> String {
     let lines: Vec<&str> = new_file.lines().collect();
 
     // set up variables
-    //let mut count: i8 = 0;
     let n_lines = lines.len();
-    let mut indent = Indent{actual: 0, visual: 0, item: 0};
+    let mut indent = Indent{actual: 0, visual: 0};
     let mut new_lines = vec!["".to_owned(); n_lines];
 
     // main loop through file
@@ -68,19 +49,10 @@ fn format_file(file: String, debug: bool) -> String {
         let line = lines[i];
         let line_strip = &remove_comment(line);
         indent = get_indent(line_strip, indent);
-        //let back = get_back(line_strip);
-        //let diff = get_diff(line_strip);
-        //let indent: i8 = count - back;
         if !debug {
-            dbg!(&line);
-            dbg!(&indent.actual);
-            dbg!(&indent.visual);
-            dbg!();
-            //assert!(indent.actual >= 0, "line {}", i);
-            //assert!(indent.visual >= 0, "line {}", i);
+            assert!(indent.actual >= 0, "line {}", i);
+            assert!(indent.visual >= 0, "line {}", i);
         };
-        //indents[i] = indent;
-        //count += diff;
 
         // apply indent
         let mut new_line = line.trim_start().to_string();
@@ -93,9 +65,10 @@ fn format_file(file: String, debug: bool) -> String {
     }
 
     // check indents return to zero
-    //if !debug {
-        //assert!(indent.current == &0);
-    //}
+    if !debug {
+        assert!(indent.actual == 0);
+        assert!(indent.visual == 0);
+    }
 
     // prepare indented file
     let mut new_file = new_lines.join("\n");
@@ -143,11 +116,11 @@ fn main() {
         } else {
             // backup original file
             let filepath = path::Path::new(&filename).canonicalize().unwrap();
-            let mut fileback = temp_dir();
-            fileback.push("tex-fmt");
-            fs::create_dir_all(&fileback).unwrap();
-            fileback.push(filepath.file_name().unwrap());
-            fs::copy(filepath.clone(), &fileback).unwrap();
+            let mut filebak = temp_dir();
+            filebak.push("tex-fmt");
+            fs::create_dir_all(&filebak).unwrap();
+            filebak.push(filepath.file_name().unwrap());
+            fs::copy(filepath.clone(), &filebak).unwrap();
 
             // write new file
             fs::write(filepath, new_file).unwrap();
