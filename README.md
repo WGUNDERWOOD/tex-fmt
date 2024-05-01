@@ -12,16 +12,10 @@ A LaTeX formatter written in Rust.
 <table width="100%">
 <tr>
 <td>
-
-``` shell
-example.tex
-```
+Input
 </td>
 <td>
-
-``` shell
-tex-fmt example.tex
-```
+Output
 </td>
 </tr>
 <tr>
