@@ -1,5 +1,5 @@
-use crate::TAB;
 use crate::regexes::*;
+use crate::TAB;
 
 pub fn remove_extra_newlines(file: &str) -> String {
     RE_NEWLINES.replace_all(file, "\n\n").to_string()
@@ -12,6 +12,18 @@ pub fn remove_tabs(file: &str) -> String {
 
 pub fn remove_trailing_spaces(file: &str) -> String {
     RE_TRAIL.replace_all(file, "\n").to_string()
+}
+
+pub fn begin_environments_new_line(file: &str) -> String {
+    RE_ENV_BEGIN_SHARED_LINE
+        .replace_all(file, "$prev\n$env")
+        .to_string()
+}
+
+pub fn end_environments_new_line(file: &str) -> String {
+    RE_ENV_END_SHARED_LINE
+        .replace_all(file, "$prev\n$env")
+        .to_string()
 }
 
 pub fn remove_comment(line: &str) -> String {

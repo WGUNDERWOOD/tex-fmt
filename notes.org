@@ -1,11 +1,7 @@
 #+title: tex-fmt
 * Tests
-** One feature per file
 ** Look for problem cases in other latex documents
 * Features
-** Begin and end document on own line
-** Environments should start and end on new lines
-*** New line before begin/end with regex replace
 ** Fold long lines to 80 characters
 *** Care with trailing comments
 *** No folding in verbatim environments, just warn
@@ -16,16 +12,12 @@
 *** -v Info verbose
 *** -vv Debug verbose
 ** Log file
-** Non-negativity and end-of-file checks apply per indenter type
-*** Care with half-open intervals like [0,1)
-*** Just use ignore comments for these cases
-** Ignore some source lines
+** Ignore source lines
 *** Line-by-line ignore
 *** Block ignore
 * Bugs
 ** Check multiple begins or ends on the same line
 *** This should never happen once new lines are implemented
-*** Still should implement counting for cumulative and back
 ** Better errors including line numbers in source file
 ** Check begins or ends with more brackets on the same line
 * Structure

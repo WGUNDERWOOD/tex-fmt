@@ -34,13 +34,18 @@ use crate::indent::*;
 fn format_file(file: String, debug: bool) -> String {
     // preformat
     let mut new_file = remove_extra_newlines(&file);
+    new_file = begin_environments_new_line(&new_file);
+    new_file = end_environments_new_line(&new_file);
     new_file = remove_tabs(&new_file);
     new_file = remove_trailing_spaces(&new_file);
     let lines: Vec<&str> = new_file.lines().collect();
 
     // set up variables
     let n_lines = lines.len();
-    let mut indent = Indent{actual: 0, visual: 0};
+    let mut indent = Indent {
+        actual: 0,
+        visual: 0,
+    };
     let mut new_lines = vec!["".to_owned(); n_lines];
 
     // main loop through file
@@ -50,6 +55,7 @@ fn format_file(file: String, debug: bool) -> String {
         let line_strip = &remove_comment(line);
         indent = get_indent(line_strip, indent);
         if !debug {
+            dbg!(&line);
             assert!(indent.actual >= 0, "line {}", i);
             assert!(indent.visual >= 0, "line {}", i);
         };
