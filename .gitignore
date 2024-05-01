@@ -5,3 +5,5 @@ target/
 result
 *.html
 *.log
+*.svg
+perf.data*
