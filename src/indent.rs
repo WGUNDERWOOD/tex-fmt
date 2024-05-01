@@ -1,5 +1,5 @@
-use core::cmp::max;
 use crate::regexes::*;
+use core::cmp::max;
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -75,7 +75,6 @@ pub fn get_back(line: &str) -> i8 {
         return 1;
     };
 
-
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
     for c in line.chars() {
@@ -91,5 +90,5 @@ pub fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     let back = get_back(line);
     let actual = prev_indent.actual + diff;
     let visual: i8 = prev_indent.actual - back;
-    Indent{actual, visual}
+    Indent { actual, visual }
 }
