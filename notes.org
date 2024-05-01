@@ -1,31 +1,35 @@
 #+title: tex-fmt
 * Tests
 ** One feature per file
-** Benchmark running all tests
-*** Give number of files and total line numbers
-** Look for problem cases in other documents
+** Look for problem cases in other latex documents
 * Features
-** Commands on own lines
-*** Implement this by regex on whole document at start
-*** Care about multiple or long arguments
-*** Look into bracket matching
-*** \begin and \end
-*** \section, \section*, \chapter, \subsection etc
-*** \author and \title etc
-*** \usepackage and \documentclass
-*** \label
-*** \centering
-*** \includegraphics
-*** \caption
-*** \newpage
-*** \appendix
-** Fold long lines
+** Begin and end document on own line
+** Environments should start and end on new lines
+*** New line before begin/end with regex replace
+** Fold long lines to 80 characters
+*** Care with trailing comments
+*** No folding in verbatim environments, just warn
+** Merge short alphanumeric lines
 ** Flags
-*** Dry run (do not modify files)
-*** Print to STDOUT
-*** Debug (display log file)
+*** -d Dry run
+*** -p Print to STDOUT
+*** -v Info verbose
+*** -vv Debug verbose
 ** Log file
+** Non-negativity and end-of-file checks apply per indenter type
+*** Care with half-open intervals like [0,1)
+*** Just use ignore comments for these cases
+** Ignore some source lines
+*** Line-by-line ignore
+*** Block ignore
 * Bugs
-** Better errors including line numbers in source file
 ** Check multiple begins or ends on the same line
+*** This should never happen once new lines are implemented
+*** Still should implement counting for cumulative and back
+** Better errors including line numbers in source file
 ** Check begins or ends with more brackets on the same line
+* Structure
+** Perform indenting
+** While long lines are present
+*** Trim long lines
+*** Perform indenting

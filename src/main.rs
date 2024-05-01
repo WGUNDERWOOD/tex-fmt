@@ -1,15 +1,11 @@
 use clap::Parser;
-use core::cmp::max;
-use lazy_static::lazy_static;
-use regex::Regex;
+//use lazy_static::lazy_static;
+//use regex::Regex;
 use std::env::temp_dir;
 use std::fs;
 use std::path;
 
-const TAB: i32 = 2;
-const OPENS: [char; 3] = ['(', '[', '{'];
-const CLOSES: [char; 3] = [')', ']', '}'];
-const LISTS: [&str; 4] = ["itemize", "enumerate", "description", "inlineroman"];
+const TAB: i8 = 2;
 
 const YELLOW: &str = "\x1b[33m\x1b[1m";
 const PINK: &str = "\x1b[35m\x1b[1m";
@@ -29,30 +25,8 @@ struct Cli {
     filenames: Vec<String>,
 }
 
-lazy_static! {
-    static ref RE_NEWLINES: Regex = Regex::new(r"\n\n\n+").unwrap();
-    static ref RE_TABS: Regex = Regex::new(r"\t").unwrap();
-    static ref RE_TRAIL: Regex = Regex::new(r" +\n").unwrap();
-    static ref RE_PERCENT: Regex = Regex::new(r"\\\%").unwrap();
-    static ref RE_COMMENT: Regex = Regex::new(r"\%.*").unwrap();
-    static ref RE_ITEM: Regex = Regex::new(r".*\\item.*").unwrap();
-    static ref RE_DOCUMENT_BEGIN: Regex =
-        Regex::new(r".*\\begin\{document\}.*").unwrap();
-    static ref RE_DOCUMENT_END: Regex =
-        Regex::new(r".*\\end\{document\}.*").unwrap();
-    static ref RE_ENV_BEGIN: Regex =
-        Regex::new(r".*\\begin\{[a-z\*]*\}.*").unwrap();
-    static ref RE_ENV_END: Regex =
-        Regex::new(r".*\\end\{[a-z\*]*\}.*").unwrap();
-    static ref RE_LISTS_BEGIN: Vec<Regex> = LISTS
-        .iter()
-        .map(|l| Regex::new(&format!(r".*\\begin\{{{}}}.*", l)).unwrap())
-        .collect();
-    static ref RE_LISTS_END: Vec<Regex> = LISTS
-        .iter()
-        .map(|l| Regex::new(&format!(r".*\\end\{{{}}}.*", l)).unwrap())
-        .collect();
-}
+pub mod regexes;
+use crate::regexes::regexes::*;
 
 fn remove_extra_newlines(file: &str) -> String {
     RE_NEWLINES.replace_all(file, "\n\n").to_string()
@@ -72,79 +46,8 @@ fn remove_comment(line: &str) -> String {
     RE_COMMENT.replace_all(&new_line, "").to_string()
 }
 
-fn get_back(line: &str) -> i32 {
-    // no deindentation for ending document
-    if RE_DOCUMENT_END.is_match(line) {
-        return 0;
-    };
-
-    // list environments get double indents for indenting items
-    for re_list_end in RE_LISTS_END.iter() {
-        if re_list_end.is_match(line) {
-            return 2;
-        };
-    }
-
-    // other environments get single indents
-    if RE_ENV_END.is_match(line) {
-        return 1;
-    };
-
-    // deindent items to make the rest of item environment appear indented
-    if RE_ITEM.is_match(line) {
-        return 1;
-    };
-
-    let mut back: i32 = 0;
-    let mut cumul: i32 = 0;
-    for c in line.chars() {
-        cumul -= OPENS.contains(&c) as i32;
-        cumul += CLOSES.contains(&c) as i32;
-        back = max(cumul, back);
-    }
-    back
-}
-
-fn get_diff(line: &str) -> i32 {
-    // no indentation for document
-    if RE_DOCUMENT_BEGIN.is_match(line) {
-        return 0;
-    };
-    if RE_DOCUMENT_END.is_match(line) {
-        return 0;
-    };
-
-    // list environments get double indents
-    let mut diff: i32 = 0;
-    for re_list_begin in RE_LISTS_BEGIN.iter() {
-        if re_list_begin.is_match(line) {
-            diff += 1
-        };
-    }
-
-    for re_list_end in RE_LISTS_END.iter() {
-        if re_list_end.is_match(line) {
-            diff -= 1
-        };
-    }
-
-    // other environments get single indents
-    if RE_ENV_BEGIN.is_match(line) {
-        diff += 1
-    };
-    if RE_ENV_END.is_match(line) {
-        diff -= 1
-    };
-
-    // delimiters
-    for c in OPENS {
-        diff += line.chars().filter(|&x| x == c).count() as i32;
-    }
-    for c in CLOSES {
-        diff -= line.chars().filter(|&x| x == c).count() as i32;
-    }
-    diff
-}
+mod indent;
+use crate::indent::indent::*;
 
 fn format_file(file: String, debug: bool) -> String {
     // preformat
@@ -154,9 +57,9 @@ fn format_file(file: String, debug: bool) -> String {
     let lines: Vec<&str> = new_file.lines().collect();
 
     // set up variables
-    let mut count: i32 = 0;
+    //let mut count: i8 = 0;
     let n_lines = lines.len();
-    let mut indents: Vec<i32> = vec![0; lines.len()];
+    let mut indent = Indent{actual: 0, visual: 0, item: 0};
     let mut new_lines = vec!["".to_owned(); n_lines];
 
     // main loop through file
@@ -164,19 +67,25 @@ fn format_file(file: String, debug: bool) -> String {
         // calculate indent
         let line = lines[i];
         let line_strip = &remove_comment(line);
-        let back = get_back(line_strip);
-        let diff = get_diff(line_strip);
-        let indent: i32 = count - back;
+        indent = get_indent(line_strip, indent);
+        //let back = get_back(line_strip);
+        //let diff = get_diff(line_strip);
+        //let indent: i8 = count - back;
         if !debug {
-            assert!(indent >= 0)
+            dbg!(&line);
+            dbg!(&indent.actual);
+            dbg!(&indent.visual);
+            dbg!();
+            //assert!(indent.actual >= 0, "line {}", i);
+            //assert!(indent.visual >= 0, "line {}", i);
         };
-        indents[i] = indent;
-        count += diff;
+        //indents[i] = indent;
+        //count += diff;
 
         // apply indent
         let mut new_line = line.trim_start().to_string();
         if !new_line.is_empty() {
-            let n_spaces = indents[i] * TAB;
+            let n_spaces = indent.visual * TAB;
             let spaces: String = (0..n_spaces).map(|_| " ").collect();
             new_line.insert_str(0, &spaces);
         }
@@ -184,10 +93,9 @@ fn format_file(file: String, debug: bool) -> String {
     }
 
     // check indents return to zero
-    if !debug {
-        assert!(indents.first().unwrap() == &0);
-        assert!(indents.last().unwrap() == &0);
-    }
+    //if !debug {
+        //assert!(indent.current == &0);
+    //}
 
     // prepare indented file
     let mut new_file = new_lines.join("\n");
@@ -211,6 +119,7 @@ fn main() {
     // check files are in correct format
     assert!(filenames.iter().all(|f| f.ends_with(".tex")
         || f.ends_with(".bib")
+        || f.ends_with(".sty")
         || f.ends_with(".cls")));
 
     // print script name
