@@ -22,8 +22,6 @@ A LaTeX formatter written in Rust.
 <td>
 
 ``` tex
-\documentclass{article}
-
 \begin{document}
 
 \begin{itemize}
@@ -41,8 +39,6 @@ E = m c^2
 <td>
 
 ``` tex
-\documentclass{article}
-
 \begin{document}
 
 \begin{itemize}
