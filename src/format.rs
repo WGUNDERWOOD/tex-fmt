@@ -2,10 +2,10 @@ use crate::indent::*;
 use crate::subs::*;
 use crate::TAB;
 
-pub fn format_file(file: String, debug: bool) -> String {
+pub fn format_file(file: &str, debug: bool) -> String {
     // preformat
     let mut new_file = remove_extra_newlines(&file);
-    new_file = begin_end_environments_new_line(&new_file);
+    //new_file = begin_end_environments_new_line(&new_file);
     new_file = remove_tabs(&new_file);
     new_file = remove_trailing_spaces(&new_file);
     let lines: Vec<&str> = new_file.lines().collect();
@@ -26,8 +26,8 @@ pub fn format_file(file: String, debug: bool) -> String {
         indent = get_indent(line_strip, indent);
         if !debug {
             //dbg!(&line);
-            assert!(indent.actual >= 0, "line {}", i);
-            assert!(indent.visual >= 0, "line {}", i);
+            assert!(indent.actual >= 0, "line {}: {}", i, line);
+            assert!(indent.visual >= 0, "line {}: {}", i, line);
         };
 
         // apply indent

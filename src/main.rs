@@ -61,7 +61,7 @@ fn main() {
         let file =
             fs::read_to_string(&filename).expect("Should have read the file");
 
-        let new_file = format_file(file, debug);
+        let new_file = format_file(&file, debug);
 
         if print {
             // print new file
