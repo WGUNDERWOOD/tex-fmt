@@ -4,5 +4,6 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     rustfmt
     clippy
+    cargo-flamegraph
   ];
 }
