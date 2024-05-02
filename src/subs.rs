@@ -14,17 +14,32 @@ pub fn remove_trailing_spaces(file: &str) -> String {
     RE_TRAIL.replace_all(file, "\n").to_string()
 }
 
-pub fn begin_environments_new_line(file: &str) -> String {
-    RE_ENV_BEGIN_SHARED_LINE
-        .replace_all(file, "$prev\n$env")
-        .to_string()
-}
+// TODO
+//pub fn begin_end_environments_new_line(file: &str) -> String {
+    //file
+        //.lines()
+        //.map(|l| remove_comment(l))
+        //.map(|l|
+             //RE_ENV_BEGIN_SHARED_LINE
+             //.replace_all(&l, "$prev\n$env")
+             //.to_string())
+        //.map(|l|
+             //RE_ENV_END_SHARED_LINE
+             //.replace_all(&l, "$prev\n$env")
+             //.to_string())
+        //.fold(String::new(), |a, b| a + &b + "\n")
 
-pub fn end_environments_new_line(file: &str) -> String {
-    RE_ENV_END_SHARED_LINE
-        .replace_all(file, "$prev\n$env")
-        .to_string()
-}
+    //let lines: Vec<&str> = new_file.lines().collect();
+    //let n_lines = lines.len();
+    //let mut new_lines = vec![];
+    //for i in 0..n_lines {
+        //let line = lines[i];
+        //if RE_ENV_BEGIN_SHARED_LINE
+    //}
+    //RE_ENV_BEGIN_SHARED_LINE
+        //.replace_all(file, "$prev\n$env")
+        //.to_string()
+//}
 
 pub fn remove_comment(line: &str) -> String {
     let new_line = RE_PERCENT.replace_all(line, "").to_string();
