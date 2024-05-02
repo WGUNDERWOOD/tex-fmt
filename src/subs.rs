@@ -30,12 +30,12 @@ pub fn begin_end_environments_new_line(file: &str) -> String {
                 let text = &RE_ENV_END_SHARED_LINE
                     .replace_all(text, "$prev\n$env")
                     .to_string();
-                new_file.push_str(&text);
-                new_file.push_str(&comment);
+                new_file.push_str(text);
+                new_file.push_str(comment);
             } else {
-                new_file.push_str(&line);
+                new_file.push_str(line);
             }
-        new_file.push_str("\n");
+        new_file.push('\n');
     }
     new_file
 }

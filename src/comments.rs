@@ -21,7 +21,7 @@ pub fn find_comment(line: &str) -> Option<Comment> {
     }
 
     // check the first character
-    let mut prev_c: char = line.chars().nth(0).unwrap();
+    let mut prev_c: char = line.chars().next().unwrap();
     if prev_c == '%' {
         return Some(Comment{idx: 0, space: false})
     }
