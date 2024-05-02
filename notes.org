@@ -17,10 +17,7 @@
 *** Block ignore
 ** Tests should compile to same pdf
 * Bugs
-** Check multiple begins or ends on the same line
-*** This should never happen once new lines are implemented
 ** Better errors including line numbers in source file
-** Check begins or ends with more brackets on the same line
 ** Handle list items properly
 * Structure
 ** Perform indenting

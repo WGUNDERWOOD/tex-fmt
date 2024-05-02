@@ -1,5 +1,5 @@
-use crate::regexes::*;
 use crate::comments::*;
+use crate::regexes::*;
 use crate::TAB;
 
 pub fn remove_extra_newlines(file: &str) -> String {
@@ -19,24 +19,22 @@ pub fn begin_end_environments_new_line(file: &str) -> String {
     let mut new_file = "".to_string();
     let lines: Vec<&str> = file.lines().collect();
     for line in lines.iter() {
-        if RE_ENV_BEGIN.is_match(line) ||
-            RE_ENV_END.is_match(line) {
-                let comm = find_comment(line);
-                let comment = get_comment(line, &comm);
-                let text = remove_comment(line, &comm);
-                let text = &RE_ENV_BEGIN_SHARED_LINE
-                    .replace_all(text, "$prev\n$env")
-                    .to_string();
-                let text = &RE_ENV_END_SHARED_LINE
-                    .replace_all(text, "$prev\n$env")
-                    .to_string();
-                new_file.push_str(text);
-                new_file.push_str(comment);
-            } else {
-                new_file.push_str(line);
-            }
+        if RE_ENV_BEGIN.is_match(line) || RE_ENV_END.is_match(line) {
+            let comm = find_comment(line);
+            let comment = get_comment(line, &comm);
+            let text = remove_comment(line, &comm);
+            let text = &RE_ENV_BEGIN_SHARED_LINE
+                .replace_all(text, "$prev\n$env")
+                .to_string();
+            let text = &RE_ENV_END_SHARED_LINE
+                .replace_all(text, "$prev\n$env")
+                .to_string();
+            new_file.push_str(text);
+            new_file.push_str(comment);
+        } else {
+            new_file.push_str(line);
+        }
         new_file.push('\n');
     }
     new_file
 }
-

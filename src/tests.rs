@@ -58,11 +58,11 @@ mod tests {
             .collect();
         let extensions: Vec<String> = filenames
             .iter()
-            .map(|f| f[(f.len()-3)..f.len()].to_string())
+            .map(|f| f[(f.len() - 3)..f.len()].to_string())
             .collect();
         let filenames: Vec<String> = filenames
             .iter()
-            .map(|f| f[0..(f.len()-7)].to_string())
+            .map(|f| f[0..(f.len() - 7)].to_string())
             .collect();
         for i in 0..filenames.len() {
             let filename = &filenames[i];
