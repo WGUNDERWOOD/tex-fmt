@@ -12,10 +12,10 @@ A LaTeX formatter written in Rust.
 <table width="100%">
 <tr>
 <td>
-Input
+<b>Input</b>
 </td>
 <td>
-Output
+<b>Output</b>
 </td>
 </tr>
 <tr>
