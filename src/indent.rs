@@ -65,23 +65,26 @@ pub fn get_back(line: &str) -> i8 {
         };
     }
 
-    // other environments get single indents
-    if RE_ENV_END.is_match(line) {
-        return 1;
-    };
-
-    // deindent items to make the rest of item environment appear indented
-    if RE_ITEM.is_match(line) {
-        return 1;
-    };
-
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
+
+    // delimiters
     for c in line.chars() {
         cumul -= OPENS.contains(&c) as i8;
         cumul += CLOSES.contains(&c) as i8;
         back = max(cumul, back);
     }
+
+    // other environments get single indents
+    if RE_ENV_END.is_match(line) {
+        back += 1;
+    };
+
+    // deindent items to make the rest of item environment appear indented
+    if RE_ITEM.is_match(line) {
+        back += 1;
+    };
+
     back
 }
 
