@@ -27,6 +27,7 @@ mod format;
 mod indent;
 mod regexes;
 mod subs;
+mod comments;
 use crate::format::*;
 
 #[cfg(test)]

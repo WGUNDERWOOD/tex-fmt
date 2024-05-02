@@ -7,7 +7,6 @@ lazy_static! {
     pub static ref RE_NEWLINES: Regex = Regex::new(r"\n\n\n+").unwrap();
     pub static ref RE_TABS: Regex = Regex::new(r"\t").unwrap();
     pub static ref RE_TRAIL: Regex = Regex::new(r" +\n").unwrap();
-    pub static ref RE_TEXT: Regex = Regex::new(r"(?P<text>.*^|[^\\])(\%.*$)").unwrap();
     pub static ref RE_ITEM: Regex = Regex::new(r".*\\item.*").unwrap();
     pub static ref RE_DOCUMENT_BEGIN: Regex =
         Regex::new(r".*\\begin\{document\}.*").unwrap();
