@@ -1,0 +1,34 @@
+% no comment
+This line is too long because it has more than eighty characters inside it.
+Therefore it should be split.
+
+% break before comment
+This line is too long because it has more than eighty characters inside it.
+Therefore it % should be split.
+
+% break after spaced comment
+This line is too long because it has more than
+% eighty characters inside it. Therefore it should be split.
+
+% break after non-spaced comment
+This line is too long because it has more than%
+% eighty characters inside it. Therefore it should be split.
+
+% unbreakable line
+Thislineistoolongbecauseithasmorethan%eightycharactersinsideitThereforeitcannotbesplit.
+
+% long line only after indenting
+(
+  1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890
+  123
+)
+
+% double break after comment
+This line has a long comment.
+% This comment is very long so needs to be split over three lines which is
+% another edge case which should be checked here with all these extra words
+
+% double break after only comment
+% This line is all a long comment. This comment is very long so needs to be
+% split over three lines which is another edge case which should be checked
+% here with all these extra words
