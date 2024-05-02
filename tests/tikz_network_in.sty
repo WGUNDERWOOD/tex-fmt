@@ -1,0 +1,1428 @@
+% ============================================================================
+% File      : tikz-network.sty -- Library for plotting networks in TikZ
+% Author    : Juergen Hackl <hackl.j@gmx.at>
+% Creation  : 2017-02-28
+% Time-stamp: <Mon 2018-07-30 11:26 juergen>
+% Version   : 1.0 (2018-07-30)
+%
+% Copyright (c) 2018 Juergen Hackl <hackl.j@gmx.at>
+%
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+% ============================================================================
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tikz-network}[2018/07/30 tikz-network v1.0]
+
+%=============================================================================
+%     Used packages
+%=============================================================================
+\RequirePackage{etex}
+\RequirePackage{xifthen}
+\RequirePackage{xkeyval}[2005/11/25]
+\RequirePackage{tikz}
+\RequirePackage{datatool}
+\RequirePackage{graphicx}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
+\usetikzlibrary{fit}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.geometric}
+%=============================================================================
+
+
+%=============================================================================
+%      Predefined variables
+%=============================================================================
+
+%<--------------------------------------------------------------------------->
+%      Vertex
+%<--------------------------------------------------------------------------->
+\definecolor{vertexfill}{HTML}{abd7e6}
+\newcommand*{\DefaultUnit}{cm}
+\newcommand*{\DistanceScale}{1}
+\newcommand*{\VertexShape}{circle}
+\newcommand*{\VertexInnerSep}{2pt}
+\newcommand*{\VertexOuterSep}{0pt}
+\newcommand*{\VertexMinSize}{0.6\DefaultUnit}
+\newcommand*{\VertexLineWidth}{1pt}
+\newcommand*{\VertexLineColor}{black}
+\newcommand*{\VertexLineOpacity}{1}
+\newcommand*{\VertexTextColor}{black}
+\newcommand*{\VertexFillColor}{vertexfill}
+\newcommand*{\VertexFillOpacity}{1}
+\newcommand*{\VertexTextFont}{\scriptsize}%\tiny}
+\newcommand*{\VertexTextRotation}{0}
+\newcommand*{\VertexTextOpacity}{1}
+
+%<--------------------------------------------------------------------------->
+%      Edge
+%<--------------------------------------------------------------------------->
+\newcommand*{\EdgeArrow}{-latex}
+\newcommand*{\EdgeLineWidth}{1.5pt}
+\newcommand*{\EdgeColor}{black!75}
+\newcommand*{\EdgeOpacity}{1}
+\newcommand*{\EdgeTextFillColor}{white}
+\newcommand*{\EdgeTextFillOpacity}{1}
+\newcommand*{\EdgeInnerSep}{0pt}
+\newcommand*{\EdgeOuterSep}{1pt}
+\newcommand*{\EdgeTextRotation}{0}
+\newcommand*{\EdgeTextOpacity}{1}
+\newcommand*{\EdgeTextFont}{\scriptsize}
+
+
+%<--------------------------------------------------------------------------->
+%      Plane
+%<--------------------------------------------------------------------------->
+\newcommand*{\PlaneLineWidth}{1.5pt}
+\newcommand*{\PlaneLineColor}{black}
+\newcommand*{\PlaneLineOpacity}{1}
+\newcommand*{\PlaneGridLineWidth}{.5pt}
+\newcommand*{\PlaneGridColor}{black}
+\newcommand*{\PlaneGridOpacity}{.5}
+\newcommand*{\PlaneFillColor}{vertexfill}
+\newcommand*{\PlaneFillOpacity}{.3}
+\newcommand*{\PlaneWidth}{5\DefaultUnit}
+\newcommand*{\PlaneHeight}{5\DefaultUnit}
+
+
+%<--------------------------------------------------------------------------->
+%      Text
+%<--------------------------------------------------------------------------->
+
+\newcommand*{\TextInnerSep}{2pt}
+\newcommand*{\TextOuterSep}{0pt}
+\newcommand*{\TextFont}{\normalsize}
+\newcommand*{\TextColor}{black}
+\newcommand*{\TextRotation}{0}
+\newcommand*{\TextOpacity}{1}
+
+
+%<--------------------------------------------------------------------------->
+%      Network
+%<--------------------------------------------------------------------------->
+\newcommand*{\NetworkLayerDistance}{-2}
+\newcommand*{\xAngle}{-12}
+\newcommand*{\xLength}{1}
+\newcommand*{\yAngle}{37}
+\newcommand*{\yLength}{1}
+\newcommand*{\zAngle}{90}
+\newcommand*{\zLength}{1}
+
+
+\tikzset{edge canvas/.style={}}
+
+\tikzset{multilayer 2d/.style={y={(0:1cm)},x={(90:1cm)},z={(90:0cm)},every
+    node/.append style={transform shape},}}
+
+
+\def\Origin{\draw [->] (0,0,0) -- (2,0,0) node [at end, right] {$y$};
+\draw [->] (0,0,0) -- (0,2,0) node [at end, right] {$x$};
+\draw [->] (0,0,0) -- (0,0,2) node [at end, left] {$z$};}
+
+
+%=============================================================================
+%      Predefined Styles
+%=============================================================================
+
+%<--------------------------------------------------------------------------->
+%      Init Default Vertex Style
+%<--------------------------------------------------------------------------->
+\define@cmdkey [NW] {DVS} {Shape}{}
+\define@cmdkey [NW] {DVS} {MinSize}{}
+\define@cmdkey [NW] {DVS} {LineWidth}{}
+\define@cmdkey [NW] {DVS} {LineColor}{}
+\define@cmdkey [NW] {DVS} {LineOpacity}{}
+\define@cmdkey [NW] {DVS} {FillColor}{}
+\define@cmdkey [NW] {DVS} {FillOpacity}{}
+\define@cmdkey [NW] {DVS} {TextColor}{}
+\define@cmdkey [NW] {DVS} {TextFont}{}
+\define@cmdkey [NW] {DVS} {TextRotation}{}
+\define@cmdkey [NW] {DVS} {TextOpacity}{}
+\define@cmdkey [NW] {DVS} {InnerSep}{}
+\define@cmdkey [NW] {DVS} {OuterSep}{}
+\presetkeys    [NW] {DVS} {
+                           Shape              = \VertexShape,
+                           MinSize            = \VertexMinSize,
+                           LineWidth          = \VertexLineWidth,
+                           LineColor          = \VertexLineColor,
+                           FillColor          = \VertexFillColor,
+                           LineOpacity        = \VertexLineOpacity,
+                           FillOpacity        = \VertexFillOpacity,
+                           InnerSep           = \VertexInnerSep,
+                           OuterSep           = \VertexOuterSep,
+                           TextColor          = \VertexTextColor,
+                           TextRotation       = \VertexTextRotation,
+                           TextOpacity        = \VertexTextOpacity,
+                           TextFont           = \VertexTextFont
+                         }{}
+
+%<--------------------------------------------------------------------------->
+%      Init Default Edge Style
+%<--------------------------------------------------------------------------->
+\define@cmdkey [NW] {DES} {Arrow}{}
+\define@cmdkey [NW] {DES} {LineWidth}{}
+\define@cmdkey [NW] {DES} {Color}{}
+\define@cmdkey [NW] {DES} {Opacity}{}
+\define@cmdkey [NW] {DES} {TextFillColor}{}
+\define@cmdkey [NW] {DES} {TextFillOpacity}{}
+\define@cmdkey [NW] {DES} {TextFont}{}
+\define@cmdkey [NW] {DES} {TextRotation}{}
+\define@cmdkey [NW] {DES} {TextOpacity}{}
+\define@cmdkey [NW] {DES} {InnerSep}{}
+\define@cmdkey [NW] {DES} {OuterSep}{}
+\presetkeys    [NW] {DES} {
+                           Arrow              = \EdgeArrow,
+                           LineWidth          = \EdgeLineWidth,
+                           Color              = \EdgeColor,
+                           Opacity            = \EdgeOpacity,
+                           TextFillColor      = \EdgeTextFillColor,
+                           TextFillOpacity    = \EdgeTextFillOpacity,
+                           InnerSep           = \EdgeInnerSep,
+                           OuterSep           = \EdgeOuterSep,
+                           TextRotation       = \EdgeTextRotation,
+                           TextOpacity        = \EdgeTextOpacity,
+                           TextFont           = \EdgeTextFont
+                         }{}
+
+
+%<--------------------------------------------------------------------------->
+%      Init Default Plane Style
+%<--------------------------------------------------------------------------->
+\define@cmdkey [NW] {DPS} {LineWidth}{}
+\define@cmdkey [NW] {DPS} {LineColor}{}
+\define@cmdkey [NW] {DPS} {LineOpacity}{}
+\define@cmdkey [NW] {DPS} {GridLineWidth}{}
+\define@cmdkey [NW] {DPS} {GridColor}{}
+\define@cmdkey [NW] {DPS} {GridOpacity}{}
+\define@cmdkey [NW] {DPS} {FillColor}{}
+\define@cmdkey [NW] {DPS} {FillOpacity}{}
+\presetkeys    [NW] {DPS} {
+                           LineWidth          = \PlaneLineWidth,
+                           LineColor          = \PlaneLineColor,
+                           LineOpacity        = \PlaneLineOpacity,
+                           GridLineWidth      = \PlaneGridLineWidth,
+                           GridColor          = \PlaneGridColor,
+                           GridOpacity        = \PlaneGridOpacity,
+                           FillColor          = \PlaneFillColor,
+                           FillOpacity        = \PlaneFillOpacity
+                         }{}
+
+
+%<--------------------------------------------------------------------------->
+%      Init Default Text Style
+%<--------------------------------------------------------------------------->
+\define@cmdkey [NW] {DTS} {InnerSep}{}
+\define@cmdkey [NW] {DTS} {OuterSep}{}
+\define@cmdkey [NW] {DTS} {TextFont}{}
+\define@cmdkey [NW] {DTS} {TextColor}{}
+\define@cmdkey [NW] {DTS} {TextRotation}{}
+\define@cmdkey [NW] {DTS} {TextOpacity}{}
+\presetkeys    [NW] {DTS} {
+                           InnerSep           = \TextInnerSep,
+                           OuterSep           = \TextOuterSep,
+                           TextFont           = \TextFont,
+                           TextColor          = \TextColor,
+                           TextRotation       = \TextRotation,
+                           TextOpacity        = \TextOpacity
+                         }{}
+
+
+
+%<--------------------------------------------------------------------------->
+%      Init Default Coordinates 3D
+%<--------------------------------------------------------------------------->
+\define@cmdkey [NW] {COS} {xAngle}{}
+\define@cmdkey [NW] {COS} {xLength}{}
+\define@cmdkey [NW] {COS} {yAngle}{}
+\define@cmdkey [NW] {COS} {yLength}{}
+\define@cmdkey [NW] {COS} {zAngle}{}
+\define@cmdkey [NW] {COS} {zLength}{}
+\presetkeys    [NW] {COS} {
+                           xAngle             = \xAngle,
+                           xLength            = \xLength,
+                           yAngle             = \yAngle,
+                           yLength            = \yLength,
+                           zAngle             = \zAngle,
+                           zLength            = \zLength
+                         }{}
+
+%<--------------------------------------------------------------------------->
+%      Default Style
+%<--------------------------------------------------------------------------->
+\newcommand*{\SetVertexStyle}[1][]{\NW@SetVertexStyleDefault[#1]}%
+\def\NW@SetVertexStyleDefault[#1]{%
+\setkeys[NW]{DVS}{#1}% 
+\tikzset{VertexStyle/.style = {
+                               draw,
+                               shape          = \cmdNW@DVS@Shape,
+                               color          = \cmdNW@DVS@LineColor,
+                               fill           = \cmdNW@DVS@FillColor,
+                               inner sep      = \cmdNW@DVS@InnerSep,
+                               outer sep      = \cmdNW@DVS@OuterSep,
+                               minimum size   = \cmdNW@DVS@MinSize,
+                               line width     = \cmdNW@DVS@LineWidth,
+                               font           = \cmdNW@DVS@TextFont,
+                               fill opacity   = \cmdNW@DVS@FillOpacity,
+                               draw opacity   = \cmdNW@DVS@LineOpacity
+                           }}
+\tikzset{LabelStyle/.style={ \cmdNW@DVS@TextColor,
+                               font           = \cmdNW@DVS@TextFont,
+                               rotate         = \cmdNW@DVS@TextRotation,
+                               opacity        = \cmdNW@DVS@TextOpacity,
+                           }}
+}%
+
+\newcommand*{\SetEdgeStyle}[1][]{\NW@SetEdgeStyleDefault[#1]}%
+\def\NW@SetEdgeStyleDefault[#1]{%
+\setkeys[NW]{DES}{#1}% 
+\tikzset{EdgeStyle/.style =   {\cmdNW@DES@Arrow,
+                               line width     = \cmdNW@DES@LineWidth,
+                               color          = \cmdNW@DES@Color,
+                               opacity        = \cmdNW@DES@Opacity
+                           }}
+\tikzset{EdgeLabelStyle/.style={circle,
+                               fill           = \cmdNW@DES@TextFillColor,
+                               fill opacity   = \cmdNW@DES@TextFillOpacity,
+                               inner sep      = \cmdNW@DES@InnerSep,
+                               outer sep      = \cmdNW@DES@OuterSep,
+                               rotate         = \cmdNW@DES@TextRotation,
+                               text opacity   = \cmdNW@DES@TextOpacity,
+                               font           = \cmdNW@DES@TextFont
+                           }}
+}%
+
+
+\newcommand*{\SetPlaneStyle}[1][]{\NW@SetPlaneStyleDefault[#1]}%
+\def\NW@SetPlaneStyleDefault[#1]{%
+\setkeys[NW]{DPS}{#1}% 
+\tikzset{PlaneBorderStyle/.style =  {draw,
+                               line width     = \cmdNW@DPS@LineWidth,
+                               color          = \cmdNW@DPS@LineColor,
+                               draw opacity   = \cmdNW@DPS@LineOpacity
+                           }}
+\tikzset{PlaneFillStyle/.style = {
+                               fill           = \cmdNW@DPS@FillColor,
+                               fill opacity   = \cmdNW@DPS@FillOpacity
+                           }}
+\tikzset{PlaneGridStyle/.style =   {draw,
+                               line width     = \cmdNW@DPS@GridLineWidth,
+                               color          = \cmdNW@DPS@GridColor,
+                               opacity        = \cmdNW@DPS@GridOpacity
+                           }}
+}%
+
+
+\newcommand*{\SetTextStyle}[1][]{\NW@SetTextStyleDefault[#1]}%
+\def\NW@SetTextStyleDefault[#1]{%
+\setkeys[NW]{DTS}{#1}% 
+\tikzset{TextStyle/.style =   {
+                               inner sep      = \cmdNW@DTS@InnerSep,
+                               outer sep      = \cmdNW@DTS@OuterSep,
+                               color          = \cmdNW@DTS@TextColor,
+                               rotate         = \cmdNW@DTS@TextRotation,
+                               text opacity   = \cmdNW@DTS@TextOpacity,
+                               font           = \cmdNW@DTS@TextFont
+                           }}
+}%
+
+
+\tikzset{
+    multilayer/.code={%
+      \ifthenelse{\equal{#1}{3d}}{
+        \tikzset{edge canvas/.style={canvas is yx plane at z=0}}
+        \tikzset{multilayer 3d}
+      }{
+        \tikzset{edge canvas/.style={}}
+        \tikzset{multilayer 2d}
+      }
+    },
+  }
+
+
+
+\newcommand*{\SetCoordinates}[1][]{\NW@SetCoordinates[#1]}%
+\def\NW@SetCoordinates[#1]{%
+\setkeys[NW]{COS}{#1}% 
+\tikzset{multilayer 3d/.style={
+    y={(\cmdNW@COS@xAngle:\cmdNW@COS@xLength \DefaultUnit)},
+    x={(\cmdNW@COS@yAngle:\cmdNW@COS@yLength \DefaultUnit)},
+    z={(\cmdNW@COS@zAngle:\cmdNW@COS@zLength \DefaultUnit)},
+    every node/.append style={transform shape},
+ }}
+%\tikzset{edge canvas/.style={canvas is yx plane at z=0}}
+}%
+
+
+%<--------------------------------------------------------------------------->
+%      Apply default settings
+%<--------------------------------------------------------------------------->
+
+\SetCoordinates
+\SetVertexStyle
+\SetEdgeStyle
+\SetPlaneStyle
+\SetTextStyle
+
+%<--------------------------------------------------------------------------->
+%      Redefine settings
+%<--------------------------------------------------------------------------->
+
+\newcommand*{\SetLayerDistance}[1]{\renewcommand{\NetworkLayerDistance}{#1}}
+\newcommand*{\SetDefaultUnit}[1]{\renewcommand{\DefaultUnit}{#1}}
+\newcommand*{\SetDistanceScale}[1]{\renewcommand{\DistanceScale}{#1}}
+\newcommand*{\SetPlaneWidth}[1]{\renewcommand{\PlaneWidth}{#1}}
+\newcommand*{\SetPlaneHeight}[1]{\renewcommand{\PlaneHeight}{#1}}
+\newcommand*{\EdgesInBG}{\presetkeys [NW] {edge} {NotInBG = false}{}}
+\newcommand*{\EdgesNotInBG}{\presetkeys [NW] {edge} {NotInBG = true}{}}
+
+%=============================================================================
+%      Vertex and Edge creation
+%=============================================================================
+
+%<--------------------------------------------------------------------------->
+%      Init Vertex
+%<--------------------------------------------------------------------------->
+\define@cmdkey  [NW] {vertex} {x}{}
+\define@cmdkey  [NW] {vertex} {y}{}
+\define@cmdkey  [NW] {vertex} {label}{}
+\define@cmdkey  [NW] {vertex} {size}{}
+\define@cmdkey  [NW] {vertex} {color}{}
+\define@cmdkey  [NW] {vertex} {opacity}{}
+\define@cmdkey  [NW] {vertex} {style}{}
+\define@cmdkey  [NW] {vertex} {layer}{}
+\define@cmdkey  [NW] {vertex} {shape}{}
+\define@cmdkey  [NW] {vertex} {fontsize}{}
+\define@cmdkey  [NW] {vertex} {fontcolor}{}
+\define@cmdkey  [NW] {vertex} {fontscale}{}
+\define@boolkey [NW] {vertex} {RGB}[true]{}
+\define@boolkey [NW] {vertex} {IdAsLabel}[true]{}
+\define@boolkey [NW] {vertex} {NoLabel}[true]{}
+\define@boolkey [NW] {vertex} {Math}[true]{}
+\define@boolkey [NW] {vertex} {Network}[true]{}
+\define@boolkey [NW] {vertex} {Pseudo}[true]{}
+\define@cmdkey  [NW] {vertex} {distance}{}
+\define@cmdkey  [NW] {vertex} {position}{}
+\presetkeys     [NW] {vertex} {Network = false,}{}
+
+
+%<--------------------------------------------------------------------------->
+%      Vertex
+%<--------------------------------------------------------------------------->
+\newcommand*{\Vertex}[1][]{\@vertex[#1]}%
+\def\@vertex[#1]#2{%
+    \setkeys[NW]{vertex}{#1}%
+    % Check if Vertex is used in a network, if so no default settings are
+    % necessary, otherwise default settings are applied. 
+    \ifNW@vertex@Network
+    \cmdNW@vertex@opacity
+    \else
+      \setkeys[NW]{vertex}{
+                           x          = {0},
+                           y          = {0},
+                           label      = {},
+                           size       = {},
+                           color      = {},
+                           opacity    = {},
+                           layer      = {},
+                           shape      = {},
+                           style      = {},
+                           fontsize   = {},
+                           fontcolor  = {},
+                           fontscale  = {},
+                           NoLabel    = false,
+                           IdAsLabel  = false,
+                           Math       = false,
+                           RGB        = false,
+                           Pseudo     = false,
+                           distance   = {0},
+                           position   = {center},
+                         }
+      \setkeys[NW]{vertex}{#1}%
+    \fi
+    \@@vertex{#2}%
+}
+\def\@@vertex#1{%
+  \def\vstyle{VertexStyle}
+  \begin{scope}
+    % [
+    % scale=1,yshift=0,every node/.append style={yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    % ]
+    % If option NoLabel is true, no labels are printed in the network
+    \ifNW@vertex@NoLabel
+      \def\vertex@L{}%
+      \def\vertex@Name{}%
+    \else
+      % if IdAsLabel is true, the label of the vertex is equal to the vertex id 
+      \ifNW@vertex@IdAsLabel
+        \def\vertex@Name{#1}
+        \def\vertex@L{\vertex@Name}
+      % Otherwise the label is equal to the label if it is non empty 
+      \else
+        \ifthenelse{\not\equal{\cmdNW@vertex@label}{}}{
+          \def\vertex@L{\cmdNW@vertex@label}
+          \def\vertex@Name{#1}
+        }{
+          \def\vertex@Name{#1}
+          \def\vertex@L{}
+        }
+      \fi
+    \fi
+    % Check if Math is true, if so the label will be in math mode
+    \ifNW@vertex@Math
+      \def\vertex@Label{$\vertex@L$}%
+    \else
+      \def\vertex@Label{\vertex@L}%
+    \fi
+    % Check if the size of the vertex is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@vertex@size}{}}{
+      \tikzset{LocalVertexSize/.style={minimum size = \cmdNW@vertex@size
+          \DefaultUnit}}
+    }{
+      \tikzset{LocalVertexSize/.style={}}
+    }
+    % Check if the font size of the vertex label is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@vertex@fontsize}{}}{
+      \tikzset{LocalVertexFontSize/.style={font = \cmdNW@vertex@fontsize}}
+    }{
+      \tikzset{LocalVertexFontSize/.style={}}
+    }
+    % Check if the font scale of the vertex label is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@vertex@fontscale}{}}{
+      \tikzset{LocalVertexFontScale/.style={scale = \cmdNW@vertex@fontscale}}
+    }{
+      \tikzset{LocalVertexFontScale/.style={}}
+    }
+    % Check if the opacity of the vertex is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@vertex@opacity}{}}{
+      \tikzset{LocalVertexOpacity/.style={fill opacity = \cmdNW@vertex@opacity}}
+    }{
+      \tikzset{LocalVertexOpacity/.style={}}
+    }
+    % Check if the shape of the vertex is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@vertex@shape}{}}{
+      \tikzset{LocalVertexShape/.style={shape = \cmdNW@vertex@shape}}
+    }{
+      \tikzset{LocalVertexShape/.style={}}
+    }
+    % Check if the color of the vertex is redefined, if so the new style is
+    % used. If the option RGB is true, RGB values can be used to define the
+    % color of the vertex entered in the form {R,G,B}. If RGB is not true the
+    % default colors of tikz can be used (e.g. blue!50!green)
+    \ifNW@vertex@RGB
+      \ifthenelse{\not\equal{\cmdNW@vertex@color}{}}{
+        \pgfutil@definecolor{LocalColor}{RGB}{\cmdNW@vertex@color}
+        \tikzset{LocalVertexFill/.style={fill = LocalColor}}
+      }{
+        \tikzset{LocalVertexFill/.style={}}
+      }
+      \ifthenelse{\not\equal{\cmdNW@vertex@fontcolor}{}}{
+        \pgfutil@definecolor{LocalFontColor}{RGB}{\cmdNW@vertex@fontcolor}
+        \tikzset{LocalVertexFontColor/.style={color = LocalFontColor}}
+      }{
+        \tikzset{LocalVertexFontColor/.style={}}
+      }
+    \else
+      \ifthenelse{\not\equal{\cmdNW@vertex@color}{}}{
+        \tikzset{LocalVertexFill/.style={fill = \cmdNW@vertex@color}}
+      }{
+        \tikzset{LocalVertexFill/.style={}}
+      }
+      \ifthenelse{\not\equal{\cmdNW@vertex@fontcolor}{}}{
+        \tikzset{LocalVertexFontColor/.style={color = \cmdNW@vertex@fontcolor}}
+      }{
+        \tikzset{LocalVertexFontColor/.style={}}
+      }
+
+    \fi
+    % Define empty style for the vertex
+    \ifNW@vertex@Pseudo
+      \tikzset{LocalPseudo/.style={opacity = 0}}
+    \else
+      \tikzset{LocalPseudo/.style={}}
+    \fi
+    % Define local style for the label
+    \tikzset{LocalLabel/.style={label = {[LabelStyle, LocalVertexFontColor,
+          LocalVertexFontSize, LocalVertexFontScale, label
+          distance=\cmdNW@vertex@distance]\cmdNW@vertex@position:\vertex@Label}}}
+    \ifthenelse{\equal{\cmdNW@vertex@layer}{}}{
+      \protected@edef\@tempa{%
+        \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,LocalVertexFill,LocalVertexShape,LocalLabel,\cmdNW@vertex@style,LocalPseudo](#1)%
+        at (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
+      \@tempa;
+    }{
+      \begin{scope}[canvas is yx plane at z=(\cmdNW@vertex@layer-1)*\NetworkLayerDistance]
+      \protected@edef\@tempa{%
+        \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,LocalVertexFill,LocalVertexShape,LocalLabel,\cmdNW@vertex@style,LocalPseudo](#1)%
+        at (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
+      \@tempa;
+      \end{scope}
+    }
+  \end{scope}
+}
+
+%<--------------------------------------------------------------------------->
+%      Init Edge
+%<--------------------------------------------------------------------------->
+\define@cmdkey  [NW] {edge} {label}{}
+\define@cmdkey  [NW] {edge} {lw}{}
+\define@cmdkey  [NW] {edge} {color}{}
+\define@cmdkey  [NW] {edge} {opacity}{}
+\define@cmdkey  [NW] {edge} {style}{}
+\define@cmdkey  [NW] {edge} {fontcolor}{}
+\define@cmdkey  [NW] {edge} {fontsize}{}
+\define@cmdkey  [NW] {edge} {fontscale}{}
+\define@boolkey [NW] {edge} {RGB}[true]{}
+\define@boolkey [NW] {edge} {Math}[true]{}
+\define@boolkey [NW] {edge} {Direct}[true]{}
+\define@boolkey [NW] {edge} {Network}[true]{}
+\define@cmdkey  [NW] {edge} {bend}{}
+\define@cmdkey  [NW] {edge} {position}{}
+\define@cmdkey  [NW] {edge} {distance}{}
+\define@cmdkey  [NW] {edge} {loopsize}{}
+\define@cmdkey  [NW] {edge} {loopposition}{}
+\define@cmdkey  [NW] {edge} {loopshape}{}
+\define@boolkey [NW] {edge} {NotInBG}[true]{}
+\define@cmdkey  [NW] {edge} {path}{}
+\presetkeys     [NW] {edge} {Network    = false,}{}
+%                             NotInBG    = false,}{}
+
+%<--------------------------------------------------------------------------->
+%      Edge
+%<--------------------------------------------------------------------------->
+\newcommand*{\Edge}[1][]{\@edge[#1]}%
+\def\@edge[#1](#2)(#3){%
+  \setkeys[NW]{edge}{#1}%
+  % Check if Vertex is used in a network, if so no default settings are
+  % necessary, otherwise default settings are applied. 
+  \ifNW@edge@Network
+  \else
+    \setkeys[NW]{edge}{
+                       label      = {},
+                       lw         = {},
+                       path       = {},
+                       color      = {},
+                       opacity    = {},
+                       style      = {},
+                       fontcolor  = {},
+                       fontsize   = {},
+                       fontscale  = {},
+                       RGB        = false,
+                       Math       = false,
+                       Direct     = false,
+                       NotInBG    = false,
+                       bend       = {0},
+                       loopsize  = {1\DefaultUnit},
+                       position   = {},
+                       loopposition= {0},
+                       loopshape  = {90},
+                       distance   = {.5}
+                     }
+    \setkeys[NW]{edge}{#1}%
+  \fi
+  \def\estyle{EdgeStyle}
+  %
+  \ifNW@edge@NotInBG
+    \tikzset{EdgeInBG/.style={}}
+  \else
+    \tikzset{EdgeInBG/.style={on background layer}}
+  \fi
+  \begin{scope}[edge canvas,EdgeInBG]
+    % [
+    % scale=1,yshift=0,every node/.append style={yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    % ]
+    % Check if Direct is true, if so use default arrow style
+    \ifNW@edge@Direct
+      \tikzset{LocalArrow/.style={}}
+    \else
+      \tikzset{LocalArrow/.style={-}}
+    \fi
+    % Check if the line width of the vertex is redefined, if so the new style is
+    % used
+    \ifthenelse{\not\equal{\cmdNW@edge@lw}{}}{
+      \tikzset{LocalEdgeLW/.style={line width = \cmdNW@edge@lw}}
+    }{
+      \tikzset{LocalEdgeLW/.style={}}
+    }
+    % Check if the opacity of the vertex is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@edge@opacity}{}}{
+      \tikzset{LocalEdgeOpacity/.style={opacity = \cmdNW@edge@opacity}}
+      \tikzset{LocalTextOpacity/.style={text opacity = \cmdNW@edge@opacity}}
+    }{
+      \tikzset{LocalEdgeOpacity/.style={}}
+      \tikzset{LocalTextOpacity/.style={}}
+    }
+    % Check if the font size of the edge is redefined, if so the new style is
+    % used
+    \ifthenelse{\not\equal{\cmdNW@edge@fontsize}{}}{
+      \tikzset{LocalEdgeFontSize/.style={font = \cmdNW@edge@fontsize}}
+    }{
+      \tikzset{LocalEdgeFontSize/.style={}}
+    }
+    % Check if the font scale of the edge is redefined, if so the new style is
+    % used
+    \ifthenelse{\not\equal{\cmdNW@edge@fontscale}{}}{
+      \tikzset{LocalEdgeFontScale/.style={scale = \cmdNW@edge@fontscale}}
+    }{
+      \tikzset{LocalEdgeFontScale/.style={}}
+    }
+    % Check if the color of the vertex is redefined, if so the new style is
+    % used. If the option RGB is true, RGB values can be used to define the
+    % color of the vertex entered in the form {R,G,B}. If RGB is not true the
+    % default colors of tikz can be used (e.g. blue!50!green)
+    \ifNW@edge@RGB
+      \ifthenelse{\not\equal{\cmdNW@edge@color}{}}{
+        \pgfutil@definecolor{LocalColor}{RGB}{\cmdNW@edge@color}
+        \tikzset{LocalEdgeColor/.style={color = LocalColor}}
+      }{
+        \tikzset{LocalEdgeColor/.style={}}
+      }
+      \ifthenelse{\not\equal{\cmdNW@edge@fontcolor}{}}{
+        \pgfutil@definecolor{LocalFontColor}{RGB}{\cmdNW@edge@fontcolor}
+        \tikzset{LocalEdgeFontColor/.style={text = LocalFontColor}}
+      }{
+        \tikzset{LocalEdgeFontColor/.style={}}
+      }
+
+    \else
+      \ifthenelse{\not\equal{\cmdNW@edge@color}{}}{
+        \tikzset{LocalEdgeColor/.style={color = \cmdNW@edge@color}}
+      }{
+        \tikzset{LocalEdgeColor/.style={}}
+      }
+      \ifthenelse{\not\equal{\cmdNW@edge@fontcolor}{}}{
+        \tikzset{LocalEdgeFontColor/.style={text = \cmdNW@edge@fontcolor}}
+      }{
+        \tikzset{LocalEdgeFontColor/.style={}}
+      }
+
+    \fi
+    % Check if Math is true, if so the label will be in math mode
+    \ifNW@edge@Math
+      \def\edge@L{$\cmdNW@edge@label$}%
+    \else
+      \def\edge@L{\cmdNW@edge@label}%
+    \fi
+    % Check if a label is assigned, if so create a label variable
+    \ifthenelse{\not\equal{\cmdNW@edge@label}{}}{    \def\edge@Label{node[EdgeLabelStyle,LocalTextOpacity,LocalEdgeFontColor,LocalEdgeFontSize,LocalEdgeFontScale,pos=\cmdNW@edge@distance,\cmdNW@edge@position]{\edge@L}}
+    }{
+      \def\edge@Label{}
+    }
+    % Check if it is a self loop or a normal edge
+    % Normal edge
+    \ifthenelse{\not\equal{#2}{#3}}{
+    \ifthenelse{\not\equal{\cmdNW@edge@path}{}}{
+      \def\edge@pts{}%
+      \@for\tmp:=\cmdNW@edge@path\do{
+        \edef\edge@pts{\edge@pts (\tmp) --}
+        }
+     \protected@edef\@tempa{%
+ \noexpand\draw[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style] (#2) -- \edge@pts (#3)}      \@tempa;
+    }{
+      \protected@edef\@tempa{%
+       \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style] (#2) edge [bend left = \cmdNW@edge@bend] \edge@Label (#3)}%
+      \@tempa;
+    }
+    }{% Self loop
+      \protected@edef\@tempa{%
+        \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style]
+        (#2) edge [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,out=\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,loop,distance=\cmdNW@edge@loopsize,] \edge@Label (#3)}%
+      \@tempa;
+    }
+  \end{scope}
+}
+
+
+%=============================================================================
+%      Vertices and Edges creation
+%=============================================================================
+
+%<--------------------------------------------------------------------------->
+%      Init Vertices
+%<--------------------------------------------------------------------------->
+\define@cmdkey  [NW] {vertices} {layer}{}
+\define@cmdkey  [NW] {vertices} {size}{}
+\define@cmdkey  [NW] {vertices} {color}{}
+\define@cmdkey  [NW] {vertices} {opacity}{}
+\define@cmdkey  [NW] {vertices} {style}{}
+\define@cmdkey  [NW] {vertices} {shape}{}
+\define@boolkey [NW] {vertices} {RGB}[true]{}
+\define@boolkey [NW] {vertices} {IdAsLabel}[true]{}
+\define@boolkey [NW] {vertices} {NoLabel}[true]{}
+\define@boolkey [NW] {vertices} {Math}[true]{}
+\define@boolkey [NW] {vertices} {Pseudo}[true]{}
+\presetkeys     [NW] {vertices} {
+                                 layer     = {},
+                                 opacity   = {},
+                                 size      = {},
+                                 color     = {},
+                                 style     = {},
+                                 shape     = {},
+                                 RGB       = false,
+                                 IdAsLabel = false,
+                                 NoLabel   = false,
+                                 Math      = false,
+                                 Pseudo     = false,
+                               }{}
+
+\newcommand*{\setkeysexpanded}[2]{%
+  \expandafter\setkeysexpandedaux\expandafter{#2}{#1}}
+\newcommand*{\setkeysexpandedaux}[2]{%
+  \setkeys[NW]{#2}{#1}}
+
+% \newcommand*{\setkeysexpandedx}[2]{%
+%   \expandafter\setkeysexpandedauxx\expandafter{#2}{#1}}
+% \newcommand*{\setkeysexpandedauxx}[2]{%
+%   \setkeys[NW]{#2}{#1}}
+
+
+
+%<--------------------------------------------------------------------------->
+%      Vertices
+%<--------------------------------------------------------------------------->
+\newcommand*{\Vertices}[1][]{\@vertices[#1]}%
+\def\@vertices[#1]#2{%
+    \setkeys[NW]{vertices}{#1}%
+    \@@vertices{#2}%
+}
+\def\@@vertices#1{%
+  % Check if data base already exist
+  \DTLifdbexists{#1}{}{
+    % create dummy data base to store name
+    \DTLnewdb{#1}
+    % delete existing vertices data base
+    \DTLifdbexists{vertices}{
+      \DTLgdeletedb{vertices}
+    }{}
+    % Load data file for vertices
+    \DTLloaddb[noheader=false]{vertices}{#1}
+  }
+  % Define variables to store option values
+  \def\vertex@Options{}%
+  \def\vertex@id{}%
+  \def\vertex@rgbValues{}%
+  % Go through each row and create vertices
+  \DTLforeach*{vertices}{}{%
+    % reset storage variable to default values
+    \edef\vertex@Options{x=0,y=0,label={},size={},color={},fontcolor={},fontsize={},fontscale={},
+      opacity={},layer={},style={},NoLabel=false,IdAsLabel=false,
+      Math=false,RGB=false,Pseudo=false,distance={0},position={center},shape={},}%
+    \edef\vertex@rgbValues{}%
+    % Go through each row element
+    \DTLforeachkeyinrow{\thisValue}{
+      \DTLifeq{\dtlkey}{id}{
+        % Assign vertex id to storage variable
+        \edef\vertex@id{\thisValue}%
+      }{
+        \DTLifeq{\dtlkey}{R}{
+          \edef\vertex@rgbValues{\vertex@rgbValues \thisValue,}
+         }{
+           \DTLifeq{\dtlkey}{G}{
+             \edef\vertex@rgbValues{\vertex@rgbValues \thisValue,}
+             }{
+               \DTLifeq{\dtlkey}{B}{
+                 \edef\vertex@rgbValues{\vertex@rgbValues \thisValue,}
+               }{
+                 % Assign option to storage variable
+                 \edef\vertex@Options{\vertex@Options \dtlkey=\thisValue,}
+      }}}}
+    }
+    % Add general settings for the Vertex
+    % NoLabel
+    \ifNW@vertices@NoLabel
+      \edef\vertex@Options{\vertex@Options NoLabel=true,}
+    \fi
+    % Pseudo
+    \ifNW@vertices@Pseudo
+      \edef\vertex@Options{\vertex@Options Pseudo=true,}
+    \fi
+    % IdAsLabel
+    \ifNW@vertices@IdAsLabel
+      \edef\vertex@Options{\vertex@Options IdAsLabel=true,}
+    \fi
+    % Math
+    \ifNW@vertices@Math
+      \edef\vertex@Options{\vertex@Options Math=true,}
+    \fi
+    % RGB
+    \ifNW@vertices@RGB
+      \edef\vertex@Options{\vertex@Options RGB=true,color={\vertex@rgbValues},}
+    \fi
+    % opacity
+    \ifthenelse{\not\equal{\cmdNW@vertices@opacity}{}}
+    {
+      \edef\vertex@Options{\vertex@Options opacity=\cmdNW@vertices@opacity,}
+    }{}
+    % size
+    \ifthenelse{\not\equal{\cmdNW@vertices@size}{}}
+    {
+      \edef\vertex@Options{\vertex@Options size=\cmdNW@vertices@size,}
+    }{}
+    % shape
+    \ifthenelse{\not\equal{\cmdNW@vertices@shape}{}}
+    {
+      \edef\vertex@Options{\vertex@Options shape=\cmdNW@vertices@shape,}
+    }{}
+    % color
+    \ifthenelse{\not\equal{\cmdNW@vertices@color}{}}
+    {
+      \edef\vertex@Options{\vertex@Options color=\cmdNW@vertices@color,}
+    }{}
+    \ifthenelse{\not\equal{\cmdNW@vertices@style}{}}{
+      \edef\vertex@Options{\vertex@Options style={\cmdNW@vertices@style},}
+    }{}
+    % Apply settings for the Vertex
+    \setkeysexpanded{vertex}{\vertex@Options}%
+    \ifthenelse{\not\equal{\cmdNW@vertices@layer}{}}{
+      \ifthenelse{\equal{\cmdNW@vertices@layer}{\cmdNW@vertex@layer}}{
+        \Vertex[Network]{\vertex@id}
+      }{}
+    }{
+      \Vertex[Network]{\vertex@id}
+    }
+    % Create Vertex
+  }
+% Delete data base
+% \DTLgdeletedb{#1}
+}
+
+%<--------------------------------------------------------------------------->
+%      Init Edges
+%<--------------------------------------------------------------------------->
+\def\myvariable{\KeySettingCommand{false}}
+\define@cmdkey  [NW] {edges} {layer}{}
+\define@cmdkey  [NW] {edges} {vertices}{}
+\define@cmdkey  [NW] {edges} {style}{}
+\define@cmdkey  [NW] {edges} {lw}{}
+\define@cmdkey  [NW] {edges} {color}{}
+\define@cmdkey  [NW] {edges} {opacity}{}
+\define@boolkey [NW] {edges} {RGB}[true]{}
+\define@boolkey [NW] {edges} {Math}[true]{}
+\define@boolkey [NW] {edges} {Direct}[true]{}
+\define@boolkey [NW] {edges} {NoLabel}[true]{}
+\define@boolkey [NW] {edges} {NotInBG}[true]{}
+\presetkeys     [NW] {edges} {
+                              layer      = {},
+                              vertices   = {},
+                              style      = {},
+                              lw         = {},
+                              color      = {},
+                              opacity    = {},
+                              RGB        = false,
+                              Math       = false,
+                              Direct     = false,
+                              NoLabel    = false,
+                              NotInBG    = false,
+                            }{}
+
+\newcommand{\shortcut}[1]{%
+  \@tempswafalse
+  \@for\next:=#1\do
+    {\if@tempswa+\else\@tempswatrue\fi\textbf{\next}}%
+}
+
+\newcounter{LayerCounter}
+
+
+\newcommand\myfunc[1]{\setcounter{LayerCounter}{0}\@for\tmp:=#1\do{
+\stepcounter{LayerCounter}
+\arabic{LayerCounter}-a-\textbf{\tmp}}
+}
+
+
+%<--------------------------------------------------------------------------->
+%      Edges
+%<--------------------------------------------------------------------------->
+\newcommand*{\Edges}[1][]{\@edges[#1]}%
+\def\@edges[#1]#2{%
+    \setkeys[NW]{edges}{#1}%
+    \@@edges{#2}%
+}
+\def\@@edges#1{%
+\begin{scope}
+  % Check if data base already exist
+  \DTLifdbexists{#1}{}{
+    % create dummy data base to store name
+    \DTLnewdb{#1}
+    % delete existing vertices data base
+    \DTLifdbexists{edges}{
+      \DTLgdeletedb{edges}
+    }{}
+    % Load data file for vertices
+    \DTLloaddb[noheader=false]{edges}{#1}
+  }
+
+  % % Load data file for vertices
+  % \DTLloaddb[noheader=false]{#1}{#1}
+  % Define variables to store option values
+  \def\edge@Options{}%
+  \def\edge@u{}%
+  \def\edge@v{}%
+  \def\edge@u@layer{}%
+  \def\edge@v@layer{}%
+  \def\edge@rgbValues{}%
+  \def\u@layer{}%
+  \def\v@layer{}%
+  %
+  % Assign where the edges are drawn from to
+  \ifthenelse{\not\equal{\cmdNW@edges@layer}{}}{
+    % set layer count back to 0
+    \setcounter{LayerCounter}{0}
+    \@for\tmp:=\cmdNW@edges@layer\do{
+      \stepcounter{LayerCounter}
+      \ifthenelse{\value{LayerCounter}=1}{
+        \edef\u@layer{\tmp}%
+      }{
+        \edef\v@layer{\tmp}%
+      }
+    }
+  }{}
+  % Go through each row and create edges
+  \DTLforeach*{edges}{}{%
+    % reset storage variable to default values
+    \edef\edge@Options{label = {}, lw = {}, color = {}, opacity = {}, style =
+      {}, RGB = false, Math = false, Direct = false, NotInBG = false, bend = {0}, loopsize =
+      {1\DefaultUnit}, position = {}, loopposition = {0}, loopshape = {90},
+      distance = {.5}, path = {}, fontcolor = {}, fontsize = {}, fontscale ={},}
+  \edef\edge@rgbValues{}%
+    % Go through each row element
+    \DTLforeachkeyinrow{\thisValue}{
+      \DTLifeq{\dtlkey}{u}{
+        % Assign edge id to storage variable
+        \edef\edge@u{\thisValue}%
+      }{
+        \DTLifeq{\dtlkey}{v}{
+          \edef\edge@v{\thisValue}%
+          }{
+            \DTLifeq{\dtlkey}{R}{
+              \edef\edge@rgbValues{\edge@rgbValues \thisValue,}
+            }{
+              \DTLifeq{\dtlkey}{G}{
+                \edef\edge@rgbValues{\edge@rgbValues \thisValue,}
+              }{
+                \DTLifeq{\dtlkey}{B}{
+                  \edef\edge@rgbValues{\edge@rgbValues \thisValue,}
+                }{
+                  % Assign option to storage variable
+                  \edef\edge@Options{\edge@Options \dtlkey=\thisValue,}
+                }}}}}
+    }
+    % Add general settings for the Edges
+    % NoLabel
+    \ifNW@edges@NoLabel
+      \edef\edge@Options{\edge@Options label={},}
+    \fi
+    % Direct
+    \ifNW@edges@Direct
+      \edef\edge@Options{\edge@Options Direct=true,}
+    \fi
+    % Math
+    \ifNW@edges@Math
+      \edef\edge@Options{\edge@Options Math=true,}
+    \fi
+    % RGB
+    \ifNW@edges@RGB
+      \edef\edge@Options{\edge@Options RGB=true,color={\edge@rgbValues},}
+    \fi
+    \ifthenelse{\not\equal{\cmdNW@edges@style}{}}{
+      \edef\edge@Options{\edge@Options style={\cmdNW@edges@style},}
+    }{}
+    % lw
+    \ifthenelse{\not\equal{\cmdNW@edges@lw}{}}
+    {
+      \edef\edge@Options{\edge@Options lw=\cmdNW@edges@lw,}
+    }{}
+    % color
+    \ifthenelse{\not\equal{\cmdNW@edges@color}{}}
+    {
+      \edef\edge@Options{\edge@Options color=\cmdNW@edges@color,}
+    }{}
+    % opacity
+    \ifthenelse{\not\equal{\cmdNW@edges@opacity}{}}
+    {
+      \edef\edge@Options{\edge@Options opacity=\cmdNW@edges@opacity,}
+    }{}
+    % NoLabel
+    \ifNW@edges@NotInBG
+      \edef\edge@Options{\edge@Options NotInBG=true,}
+    \fi
+    % Apply settings for the Edge
+    \setkeysexpanded{edge}{\edge@Options}%
+    % Create Edge
+    \ifthenelse{\equal{\cmdNW@edges@layer}{}}{
+      \Edge[Network](\edge@u)(\edge@v)
+    }{
+      \ifthenelse{\not\equal{\cmdNW@edges@vertices}{}}{
+        \DTLifdbexists{vertices}{
+          \DTLgdeletedb{vertices}
+        }{}
+        % Load data file for vertices
+        \DTLloaddb[noheader=false]{vertices}{\cmdNW@edges@vertices}      
+      }{}
+      % find assigned layer to the used vertices
+      \DTLforeach*{vertices}{\id=id,\layer=layer}{%
+        \ifthenelse{\equal{\id}{\edge@u}}{
+          \edef\edge@u@layer{\layer}%
+          \dtlbreak
+        }{}
+      }
+      \DTLforeach*{vertices}{\id=id,\layer=layer}{%
+        \ifthenelse{\equal{\id}{\edge@v}}{
+          \edef\edge@v@layer{\layer}%
+          \dtlbreak
+        }{}
+      }
+      % if the edge is an intra layer edge
+      \ifthenelse{\equal{\u@layer}{\v@layer}}{
+        \ifthenelse{\equal{\u@layer}{\edge@u@layer}}{
+          \ifthenelse{\equal{\v@layer}{\edge@v@layer}}{
+            \Edge[Network](\edge@u)(\edge@v)
+          }{}
+        }{}
+      }{
+        \ifthenelse{\equal{\u@layer}{\edge@u@layer}}{
+          \ifthenelse{\equal{\v@layer}{\edge@v@layer}}{
+            \Edge[Network](\edge@u)(\edge@v)
+          }{}
+        }{}
+        \ifthenelse{\equal{\v@layer}{\edge@u@layer}}{
+          \ifthenelse{\equal{\u@layer}{\edge@v@layer}}{
+            \Edge[Network](\edge@u)(\edge@v)
+          }{}
+        }{}
+
+      }
+
+    }
+  }
+\end{scope}
+% Delete data base
+% \DTLgdeletedb{#1}
+}
+
+
+%<--------------------------------------------------------------------------->
+%      Init Layer
+%<--------------------------------------------------------------------------->
+\define@cmdkey  [NW] {layer} {layer}{}
+\define@cmdkey  [NW] {layer} {z}{}
+\define@cmdkey  [NW] {layer} {opacity}{}
+\presetkeys     [NW] {layer} {
+                              layer   = {1},
+                              opacity = {},
+                              z       = {},
+                            }{}
+
+%<--------------------------------------------------------------------------->
+%      Layer
+%<--------------------------------------------------------------------------->
+%\def\@layer{canvas is yx plane at z=-3,}
+
+\def\@layer[#1]#2{
+\setkeys[NW]{layer}{#1}
+\ifthenelse{\not\equal{\cmdNW@layer@z}{}}{
+  \tikzset{LocalLayerZ/.style={canvas is yx plane at z=\cmdNW@layer@z}}
+}{
+  \tikzset{LocalLayerZ/.style={canvas is yx plane at z=(\cmdNW@layer@layer-1)*\NetworkLayerDistance}}
+}
+\ifthenelse{\not\equal{\cmdNW@layer@opacity}{}}{
+  \tikzset{LocalLayerOpacity/.style={fill opacity = \cmdNW@layer@opacity}}
+}{
+  \tikzset{LocalLayerOpacity/.style={}}
+}
+\begin{scope}[LocalLayerZ,LocalLayerOpacity]
+}
+%\newcommand*{\Layer}[1][]{\@layer[#1]}%
+\newenvironment{Layer}[1][]{\@layer[#1]1}{
+\end{scope}
+}
+%\def\@layer[#1]#2{}
+% \newcommand*{\Edges}[1][]{\@edges[#1]}%
+% \def\@edges[#1]#2{%
+%     \setkeys[NW]{edges}{#1}%
+%     \@@edges{#2}%
+% }
+% \def\@@edges#1{%
+
+
+
+%<--------------------------------------------------------------------------->
+%      Init Plane
+%<--------------------------------------------------------------------------->
+\define@cmdkey  [NW] {plane} {x}{}
+\define@cmdkey  [NW] {plane} {y}{}
+\define@cmdkey  [NW] {plane} {width}{}
+\define@cmdkey  [NW] {plane} {height}{}
+\define@cmdkey  [NW] {plane} {color}{}
+\define@cmdkey  [NW] {plane} {opacity}{}
+\define@cmdkey  [NW] {plane} {style}{}
+\define@cmdkey  [NW] {plane} {layer}{}
+\define@cmdkey  [NW] {plane} {grid}{}
+\define@cmdkey  [NW] {plane} {image}{}
+\define@boolkey [NW] {plane} {RGB}[true]{}
+\define@boolkey [NW] {plane} {InBG}[true]{}
+\define@boolkey [NW] {plane} {NoFill}[true]{}
+\define@boolkey [NW] {plane} {NoBorder}[true]{}
+\define@boolkey [NW] {plane} {ImageAndFill}[true]{}
+\presetkeys     [NW] {plane} {
+                              x       = {0},
+                              y       = {0},
+                              width   = {\PlaneWidth},
+                              height  = {\PlaneHeight},
+                              color   = {},
+                              opacity = {},
+                              style   = {},
+                              layer   = {1},
+                              grid    = {},
+                              image   = {},
+                              RGB     = false,
+                              InBG    = false,
+                              NoFill  = false,
+                              NoBorder= false,
+                              ImageAndFill= false,
+                            }{}
+
+
+%<--------------------------------------------------------------------------->
+%      Plane
+%<--------------------------------------------------------------------------->
+\newcommand*{\Plane}[1][]{\@plane[#1]}%
+\def\@plane[#1]{%
+  \setkeys[NW]{plane}{#1}%
+  \ifNW@plane@ImageAndFill
+  \setkeys[NW]{plane}{#1}%
+  \else
+  \ifthenelse{\not\equal{\cmdNW@plane@image}{}}{
+    \setkeys[NW]{plane}{#1,NoFill}
+  }{}
+  \fi
+  \@@plane%
+}
+\def\@@plane{%
+  % Draw Plane on the Background layer
+  \ifNW@plane@InBG
+    \tikzset{InBGStyle/.style={on background layer}}
+  \else
+    \tikzset{InBGStyle/.style={}}
+  \fi
+  \begin{scope}[InBGStyle]
+    % Check if the color of the plane is redefined, if so the new style is
+    % used. If the option RGB is true, RGB values can be used to define the
+    % color of the plane entered in the form {R,G,B}. If RGB is not true the
+    % default colors of tikz can be used (e.g. blue!50!green)
+    \ifNW@plane@RGB
+      \ifthenelse{\not\equal{\cmdNW@plane@color}{}}{
+        \pgfutil@definecolor{LocalColor}{RGB}{\cmdNW@plane@color}
+        \tikzset{LocalPlaneFill/.style={fill = LocalColor}}
+      }{
+        \tikzset{LocalPlaneFill/.style={}}
+      }
+    \else
+      \ifthenelse{\not\equal{\cmdNW@plane@color}{}}{
+        \tikzset{LocalPlaneFill/.style={fill = \cmdNW@plane@color}}
+      }{
+        \tikzset{LocalPlaneFill/.style={}}
+      }
+    \fi
+    % Check if the opacity of the plane is redefined, if so the new style is used
+    \ifthenelse{\not\equal{\cmdNW@plane@opacity}{}}{
+      \tikzset{LocalPlaneOpacity/.style={fill opacity = \cmdNW@plane@opacity}}
+    }{
+      \tikzset{LocalPlaneOpacity/.style={}}
+    }
+    \begin{scope}[canvas is yx plane at z=(\cmdNW@plane@layer-1)*\NetworkLayerDistance]
+      % Draw the fill of the Plane
+      \ifNW@plane@NoFill
+      \else
+      \protected@edef\@tempa{%
+        \noexpand\fill[PlaneFillStyle,LocalPlaneFill,LocalPlaneOpacity](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
+        rectangle ++ (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
+      \@tempa;
+      \fi
+      % Draw image on the Plane
+      \ifthenelse{\not\equal{\cmdNW@plane@image}{}}{
+        %\protected@edef\@tempa{%
+          %\noexpand
+          \node[inner sep=0pt,LocalPlaneOpacity] at
+          ($(\cmdNW@plane@width/2,\cmdNW@plane@height/2)+(\cmdNW@plane@x,\cmdNW@plane@y)$)
+          {\includegraphics[width=\cmdNW@plane@width\DefaultUnit,height=\cmdNW@plane@height\DefaultUnit]{\cmdNW@plane@image}};
+        %}%
+        %\@tempa;
+      }{}
+      % Draw grid on the Plane
+      \ifthenelse{\not\equal{\cmdNW@plane@grid}{}}{
+        \protected@edef\@tempa{%
+          \noexpand\draw[PlaneGridStyle,step=\cmdNW@plane@grid*\DistanceScale](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
+          grid ++ (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
+        \@tempa;
+     }{}
+      % Draw the border of the Plane
+      \ifNW@plane@NoBorder
+      \else
+      \protected@edef\@tempa{%
+        \noexpand\draw[PlaneBorderStyle,\cmdNW@plane@style](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
+        rectangle ++ (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
+      \@tempa;
+      \fi
+    \end{scope}
+\end{scope}
+}
+
+
+%<--------------------------------------------------------------------------->
+%      Init Text
+%<--------------------------------------------------------------------------->
+\define@cmdkey  [NW] {text} {x}{}
+\define@cmdkey  [NW] {text} {y}{}
+\define@cmdkey  [NW] {text} {layer}{}
+\define@cmdkey  [NW] {text} {color}{}
+\define@cmdkey  [NW] {text} {opacity}{}
+\define@cmdkey  [NW] {text} {rotation}{}
+\define@cmdkey  [NW] {text} {fontsize}{}
+\define@cmdkey  [NW] {text} {anchor}{}
+\define@cmdkey  [NW] {text} {position}{}
+\define@cmdkey  [NW] {text} {distance}{}
+\define@cmdkey  [NW] {text} {style}{}
+\define@cmdkey  [NW] {text} {width}{}
+\define@boolkey [NW] {text} {RGB}[true]{}
+\presetkeys     [NW] {text} {
+                             x         = {0},
+                             y         = {0},
+                             layer     = {},
+                             color     = {},
+                             opacity   = {},
+                             fontsize  = {},
+                             anchor    = {},
+                             position  = {},
+                             rotation  = {},
+                             distance  = {0\DefaultUnit},
+                             style     = {},
+                             width     = {},
+                             RGB       = false,
+                           }{}
+
+
+%<--------------------------------------------------------------------------->
+%      Text
+%<--------------------------------------------------------------------------->
+\newcommand*{\Text}[1][]{\@text[#1]}%
+\def\@text[#1]#2{%
+    \setkeys[NW]{text}{#1}%
+    \@@text{#2}%
+}
+\def\@@text#1{%
+  % Check if the color of the text is redefined, if so the new style is
+  % used. If the option RGB is true, RGB values can be used to define the
+  % color of the text entered in the form {R,G,B}. If RGB is not true the
+  % default colors of tikz can be used (e.g. blue!50!green)
+  \ifNW@text@RGB
+  \ifthenelse{\not\equal{\cmdNW@text@color}{}}{
+    \pgfutil@definecolor{LocalColor}{RGB}{\cmdNW@text@color}
+    \tikzset{LocalTextColor/.style={color = LocalColor}}
+  }{
+    \tikzset{LocalTextColor/.style={}}
+  }
+  \else
+  \ifthenelse{\not\equal{\cmdNW@text@color}{}}{
+    \tikzset{LocalTextColor/.style={color = \cmdNW@text@color}}
+  }{
+    \tikzset{LocalTextColor/.style={}}
+  }
+  \fi
+  % Check if the opacity of the text is redefined, if so the new style is used
+  \ifthenelse{\not\equal{\cmdNW@text@opacity}{}}{
+    \tikzset{LocalTextOpacity/.style={text opacity = \cmdNW@text@opacity}}
+  }{
+    \tikzset{LocalTextOpacity/.style={}}
+  }
+  % Check if the rotation of the text is redefined, if so the new style is used
+  \ifthenelse{\not\equal{\cmdNW@text@rotation}{}}{
+    \tikzset{LocalTextRotation/.style={rotate = \cmdNW@text@rotation}}
+  }{
+    \tikzset{LocalTextRotation/.style={}}
+  }
+  % Check if the font size of the text is redefined, if so the new style is used
+  \ifthenelse{\not\equal{\cmdNW@text@fontsize}{}}{
+    \tikzset{LocalTextFontSize/.style={font = \cmdNW@text@fontsize}}
+  }{
+    \tikzset{LocalTextFontSize/.style={}}
+  }
+  % Check if the position of the text is redefined, if so the new style is used
+  \ifthenelse{\not\equal{\cmdNW@text@position}{}}{
+    \tikzset{LocalTextPosition/.style={\cmdNW@text@position = \cmdNW@text@distance}}
+  }{
+    \tikzset{LocalTextPosition/.style={}}
+  }
+  % Check if the anchor of the text is redefined, if so the new style is used
+  \ifthenelse{\not\equal{\cmdNW@text@anchor}{}}{
+    \tikzset{LocalTextAnchor/.style={anchor = \cmdNW@text@anchor}}
+  }{
+    \tikzset{LocalTextAnchor/.style={}}
+  }
+  % Check if the text width of the text is redefined, if so the new style is used
+  \ifthenelse{\not\equal{\cmdNW@text@width}{}}{
+    \tikzset{LocalTextWidth/.style={text width = \cmdNW@text@width}}
+  }{
+    \tikzset{LocalTextWidth/.style={}}
+  }
+  \ifthenelse{\equal{\cmdNW@text@layer}{}}{
+        \protected@edef\@tempa{%
+          \noexpand\node[TextStyle, LocalTextColor, LocalTextOpacity,
+          LocalTextFontSize, LocalTextRotation, LocalTextPosition,
+          LocalTextAnchor, LocalTextWidth, \cmdNW@text@style] at
+          (\cmdNW@text@x*\DistanceScale,\cmdNW@text@y*\DistanceScale){#1}
+        }\@tempa;%
+    }{
+      \begin{scope}[canvas is yx plane at z=(\cmdNW@text@layer-1)*\NetworkLayerDistance]
+        \protected@edef\@tempa{%
+          \noexpand\node[TextStyle, LocalTextColor, LocalTextOpacity,
+          LocalTextFontSize, LocalTextRotation, LocalTextPosition,
+          LocalTextAnchor, LocalTextWidth, \cmdNW@text@style] at
+          (\cmdNW@text@x*\DistanceScale,\cmdNW@text@y*\DistanceScale){#1}
+        }\@tempa;%
+      \end{scope}
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\endinput
+%=============================================================================
+% eof
+%
+% Local Variables:
+% mode: latex
+% mode: flyspell
+% mode: auto-fill
+% fill-column: 80
+% TeX-master: t
+% End:
