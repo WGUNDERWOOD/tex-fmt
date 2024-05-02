@@ -77,7 +77,7 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ## Performance
 
 Run `perf.sh` to format all test cases.
-For large files, tex-fmt is hundreds of times faster than latexindent.
+For large files, `tex-fmt` is hundreds of times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
