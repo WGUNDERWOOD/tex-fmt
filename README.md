@@ -56,6 +56,11 @@ E = m c^2
 </tr>
 </table>
 
+- ⚡ Very good run-time performance
+- 🔧 No configuration necessary
+- 📟 Command-line interface
+- 📜 Handles LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
+
 ## Installation
 
 ### Nix
@@ -69,34 +74,25 @@ nix build "github:wgunderwood/tex-fmt"
 ``` shell
 cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ```
-## Aims
-
-This project aims to provide a command-line tool for formatting
-LaTeX source code files with the following properties:
-
-- Handling of the common LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
-- Very good run-time performance
-- No configuration necessary
-
-It does *not* currently aim to provide the following:
-
-- Semantic parsing of LaTeX code
-- Linting or correction of syntax errors
-- Customization via configuration files
-- Compliance with existing formatting guidelines
-- Editor integration
-- Spell checking
-
 ## Performance
 
-Run `perf.sh` to format all test cases in the `tests/` directory.
-For larger files, tex-fmt is hundreds of times faster than latexindent.
+Run `perf.sh` to format all test cases.
+For large files, `tex-fmt` is hundreds of times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 6 | 30k | 900kb | **0.0362s** | 11.6s [x322] | 15.3s [x424] |
+| 11 | 30k | 800kb | **0.0362s** | 12.0s [x333] | 15.9s [x439] |
 
-## Comparison with existing tools
+## Limitations
+
+- Semantic parsing of LaTeX code not conducted
+- No linting or correction of syntax errors
+- Customization via configuration files not supported
+- Compliance with existing formatting guidelines not guaranteed
+- Editor integration not currently provided
+- No spell checking
+
+## Existing tools
 
 - [latexindent](https://github.com/cmhughes/latexindent.pl).
 Perl script, many configuration options, slow on large files.

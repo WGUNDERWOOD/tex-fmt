@@ -7,7 +7,8 @@ for f in $DIR/*.tex; do
     echo -n "$(wc -l $f | cut --delimiter=" " --fields 1) lines, "
     echo "$(ls -sh $f | cut --delimiter=" " --fields 1)"
 done
-echo -n "Total: $(wc -l --total=only $DIR/*.tex) lines, "
+echo -n "Total: $(ls -l $DIR/*.tex | wc -l) files, "
+echo -n "$(wc -l --total=only $DIR/*.tex) lines, "
 echo "$(ls -lh $DIR | head -n 1 | cut --delimiter=" " --fields 2)"
 echo
 
