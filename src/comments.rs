@@ -7,6 +7,12 @@ pub struct Comment{
 }
 
 pub fn find_comment(line: &str) -> Option<Comment> {
+
+    // no percent means no comment
+    if !line.contains('%') {
+        return None
+    }
+
     let n = line.len();
 
     // empty line
@@ -40,16 +46,16 @@ pub fn find_comment(line: &str) -> Option<Comment> {
     None
 }
 
-pub fn remove_comment(line: &str) -> &str {
-    match find_comment(line) {
-        Some(comm) => &line[0..comm.idx],
+pub fn remove_comment<'a>(line: &'a str, comm: &Option<Comment>) -> &'a str {
+    match comm {
+        Some(c) => &line[0..c.idx],
         None => line
     }
 }
 
-pub fn get_comment(line: &str) -> &str {
-    match find_comment(line) {
-        Some(comm) => &line[comm.idx..line.len()],
+pub fn get_comment<'a>(line: &'a str, comm: &Option<Comment>) -> &'a str {
+    match comm {
+        Some(c) => &line[c.idx..line.len()],
         None => ""
     }
 }

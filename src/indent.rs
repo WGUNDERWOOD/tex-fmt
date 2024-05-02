@@ -89,6 +89,6 @@ pub fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     let diff = get_diff(line);
     let back = get_back(line);
     let actual = prev_indent.actual + diff;
-    let visual: i8 = prev_indent.actual - back;
+    let visual = prev_indent.actual - back;
     Indent { actual, visual }
 }

@@ -23,7 +23,8 @@ pub fn format_file(file: &str, debug: bool) -> String {
     for i in 0..n_lines {
         // calculate indent
         let line = lines[i];
-        let line_strip = remove_comment(line);
+        let comm = find_comment(line);
+        let line_strip = remove_comment(line, &comm);
         indent = get_indent(line_strip, indent);
         if !debug {
             assert!(indent.actual >= 0, "line {}: {}", i, line);

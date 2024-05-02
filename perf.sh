@@ -12,6 +12,6 @@ echo "$(ls -lh $DIR | head -n 1 | cut --delimiter=" " --fields 2)"
 echo
 
 hyperfine --warmup 2 \
-    -n "tex-fmt" "tex-fmt $DIR/*.tex" \
+    -n "tex-fmt" "./target/release/tex-fmt $DIR/*.tex" \
     -n "latexindent" "latexindent $DIR/*.tex" \
     -n "latexindent -m" "latexindent -m $DIR/*.tex"
