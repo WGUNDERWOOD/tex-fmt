@@ -23,11 +23,12 @@ struct Cli {
     filenames: Vec<String>,
 }
 
+mod comments;
 mod format;
 mod indent;
 mod regexes;
 mod subs;
-mod comments;
+mod wrap;
 use crate::format::*;
 
 #[cfg(test)]
