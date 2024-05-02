@@ -15,26 +15,26 @@ pub fn remove_trailing_spaces(file: &str) -> String {
 }
 
 // TODO
-pub fn begin_end_environments_new_line(file: &str) -> String {
-    let mut new_file = "".to_string();
-    let lines: Vec<&str> = file.lines().collect();
-    for line in lines.iter() {
-        let comment = get_comment(line);
-        dbg!(&comment);
-        let mut text = remove_comment(line);
-        dbg!(&text);
-        text = RE_ENV_BEGIN_SHARED_LINE
-            .replace_all(&text, "$prev\n$env")
-            .to_string();
-        text = RE_ENV_END_SHARED_LINE
-            .replace_all(&text, "$prev\n$env")
-            .to_string();
-        new_file.push_str(&text);
-        new_file.push_str(&comment);
-        new_file.push_str("\n");
-        dbg!();
-    }
-    new_file
+//pub fn begin_end_environments_new_line(file: &str) -> String {
+    //let mut new_file = "".to_string();
+    //let lines: Vec<&str> = file.lines().collect();
+    //for line in lines.iter() {
+        //let comment = get_comment(line);
+        //dbg!(&comment);
+        //let mut text = remove_comment(line);
+        //dbg!(&text);
+        //text = RE_ENV_BEGIN_SHARED_LINE
+            //.replace_all(&text, "$prev\n$env")
+            //.to_string();
+        //text = RE_ENV_END_SHARED_LINE
+            //.replace_all(&text, "$prev\n$env")
+            //.to_string();
+        //new_file.push_str(&text);
+        //new_file.push_str(&comment);
+        //new_file.push_str("\n");
+        //dbg!();
+    //}
+    //new_file
     //dbg!(lines);
     //file
         //.lines()
@@ -59,12 +59,5 @@ pub fn begin_end_environments_new_line(file: &str) -> String {
         //.replace_all(file, "$prev\n$env")
         //.to_string()
     //file.to_string()
-}
+//}
 
-pub fn remove_comment(line: &str) -> String {
-    RE_TEXT.replace_all(line, "$text").to_string()
-}
-
-pub fn get_comment(line: &str) -> String {
-    line.strip_prefix(&remove_comment(line)).unwrap().to_string()
-}

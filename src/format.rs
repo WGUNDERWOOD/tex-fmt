@@ -1,5 +1,6 @@
 use crate::indent::*;
 use crate::subs::*;
+use crate::comments::*;
 use crate::TAB;
 
 pub fn format_file(file: &str, debug: bool) -> String {
@@ -22,10 +23,9 @@ pub fn format_file(file: &str, debug: bool) -> String {
     for i in 0..n_lines {
         // calculate indent
         let line = lines[i];
-        let line_strip = &remove_comment(line);
+        let line_strip = remove_comment(line);
         indent = get_indent(line_strip, indent);
         if !debug {
-            //dbg!(&line);
             assert!(indent.actual >= 0, "line {}: {}", i, line);
             assert!(indent.visual >= 0, "line {}: {}", i, line);
         };
