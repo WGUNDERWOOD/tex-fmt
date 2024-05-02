@@ -6,7 +6,7 @@ use crate::TAB;
 pub fn format_file(file: &str, debug: bool) -> String {
     // preformat
     let mut new_file = remove_extra_newlines(&file);
-    //new_file = begin_end_environments_new_line(&new_file);
+    new_file = begin_end_environments_new_line(&new_file);
     new_file = remove_tabs(&new_file);
     new_file = remove_trailing_spaces(&new_file);
     let lines: Vec<&str> = new_file.lines().collect();
