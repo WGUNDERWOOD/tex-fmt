@@ -1,11 +1,3 @@
-//pub fn remove_comment(line: &str) -> String {
-    //RE_TEXT.replace_all(line, "$text").to_string()
-//}
-
-//pub fn get_comment(line: &str) -> String {
-    //line.strip_prefix(&remove_comment(line)).unwrap().to_string()
-//}
-
 #[derive(Debug)]
 pub struct Comment{
     // index where the comment starts
@@ -52,5 +44,12 @@ pub fn remove_comment(line: &str) -> &str {
     match find_comment(line) {
         Some(comm) => &line[0..comm.idx],
         None => line
+    }
+}
+
+pub fn get_comment(line: &str) -> &str {
+    match find_comment(line) {
+        Some(comm) => &line[comm.idx..line.len()],
+        None => ""
     }
 }

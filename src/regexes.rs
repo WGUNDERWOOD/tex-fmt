@@ -25,7 +25,7 @@ lazy_static! {
         .map(|l| Regex::new(&format!(r".*\\end\{{{}}}.*", l)).unwrap())
         .collect();
     pub static ref RE_ENV_BEGIN_SHARED_LINE: Regex =
-        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\begin)").unwrap();
+        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\begin\{)").unwrap();
     pub static ref RE_ENV_END_SHARED_LINE: Regex =
-        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end)").unwrap();
+        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end\{)").unwrap();
 }
