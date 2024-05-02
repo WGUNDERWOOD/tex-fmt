@@ -14,9 +14,9 @@ mod tests {
         let out_filename = format!("tests/{}_out.tex", filename);
         let in_file = fs::read_to_string(&in_filename).expect("");
         let out_file = fs::read_to_string(&out_filename).expect("");
-        let fmt_file = format_file(in_file, false);
-        assert!(
-            fmt_file == out_file,
+        let fmt_in_file = format_file(&in_file, false);
+        let fmt_out_file = format_file(&out_file, false);
+        assert!(fmt_in_file == out_file,
             "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
             &RED,
             &YELLOW,
@@ -27,18 +27,30 @@ mod tests {
             &RESET,
             &YELLOW,
             &RESET,
-            &fmt_file,
+            &fmt_in_file,
             &YELLOW,
             &RESET,
-            &out_file
-        );
+            &out_file);
+        assert!(fmt_out_file == out_file,
+            "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
+            &RED,
+            &YELLOW,
+            &out_filename,
+            &WHITE,
+            &YELLOW,
+            &out_filename,
+            &RESET,
+            &YELLOW,
+            &RESET,
+            &fmt_out_file,
+            &YELLOW,
+            &RESET,
+            &out_file);
         println!("{}Pass: {}{}", &GREEN, &RESET, &in_filename);
     }
 
     #[test]
     fn test_files() {
-        test_file("masters_dissertation");
-        /*
         let filenames: Vec<String> = fs::read_dir("tests/")
             .unwrap()
             .map(|f| f.unwrap().file_name().into_string().unwrap())
@@ -48,6 +60,5 @@ mod tests {
         for filename in filenames {
             test_file(&filename);
         }
-        */
     }
 }
