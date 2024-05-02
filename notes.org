@@ -15,6 +15,7 @@
 ** Ignore source lines
 *** Line-by-line ignore
 *** Block ignore
+** Tests should compile to same pdf
 * Bugs
 ** Check multiple begins or ends on the same line
 *** This should never happen once new lines are implemented
