@@ -2,6 +2,9 @@
 * Tests
 ** Look for problem cases in other latex documents
 * Features
+** TODO Environments should start and end on new lines
+*** New line before begin/end with regex replace
+*** Care with comments
 ** Fold long lines to 80 characters
 *** Care with trailing comments
 *** No folding in verbatim environments, just warn
