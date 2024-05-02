@@ -3,7 +3,7 @@
 ** Look for problem cases in other latex documents
 * Features
 ** Fold long lines to 80 characters
-*** Care with trailing comments
+*** Care with trailing comments with space or no space
 *** No folding in verbatim environments, just warn
 ** Merge short alphanumeric lines
 ** Flags
