@@ -9,9 +9,9 @@ mod tests {
     const WHITE: &str = "\x1b[37m\x1b[1m";
     const RESET: &str = "\x1b[00m\x1b[0m";
 
-    fn test_file(filename: &str) {
-        let in_filename = format!("tests/{}_in.tex", filename);
-        let out_filename = format!("tests/{}_out.tex", filename);
+    fn test_file(filename: &str, extension: &str) {
+        let in_filename = format!("tests/{}_in.{}", filename, extension);
+        let out_filename = format!("tests/{}_out.{}", filename, extension);
         let in_file = fs::read_to_string(&in_filename).expect("");
         let out_file = fs::read_to_string(&out_filename).expect("");
         let fmt_in_file = format_file(&in_file, false);
@@ -54,11 +54,20 @@ mod tests {
         let filenames: Vec<String> = fs::read_dir("tests/")
             .unwrap()
             .map(|f| f.unwrap().file_name().into_string().unwrap())
-            .filter(|f| f.ends_with("_in.tex"))
-            .map(|f| f.strip_suffix("_in.tex").unwrap().to_string())
+            .filter(|f| f.contains("_in."))
             .collect();
-        for filename in filenames {
-            test_file(&filename);
+        let extensions: Vec<String> = filenames
+            .iter()
+            .map(|f| f[(f.len()-3)..f.len()].to_string())
+            .collect();
+        let filenames: Vec<String> = filenames
+            .iter()
+            .map(|f| f[0..(f.len()-7)].to_string())
+            .collect();
+        for i in 0..filenames.len() {
+            let filename = &filenames[i];
+            let extension = &extensions[i];
+            test_file(&filename, &extension);
         }
     }
 }
