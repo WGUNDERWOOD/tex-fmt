@@ -42,6 +42,5 @@ pub fn remove_trailing_spaces(file: &str) -> String {
 //}
 
 pub fn remove_comment(line: &str) -> String {
-    let new_line = RE_PERCENT.replace_all(line, "").to_string();
-    RE_COMMENT.replace_all(&new_line, "").to_string()
+    RE_COMMENT.replace_all(line, "$text").to_string()
 }
