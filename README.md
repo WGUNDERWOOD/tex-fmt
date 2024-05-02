@@ -60,6 +60,7 @@ E = m c^2
 - 🔧 No configuration necessary
 - 📟 Command-line interface
 - 📜 Handles LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
+- 🦀 Written entirely in safe Rust
 
 ## Installation
 
@@ -77,11 +78,11 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ## Performance
 
 Run `perf.sh` to format all test cases.
-For large files, `tex-fmt` is hundreds of times faster than latexindent.
+For large files, tex-fmt is hundreds of times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 11 | 30k | 800kb | **0.0362s** | 12.0s [x333] | 15.9s [x439] |
+| 14 | 33k | 948kb | **0.0392s** | 14.5s [x369] | 18.7s [x478] |
 
 ## Limitations
 
