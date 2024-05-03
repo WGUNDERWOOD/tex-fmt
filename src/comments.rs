@@ -25,26 +25,22 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
     // multi-character line
     for i in 1..n {
         let c = line.chars().nth(i).unwrap();
-        if c == '%' {
-            if prev_c == ' ' {
-                return Some(i);
-            } else if prev_c != '\\' {
-                return Some(i);
-            }
+        if c == '%' && (prev_c == ' ' || prev_c != '\\') {
+            return Some(i);
         }
         prev_c = c;
     }
     None
 }
 
-pub fn remove_comment<'a>(line: &'a str, comment: Option<usize>) -> &'a str {
+pub fn remove_comment(line: &str, comment: Option<usize>) -> &str {
     match comment {
         Some(c) => &line[0..c],
         None => line,
     }
 }
 
-pub fn get_comment<'a>(line: &'a str, comment: Option<usize>) -> &'a str {
+pub fn get_comment(line: &str, comment: Option<usize>) -> &str {
     match comment {
         Some(c) => &line[c..line.len()],
         None => "",
