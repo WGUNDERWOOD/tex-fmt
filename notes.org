@@ -14,7 +14,6 @@
 ** Documentation
 ** Tidy up code
 ** Find todos
-** New source files: print.rs
 ** Tests better output
 ** Better file backup
 * Bugs
