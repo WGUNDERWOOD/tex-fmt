@@ -12,9 +12,15 @@ pub fn line_needs_wrap(line: &str) -> bool {
 
 pub fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
+    let mut after_non_space = false;
     for i in 0..WRAP {
-        if line.chars().nth(i) == Some(' ') {
-            wrap_point = Some(i);
+        let char_is_space: bool = line.chars().nth(i) == Some(' ');
+        if char_is_space {
+            if after_non_space {
+                wrap_point = Some(i);
+            }
+        } else {
+            after_non_space = true;
         }
     }
     wrap_point
@@ -92,5 +98,10 @@ fn test_wrap_line() {
         Therefore it should be split.";
     let s_out = "This line is too long because % it has more than eighty characters inside it.\n\
         % Therefore it should be split.";
+    assert_eq!(wrap_line(s_in), s_out);
+    // leading spaces
+    let s_in = "    Thislineistoolongbecauseithasmorethaneightycharactersinsideiteventhoughitstartswithspaces. \
+        Thereforeitshouldbesplit.";
+    let s_out = s_in;
     assert_eq!(wrap_line(s_in), s_out);
 }
