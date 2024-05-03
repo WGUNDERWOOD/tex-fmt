@@ -14,8 +14,9 @@
 ** Documentation
 ** Tidy up code
 ** Find todos
-** New source files: write.rs, print.rs
+** New source files: print.rs
 ** Tests better output
+** Better file backup
 * Bugs
 ** Better errors including line numbers in source file
 ** Handle list items properly
