@@ -1,4 +1,4 @@
-\documentclass[12pt]{ociamthesis}
+\documentclass[12pt,draft]{ociamthesis}
 
 %TC:ignore
 
@@ -45,15 +45,15 @@
 \usepackage{subcaption}
 
 % draft options
-\usepackage{ifdraft}
-\ifoptiondraft{
-  \usepackage{draftwatermark}
-  \SetWatermarkText{DRAFT}
-  \SetWatermarkScale{6}
-  \SetWatermarkColor[rgb]{1,0.9,0.9}
-  \usepackage{showframe}
-  \usepackage{layout}
-}{}
+%\usepackage{ifdraft}
+%\ifoptiondraft{
+%\usepackage{draftwatermark}
+%\SetWatermarkText{DRAFT}
+%\SetWatermarkScale{6}
+%\SetWatermarkColor[rgb]{1,0.9,0.9}
+%\usepackage{showframe}
+%\usepackage{layout}
+%}{}
 
 % hyperlinks
 \usepackage[plainpages=false,draft=false
@@ -215,7 +215,7 @@ description={Bipartite stochastic block model}}
   \begingroup
   \let\cleardoublepage\relax
   \let\clearpage\relax
-  \printglossary[title=Abbreviations, style=mystyle]
+  %\printglossary[title=Abbreviations, style=mystyle]
   \endgroup
 
 \end{romanpages}
@@ -404,8 +404,8 @@ notation and definitions.
 %
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.7,draft=false]{%
-  ../tikz/motif_definitions_directed/motif_definitions_directed.pdf}
+  %\includegraphics[scale=0.7,draft=false]{%
+  %../tikz/motif_definitions_directed/motif_definitions_directed.pdf}
   \caption{All simple motifs on at most three vertices}
   \label{fig:motif_definitions_directed}
 \end{figure}
@@ -810,16 +810,16 @@ line in Figure~\ref{fig:eigenvector_sweep_network}.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../tikz/eigenvector_sweep_network/eigenvector_sweep_network.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../tikz/eigenvector_sweep_network/eigenvector_sweep_network.pdf}
     \caption{A small network}
     \label{fig:eigenvector_sweep_network}
   \end{subfigure}
   %
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/eigenvector_sweep/eigenvector_sweep_scores.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/eigenvector_sweep/eigenvector_sweep_scores.pdf}
     \caption{Sweep profile of the network}
     \label{fig:eigenvector_sweep_profile}
   \end{subfigure}
@@ -1001,8 +1001,8 @@ of edges with higher probability.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.8,draft=false]{%
-  ../tikz/sym_two_block_dsbm/sym_two_block_dsbm.pdf}
+  %\includegraphics[scale=0.8,draft=false]{%
+  %../tikz/sym_two_block_dsbm/sym_two_block_dsbm.pdf}
   \caption{Symmetric two-block DSBM block structure and sparsity matrix}
   \label{fig:sym_two_block_dsbm}
 \end{figure}
@@ -1024,14 +1024,14 @@ only cluster a subset of the vertices of $\ca{G}$.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifsym/motifsym_1.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/motifsym/motifsym_1.pdf}
     \caption{$n=50$, $p=0.3$, $q=0.2$}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifsym/motifsym_2.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/motifsym/motifsym_2.pdf}
     \caption{$n=100$, $p=0.15$, $q=0.1$}
   \end{subfigure}
   \caption{ARI violin plots for the symmetric two-block DSBM}
@@ -1051,8 +1051,8 @@ Figure~\ref{fig:asym_two_block_dsbm} shows this model.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.8,draft=false]{%
-  ../tikz/asym_two_block_dsbm/asym_two_block_dsbm.pdf}
+  %\includegraphics[scale=0.8,draft=false]{%
+  %../tikz/asym_two_block_dsbm/asym_two_block_dsbm.pdf}
   \caption{Asymmetric two-block DSBM block structure and sparsity matrix}
   \label{fig:asym_two_block_dsbm}
 \end{figure}
@@ -1075,14 +1075,14 @@ traditional method performs extremely poorly.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifasym/motifasym_1.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/motifasym/motifasym_1.pdf}
     \caption{$n=100$, $p=0.2$, $q_1=0.35$, $q_2=0.05$}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/motifasym/motifasym_2.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/motifasym/motifasym_2.pdf}
     \caption{$n=200$, $p=0.15$, $q_1=0.25$, $q_2=0.05$}
   \end{subfigure}
   \caption{ARI violin plots for the asymmetric two-block DSBM}
@@ -1115,15 +1115,15 @@ by the dashed line and circled vertices in Figure~\ref{fig:polblogs_network}.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_network.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/polblogs/polblogs_network.pdf}
     \caption{The US Political Blogs network}
     \label{fig:polblogs_network}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_ari_conn.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/polblogs/polblogs_ari_conn.pdf}
     \caption{ARI against $|C|$ across motifs}
     \label{fig:polblogs_ariplot}
   \end{subfigure}
@@ -1143,15 +1143,15 @@ eigenvector 2. The clusterings are very similar, giving an ARI of $0.82$.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_M12_truth.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/polblogs/polblogs_M12_truth.pdf}
     \caption{Colouring by truth label}
     \label{fig:polblogs_embedding_truth}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/polblogs/polblogs_M12_clusts.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/polblogs/polblogs_M12_clusts.pdf}
     \caption{Colouring by $k$-means++ cluster}
     \label{fig:polblogs_embedding_kmeans}
   \end{subfigure}
@@ -1192,20 +1192,20 @@ $\textrm{ARI}(\ca{M}_6, \ca{M}_9) = 0.73$.
 \begin{figure}[H]
   \begin{subfigure}{.325\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/us_migration/us_migration_sweep_profile_Ms.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/us_migration/us_migration_sweep_profile_Ms.pdf}
     \caption{$\ca{M}_\mathrm{s}$}
   \end{subfigure}
   \begin{subfigure}{.325\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/us_migration/us_migration_sweep_profile_M6.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/us_migration/us_migration_sweep_profile_M6.pdf}
     \caption{$\ca{M}_6$}
   \end{subfigure}
   \begin{subfigure}{.325\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/us_migration/us_migration_sweep_profile_M9.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/us_migration/us_migration_sweep_profile_M9.pdf}
     \caption{$\ca{M}_9$}
   \end{subfigure}
   \caption{Sweep profiles of the US Migration network}
@@ -1257,7 +1257,7 @@ $\ca{M}_9$.
     \centering
     \setlength{\tabcolsep}{0em}
     \begin{tabular}{ |c|c|c|c| }
-      \expandableinput ../../results/us_migration/us_migration_table.txt
+      %\expandableinput ../../results/us_migration/us_migration_table.txt
     \end{tabular}
   \end{table}
   \vspace*{-0.5cm}
@@ -1299,7 +1299,7 @@ motifs; the \emph{collider} and the \emph{expander}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.8,draft=false]{../tikz/expa_coll/expa_coll.pdf}
+  %\includegraphics[scale=0.8,draft=false]{../tikz/expa_coll/expa_coll.pdf}
   \caption{The collider and expander motifs}
   \label{fig:expa_coll}
 \end{figure}
@@ -1396,8 +1396,8 @@ $\ca{S}_1$ to $\ca{D}_1$ and from $\ca{S}_2$ to $\ca{D}_2$.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.8,draft=false]{%
-  ../tikz/bipartite_dsbm/bipartite_dsbm.pdf}
+  %\includegraphics[scale=0.8,draft=false]{%
+  %../tikz/bipartite_dsbm/bipartite_dsbm.pdf}
   \caption{BSBM block structure and sparsity matrix}
   \label{fig:bipartite_bsbm}
 \end{figure}
@@ -1418,14 +1418,14 @@ vertices.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/bipartite/bipartite1.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/bipartite/bipartite1.pdf}
     \caption{$n=100$, $p=0.2$, $q=0.1$}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/bipartite/bipartite2.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/bipartite/bipartite2.pdf}
     \caption{$n=200$, $p=0.1$, $q=0.06$}
   \end{subfigure}
   \caption{ARI violin plots for the BSBM}
@@ -1452,15 +1452,15 @@ in clustering organisations based on their common members.
 \begin{figure}[H]
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/american_revolution/american_revolution_source.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/american_revolution/american_revolution_source.pdf}
     \caption{Grouping people into 5 clusters}
     \label{fig:bipartite_revolution_source}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[scale=0.4,draft=false]{%
-    ../../results/american_revolution/american_revolution_dest.pdf}
+    %\includegraphics[scale=0.4,draft=false]{%
+    %../../results/american_revolution/american_revolution_dest.pdf}
     \caption{Grouping organisations into 2 clusters}
     \label{fig:bipartite_revolution_dest}
   \end{subfigure}
@@ -1508,8 +1508,8 @@ Norwegian Bokm{\aa}l and Norwegian Nynorsk.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6, draft=false]{%
-  ../../results/languages/languages_source_map_clusts.pdf}
+  %\includegraphics[scale=0.6, draft=false]{%
+  %../../results/languages/languages_source_map_clusts.pdf}
   \caption{Clustering the territories from the Unicode Languages network}
   \label{fig:bipartite_languages_map}
 \end{figure}
@@ -1911,8 +1911,8 @@ performance.
   %
   \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.7,draft=false]{%
-    ../tikz/instance_example_1/instance_example_1.pdf}
+    %\includegraphics[scale=0.7,draft=false]{%
+    %../tikz/instance_example_1/instance_example_1.pdf}
     \caption{The specified graph $\ca{G}$ and anchored motif $\ca{M}$}
     \label{fig:instance_example_1}
   \end{figure}
@@ -1934,8 +1934,8 @@ performance.
   %
   \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.7,draft=false]{%
-    ../tikz/instance_example_2/instance_example_2.pdf}
+    %\includegraphics[scale=0.7,draft=false]{%
+    %../tikz/instance_example_2/instance_example_2.pdf}
     \caption{Functional instances $\ca{H}_1,\ca{H}_2$ and $\ca{H}_3$}
     \label{fig:instance_example_2}
   \end{figure}
@@ -1978,7 +1978,7 @@ performance.
   %
   \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.7,draft=false]{../tikz/M6/M6.pdf}
+    %\includegraphics[scale=0.7,draft=false]{../tikz/M6/M6.pdf}
     \caption{The motif $\ca{M}_6$}
     \label{fig:M6}
   \end{figure}
@@ -2417,8 +2417,8 @@ million speakers. Vertex and edge counts of all networks are stated
 \vspace*{-0.8cm}
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.6,draft=false]{%
-  ../../results/us_migration/us_migration_map_state_names.pdf}
+  %\includegraphics[scale=0.6,draft=false]{%
+  %../../results/us_migration/us_migration_map_state_names.pdf}
   \vspace*{-0.5cm} \caption{US map with state boundaries and state
   abbreviations} \label{fig:notes_us_map}
 \end{figure}
