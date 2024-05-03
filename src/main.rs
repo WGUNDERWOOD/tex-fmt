@@ -9,27 +9,15 @@ const YELLOW: &str = "\x1b[33m\x1b[1m";
 const PINK: &str = "\x1b[35m\x1b[1m";
 const RESET: &str = "\x1b[00m\x1b[0m";
 
-#[derive(Parser)]
-struct Cli {
-    #[arg(long, short, help = "Print to stdout, do not modify files")]
-    print: bool,
-    #[arg(
-        long,
-        short,
-        help = "Debug mode, disable checks and do not modify files"
-    )]
-    debug: bool,
-    #[arg(required = true)]
-    filenames: Vec<String>,
-}
-
 mod comments;
 mod format;
 mod indent;
+mod parse;
 mod regexes;
 mod subs;
 mod wrap;
 use crate::format::*;
+use crate::parse::Cli;
 
 #[cfg(test)]
 mod tests;
