@@ -64,8 +64,7 @@ pub fn wrap_line(line: &str) -> String {
 
 pub fn wrap(file: &str) -> String {
     let mut new_file = "".to_string();
-    let lines = file.lines();
-    for line in lines {
+    for line in file.lines() {
         if line_needs_wrap(line) {
             let new_line = wrap_line(line);
             new_file.push_str(&new_line);

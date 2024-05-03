@@ -106,11 +106,10 @@ pub fn get_indent(line: &str, prev_indent: Indent) -> Indent {
 }
 
 pub fn apply_indent(file: &str, debug: bool) -> String {
-    let lines: Vec<&str> = file.lines().collect();
     let mut indent = Indent::new();
     let mut new_file = "".to_owned();
 
-    for (i, line) in lines.iter().enumerate() {
+    for (i, line) in file.lines().enumerate() {
         // calculate indent
         let comment_index = find_comment_index(line);
         let line_strip = remove_comment(line, comment_index);

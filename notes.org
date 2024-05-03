@@ -21,9 +21,7 @@
 ** Find todos
 ** Clippy
 ** New source files: write.rs, parse.rs, print.rs
-** Check unused regexes
-** Check for collect() not needed
-** Tests output better
+** Tests better output
 * Bugs
 ** Better errors including line numbers in source file
 ** Handle list items properly
