@@ -1,5 +1,5 @@
 DIR="$(mktemp -d)"
-cp tests/phd_dissertation_in.tex $DIR
+cp ../tests/phd_dissertation_in.tex $DIR
 
 echo "Test file:"
 for f in $DIR/*.tex; do
@@ -8,4 +8,4 @@ for f in $DIR/*.tex; do
     echo "$(ls -sh $f | cut --delimiter=" " --fields 1)"
 done
 
-flamegraph -F 30000 -- ./target/release/tex-fmt $DIR/*.tex
+flamegraph -F 30000 -- ../target/release/tex-fmt $DIR/*.tex

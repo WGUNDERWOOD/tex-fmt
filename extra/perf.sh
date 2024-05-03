@@ -1,5 +1,5 @@
 DIR="$(mktemp -d)"
-cp tests/*_in.* $DIR
+cp ../tests/*_in.* $DIR
 
 echo "Test files:"
 for f in $DIR/*; do
@@ -15,6 +15,6 @@ echo "$(ls -lh $DIR | head -n 1 | cut --delimiter=" " --fields 2)"
 echo
 
 hyperfine --warmup 2 \
-    -n "tex-fmt" "./target/release/tex-fmt $DIR/*" \
+    -n "tex-fmt" "../target/release/tex-fmt $DIR/*" \
     -n "latexindent" "latexindent $DIR/*" \
     -n "latexindent -m" "latexindent -m $DIR/*"
