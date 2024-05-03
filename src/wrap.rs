@@ -32,12 +32,12 @@ pub fn wrap_line(line: &str) -> String {
     let mut can_wrap = true;
     while line_needs_wrap(&remaining_line) && can_wrap {
         let wrap_point = find_wrap_point(&remaining_line);
-        let comm = find_comment(&remaining_line);
+        let comment_index = find_comment_index(&remaining_line);
         match wrap_point {
             Some(p) => {
-                let line_start = match comm {
-                    Some(ref c) => {
-                        if p > c.idx {
+                let line_start = match comment_index {
+                    Some(c) => {
+                        if p > c {
                             "%"
                         }
                         else {
@@ -64,7 +64,7 @@ pub fn wrap_line(line: &str) -> String {
 
 pub fn wrap(file: &str) -> String {
     let mut new_file = "".to_string();
-    let lines: Vec<&str> = file.lines().collect();
+    let lines = file.lines();
     for line in lines {
         if line_needs_wrap(line) {
             let new_line = wrap_line(line);

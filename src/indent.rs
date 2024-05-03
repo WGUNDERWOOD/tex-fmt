@@ -8,9 +8,7 @@ const CLOSES: [char; 3] = [')', ']', '}'];
 
 #[derive(Debug)]
 pub struct Indent {
-    /// actual running indentation count at end of current line
     pub actual: i8,
-    /// visual indentation of current line
     pub visual: i8,
 }
 
@@ -114,8 +112,8 @@ pub fn apply_indent(file: &str, debug: bool) -> String {
 
     for (i, line) in lines.iter().enumerate() {
         // calculate indent
-        let comm = find_comment(line);
-        let line_strip = remove_comment(line, &comm);
+        let comment_index = find_comment_index(line);
+        let line_strip = remove_comment(line, comment_index);
         indent = get_indent(line_strip, indent);
         if !debug {
             assert!(indent.actual >= 0, "line {}: {}", i, line);
