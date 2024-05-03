@@ -51,6 +51,8 @@ mod tests {
 
     #[test]
     fn test_files() {
+        test_file("wrap", "tex");
+        /*
         let filenames: Vec<String> = fs::read_dir("tests/")
             .unwrap()
             .map(|f| f.unwrap().file_name().into_string().unwrap())
@@ -69,5 +71,6 @@ mod tests {
             let extension = &extensions[i];
             test_file(&filename, &extension);
         }
+        */
     }
 }

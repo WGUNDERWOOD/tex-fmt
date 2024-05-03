@@ -1,9 +1,7 @@
 #[derive(Debug)]
 pub struct Comment {
     // index where the comment starts
-    idx: usize,
-    // does the comment have a leading space
-    space: bool,
+    pub idx: usize,
 }
 
 pub fn find_comment(line: &str) -> Option<Comment> {
@@ -24,7 +22,6 @@ pub fn find_comment(line: &str) -> Option<Comment> {
     if prev_c == '%' {
         return Some(Comment {
             idx: 0,
-            space: false,
         });
     }
 
@@ -40,12 +37,10 @@ pub fn find_comment(line: &str) -> Option<Comment> {
             if prev_c == ' ' {
                 return Some(Comment {
                     idx: i,
-                    space: true,
                 });
             } else if prev_c != '\\' {
                 return Some(Comment {
                     idx: i,
-                    space: false,
                 });
             }
         }

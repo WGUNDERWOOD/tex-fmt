@@ -7,15 +7,15 @@ This line is too long because it has more than eighty characters inside it.
 Therefore it % should be split.
 
 % break after spaced comment
-This line is too long because it has more than
-% eighty characters inside it. Therefore it should be split.
+This line is too long because it has more than % eighty characters inside it.
+% Therefore it should be split.
 
 % break after non-spaced comment
-This line is too long because it has more than%
-% eighty characters inside it. Therefore it should be split.
+This line is too long because it has more than% eighty characters inside it.
+% Therefore it should be split.
 
 % unbreakable line
-Thislineistoolongbecauseithasmorethan%eightycharactersinsideitThereforeitcannotbesplit.
+Thislineistoolongbecauseithasmorethan%eightycharactersinsideit.Buttherearenospacessoitcannotbesplit.
 
 % long line only after indenting
 (
@@ -24,9 +24,9 @@ Thislineistoolongbecauseithasmorethan%eightycharactersinsideitThereforeitcannotb
 )
 
 % double break after comment
-This line has a long comment.
-% This comment is very long so needs to be split over three lines which is
-% another edge case which should be checked here with all these extra words
+This line has a long comment. % This comment is very long so needs to be split
+% over three lines which is another edge case which should be checked here with
+% all these extra words
 
 % double break after only comment
 % This line is all a long comment. This comment is very long so needs to be
