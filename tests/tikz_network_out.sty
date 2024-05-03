@@ -441,7 +441,8 @@ node/.append style={transform shape},}}
   \def\vstyle{VertexStyle}
   \begin{scope}
     % [
-    % scale=1,yshift=0,every node/.append style={yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    % scale=1,yshift=0,every node/.append
+    % style={yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
     % ]
     % If option NoLabel is true, no labels are printed in the network
     \ifNW@vertex@NoLabel
@@ -476,19 +477,22 @@ node/.append style={transform shape},}}
     }{
       \tikzset{LocalVertexSize/.style={}}
     }
-    % Check if the font size of the vertex label is redefined, if so the new style is used
+    % Check if the font size of the vertex label is redefined, if so the new
+    % style is used
     \ifthenelse{\not\equal{\cmdNW@vertex@fontsize}{}}{
       \tikzset{LocalVertexFontSize/.style={font = \cmdNW@vertex@fontsize}}
     }{
       \tikzset{LocalVertexFontSize/.style={}}
     }
-    % Check if the font scale of the vertex label is redefined, if so the new style is used
+    % Check if the font scale of the vertex label is redefined, if so the new
+    % style is used
     \ifthenelse{\not\equal{\cmdNW@vertex@fontscale}{}}{
       \tikzset{LocalVertexFontScale/.style={scale = \cmdNW@vertex@fontscale}}
     }{
       \tikzset{LocalVertexFontScale/.style={}}
     }
-    % Check if the opacity of the vertex is redefined, if so the new style is used
+    % Check if the opacity of the vertex is redefined, if so the new style is
+    % used
     \ifthenelse{\not\equal{\cmdNW@vertex@opacity}{}}{
       \tikzset{LocalVertexOpacity/.style={fill opacity = \cmdNW@vertex@opacity}}
     }{
@@ -543,13 +547,16 @@ node/.append style={transform shape},}}
     \ifthenelse{\equal{\cmdNW@vertex@layer}{}}{
       \protected@edef\@tempa{%
         \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,LocalVertexFill,LocalVertexShape,LocalLabel,\cmdNW@vertex@style,LocalPseudo](#1)%
-      at (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
+        at
+      (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
       \@tempa;
     }{
-      \begin{scope}[canvas is yx plane at z=(\cmdNW@vertex@layer-1)*\NetworkLayerDistance]
+      \begin{scope}[canvas is yx plane at
+        z=(\cmdNW@vertex@layer-1)*\NetworkLayerDistance]
         \protected@edef\@tempa{%
           \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,LocalVertexFill,LocalVertexShape,LocalLabel,\cmdNW@vertex@style,LocalPseudo](#1)%
-        at (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
+          at
+        (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
         \@tempa;
       \end{scope}
     }
@@ -624,7 +631,8 @@ node/.append style={transform shape},}}
   \fi
   \begin{scope}[edge canvas,EdgeInBG]
     % [
-    % scale=1,yshift=0,every node/.append style={yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    % scale=1,yshift=0,every node/.append
+    % style={yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
     % ]
     % Check if Direct is true, if so use default arrow style
     \ifNW@edge@Direct
@@ -639,7 +647,8 @@ node/.append style={transform shape},}}
     }{
       \tikzset{LocalEdgeLW/.style={}}
     }
-    % Check if the opacity of the vertex is redefined, if so the new style is used
+    % Check if the opacity of the vertex is redefined, if so the new style is
+    % used
     \ifthenelse{\not\equal{\cmdNW@edge@opacity}{}}{
       \tikzset{LocalEdgeOpacity/.style={opacity = \cmdNW@edge@opacity}}
       \tikzset{LocalTextOpacity/.style={text opacity = \cmdNW@edge@opacity}}
@@ -699,7 +708,8 @@ node/.append style={transform shape},}}
     \def\edge@L{\cmdNW@edge@label}%
     \fi
     % Check if a label is assigned, if so create a label variable
-    \ifthenelse{\not\equal{\cmdNW@edge@label}{}}{    \def\edge@Label{node[EdgeLabelStyle,LocalTextOpacity,LocalEdgeFontColor,LocalEdgeFontSize,LocalEdgeFontScale,pos=\cmdNW@edge@distance,\cmdNW@edge@position]{\edge@L}}
+    \ifthenelse{\not\equal{\cmdNW@edge@label}{}}{
+      \def\edge@Label{node[EdgeLabelStyle,LocalTextOpacity,LocalEdgeFontColor,LocalEdgeFontSize,LocalEdgeFontScale,pos=\cmdNW@edge@distance,\cmdNW@edge@position]{\edge@L}}
     }{
       \def\edge@Label{}
     }
@@ -721,7 +731,8 @@ node/.append style={transform shape},}}
     }{% Self loop
       \protected@edef\@tempa{%
         \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style]
-      (#2) edge [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,out=\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,loop,distance=\cmdNW@edge@loopsize,] \edge@Label (#3)}%
+        (#2) edge
+      [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,out=\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,loop,distance=\cmdNW@edge@loopsize,] \edge@Label (#3)}%
       \@tempa;
     }
   \end{scope}
@@ -971,7 +982,8 @@ node/.append style={transform shape},}}
     \DTLforeach*{edges}{}{%
       % reset storage variable to default values
       \edef\edge@Options{label = {}, lw = {}, color = {}, opacity = {}, style =
-        {}, RGB = false, Math = false, Direct = false, NotInBG = false, bend = {0}, loopsize =
+        {}, RGB = false, Math = false, Direct = false, NotInBG = false, bend =
+        {0}, loopsize =
         {1\DefaultUnit}, position = {}, loopposition = {0}, loopshape = {90},
       distance = {.5}, path = {}, fontcolor = {}, fontsize = {}, fontscale ={},}
       \edef\edge@rgbValues{}%
@@ -1112,7 +1124,8 @@ node/.append style={transform shape},}}
   \ifthenelse{\not\equal{\cmdNW@layer@z}{}}{
     \tikzset{LocalLayerZ/.style={canvas is yx plane at z=\cmdNW@layer@z}}
   }{
-    \tikzset{LocalLayerZ/.style={canvas is yx plane at z=(\cmdNW@layer@layer-1)*\NetworkLayerDistance}}
+    \tikzset{LocalLayerZ/.style={canvas is yx plane at
+    z=(\cmdNW@layer@layer-1)*\NetworkLayerDistance}}
   }
   \ifthenelse{\not\equal{\cmdNW@layer@opacity}{}}{
     \tikzset{LocalLayerOpacity/.style={fill opacity = \cmdNW@layer@opacity}}
@@ -1210,19 +1223,22 @@ node/.append style={transform shape},}}
       \tikzset{LocalPlaneFill/.style={}}
     }
     \fi
-    % Check if the opacity of the plane is redefined, if so the new style is used
+    % Check if the opacity of the plane is redefined, if so the new style is
+    % used
     \ifthenelse{\not\equal{\cmdNW@plane@opacity}{}}{
       \tikzset{LocalPlaneOpacity/.style={fill opacity = \cmdNW@plane@opacity}}
     }{
       \tikzset{LocalPlaneOpacity/.style={}}
     }
-    \begin{scope}[canvas is yx plane at z=(\cmdNW@plane@layer-1)*\NetworkLayerDistance]
+    \begin{scope}[canvas is yx plane at
+      z=(\cmdNW@plane@layer-1)*\NetworkLayerDistance]
       % Draw the fill of the Plane
       \ifNW@plane@NoFill
       \else
       \protected@edef\@tempa{%
         \noexpand\fill[PlaneFillStyle,LocalPlaneFill,LocalPlaneOpacity](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
-      rectangle ++ (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
+        rectangle ++
+      (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
       \@tempa;
       \fi
       % Draw image on the Plane
@@ -1239,7 +1255,8 @@ node/.append style={transform shape},}}
       \ifthenelse{\not\equal{\cmdNW@plane@grid}{}}{
         \protected@edef\@tempa{%
           \noexpand\draw[PlaneGridStyle,step=\cmdNW@plane@grid*\DistanceScale](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
-        grid ++ (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
+          grid ++
+        (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
         \@tempa;
       }{}
       % Draw the border of the Plane
@@ -1247,7 +1264,8 @@ node/.append style={transform shape},}}
       \else
       \protected@edef\@tempa{%
         \noexpand\draw[PlaneBorderStyle,\cmdNW@plane@style](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
-      rectangle ++ (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
+        rectangle ++
+      (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
       \@tempa;
       \fi
     \end{scope}
@@ -1333,7 +1351,8 @@ node/.append style={transform shape},}}
   }
   % Check if the position of the text is redefined, if so the new style is used
   \ifthenelse{\not\equal{\cmdNW@text@position}{}}{
-    \tikzset{LocalTextPosition/.style={\cmdNW@text@position = \cmdNW@text@distance}}
+    \tikzset{LocalTextPosition/.style={\cmdNW@text@position =
+    \cmdNW@text@distance}}
   }{
     \tikzset{LocalTextPosition/.style={}}
   }
@@ -1343,7 +1362,8 @@ node/.append style={transform shape},}}
   }{
     \tikzset{LocalTextAnchor/.style={}}
   }
-  % Check if the text width of the text is redefined, if so the new style is used
+  % Check if the text width of the text is redefined, if so the new style is
+  % used
   \ifthenelse{\not\equal{\cmdNW@text@width}{}}{
     \tikzset{LocalTextWidth/.style={text width = \cmdNW@text@width}}
   }{
@@ -1357,7 +1377,8 @@ node/.append style={transform shape},}}
       (\cmdNW@text@x*\DistanceScale,\cmdNW@text@y*\DistanceScale){#1}
     }\@tempa;%
   }{
-    \begin{scope}[canvas is yx plane at z=(\cmdNW@text@layer-1)*\NetworkLayerDistance]
+    \begin{scope}[canvas is yx plane at
+      z=(\cmdNW@text@layer-1)*\NetworkLayerDistance]
       \protected@edef\@tempa{%
         \noexpand\node[TextStyle, LocalTextColor, LocalTextOpacity,
           LocalTextFontSize, LocalTextRotation, LocalTextPosition,
