@@ -23,23 +23,21 @@ mod tests;
 fn main() {
     // get arguments
     let args = Cli::parse();
-    let debug = args.debug;
     let mut print = args.print;
-    let filenames = args.filenames;
-    if debug {
+    if args.debug {
         print = true;
     };
 
     // check files are in correct format
-    assert!(filenames.iter().all(|f| f.ends_with(".tex")
+    assert!(args.filenames.iter().all(|f| f.ends_with(".tex")
         || f.ends_with(".bib")
         || f.ends_with(".sty")
         || f.ends_with(".cls")));
 
     print_script_name();
 
-    for filename in filenames {
-        if debug {
+    for filename in args.filenames {
+        if args.debug {
             print_file_name(&filename);
         }
 
@@ -47,7 +45,7 @@ fn main() {
         let file =
             fs::read_to_string(&filename).expect("Should have read the file");
 
-        let new_file = format_file(&file, debug);
+        let new_file = format_file(&file, args.debug);
 
         if print {
             print_file(&new_file);
