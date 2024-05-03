@@ -3,6 +3,9 @@
 [![CI](
 https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml/badge.svg)](
 https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml)
+[![crates.io](
+https://img.shields.io/crates/v/tex-fmt?logo=rust)](
+https://crates.io/crates/tex-fmt)
 [![license: MIT](
 https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
