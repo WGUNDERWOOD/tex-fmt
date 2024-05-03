@@ -242,7 +242,8 @@
   and nontraditional data.
 
   We begin in the regression setting by studying the Mondrian random forest, a
-  variant in which the partitions are drawn from a Mondrian process. We present a
+  variant in which the partitions are drawn from a Mondrian process. We present
+  a
   comprehensive analysis of the statistical properties of Mondrian random
   forests, including a central limit theorem for the estimated regression
   function and a characterization of the bias. We show how to conduct feasible
@@ -254,14 +255,16 @@
   dependent dyadic network data. We present results for minimax-optimal
   estimation, including a novel lower bound for the dyadic uniform convergence
   rate, and develop methodology for uniform inference via confidence bands and
-  counterfactual analysis. Our methods are based on strong approximations and are
+  counterfactual analysis. Our methods are based on strong approximations and
+  are
   designed to be adaptive to potential dyadic degeneracy. We give empirical
   results with simulated and real-world economic trade data.
 
   Finally, we develop some new probabilistic results with applications to
   nonparametric statistics. Coupling has become a popular approach for
   distributional analysis in recent years, and Yurinskii's method stands out for
-  its wide applicability and explicit formulation. We present a generalization of
+  its wide applicability and explicit formulation. We present a generalization
+  of
   Yurinskii's coupling, treating approximate martingale data under weaker
   conditions than previously imposed. We allow for Gaussian mixture coupling
   distributions, and a third-order method permits faster rates in certain
@@ -272,8 +275,10 @@
 }
 \acknowledgments{
 
-  I am extremely fortunate to have been surrounded by many truly wonderful people
-  over the course of my career, and without their support this dissertation would
+  I am extremely fortunate to have been surrounded by many truly wonderful
+  people
+  over the course of my career, and without their support this dissertation
+  would
   not have been possible. While it is impossible for me to identify every one of
   them individually, I would like to mention a few names in particular to
   recognize those who have been especially important to me during the last few
@@ -283,11 +288,13 @@
   Matias Cattaneo. Working with Matias has been genuinely inspirational for me,
   and I could not have asked for a more rewarding start to my journey as a
   researcher. From the very beginning, he has guided me expertly through my
-  studies, providing hands-on assistance when required while also allowing me the
+  studies, providing hands-on assistance when required while also allowing me
+  the
   independence necessary to develop as an academic. I hope that, during the four
   years we have worked together, I have acquired just a fraction of his
   formidable mathematical intuition, keen attention to detail, boundless
-  creativity, and inimitable pedagogical skill. Alongside his role as my adviser,
+  creativity, and inimitable pedagogical skill. Alongside his role as my
+  adviser,
   Matias has been above all a friend, who has been in equal measure inspiring,
   insightful, dedicated, understanding, and kind.
 
@@ -295,9 +302,11 @@
   beyond who have acted as my collaborators and mentors, without whom none of my
   work could have been realized. In particular, I express my gratitude to my
   tireless Ph.D.\ committee members and letter writers Jianqing Fan and Jason
-  Klusowski, my coauthors Yingjie Feng and Ricardo Masini, my dissertation reader
+  Klusowski, my coauthors Yingjie Feng and Ricardo Masini, my dissertation
+  reader
   Boris Hanin, my teachers Amir Ali Ahmadi, Ramon van Handel, Mikl{\'o}s
-  R{\'a}cz, and Mykhaylo Shkolnikov, my colleagues Sanjeev Kulkarni and Roc{\'i}o
+  R{\'a}cz, and Mykhaylo Shkolnikov, my colleagues Sanjeev Kulkarni and
+  Roc{\'i}o
   Titiunik, and my former supervisor Mihai Cucuringu. I am also thankful for the
   staff members at Princeton who have been perpetually helpful, and I would like
   to identify Kim
@@ -307,11 +316,14 @@
   I am grateful to my fellow graduate students in the ORFE department for their
   technical expertise and generosity with their time, and for making Sherrerd
   Hall such a vibrant and exciting space, especially Jose Avilez, Pier
-  Beneventano, Ben Budway, Rajita Chandak, Abraar Chaudhry, Stefan Clarke, Giulia
+  Beneventano, Ben Budway, Rajita Chandak, Abraar Chaudhry, Stefan Clarke,
+  Giulia
   Crippa, G{\"o}k{\c c}e Dayan{\i}kl{\i}, Nicolas Garcia, Felix Hoefer, Erica
   Lai, Jackie Lok, Maya Mutic, Dan Rigobon, Till Saenger, Rajiv Sambharya, Boris
-  Shigida, Igor Silin, Giang Truong, and Rae Yu. Our regular social events made a
-  contribution to my well-being which is difficult to overstate. My thanks extend
+  Shigida, Igor Silin, Giang Truong, and Rae Yu. Our regular social events made
+  a
+  contribution to my well-being which is difficult to overstate. My thanks
+  extend
   also to the students I taught, as well as to my group of senior thesis
   undergraduates, for their commitment, patience, and responsiveness.
 
@@ -322,7 +334,8 @@
   Robin Franklin, Greg Henderson, Bonnie Ko, Grace Matthews, Dan Mead, Ben
   Musachio, Jacob Neis, Monika Papayova, Will Pedrick, Oliver Philcox, Nandita
   Rao, Alex Rice, Edward Rowe, David Snyder, Titi Sodimu, Nikitas Tampakis, and
-  Anita Zhang. Thank you to the Princeton Chapel Choir for being such a wonderful
+  Anita Zhang. Thank you to the Princeton Chapel Choir for being such a
+  wonderful
   community of musicians and a source of close friends, and to our directors,
   Nicole Aldrich and Penna Rose, and organist Eric Plutz.
 
@@ -351,23 +364,23 @@ random forests, neural networks, and many more.
 % nonparametric estimation is good
 The benefits of the nonparametric framework are clear: statistical procedures
 can be formulated in cases where the stringent assumptions of parametric models
-are untestable, demonstrably violated, or simply unreasonable.
-As a consequence,
-the resulting methods often inherit desirable robustness properties against
-various forms of misspecification or misuse. The class of problems that can be
-formulated is correspondingly larger: arbitrary distributions and
-relationships can be characterized and estimated in a principled manner.
+are untestable, demonstrably violated, or simply unreasonable. As a
+consequence, the resulting methods often inherit desirable robustness
+properties against various forms of misspecification or misuse. The class of
+problems that can be formulated is correspondingly larger: arbitrary
+distributions and relationships can be characterized and estimated in a
+principled manner.
 
 % nonparametric estimation is hard
 Nonetheless, these attractive properties do come at a price. In particular, as
-its name suggests, the nonparametric approach forgoes the ability to reduce
-a complex statistical problem to that of estimating a fixed, finite number of
-parameters. Rather, nonparametric procedures typically involve making inferences
-about a growing number of parameters simultaneously, as witnessed in
+its name suggests, the nonparametric approach forgoes the ability to reduce a
+complex statistical problem to that of estimating a fixed, finite number of
+parameters. Rather, nonparametric procedures typically involve making
+inferences about a growing number of parameters simultaneously, as witnessed in
 high-dimensional regimes, or even directly handling infinite-dimensional
 objects such as entire regression or density functions. As a consequence,
-nonparametric estimators are usually less efficient than their
-correctly specified parametric counterparts, when they are available; rates of
+nonparametric estimators are usually less efficient than their correctly
+specified parametric counterparts, when they are available; rates of
 convergence tend to be slower, and confidence sets more conservative. Another
 challenge is that theoretical mathematical analyses of nonparametric estimators
 are often significantly more demanding than those required for low-dimensional
@@ -385,27 +398,26 @@ techniques is paramount, with contemporary nonparametric methods forming a
 ubiquitous component of modern data science tool kits. Valid uncertainty
 quantification is essential for hypothesis testing, error bar construction,
 assessing statistical significance, and performing power analyses. Inference is
-a central concept in classical statistics, and despite the rapid
-recent development of theory for modern nonparametric estimators, their
-applicability to statistical inference is in certain cases rather less well
-studied; theoretically sound and practically implementable inference procedures
-are sometimes absent in the literature.
+a central concept in classical statistics, and despite the rapid recent
+development of theory for modern nonparametric estimators, their applicability
+to statistical inference is in certain cases rather less well studied;
+theoretically sound and practically implementable inference procedures are
+sometimes absent in the literature.
 
 % complex data
 In any statistical modeling problem, the selection and application of an
 estimator must naturally be tailored to the available data. Today, much of the
 data produced and analyzed does not necessarily fit neatly into the classical
 framework of independent and identically distributed samples, and instead might
-consist of time series, stochastic processes, networks,
-or high-dimensional or functional data, to name just a few.
-Therefore, it is important to understand how nonparametric methods might be
-adapted to correctly handle these data types, maintaining fast estimation rates
-and valid techniques for statistical inference. The technical challenges
-associated with such an endeavor are non-trivial; many standard techniques are
-ineffective in the presence of dependent or infinite-dimensional data, for
-example. As such, the development of new mathematical results in probability
-theory plays an important role in the comprehensive treatment of nonparametric
-statistics with complex data.
+consist of time series, stochastic processes, networks, or high-dimensional or
+functional data, to name just a few. Therefore, it is important to understand
+how nonparametric methods might be adapted to correctly handle these data
+types, maintaining fast estimation rates and valid techniques for statistical
+inference. The technical challenges associated with such an endeavor are
+non-trivial; many standard techniques are ineffective in the presence of
+dependent or infinite-dimensional data, for example. As such, the development
+of new mathematical results in probability theory plays an important role in
+the comprehensive treatment of nonparametric statistics with complex data.
 
 \section*{Overview of the dissertation}
 
@@ -437,23 +449,22 @@ detailed theoretical analysis.
 % mondrian random forests
 One interesting such example is that of the Mondrian random forest, in which
 the underlying partitions (or trees) are constructed independently of the data.
-Naturally, this restriction rules out many classical random forest models, which
-exhibit a complex and data-dependent partitioning scheme. Instead, trees are
-sampled from a canonical stochastic process known as the Mondrian process,
+Naturally, this restriction rules out many classical random forest models,
+which exhibit a complex and data-dependent partitioning scheme. Instead, trees
+are sampled from a canonical stochastic process known as the Mondrian process,
 which endows the resulting tree and forest estimators with various agreeable
 features.
 
 % what we do
-We study the estimation and inference properties of Mondrian
-random forests in the nonparametric regression setting. In particular, we
-establish a novel central limit theorem for the estimates made by a Mondrian
-random forest which, when combined with a characterization of the bias and a
-consistent variance estimator, allows one to perform asymptotically valid
-statistical inference, such as constructing confidence intervals, on the
-unknown regression function. We also provide a debiasing procedure for Mondrian
-random forests, which allows them to achieve minimax-optimal estimation rates
-with H{\"o}lder smooth regression functions, for any smoothness parameter and
-in arbitrary dimension.
+We study the estimation and inference properties of Mondrian random forests in
+the nonparametric regression setting. In particular, we establish a novel
+central limit theorem for the estimates made by a Mondrian random forest which,
+when combined with a characterization of the bias and a consistent variance
+estimator, allows one to perform asymptotically valid statistical inference,
+such as constructing confidence intervals, on the unknown regression function.
+We also provide a debiasing procedure for Mondrian random forests, which allows
+them to achieve minimax-optimal estimation rates with H{\"o}lder smooth
+regression functions, for any smoothness parameter and in arbitrary dimension.
 
 % kernel
 Chapter~\ref{ch:kernel}, titled ``Dyadic Kernel Density Estimators,'' is based
@@ -469,24 +480,24 @@ appeal to techniques tailored to dyadic data in order to accurately capture the
 complex structure present in the network.
 
 % broad scope
-We focus on nonparametric estimation and inference with dyadic
-data, and in particular we seek methods that are robust in the sense that our
-results should hold uniformly across the support of the data. Such uniformity
-guarantees allow for statistical inference in a broader range of settings,
-including specification testing and distributional counterfactual analysis. We
-specifically consider the problem of uniformly estimating a dyadic
-density function, focusing on kernel estimators taking the form of dyadic
-empirical processes.
+We focus on nonparametric estimation and inference with dyadic data, and in
+particular we seek methods that are robust in the sense that our results should
+hold uniformly across the support of the data. Such uniformity guarantees allow
+for statistical inference in a broader range of settings, including
+specification testing and distributional counterfactual analysis. We
+specifically consider the problem of uniformly estimating a dyadic density
+function, focusing on kernel estimators taking the form of dyadic empirical
+processes.
 
 % main contributions
 Our main contributions include the minimax-optimal uniform convergence rate of
 the dyadic kernel density estimator, along with strong approximation results
 for the associated standardized and Studentized $t$-processes. A consistent
-variance estimator enables the construction of feasible uniform
-confidence bands for the unknown density function. We showcase the broad
-applicability of our results by developing novel counterfactual density
-estimation and inference methodology for dyadic data, which can be used for
-causal inference and program evaluation.
+variance estimator enables the construction of feasible uniform confidence
+bands for the unknown density function. We showcase the broad applicability of
+our results by developing novel counterfactual density estimation and inference
+methodology for dyadic data, which can be used for causal inference and program
+evaluation.
 % why it is difficult
 A crucial feature of dyadic distributions is that they may be ``degenerate'' at
 certain points in the support of the data, a property that makes our analysis
@@ -495,12 +506,11 @@ to the potential presence of such points.
 % applications
 For implementation purposes, we discuss inference procedures based on positive
 semi-definite covariance estimators, mean squared error optimal bandwidth
-selectors, and robust bias correction. We illustrate the empirical
-performance of our methods in simulations and with
-real-world trade data, for which we make comparisons between observed and
-counterfactual trade distributions in different years. Our technical results
-on strong approximations and maximal inequalities are of potential
-independent interest.
+selectors, and robust bias correction. We illustrate the empirical performance
+of our methods in simulations and with real-world trade data, for which we make
+comparisons between observed and counterfactual trade distributions in
+different years. Our technical results on strong approximations and maximal
+inequalities are of potential independent interest.
 
 % yurinskii
 Finally, Chapter~\ref{ch:yurinskii}, titled ``Yurinskii's Coupling for
