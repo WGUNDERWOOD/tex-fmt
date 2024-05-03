@@ -3,20 +3,18 @@ use std::fs;
 
 const TAB: i8 = 2;
 
-const YELLOW: &str = "\x1b[33m\x1b[1m";
-const PINK: &str = "\x1b[35m\x1b[1m";
-const RESET: &str = "\x1b[00m\x1b[0m";
-
 mod comments;
 mod format;
 mod indent;
 mod parse;
+mod print;
 mod regexes;
 mod subs;
 mod wrap;
 mod write;
 use crate::format::*;
-use crate::parse::Cli;
+use crate::parse::*;
+use crate::print::*;
 use crate::write::*;
 
 #[cfg(test)]
@@ -38,13 +36,11 @@ fn main() {
         || f.ends_with(".sty")
         || f.ends_with(".cls")));
 
-    // print script name
-    println!("{}", String::new() + PINK + "tex-fmt" + RESET);
+    print_script_name();
 
     for filename in filenames {
-        // print file name
         if debug {
-            println!("{}", String::new() + YELLOW + &filename + RESET);
+            print_file_name(&filename);
         }
 
         // read lines from file
@@ -54,8 +50,7 @@ fn main() {
         let new_file = format_file(&file, debug);
 
         if print {
-            // print new file
-            println!("{}", &new_file);
+            print_file(&new_file);
         } else {
             backup_file(&filename);
             write_file(&filename, &new_file);
