@@ -11,14 +11,11 @@
 ** Ignore source lines
 *** Line-by-line ignore
 *** Block ignore
-** Tests should compile to same pdf
 ** Documentation
 ** Tidy up code
 ** Find todos
-** Clippy
-** New source files: write.rs, parse.rs, print.rs
+** New source files: write.rs, print.rs
 ** Tests better output
 * Bugs
 ** Better errors including line numbers in source file
 ** Handle list items properly
-* Structure
