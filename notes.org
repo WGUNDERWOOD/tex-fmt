@@ -16,11 +16,15 @@
 *** Line-by-line ignore
 *** Block ignore
 ** Tests should compile to same pdf
+** Documentation
+** Tidy up code
+** Find todos
+** Clippy
+** New source files: write.rs, parse.rs, print.rs
+** Check unused regexes
+** Check for collect() not needed
+** Tests output better
 * Bugs
 ** Better errors including line numbers in source file
 ** Handle list items properly
 * Structure
-** Perform indenting
-** While long lines are present
-*** Trim long lines
-*** Perform indenting

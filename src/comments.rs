@@ -1,10 +1,4 @@
-#[derive(Debug)]
-pub struct Comment {
-    // index where the comment starts
-    pub idx: usize,
-}
-
-pub fn find_comment(line: &str) -> Option<Comment> {
+pub fn find_comment_index(line: &str) -> Option<usize> {
     // no percent means no comment
     if !line.contains('%') {
         return None;
@@ -20,9 +14,7 @@ pub fn find_comment(line: &str) -> Option<Comment> {
     // check the first character
     let mut prev_c: char = line.chars().next().unwrap();
     if prev_c == '%' {
-        return Some(Comment {
-            idx: 0,
-        });
+        return Some(0);
     }
 
     // single-character line
@@ -35,13 +27,9 @@ pub fn find_comment(line: &str) -> Option<Comment> {
         let c = line.chars().nth(i).unwrap();
         if c == '%' {
             if prev_c == ' ' {
-                return Some(Comment {
-                    idx: i,
-                });
+                return Some(i);
             } else if prev_c != '\\' {
-                return Some(Comment {
-                    idx: i,
-                });
+                return Some(i);
             }
         }
         prev_c = c;
@@ -49,16 +37,16 @@ pub fn find_comment(line: &str) -> Option<Comment> {
     None
 }
 
-pub fn remove_comment<'a>(line: &'a str, comm: &Option<Comment>) -> &'a str {
-    match comm {
-        Some(c) => &line[0..c.idx],
+pub fn remove_comment<'a>(line: &'a str, comment: Option<usize>) -> &'a str {
+    match comment {
+        Some(c) => &line[0..c],
         None => line,
     }
 }
 
-pub fn get_comment<'a>(line: &'a str, comm: &Option<Comment>) -> &'a str {
-    match comm {
-        Some(c) => &line[c.idx..line.len()],
+pub fn get_comment<'a>(line: &'a str, comment: Option<usize>) -> &'a str {
+    match comment {
+        Some(c) => &line[c..line.len()],
         None => "",
     }
 }
