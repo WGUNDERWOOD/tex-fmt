@@ -7,10 +7,10 @@
 *** -p Print to STDOUT
 *** -v Info verbose
 *** -vv Debug verbose
-** Log file
 ** Ignore source lines
 *** Line-by-line ignore
 *** Block ignore
+** Log file
 ** Documentation
 ** Tidy up code
 ** Find todos
@@ -18,4 +18,6 @@
 ** Better file backup
 * Bugs
 ** Better errors including line numbers in source file
-** Handle list items properly
+** Handle list items and comments properly
+** Do not wrap lines in verbatim environment
+** Handle errors due to unwrappable lines
