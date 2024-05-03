@@ -1,7 +1,5 @@
 use clap::Parser;
-use std::env::temp_dir;
 use std::fs;
-use std::path;
 
 const TAB: i8 = 2;
 
@@ -16,8 +14,10 @@ mod parse;
 mod regexes;
 mod subs;
 mod wrap;
+mod write;
 use crate::format::*;
 use crate::parse::Cli;
+use crate::write::*;
 
 #[cfg(test)]
 mod tests;
@@ -57,16 +57,8 @@ fn main() {
             // print new file
             println!("{}", &new_file);
         } else {
-            // backup original file
-            let filepath = path::Path::new(&filename).canonicalize().unwrap();
-            let mut filebak = temp_dir();
-            filebak.push("tex-fmt");
-            fs::create_dir_all(&filebak).unwrap();
-            filebak.push(filepath.file_name().unwrap());
-            fs::copy(filepath.clone(), &filebak).unwrap();
-
-            // write new file
-            fs::write(filepath, new_file).unwrap();
+            backup_file(&filename);
+            write_file(&filename, &new_file);
         }
     }
 }
