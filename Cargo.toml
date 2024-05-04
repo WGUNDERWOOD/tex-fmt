@@ -9,3 +9,5 @@ description = "LaTeX formatter written in Rust"
 clap = { version = "=4.4.0", features = ["derive"] }
 lazy_static = "1.4.0"
 regex = "1.10.3"
+rstest = "0.19.0"
+rstest_reuse = "0.6.0"

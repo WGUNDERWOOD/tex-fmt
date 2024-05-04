@@ -1,4 +1,8 @@
 use clap::Parser;
+#[allow(unused_imports)]
+use rstest::rstest;
+#[allow(unused_imports)]
+use rstest_reuse::{self, *};
 use std::fs;
 
 const TAB: i8 = 2;
@@ -22,10 +26,10 @@ mod tests;
 
 fn main() {
     // get arguments
-    let args = Cli::parse();
-    let mut print = args.print;
+    let mut args = Cli::parse();
     if args.debug {
-        print = true;
+        args.print = true;
+        args.verbose = true;
     };
 
     // check files are in correct format
@@ -47,7 +51,7 @@ fn main() {
 
         let new_file = format_file(&file, args.debug);
 
-        if print {
+        if args.print {
             print_file(&new_file);
         } else {
             backup_file(&filename);

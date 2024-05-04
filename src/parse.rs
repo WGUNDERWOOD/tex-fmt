@@ -2,15 +2,14 @@ use clap::Parser;
 
 #[derive(Parser)]
 pub struct Cli {
-    #[arg(long, short, help = "Print to stdout, do not modify files")]
+    #[arg(long, short, help = "Indent only, do not modify line breaks")]
+    pub indent: bool,
+    #[arg(long, short, help = "Print to STDOUT, do not modify files")]
     pub print: bool,
-    #[arg(
-        long,
-        short,
-        help = "Debug mode, disable checks and do not modify files"
-    )]
+    #[arg(long, short, help = "Increase verbosity")]
+    pub verbose: bool,
+    #[arg(long, short, help = "Debug, do not modify files")]
     pub debug: bool,
     #[arg(required = true)]
     pub filenames: Vec<String>,
 }
-

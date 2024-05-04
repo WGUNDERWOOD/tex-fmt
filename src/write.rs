@@ -1,6 +1,6 @@
 use crate::fs;
-use std::path;
 use std::env::temp_dir;
+use std::path;
 
 pub fn backup_file(filename: &str) {
     let filepath = path::Path::new(&filename).canonicalize().unwrap();
@@ -15,4 +15,3 @@ pub fn write_file(filename: &str, new_file: &str) {
     let filepath = path::Path::new(&filename).canonicalize().unwrap();
     fs::write(filepath, new_file).unwrap();
 }
-
