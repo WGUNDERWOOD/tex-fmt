@@ -12,15 +12,14 @@ pub fn line_needs_wrap(line: &str) -> bool {
 
 pub fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
-    let mut after_non_space = false;
+    let mut after_char = false;
     for i in 0..WRAP {
-        let char_is_space: bool = line.chars().nth(i) == Some(' ');
-        if char_is_space {
-            if after_non_space {
+        if line.chars().nth(i) == Some(' ') {
+            if after_char {
                 wrap_point = Some(i);
             }
-        } else {
-            after_non_space = true;
+        } else if line.chars().nth(i) != Some('%') {
+            after_char = true;
         }
     }
     wrap_point
@@ -54,7 +53,7 @@ pub fn wrap_line(line: &str) -> String {
             None => {
                 can_wrap = false;
                 println!("long line cannot be wrapped!");
-                println!("{}", line);
+                println!("{}", remaining_line);
             }
         }
     }
