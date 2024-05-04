@@ -25,6 +25,8 @@ A LaTeX formatter written in Rust.
 <td>
 
 ``` tex
+\documentclass{article}
+
 \begin{document}
 
 \begin{itemize}
@@ -32,9 +34,9 @@ A LaTeX formatter written in Rust.
 over multiple lines
 \end{itemize}
 
-\begin{align}
+\begin{equation}
 E = m c^2
-\end{align}
+\end{equation}
 
 \end{document}
 ```
@@ -42,6 +44,8 @@ E = m c^2
 <td>
 
 ``` tex
+\documentclass{article}
+
 \begin{document}
 
 \begin{itemize}
@@ -49,9 +53,9 @@ E = m c^2
     over multiple lines
 \end{itemize}
 
-\begin{align}
+\begin{equation}
   E = m c^2
-\end{align}
+\end{equation}
 
 \end{document}
 ```
