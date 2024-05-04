@@ -16,6 +16,7 @@ mod tests {
     #[rstest]
     #[case::brackets("brackets", "tex")]
     #[case::comments("comments", "tex")]
+    #[case::cv("cv", "tex")]
     #[case::document("document", "tex")]
     #[case::environment_lines("environment_lines", "tex")]
     #[case::lists("lists", "tex")]
