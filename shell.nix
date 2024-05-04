@@ -5,5 +5,10 @@ pkgs.mkShell {
     rustfmt
     clippy
     cargo-flamegraph
+    cacert
+    hyperfine
+    texlive.combined.scheme-full
+    diff-so-fancy
+    poppler_utils
   ];
 }

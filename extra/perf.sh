@@ -1,5 +1,6 @@
 DIR="$(mktemp -d)"
 cp ../tests/*_in.* $DIR
+cargo build --release
 
 echo "Test files:"
 for f in $DIR/*; do
