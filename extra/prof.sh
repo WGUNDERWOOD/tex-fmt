@@ -1,5 +1,6 @@
 DIR="$(mktemp -d)"
 cp ../tests/phd_dissertation_in.tex $DIR
+cargo build --release
 
 echo "Test file:"
 for f in $DIR/*.tex; do
