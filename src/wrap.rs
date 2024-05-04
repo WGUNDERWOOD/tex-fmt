@@ -39,18 +39,18 @@ pub fn wrap_line(line: &str) -> String {
                     Some(c) => {
                         if p > c {
                             "%"
-                        }
-                        else {
+                        } else {
                             ""
                         }
                     }
-                    None => ""
+                    None => "",
                 };
                 new_line.push_str(&remaining_line[0..p]);
                 new_line.push('\n');
-                remaining_line = remaining_line[p..remaining_line.len()].to_string();
+                remaining_line =
+                    remaining_line[p..remaining_line.len()].to_string();
                 remaining_line.insert_str(0, line_start);
-            },
+            }
             None => {
                 can_wrap = false;
                 println!("long line cannot be wrapped!");
@@ -77,7 +77,6 @@ pub fn wrap(file: &str) -> String {
 }
 
 #[cfg(test)]
-
 #[test]
 fn test_wrap_line() {
     // no comment

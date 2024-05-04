@@ -18,7 +18,7 @@ pub fn format_file(file: &str, debug: bool) -> String {
         new_file = wrap(&new_file);
         new_file = remove_trailing_spaces(&new_file);
         new_file = apply_indent(&new_file, debug);
-    };
+    }
 
     new_file
 }

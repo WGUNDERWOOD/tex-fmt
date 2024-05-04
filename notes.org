@@ -2,19 +2,12 @@
 * Tests
 ** Look for problem cases in other latex documents
 * Features
-** Flags
-*** -d Dry run
-*** -p Print to STDOUT
-*** -v Info verbose
-*** -vv Debug verbose
+** Implement new flags
 ** Ignore source lines
-*** Line-by-line ignore
-*** Block ignore
 ** Log file
 ** Documentation
 ** Tidy up code
 ** Find todos
-** Tests better output
 ** Better file backup
 * Bugs
 ** Better errors including line numbers in source file
