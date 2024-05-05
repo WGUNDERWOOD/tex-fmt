@@ -71,17 +71,22 @@ E = m c^2
 
 ## Installation
 
+### Cargo
+
+``` shell
+# install stable release
+cargo install tex-fmt
+
+# install from github
+cargo install --git "https://github.com/wgunderwood/tex-fmt"
+```
+
 ### Nix
 
 ``` shell
 nix build "github:wgunderwood/tex-fmt"
 ```
 
-### Cargo
-
-``` shell
-cargo install --git "https://github.com/wgunderwood/tex-fmt"
-```
 ## Performance
 
 Run `perf.sh` to format all test cases.
