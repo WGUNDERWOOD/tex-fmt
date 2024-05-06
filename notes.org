@@ -10,7 +10,7 @@
 ** Find todos
 ** Better file backup
 * Bugs
+** Do not wrap lines in verbatim environment
 ** Better errors including line numbers in source file
 ** Handle list items and comments properly
-** Do not wrap lines in verbatim environment
 ** Handle errors due to unwrappable lines
