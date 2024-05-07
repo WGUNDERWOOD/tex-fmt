@@ -14,3 +14,5 @@
 ** Better errors including line numbers in source file
 ** Handle list items and comments properly
 ** Handle errors due to unwrappable lines
+** Do not break line at \<space>
+** Prefer to break line after punctuation
