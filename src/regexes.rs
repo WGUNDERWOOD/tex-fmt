@@ -12,6 +12,10 @@ lazy_static! {
         Regex::new(r".*\\begin\{document\}.*").unwrap();
     pub static ref RE_DOCUMENT_END: Regex =
         Regex::new(r".*\\end\{document\}.*").unwrap();
+    pub static ref RE_VERBATIM_BEGIN: Regex =
+        Regex::new(r".*\\begin\{verbatim\}.*").unwrap();
+    pub static ref RE_VERBATIM_END: Regex =
+        Regex::new(r".*\\end\{verbatim\}.*").unwrap();
     pub static ref RE_ENV_BEGIN: Regex =
         Regex::new(r".*\\begin\{[a-zA-Z0-9\*]*\}.*").unwrap();
     pub static ref RE_ENV_END: Regex =
