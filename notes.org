@@ -1,7 +1,6 @@
 #+title: tex-fmt
 * Tasks
 ** Look for problem cases in other latex documents
-** justfile
 ** Tidy code
 * Features
 ** Implement new flags

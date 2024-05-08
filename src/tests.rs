@@ -7,7 +7,6 @@ mod tests {
     use std::fs;
 
     const YELLOW: &str = "\x1b[33m\x1b[1m";
-    const GREEN: &str = "\x1b[32m\x1b[1m";
     const RED: &str = "\x1b[31m\x1b[1m";
     const WHITE: &str = "\x1b[37m\x1b[1m";
     const RESET: &str = "\x1b[00m\x1b[0m";
@@ -53,7 +52,6 @@ mod tests {
             &YELLOW,
             &RESET,
             &out_file);
-        println!("{}Pass: {}{}", &GREEN, &RESET, &in_filename);
     }
 
     #[apply(test_file)]
@@ -76,6 +74,5 @@ mod tests {
             &YELLOW,
             &RESET,
             &out_file);
-        println!("{}Pass: {}{}", &GREEN, &RESET, &out_filename);
     }
 }

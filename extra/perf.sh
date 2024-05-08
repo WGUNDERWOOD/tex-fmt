@@ -1,3 +1,4 @@
+echo "Getting performance metrics"
 DIR="$(mktemp -d)"
 cp ../tests/*_in.* $DIR
 cargo build --release
