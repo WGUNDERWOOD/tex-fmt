@@ -1,3 +1,4 @@
+echo "Checking latex PDFs agree"
 DIR="$(mktemp -d)"
 cp ../tests/*_in.tex $DIR
 cp ../tests/*_out.tex $DIR

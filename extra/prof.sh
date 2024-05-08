@@ -1,3 +1,4 @@
+echo "Making flamegraph profile"
 DIR="$(mktemp -d)"
 cp ../tests/phd_dissertation_in.tex $DIR
 cargo build --release
