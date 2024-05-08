@@ -1,4 +1,5 @@
 use crate::comments::*;
+use crate::regexes::*;
 
 const WRAP: usize = 80;
 
@@ -63,14 +64,21 @@ pub fn wrap_line(line: &str) -> String {
 
 pub fn wrap(file: &str) -> String {
     let mut new_file = "".to_string();
+    let mut verbatim_count = 0;
     for line in file.lines() {
-        if line_needs_wrap(line) {
+        if RE_VERBATIM_BEGIN.is_match(line) {
+            verbatim_count += 1;
+        }
+        if line_needs_wrap(line) && verbatim_count == 0 {
             let new_line = wrap_line(line);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);
         }
         new_file.push('\n');
+        if RE_VERBATIM_BEGIN.is_match(line) {
+            verbatim_count += 1;
+        }
     }
     new_file
 }

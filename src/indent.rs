@@ -108,26 +108,37 @@ pub fn get_indent(line: &str, prev_indent: Indent) -> Indent {
 pub fn apply_indent(file: &str, debug: bool) -> String {
     let mut indent = Indent::new();
     let mut new_file = "".to_owned();
+    let mut verbatim_count = 0;
 
     for (i, line) in file.lines().enumerate() {
-        // calculate indent
-        let comment_index = find_comment_index(line);
-        let line_strip = remove_comment(line, comment_index);
-        indent = get_indent(line_strip, indent);
-        if !debug {
-            assert!(indent.actual >= 0, "line {}: {}", i, line);
-            assert!(indent.visual >= 0, "line {}: {}", i, line);
-        };
-
-        // apply indent
-        let mut new_line = line.trim_start().to_string();
-        if !new_line.is_empty() {
-            let n_spaces = indent.visual * TAB;
-            let spaces: String = (0..n_spaces).map(|_| " ").collect();
-            new_line.insert_str(0, &spaces);
+        if RE_VERBATIM_BEGIN.is_match(line) {
+            verbatim_count += 1;
         }
-        new_file.push_str(&new_line);
+        if verbatim_count == 0 {
+            // calculate indent
+            let comment_index = find_comment_index(line);
+            let line_strip = remove_comment(line, comment_index);
+            indent = get_indent(line_strip, indent);
+            if !debug {
+                assert!(indent.actual >= 0, "line {}: {}", i, line);
+                assert!(indent.visual >= 0, "line {}: {}", i, line);
+            };
+
+            // apply indent
+            let mut new_line = line.trim_start().to_string();
+            if !new_line.is_empty() {
+                let n_spaces = indent.visual * TAB;
+                let spaces: String = (0..n_spaces).map(|_| " ").collect();
+                new_line.insert_str(0, &spaces);
+            }
+            new_file.push_str(&new_line);
+        } else {
+            new_file.push_str(line);
+        }
         new_file.push('\n');
+        if RE_VERBATIM_BEGIN.is_match(line) {
+            verbatim_count += 1;
+        }
     }
 
     // check indents return to zero

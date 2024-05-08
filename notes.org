@@ -1,6 +1,8 @@
 #+title: tex-fmt
-* Tests
+* Tasks
 ** Look for problem cases in other latex documents
+** justfile
+** Tidy code
 * Features
 ** Implement new flags
 ** Ignore source lines
@@ -10,9 +12,7 @@
 ** Find todos
 ** Better file backup
 * Bugs
-** Do not wrap lines in verbatim environment
 ** Better errors including line numbers in source file
 ** Handle list items and comments properly
 ** Handle errors due to unwrappable lines
 ** Do not break line at \<space>
-** Prefer to break line after punctuation
