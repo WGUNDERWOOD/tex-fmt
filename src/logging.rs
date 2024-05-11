@@ -1,26 +1,31 @@
 use crate::Builder;
 use crate::Cli;
+use log::Level;
+use log::LevelFilter;
 use std::io::Write;
 
 const RED: &str = "\x1b[31m\x1b[1m";
 const YELLOW: &str = "\x1b[33m\x1b[1m";
 const RESET: &str = "\x1b[00m\x1b[0m";
 
-fn get_log_style(log_level: log::Level) -> String {
+fn get_log_style(log_level: Level) -> String {
     match log_level {
-        log::Level::Warn => YELLOW.to_string(),
-        log::Level::Error => RED.to_string(),
+        Level::Warn => YELLOW.to_string(),
+        Level::Error => RED.to_string(),
         _ => panic!(),
     }
 }
 
+fn get_log_level(args: &Cli) -> LevelFilter {
+    match args.verbose {
+        true => LevelFilter::Info,
+        false => LevelFilter::Warn,
+    }
+}
+
 pub fn init_logger(args: &Cli) {
-    let log_level = match args.verbose {
-        true => log::LevelFilter::Warn,
-        false => log::LevelFilter::Error,
-    };
     Builder::new()
-        .filter_level(log_level)
+        .filter_level(get_log_level(args))
         .format(|buf, record| {
             writeln!(
                 buf,

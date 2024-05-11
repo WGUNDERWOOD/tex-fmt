@@ -1,7 +1,11 @@
 use crate::comments::*;
+use crate::indent::*;
+use crate::parse::*;
 use crate::regexes::*;
+use crate::subs::*;
 
 const WRAP: usize = 80;
+const MAX_WRAP_TRY: u8 = 3;
 
 pub fn needs_wrap(file: &str) -> bool {
     file.lines().any(|l| l.len() > WRAP)
@@ -28,10 +32,11 @@ pub fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-pub fn wrap_line(line: &str) -> String {
+pub fn wrap_line(line: &str) -> (String, Option<String>) {
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
+    let mut warn_string: Option<String> = None;
     while line_needs_wrap(&remaining_line) && can_wrap {
         let wrap_point = find_wrap_point(&remaining_line);
         let comment_index = find_comment_index(&remaining_line);
@@ -55,23 +60,28 @@ pub fn wrap_line(line: &str) -> String {
             }
             None => {
                 can_wrap = false;
-                log::warn!("Line cannot be wrapped: {:.50}...", remaining_line);
+                warn_string = Some(format!(
+                    "Line cannot be wrapped: {:.50}...",
+                    remaining_line
+                ));
             }
         }
     }
     new_line.push_str(&remaining_line);
-    new_line
+    (new_line, warn_string)
 }
 
-pub fn wrap(file: &str) -> String {
+fn wrap_once(file: &str) -> (String, Option<String>) {
     let mut new_file = "".to_string();
+    let mut new_line: String;
     let mut verbatim_count = 0;
+    let mut warn_string: Option<String> = None;
     for line in file.lines() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
         if line_needs_wrap(line) && verbatim_count == 0 {
-            let new_line = wrap_line(line);
+            (new_line, warn_string) = wrap_line(line);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);
@@ -80,6 +90,22 @@ pub fn wrap(file: &str) -> String {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
+    }
+    (new_file, warn_string)
+}
+
+pub fn wrap(file: &str, args: &Cli) -> String {
+    let mut wrap_tries = 0;
+    let mut new_file = file.to_string();
+    let mut warn_string: Option<String> = None;
+    while needs_wrap(&new_file) && wrap_tries < MAX_WRAP_TRY {
+        wrap_tries += 1;
+        (new_file, warn_string) = wrap_once(&new_file);
+        new_file = remove_trailing_spaces(&new_file);
+        new_file = apply_indent(&new_file, args);
+    }
+    if let Some(s) = warn_string {
+        log::warn!("{}", s)
     }
     new_file
 }
@@ -92,22 +118,22 @@ fn test_wrap_line() {
         Therefore it should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it should be split.";
-    assert_eq!(wrap_line(s_in), s_out);
+    assert_eq!(wrap_line(s_in).0, s_out);
     // break before comment
     let s_in = "This line is too long because it has more than eighty characters inside it. \
         Therefore it % should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it % should be split.";
-    assert_eq!(wrap_line(s_in), s_out);
+    assert_eq!(wrap_line(s_in).0, s_out);
     // break after comment
     let s_in = "This line is too long because % it has more than eighty characters inside it. \
         Therefore it should be split.";
     let s_out = "This line is too long because % it has more than eighty characters inside it.\n\
         % Therefore it should be split.";
-    assert_eq!(wrap_line(s_in), s_out);
+    assert_eq!(wrap_line(s_in).0, s_out);
     // leading spaces
     let s_in = "    Thislineistoolongbecauseithasmorethaneightycharactersinsideiteventhoughitstartswithspaces. \
         Thereforeitshouldbesplit.";
     let s_out = s_in;
-    assert_eq!(wrap_line(s_in), s_out);
+    assert_eq!(wrap_line(s_in).0, s_out);
 }
