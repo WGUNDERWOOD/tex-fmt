@@ -1,6 +1,7 @@
 use crate::comments::*;
 use crate::regexes::*;
 use crate::TAB;
+use crate::Cli;
 use core::cmp::max;
 
 const OPENS: [char; 3] = ['(', '[', '{'];
@@ -105,7 +106,7 @@ pub fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, debug: bool) -> String {
+pub fn apply_indent(file: &str, args: &Cli) -> String {
     let mut indent = Indent::new();
     let mut new_file = "".to_owned();
     let mut verbatim_count = 0;
@@ -119,7 +120,7 @@ pub fn apply_indent(file: &str, debug: bool) -> String {
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
             indent = get_indent(line_strip, indent);
-            if !debug {
+            if !args.debug {
                 assert!(indent.actual >= 0, "line {}: {}", i, line);
                 assert!(indent.visual >= 0, "line {}: {}", i, line);
             };
@@ -142,7 +143,7 @@ pub fn apply_indent(file: &str, debug: bool) -> String {
     }
 
     // check indents return to zero
-    if !debug {
+    if !args.debug {
         assert!(indent.actual == 0);
         assert!(indent.visual == 0);
     }

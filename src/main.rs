@@ -40,7 +40,7 @@ fn main() {
 
     print_script_name();
 
-    for filename in args.filenames {
+    for filename in &args.filenames {
         if args.debug {
             print_file_name(&filename);
         }
@@ -49,7 +49,7 @@ fn main() {
         let file =
             fs::read_to_string(&filename).expect("Should have read the file");
 
-        let new_file = format_file(&file, args.debug);
+        let new_file = format_file(&file, &args);
 
         if args.print {
             print_file(&new_file);
