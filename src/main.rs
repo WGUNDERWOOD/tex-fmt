@@ -42,20 +42,20 @@ fn main() {
 
     for filename in &args.filenames {
         if args.debug {
-            print_file_name(&filename);
+            print_file_name(filename);
         }
 
         // read lines from file
         let file =
-            fs::read_to_string(&filename).expect("Should have read the file");
+            fs::read_to_string(filename).expect("Should have read the file");
 
         let new_file = format_file(&file, &args);
 
         if args.print {
             print_file(&new_file);
         } else {
-            backup_file(&filename);
-            write_file(&filename, &new_file);
+            backup_file(filename);
+            write_file(filename, &new_file);
         }
     }
 }

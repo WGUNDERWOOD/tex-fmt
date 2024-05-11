@@ -1,4 +1,4 @@
-default: test latex clippy format prof
+default: test clippy format latex prof
 
 all: default perf
 
@@ -8,7 +8,7 @@ alias c := clippy
 alias f := format
 
 test:
-  @cargo test
+  @cargo test -r
 
 latex:
   @cd extra && bash latex.sh
@@ -20,7 +20,7 @@ prof:
   @cd extra && bash prof.sh
 
 clippy:
-  @cargo clippy
+  @cargo clippy -r
 
 format:
   @cargo fmt
