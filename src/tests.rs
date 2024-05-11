@@ -1,6 +1,7 @@
 mod tests {
 
     use crate::apply;
+    use crate::Cli;
     use crate::format_file;
     use crate::rstest;
     use crate::template;
@@ -32,11 +33,12 @@ mod tests {
 
     #[apply(test_file)]
     fn test_in_file(filename: &str, extension: &str) {
+        let args = Cli::new();
         let in_filename = format!("tests/{}_in.{}", filename, extension);
         let out_filename = format!("tests/{}_out.{}", filename, extension);
         let in_file = fs::read_to_string(&in_filename).expect("");
         let out_file = fs::read_to_string(&out_filename).expect("");
-        let fmt_in_file = format_file(&in_file, false);
+        let fmt_in_file = format_file(&in_file, &args);
         assert!(fmt_in_file == out_file,
             "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
             &RED,
@@ -56,9 +58,10 @@ mod tests {
 
     #[apply(test_file)]
     fn test_out_file(filename: &str, extension: &str) {
+        let args = Cli::new();
         let out_filename = format!("tests/{}_out.{}", filename, extension);
         let out_file = fs::read_to_string(&out_filename).expect("");
-        let fmt_out_file = format_file(&out_file, false);
+        let fmt_out_file = format_file(&out_file, &args);
         assert!(fmt_out_file == out_file,
             "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
             &RED,

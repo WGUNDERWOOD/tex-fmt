@@ -13,3 +13,9 @@ pub struct Cli {
     #[arg(required = true)]
     pub filenames: Vec<String>,
 }
+
+impl Cli {
+    pub fn new() -> Self {
+        Cli{indent: false, print: false, verbose: false, debug: false, filenames: vec![]}
+    }
+}
