@@ -15,6 +15,7 @@ pub struct Cli {
 }
 
 impl Cli {
+    #[cfg(test)]
     pub fn new() -> Self {
         Cli {
             indent: false,
