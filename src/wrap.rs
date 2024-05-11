@@ -14,14 +14,16 @@ pub fn line_needs_wrap(line: &str) -> bool {
 pub fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
+    let mut prev_char: Option<char> = None;
     for i in 0..WRAP {
-        if line.chars().nth(i) == Some(' ') {
+        if line.chars().nth(i) == Some(' ') && prev_char != Some('\\') {
             if after_char {
                 wrap_point = Some(i);
             }
         } else if line.chars().nth(i) != Some('%') {
             after_char = true;
         }
+        prev_char = line.chars().nth(i)
     }
     wrap_point
 }
