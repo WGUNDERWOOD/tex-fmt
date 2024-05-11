@@ -15,7 +15,7 @@ pub fn format_file(file: &str, args: &Cli) -> String {
     let mut wrap_tries = 0;
     while needs_wrap(&new_file) && wrap_tries < MAX_WRAP_TRY {
         wrap_tries += 1;
-        new_file = wrap(&new_file, args);
+        new_file = wrap(&new_file);
         new_file = remove_trailing_spaces(&new_file);
         new_file = apply_indent(&new_file, args);
     }

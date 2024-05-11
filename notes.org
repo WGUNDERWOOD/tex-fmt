@@ -14,3 +14,6 @@
 ** Better errors including line numbers in source file
 ** Handle list items and comments properly
 ** Handle errors due to unwrappable lines
+** Better color printing
+** Colors in logging errors, etc
+** Don't repeat long line warning
