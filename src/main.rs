@@ -1,4 +1,5 @@
 use clap::Parser;
+use env_logger::Builder;
 #[allow(unused_imports)]
 use rstest::rstest;
 #[allow(unused_imports)]
@@ -10,6 +11,7 @@ const TAB: i8 = 2;
 mod comments;
 mod format;
 mod indent;
+mod logging;
 mod parse;
 mod print;
 mod regexes;
@@ -17,6 +19,7 @@ mod subs;
 mod wrap;
 mod write;
 use crate::format::*;
+use crate::logging::*;
 use crate::parse::*;
 use crate::print::*;
 use crate::write::*;
@@ -31,6 +34,9 @@ fn main() {
         args.print = true;
         args.verbose = true;
     };
+
+    // initialize logger
+    init_logger(&args);
 
     // check files are in correct format
     assert!(args.filenames.iter().all(|f| f.ends_with(".tex")
