@@ -98,11 +98,19 @@ pub fn get_back(line: &str) -> i8 {
     back
 }
 
-pub fn get_indent(line: &str, prev_indent: Indent) -> Indent {
+pub fn get_indent(line: &str, linum: usize, prev_indent: Indent) -> Indent {
     let diff = get_diff(line);
     let back = get_back(line);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
+    log::info!(
+        "Indent line {}: diff = {}, actual = {}, visual = {}: {:.20}",
+        linum,
+        diff,
+        actual,
+        visual,
+        line
+    );
     Indent { actual, visual }
 }
 
@@ -119,10 +127,24 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
-            indent = get_indent(line_strip, indent);
+            indent = get_indent(line_strip, i, indent);
             if !args.debug {
-                assert!(indent.actual >= 0, "line {}: {}", i, line);
-                assert!(indent.visual >= 0, "line {}: {}", i, line);
+                if indent.actual < 0 {
+                    log::error!(
+                        "Actual indent is negative: line {}: {:.20}",
+                        i,
+                        line
+                    );
+                    indent.actual = 0;
+                }
+                if indent.visual < 0 {
+                    log::error!(
+                        "Visual indent is negative: line {}: {:.20}",
+                        i,
+                        line
+                    );
+                    indent.visual = 0;
+                }
             };
 
             // apply indent
@@ -144,8 +166,12 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
 
     // check indents return to zero
     if !args.debug {
-        assert!(indent.actual == 0);
-        assert!(indent.visual == 0);
+        if indent.actual != 0 {
+            log::error!("Actual indent does not return to zero");
+        }
+        if indent.visual != 0 {
+            log::error!("Visual indent does not return to zero");
+        }
     }
 
     new_file

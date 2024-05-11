@@ -5,11 +5,13 @@ use log::LevelFilter;
 use std::io::Write;
 
 const RED: &str = "\x1b[31m\x1b[1m";
+const CYAN: &str = "\x1b[36m\x1b[1m";
 const YELLOW: &str = "\x1b[33m\x1b[1m";
 const RESET: &str = "\x1b[00m\x1b[0m";
 
 fn get_log_style(log_level: Level) -> String {
     match log_level {
+        Level::Info => CYAN.to_string(),
         Level::Warn => YELLOW.to_string(),
         Level::Error => RED.to_string(),
         _ => panic!(),
