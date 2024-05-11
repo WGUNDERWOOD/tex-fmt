@@ -39,10 +39,19 @@ fn main() {
     init_logger(&args);
 
     // check files are in correct format
-    assert!(args.filenames.iter().all(|f| f.ends_with(".tex")
-        || f.ends_with(".bib")
-        || f.ends_with(".sty")
-        || f.ends_with(".cls")));
+    let extensions = [".tex", ".bib", ".sty", ".cls"];
+    for f in &args.filenames {
+        let mut extension_valid = false;
+        for extension in extensions {
+            if f.ends_with(extension) {
+                extension_valid = true;
+            }
+        }
+        if !extension_valid {
+            log::error!("File type invalid for {}", f);
+            panic!();
+        }
+    }
 
     print_script_name();
 

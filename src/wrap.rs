@@ -33,6 +33,7 @@ pub fn find_wrap_point(line: &str) -> Option<usize> {
 }
 
 pub fn wrap_line(line: &str) -> (String, Option<String>) {
+    log::info!("Wrap long line: {:.50}...", line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
@@ -61,7 +62,7 @@ pub fn wrap_line(line: &str) -> (String, Option<String>) {
             None => {
                 can_wrap = false;
                 warn_string = Some(format!(
-                    "Line cannot be wrapped: {:.50}...",
+                    "Long line cannot be wrapped: {:.50}...",
                     remaining_line
                 ));
             }
@@ -99,6 +100,7 @@ pub fn wrap(file: &str, args: &Cli) -> String {
     let mut new_file = file.to_string();
     let mut warn_string: Option<String> = None;
     while needs_wrap(&new_file) && wrap_tries < MAX_WRAP_TRY {
+        log::info!("Wrap pass number {}", wrap_tries);
         wrap_tries += 1;
         (new_file, warn_string) = wrap_once(&new_file);
         new_file = remove_trailing_spaces(&new_file);
