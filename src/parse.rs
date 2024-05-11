@@ -16,6 +16,12 @@ pub struct Cli {
 
 impl Cli {
     pub fn new() -> Self {
-        Cli{indent: false, print: false, verbose: false, debug: false, filenames: vec![]}
+        Cli {
+            indent: false,
+            print: false,
+            verbose: false,
+            debug: false,
+            filenames: vec![],
+        }
     }
 }

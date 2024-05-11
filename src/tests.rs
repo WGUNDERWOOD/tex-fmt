@@ -1,10 +1,10 @@
 mod tests {
 
     use crate::apply;
-    use crate::Cli;
     use crate::format_file;
     use crate::rstest;
     use crate::template;
+    use crate::Cli;
     use std::fs;
 
     const YELLOW: &str = "\x1b[33m\x1b[1m";
