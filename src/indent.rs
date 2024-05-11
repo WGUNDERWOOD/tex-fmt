@@ -1,7 +1,7 @@
 use crate::comments::*;
 use crate::regexes::*;
-use crate::TAB;
 use crate::Cli;
+use crate::TAB;
 use core::cmp::max;
 
 const OPENS: [char; 3] = ['(', '[', '{'];
