@@ -52,12 +52,8 @@ fn get_diff(line: &str) -> i8 {
     };
 
     // indent for delimiters
-    for c in OPENS {
-        diff += line.chars().filter(|&x| x == c).count() as i8;
-    }
-    for c in CLOSES {
-        diff -= line.chars().filter(|&x| x == c).count() as i8;
-    }
+    diff += line.chars().filter(|x| OPENS.contains(x)).count() as i8;
+    diff -= line.chars().filter(|x| CLOSES.contains(x)).count() as i8;
 
     diff
 }

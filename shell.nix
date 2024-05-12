@@ -5,7 +5,6 @@ pkgs.mkShell {
     rustfmt
     clippy
     cargo-flamegraph
-    #cargo-nextest
     cacert
     hyperfine
     texlive.combined.scheme-full
