@@ -3,6 +3,14 @@ DIR="$(mktemp -d)"
 cp ../tests/phd_dissertation_in.tex $DIR
 cargo build --release
 
+echo "Writing large test file"
+for i in {1..50}; do
+    cat $DIR/phd_dissertation_in.tex >> $DIR/large.tex
+    echo "\n\n\n" >> $DIR/large.tex
+done
+
+rm $DIR/phd_dissertation_in.tex
+
 echo "Test file:"
 for f in $DIR/*.tex; do
     echo -n "  $(basename $f), "
@@ -10,4 +18,4 @@ for f in $DIR/*.tex; do
     echo "$(ls -sh $f | cut --delimiter=" " --fields 1)"
 done
 
-flamegraph -F 30000 -- ../target/release/tex-fmt $DIR/*.tex
+flamegraph -F 10000 -- ../target/release/tex-fmt $DIR/*.tex
