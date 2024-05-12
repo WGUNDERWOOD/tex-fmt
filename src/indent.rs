@@ -8,9 +8,9 @@ const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
 
 #[derive(Debug)]
-pub struct Indent {
-    pub actual: i8,
-    pub visual: i8,
+struct Indent {
+    actual: i8,
+    visual: i8,
 }
 
 impl Indent {
@@ -23,7 +23,7 @@ impl Indent {
 }
 
 /// calculate total indentation change due to current line
-pub fn get_diff(line: &str) -> i8 {
+fn get_diff(line: &str) -> i8 {
     // documents get no global indentation
     if RE_DOCUMENT_BEGIN.is_match(line) || RE_DOCUMENT_END.is_match(line) {
         return 0;
@@ -62,7 +62,7 @@ pub fn get_diff(line: &str) -> i8 {
 }
 
 /// calculate dedentation for current line compared to previous
-pub fn get_back(line: &str) -> i8 {
+fn get_back(line: &str) -> i8 {
     // documents get no global indentation
     if RE_DOCUMENT_END.is_match(line) {
         return 0;
@@ -98,7 +98,7 @@ pub fn get_back(line: &str) -> i8 {
     back
 }
 
-pub fn get_indent(line: &str, linum: usize, prev_indent: Indent) -> Indent {
+fn get_indent(line: &str, linum: usize, prev_indent: Indent) -> Indent {
     let diff = get_diff(line);
     let back = get_back(line);
     let actual = prev_indent.actual + diff;
