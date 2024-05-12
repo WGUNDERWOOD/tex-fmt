@@ -29,10 +29,6 @@ impl Cli {
     }
 }
 
-pub fn check_extension(filename: &str) -> Result<(), ()> {
-    let extension_valid = EXTENSIONS.iter().any(|e| filename.ends_with(e));
-    match extension_valid {
-        true => Ok(()),
-        false => Err(()),
-    }
+pub fn check_extension_valid(filename: &str) -> bool {
+    EXTENSIONS.iter().any(|e| filename.ends_with(e))
 }

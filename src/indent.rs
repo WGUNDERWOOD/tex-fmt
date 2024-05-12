@@ -1,7 +1,7 @@
 use crate::colors::*;
 use crate::comments::*;
+use crate::parse::*;
 use crate::regexes::*;
-use crate::Cli;
 use crate::TAB;
 use core::cmp::max;
 
