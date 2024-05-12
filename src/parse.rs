@@ -1,5 +1,7 @@
 use clap::Parser;
 
+const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
+
 #[derive(Parser)]
 pub struct Cli {
     #[arg(long, short, help = "Indent only, do not modify line breaks")]
@@ -24,5 +26,13 @@ impl Cli {
             debug: false,
             filenames: vec![],
         }
+    }
+}
+
+pub fn check_extension(filename: &str) -> Result<(), ()> {
+    let extension_valid = EXTENSIONS.iter().any(|e| filename.ends_with(e));
+    match extension_valid {
+        true => Ok(()),
+        false => Err(()),
     }
 }

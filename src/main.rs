@@ -19,6 +19,7 @@ mod regexes;
 mod subs;
 mod wrap;
 mod write;
+use crate::colors::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::parse::*;
@@ -36,30 +37,22 @@ fn main() {
         args.verbose = true;
     };
 
-    // initialize logger
     init_logger(&args);
-
-    // check files are in correct format
-    let extensions = [".tex", ".bib", ".sty", ".cls"];
-    for f in &args.filenames {
-        let mut extension_valid = false;
-        for extension in extensions {
-            if f.ends_with(extension) {
-                extension_valid = true;
-            }
-        }
-        if !extension_valid {
-            log::error!("File type invalid for {}", f);
-            panic!();
-        }
-    }
-
     print_script_name();
 
     for filename in &args.filenames {
         if args.verbose {
             print_file_name(filename);
         }
+
+        // check file is in correct format
+        match check_extension(filename) {
+            Ok(_) => (),
+            Err(_) => {
+                log::error!("File type invalid for {}{}", WHITE, filename);
+                continue;
+            }
+        };
 
         // read lines from file
         let file =
