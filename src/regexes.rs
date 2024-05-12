@@ -16,10 +16,8 @@ lazy_static! {
         Regex::new(r"\\begin\{verbatim\}").unwrap();
     pub static ref RE_VERBATIM_END: Regex =
         Regex::new(r"\\end\{verbatim\}").unwrap();
-    pub static ref RE_ENV_BEGIN: Regex =
-        Regex::new(r"\\begin\{").unwrap();
-    pub static ref RE_ENV_END: Regex =
-        Regex::new(r"\\end\{").unwrap();
+    pub static ref RE_ENV_BEGIN: Regex = Regex::new(r"\\begin\{").unwrap();
+    pub static ref RE_ENV_END: Regex = Regex::new(r"\\end\{").unwrap();
     pub static ref RE_LISTS_BEGIN: Vec<Regex> = LISTS
         .iter()
         .map(|l| Regex::new(&format!(r"\\begin\{{{}}}", l)).unwrap())

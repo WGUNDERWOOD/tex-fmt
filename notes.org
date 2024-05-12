@@ -11,4 +11,3 @@
 * Bugs
 ** Handle list items and comments properly
 ** Only print errors once, handle better
-** Try to allocate less memory

@@ -89,12 +89,12 @@ nix build "github:wgunderwood/tex-fmt"
 
 ## Performance
 
-Run `perf.sh` to format all test cases.
-For large files, tex-fmt is hundreds of times faster than latexindent.
+When formatting all of the test cases,
+tex-fmt is hundreds of times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 14 | 33k | 948kb | **0.0392s** | 14.5s [x369] | 18.7s [x478] |
+| 15 | 33k | 956kb | **0.0358s** | 14.5s [x405] | 18.7s [x522] |
 
 ## Limitations
 
