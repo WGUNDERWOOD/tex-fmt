@@ -8,7 +8,6 @@
 ** Documentation
 ** Tidy up code
 ** Find todos
-** Better file backup
 * Bugs
 ** Handle list items and comments properly
 ** Only print errors once, handle better
