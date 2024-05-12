@@ -5,16 +5,11 @@
 * Features
 ** Implement new flags
 ** Ignore source lines
-** Log file
 ** Documentation
 ** Tidy up code
 ** Find todos
 ** Better file backup
 * Bugs
-** Better errors including line numbers in source file
 ** Handle list items and comments properly
-** Handle errors due to unwrappable lines
-** Better color printing
-** Colors in logging errors, etc
-** Don't repeat long line warning
+** Only print errors once, handle better
 ** Try to allocate less memory

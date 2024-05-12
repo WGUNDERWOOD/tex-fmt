@@ -1,16 +1,12 @@
 mod tests {
 
     use crate::apply;
+    use crate::colors::*;
     use crate::format_file;
     use crate::rstest;
     use crate::template;
     use crate::Cli;
     use std::fs;
-
-    const YELLOW: &str = "\x1b[33m\x1b[1m";
-    const RED: &str = "\x1b[31m\x1b[1m";
-    const WHITE: &str = "\x1b[37m\x1b[1m";
-    const RESET: &str = "\x1b[00m\x1b[0m";
 
     #[template]
     #[rstest]

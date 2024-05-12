@@ -1,3 +1,4 @@
+use crate::colors::*;
 use crate::comments::*;
 use crate::regexes::*;
 use crate::Cli;
@@ -98,23 +99,16 @@ fn get_back(line: &str) -> i8 {
     back
 }
 
-fn get_indent(line: &str, linum: usize, prev_indent: Indent) -> Indent {
+fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     let diff = get_diff(line);
     let back = get_back(line);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
-    log::info!(
-        "Indent line {}: diff = {}, actual = {}, visual = {}: {:.20}",
-        linum,
-        diff,
-        actual,
-        visual,
-        line
-    );
     Indent { actual, visual }
 }
 
 pub fn apply_indent(file: &str, args: &Cli) -> String {
+    log::info!("Indenting file");
     let mut indent = Indent::new();
     let mut new_file = "".to_owned();
     let mut verbatim_count = 0;
@@ -127,20 +121,30 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
-            indent = get_indent(line_strip, i, indent);
+            indent = get_indent(line_strip, indent);
+            log::info!(
+                "Indent line {}: actual = {}, visual = {}:{} {}",
+                i,
+                indent.actual,
+                indent.visual,
+                WHITE,
+                line,
+            );
             if !args.debug {
                 if indent.actual < 0 {
                     log::error!(
-                        "Actual indent is negative: line {}: {:.20}",
+                        "Actual indent negative on line {}: {}{}",
                         i,
+                        WHITE,
                         line
                     );
                     indent.actual = 0;
                 }
                 if indent.visual < 0 {
                     log::error!(
-                        "Visual indent is negative: line {}: {:.20}",
+                        "Visual indent negative on line {}: {}{}",
                         i,
+                        WHITE,
                         line
                     );
                     indent.visual = 0;
