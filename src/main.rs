@@ -55,7 +55,6 @@ fn main() {
         if args.print {
             print_file(&new_file);
         } else {
-            backup_file(filename);
             write_file(filename, &new_file);
         }
     }
