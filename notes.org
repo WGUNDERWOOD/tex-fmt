@@ -17,3 +17,4 @@
 ** Better color printing
 ** Colors in logging errors, etc
 ** Don't repeat long line warning
+** Try to allocate less memory

@@ -1,21 +1,17 @@
 use crate::comments::*;
-use crate::indent::*;
-use crate::parse::*;
 use crate::regexes::*;
-use crate::subs::*;
 
 const WRAP: usize = 80;
-const MAX_WRAP_TRY: u8 = 3;
 
 pub fn needs_wrap(file: &str) -> bool {
     file.lines().any(|l| l.len() > WRAP)
 }
 
-pub fn line_needs_wrap(line: &str) -> bool {
+fn line_needs_wrap(line: &str) -> bool {
     line.len() > WRAP
 }
 
-pub fn find_wrap_point(line: &str) -> Option<usize> {
+fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
@@ -32,7 +28,7 @@ pub fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-pub fn wrap_line(line: &str) -> (String, Option<String>) {
+fn wrap_line(line: &str) -> (String, Option<String>) {
     log::info!("Wrap long line: {:.50}...", line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
@@ -72,7 +68,7 @@ pub fn wrap_line(line: &str) -> (String, Option<String>) {
     (new_line, warn_string)
 }
 
-fn wrap_once(file: &str) -> (String, Option<String>) {
+pub fn wrap(file: &str) -> (String, Option<String>) {
     let mut new_file = "".to_string();
     let mut new_line: String;
     let mut verbatim_count = 0;
@@ -93,23 +89,6 @@ fn wrap_once(file: &str) -> (String, Option<String>) {
         }
     }
     (new_file, warn_string)
-}
-
-pub fn wrap(file: &str, args: &Cli) -> String {
-    let mut wrap_tries = 0;
-    let mut new_file = file.to_string();
-    let mut warn_string: Option<String> = None;
-    while needs_wrap(&new_file) && wrap_tries < MAX_WRAP_TRY {
-        log::info!("Wrap pass number {}", wrap_tries);
-        wrap_tries += 1;
-        (new_file, warn_string) = wrap_once(&new_file);
-        new_file = remove_trailing_spaces(&new_file);
-        new_file = apply_indent(&new_file, args);
-    }
-    if let Some(s) = warn_string {
-        log::warn!("{}", s)
-    }
-    new_file
 }
 
 #[cfg(test)]
