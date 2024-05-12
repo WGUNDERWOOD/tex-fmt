@@ -8,6 +8,7 @@ use std::fs;
 
 const TAB: i8 = 2;
 
+mod colors;
 mod comments;
 mod format;
 mod indent;
@@ -56,7 +57,7 @@ fn main() {
     print_script_name();
 
     for filename in &args.filenames {
-        if args.debug {
+        if args.verbose {
             print_file_name(filename);
         }
 

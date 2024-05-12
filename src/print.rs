@@ -1,6 +1,4 @@
-const PINK: &str = "\x1b[35m\x1b[1m";
-const RESET: &str = "\x1b[00m\x1b[0m";
-const YELLOW: &str = "\x1b[33m\x1b[1m";
+use crate::colors::*;
 
 pub fn print_script_name() {
     println!("{}", String::new() + PINK + "tex-fmt" + RESET);

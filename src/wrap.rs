@@ -1,3 +1,4 @@
+use crate::colors::*;
 use crate::comments::*;
 use crate::regexes::*;
 
@@ -28,8 +29,8 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-fn wrap_line(line: &str) -> (String, Option<String>) {
-    log::info!("Wrap long line: {:.50}...", line);
+fn wrap_line(line: &str, linum: usize) -> (String, Option<String>) {
+    log::info!("Wrap long line: {}{}", WHITE, line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
@@ -58,8 +59,8 @@ fn wrap_line(line: &str) -> (String, Option<String>) {
             None => {
                 can_wrap = false;
                 warn_string = Some(format!(
-                    "Long line cannot be wrapped: {:.50}...",
-                    remaining_line
+                    "Line {} cannot be wrapped: {}{}",
+                    linum, WHITE, remaining_line,
                 ));
             }
         }
@@ -73,12 +74,12 @@ pub fn wrap(file: &str) -> (String, Option<String>) {
     let mut new_line: String;
     let mut verbatim_count = 0;
     let mut warn_string: Option<String> = None;
-    for line in file.lines() {
+    for (i, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
         if line_needs_wrap(line) && verbatim_count == 0 {
-            (new_line, warn_string) = wrap_line(line);
+            (new_line, warn_string) = wrap_line(line, i);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);
@@ -99,22 +100,22 @@ fn test_wrap_line() {
         Therefore it should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it should be split.";
-    assert_eq!(wrap_line(s_in).0, s_out);
+    assert_eq!(wrap_line(s_in, 0).0, s_out);
     // break before comment
     let s_in = "This line is too long because it has more than eighty characters inside it. \
         Therefore it % should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it % should be split.";
-    assert_eq!(wrap_line(s_in).0, s_out);
+    assert_eq!(wrap_line(s_in, 0).0, s_out);
     // break after comment
     let s_in = "This line is too long because % it has more than eighty characters inside it. \
         Therefore it should be split.";
     let s_out = "This line is too long because % it has more than eighty characters inside it.\n\
         % Therefore it should be split.";
-    assert_eq!(wrap_line(s_in).0, s_out);
+    assert_eq!(wrap_line(s_in, 0).0, s_out);
     // leading spaces
     let s_in = "    Thislineistoolongbecauseithasmorethaneightycharactersinsideiteventhoughitstartswithspaces. \
         Thereforeitshouldbesplit.";
     let s_out = s_in;
-    assert_eq!(wrap_line(s_in).0, s_out);
+    assert_eq!(wrap_line(s_in, 0).0, s_out);
 }
