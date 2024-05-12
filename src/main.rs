@@ -1,5 +1,4 @@
 use clap::Parser;
-use env_logger::Builder;
 #[allow(unused_imports)]
 use rstest::rstest;
 #[allow(unused_imports)]
@@ -45,19 +44,12 @@ fn main() {
             print_file_name(filename);
         }
 
-        // check file is in correct format
-        match check_extension(filename) {
-            Ok(_) => (),
-            Err(_) => {
-                log::error!("File type invalid for {}{}", WHITE, filename);
-                continue;
-            }
+        if !check_extension_valid(filename) {
+            log::error!("File type invalid for {}{}", WHITE, filename);
+            continue;
         };
 
-        // read lines from file
-        let file =
-            fs::read_to_string(filename).expect("Should have read the file");
-
+        let file = fs::read_to_string(filename).unwrap();
         let new_file = format_file(&file, &args);
 
         if args.print {

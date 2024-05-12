@@ -1,6 +1,6 @@
 use crate::colors::*;
-use crate::Builder;
 use crate::Cli;
+use env_logger::Builder;
 use log::Level;
 use log::LevelFilter;
 use std::io::Write;
