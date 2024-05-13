@@ -10,6 +10,7 @@ const TAB: i8 = 2;
 mod colors;
 mod comments;
 mod format;
+mod ignore;
 mod indent;
 mod logging;
 mod parse;
