@@ -7,7 +7,7 @@ use crate::Cli;
 const MAX_TRIES: u8 = 10;
 
 fn apply_passes(file: &str, args: &Cli) -> String {
-    let mut new_file = apply_indent(file, args, false);
+    let (mut new_file, mut indent_errs) = apply_indent(file, args);
 
     for _ in 0..MAX_TRIES {
         if needs_wrap(&new_file) {
@@ -17,11 +17,22 @@ fn apply_passes(file: &str, args: &Cli) -> String {
             if new_file == old_file {
                 continue;
             }
-            new_file = apply_indent(&new_file, args, false);
+            (new_file, indent_errs) = apply_indent(&new_file, args);
+        } else {
+            continue;
         }
     }
 
-    new_file = apply_indent(&new_file, args, true);
+    for indent_err in indent_errs {
+        let i = indent_err.0;
+        let line = new_file.lines().nth(i).unwrap();
+        log::error!("Indent is negative on line {}: {}{}", i, WHITE, line);
+    }
+
+    // check indents return to zero
+    if new_file.lines().last().unwrap().starts_with(' ') {
+        log::error!("Indent does not return to zero at end of file");
+    }
 
     if needs_wrap(&new_file) {
         for (i, line) in new_file.lines().enumerate() {

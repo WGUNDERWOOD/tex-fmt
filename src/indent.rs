@@ -8,10 +8,10 @@ use core::cmp::max;
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
 
-#[derive(Debug)]
-struct Indent {
-    actual: i8,
-    visual: i8,
+#[derive(Debug, Clone)]
+pub struct Indent {
+    pub actual: i8,
+    pub visual: i8,
 }
 
 impl Indent {
@@ -103,11 +103,12 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, args: &Cli, last_pass: bool) -> String {
+pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
     log::info!("Indenting file");
     let mut indent = Indent::new();
     let mut new_file = "".to_owned();
     let mut verbatim_count = 0;
+    let mut indent_errs = vec![];
 
     for (i, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
@@ -127,15 +128,11 @@ pub fn apply_indent(file: &str, args: &Cli, last_pass: bool) -> String {
                 line,
             );
 
+            if (indent.visual < 0) || (indent.actual < 0) {
+                indent_errs.push((i, indent.clone()))
+            }
+
             if !args.debug {
-                if last_pass && ((indent.visual < 0) || (indent.actual < 0)) {
-                    log::error!(
-                        "Indent negative on line {}: {}{}",
-                        i,
-                        WHITE,
-                        line
-                    );
-                }
                 if indent.actual < 0 {
                     indent.actual = 0;
                 }
@@ -161,10 +158,5 @@ pub fn apply_indent(file: &str, args: &Cli, last_pass: bool) -> String {
         }
     }
 
-    // check indents return to zero
-    if !args.debug && last_pass && (indent.actual != 0 || indent.visual != 0) {
-        log::error!("Indent does not return to zero at end of file");
-    }
-
-    new_file
+    (new_file, indent_errs)
 }
