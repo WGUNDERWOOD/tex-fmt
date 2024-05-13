@@ -6,25 +6,32 @@ use crate::Cli;
 
 const MAX_WRAP_TRY: u8 = 10;
 
-fn apply_wraps(file: &str, args: &Cli) -> String {
+fn apply_passes(file: &str, args: &Cli) -> String {
     let mut wrap_tries = 0;
-    let mut new_file = file.to_string();
     let mut old_file: String = "".to_string();
+    let mut new_file = apply_indent(file, args, false);
     while needs_wrap(&new_file)
         && wrap_tries < MAX_WRAP_TRY
         && new_file != old_file
     {
         log::info!("Wrapping pass number {}", wrap_tries + 1);
+        if wrap_tries >= 1 {
+            new_file = apply_indent(&new_file, args, false);
+        }
         old_file = new_file.clone();
         wrap_tries += 1;
         new_file = wrap(&new_file);
         new_file = remove_trailing_spaces(&new_file);
-        new_file = apply_indent(&new_file, args);
     }
+    new_file = apply_indent(&new_file, args, true);
     for (i, line) in new_file.lines().enumerate() {
         if line_needs_wrap(line) {
-            log::warn!("Line {} cannot be wrapped: {}{:.50}...",
-                       i, WHITE, line);
+            log::warn!(
+                "Line {} cannot be wrapped: {}{:.50}...",
+                i,
+                WHITE,
+                line
+            );
         }
     }
     new_file
@@ -35,8 +42,7 @@ pub fn format_file(file: &str, args: &Cli) -> String {
     new_file = begin_end_environments_new_line(&new_file);
     new_file = remove_tabs(&new_file);
     new_file = remove_trailing_spaces(&new_file);
-    new_file = apply_indent(&new_file, args);
-    new_file = apply_wraps(&new_file, args);
+    new_file = apply_passes(&new_file, args);
 
     new_file
 }
