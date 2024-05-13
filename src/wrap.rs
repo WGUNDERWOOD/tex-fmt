@@ -8,7 +8,7 @@ pub fn needs_wrap(file: &str) -> bool {
     file.lines().any(|l| l.len() > WRAP)
 }
 
-fn line_needs_wrap(line: &str) -> bool {
+pub fn line_needs_wrap(line: &str) -> bool {
     line.len() > WRAP
 }
 
@@ -29,12 +29,11 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-fn wrap_line(line: &str, linum: usize) -> (String, Option<String>) {
+fn wrap_line(line: &str) -> String {
     log::info!("Wrap long line: {}{}", WHITE, line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
-    let mut warn_string: Option<String> = None;
     while line_needs_wrap(&remaining_line) && can_wrap {
         let wrap_point = find_wrap_point(&remaining_line);
         let comment_index = find_comment_index(&remaining_line);
@@ -58,28 +57,23 @@ fn wrap_line(line: &str, linum: usize) -> (String, Option<String>) {
             }
             None => {
                 can_wrap = false;
-                warn_string = Some(format!(
-                    "Line {} cannot be wrapped: {}{}",
-                    linum, WHITE, remaining_line,
-                ));
             }
         }
     }
     new_line.push_str(&remaining_line);
-    (new_line, warn_string)
+    new_line
 }
 
-pub fn wrap(file: &str) -> (String, Option<String>) {
+pub fn wrap(file: &str) -> String {
     let mut new_file = "".to_string();
     let mut new_line: String;
     let mut verbatim_count = 0;
-    let mut warn_string: Option<String> = None;
-    for (i, line) in file.lines().enumerate() {
+    for line in file.lines() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
         if line_needs_wrap(line) && verbatim_count == 0 {
-            (new_line, warn_string) = wrap_line(line, i);
+            new_line = wrap_line(line);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);
@@ -89,7 +83,7 @@ pub fn wrap(file: &str) -> (String, Option<String>) {
             verbatim_count += 1;
         }
     }
-    (new_file, warn_string)
+    new_file
 }
 
 #[cfg(test)]
@@ -100,22 +94,22 @@ fn test_wrap_line() {
         Therefore it should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it should be split.";
-    assert_eq!(wrap_line(s_in, 0).0, s_out);
+    assert_eq!(wrap_line(s_in), s_out);
     // break before comment
     let s_in = "This line is too long because it has more than eighty characters inside it. \
         Therefore it % should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it % should be split.";
-    assert_eq!(wrap_line(s_in, 0).0, s_out);
+    assert_eq!(wrap_line(s_in), s_out);
     // break after comment
     let s_in = "This line is too long because % it has more than eighty characters inside it. \
         Therefore it should be split.";
     let s_out = "This line is too long because % it has more than eighty characters inside it.\n\
         % Therefore it should be split.";
-    assert_eq!(wrap_line(s_in, 0).0, s_out);
+    assert_eq!(wrap_line(s_in), s_out);
     // leading spaces
     let s_in = "    Thislineistoolongbecauseithasmorethaneightycharactersinsideiteventhoughitstartswithspaces. \
         Thereforeitshouldbesplit.";
     let s_out = s_in;
-    assert_eq!(wrap_line(s_in, 0).0, s_out);
+    assert_eq!(wrap_line(s_in), s_out);
 }
