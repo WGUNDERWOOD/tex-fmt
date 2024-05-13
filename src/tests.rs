@@ -13,6 +13,7 @@ use crate::Cli;
 #[case::cv("cv", "tex")]
 #[case::document("document", "tex")]
 #[case::environment_lines("environment_lines", "tex")]
+#[case::ignore("ignore", "tex")]
 #[case::lists("lists", "tex")]
 #[case::masters_dissertation("masters_dissertation", "tex")]
 #[case::phd_dissertation("phd_dissertation", "tex")]

@@ -6,8 +6,6 @@
 ** Implement new flags
 ** Ignore source lines
 ** Documentation
-** Tidy up code
 ** Find todos
 * Bugs
 ** Handle list items and comments properly
-** Only print errors once, handle better
