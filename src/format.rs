@@ -8,18 +8,17 @@ const MAX_TRIES: u8 = 10;
 
 fn apply_passes(file: &str, args: &Cli) -> String {
     let (mut new_file, mut indent_errs) = apply_indent(file, args);
+    let mut finished = false;
+    let mut tries = 0;
 
-    for _ in 0..MAX_TRIES {
-        if needs_wrap(&new_file) {
-            let old_file = new_file.clone();
-            new_file = wrap(&new_file);
-            new_file = remove_trailing_spaces(&new_file);
-            if new_file == old_file {
-                continue;
-            }
-            (new_file, indent_errs) = apply_indent(&new_file, args);
-        } else {
-            continue;
+    while needs_wrap(&new_file) && !finished && tries < MAX_TRIES {
+        let old_file = new_file.clone();
+        new_file = wrap(&new_file);
+        new_file = remove_trailing_spaces(&new_file);
+        (new_file, indent_errs) = apply_indent(&new_file, args);
+        tries += 1;
+        if new_file == old_file {
+            finished = true;
         }
     }
 

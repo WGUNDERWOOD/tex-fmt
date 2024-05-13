@@ -65,6 +65,7 @@ fn wrap_line(line: &str) -> String {
 }
 
 pub fn wrap(file: &str) -> String {
+    log::info!("Wrapping file");
     let mut new_file = "".to_string();
     let mut new_line: String;
     let mut verbatim_count = 0;
