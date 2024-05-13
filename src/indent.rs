@@ -103,7 +103,7 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, args: &Cli, log: bool) -> String {
+pub fn apply_indent(file: &str, args: &Cli, last_pass: bool) -> String {
     log::info!("Indenting file");
     let mut indent = Indent::new();
     let mut new_file = "".to_owned();
@@ -126,15 +126,21 @@ pub fn apply_indent(file: &str, args: &Cli, log: bool) -> String {
                 WHITE,
                 line,
             );
+
             if !args.debug {
-                if (indent.actual < 0 || indent.visual < 0) && log {
+                if last_pass && ((indent.visual < 0) || (indent.actual < 0)) {
                     log::error!(
-                        "Line {} requests a negative indent: {}{}",
+                        "Indent negative on line {}: {}{}",
                         i,
                         WHITE,
                         line
                     );
+                }
+                if indent.actual < 0 {
                     indent.actual = 0;
+                }
+                if indent.visual < 0 {
+                    indent.visual = 0;
                 }
             };
 
@@ -156,10 +162,8 @@ pub fn apply_indent(file: &str, args: &Cli, log: bool) -> String {
     }
 
     // check indents return to zero
-    if !args.debug && log {
-        if indent.actual != 0 || indent.visual != 0 {
-            log::error!("Indent does not return to zero at end of file");
-        }
+    if !args.debug && last_pass && (indent.actual != 0 || indent.visual != 0) {
+        log::error!("Indent does not return to zero at end of file");
     }
 
     new_file
