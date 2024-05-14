@@ -1,5 +1,6 @@
 use crate::colors::*;
 use crate::comments::*;
+use crate::ignore::*;
 use crate::regexes::*;
 
 const WRAP: usize = 80;
@@ -73,7 +74,7 @@ pub fn wrap(file: &str) -> String {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        if line_needs_wrap(line) && verbatim_count == 0 {
+        if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(line) {
             new_line = wrap_line(line);
             new_file.push_str(&new_line);
         } else {

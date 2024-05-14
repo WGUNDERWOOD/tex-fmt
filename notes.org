@@ -9,3 +9,4 @@
 ** Find todos
 * Bugs
 ** Handle list items and comments properly
+** Handle verbatim and ignores better
