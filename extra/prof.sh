@@ -4,7 +4,7 @@ cp ../tests/phd_dissertation_in.tex $DIR
 cargo build --release
 
 echo "Writing large test file"
-for i in {1..10}; do
+for i in {1..5}; do
     cat $DIR/phd_dissertation_in.tex >> $DIR/large.tex
     echo "\n\n\n" >> $DIR/large.tex
 done
@@ -19,3 +19,4 @@ for f in $DIR/*.tex; do
 done
 
 flamegraph -F 10000 -- ../target/release/tex-fmt $DIR/*.tex
+hyperfine --warmup 2 -n "tex-fmt" "../target/release/tex-fmt $DIR/*.tex"

@@ -33,23 +33,22 @@ fn get_diff(line: &str) -> i8 {
 
     // list environments get double indents
     let mut diff: i8 = 0;
-    for re_list_begin in RE_LISTS_BEGIN.iter() {
-        if re_list_begin.is_match(line) {
-            diff += 1
-        };
-    }
-    for re_list_end in RE_LISTS_END.iter() {
-        if re_list_end.is_match(line) {
-            diff -= 1
-        };
-    }
 
     // other environments get single indents
     if RE_ENV_BEGIN.is_match(line) {
-        diff += 1
-    };
-    if RE_ENV_END.is_match(line) {
-        diff -= 1
+        diff += 1;
+        for re_list_begin in RE_LISTS_BEGIN.iter() {
+            if re_list_begin.is_match(line) {
+                diff += 1
+            };
+        }
+    } else if RE_ENV_END.is_match(line) {
+        diff -= 1;
+        for re_list_end in RE_LISTS_END.iter() {
+            if re_list_end.is_match(line) {
+                diff -= 1
+            };
+        }
     };
 
     // indent for delimiters
@@ -66,13 +65,6 @@ fn get_back(line: &str) -> i8 {
         return 0;
     };
 
-    // list environments get double indents for indenting items
-    for re_list_end in RE_LISTS_END.iter() {
-        if re_list_end.is_match(line) {
-            return 2;
-        };
-    }
-
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
 
@@ -85,6 +77,12 @@ fn get_back(line: &str) -> i8 {
 
     // other environments get single indents
     if RE_ENV_END.is_match(line) {
+        // list environments get double indents for indenting items
+        for re_list_end in RE_LISTS_END.iter() {
+            if re_list_end.is_match(line) {
+                return 2;
+            };
+        }
         back += 1;
     };
 
