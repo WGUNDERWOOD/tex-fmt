@@ -1,5 +1,6 @@
 use crate::colors::*;
 use crate::comments::*;
+use crate::ignore::*;
 use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
@@ -114,7 +115,7 @@ pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        if verbatim_count == 0 {
+        if verbatim_count == 0 && !is_ignored(line) {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);

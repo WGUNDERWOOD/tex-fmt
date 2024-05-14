@@ -4,7 +4,7 @@ cp ../tests/phd_dissertation_in.tex $DIR
 cargo build --release
 
 echo "Writing large test file"
-for i in {1..50}; do
+for i in {1..10}; do
     cat $DIR/phd_dissertation_in.tex >> $DIR/large.tex
     echo "\n\n\n" >> $DIR/large.tex
 done
