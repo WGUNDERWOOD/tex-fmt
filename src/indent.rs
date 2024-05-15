@@ -105,7 +105,7 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
 pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
     log::info!("Indenting file");
     let mut indent = Indent::new();
-    let mut new_file = "".to_owned();
+    let mut new_file = String::with_capacity(file.len());
     let mut verbatim_count = 0;
     let mut indent_errs = vec![];
 
