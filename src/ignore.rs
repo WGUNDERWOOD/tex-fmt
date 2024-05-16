@@ -1,4 +1,6 @@
 use crate::colors::*;
+use crate::logging::*;
+use log::Level::Warn;
 
 //const IG_STARTS: [&str; 1] = ["\\begin{verbatim}"];
 //const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
@@ -29,21 +31,26 @@ pub fn get_ignore(line: &str, i: usize, prev_ignore: Ignore) -> Ignore {
             block = true
         }
         if end {
-            log::warn!(
-                "No ignore block to end on line {}: {}{:.50}...",
+            record_log(
+                Warn,
                 i,
-                WHITE,
-                line
+                format!(
+                    " Line {}: no ignore block to end: {}{:.50}...",
+                    i, WHITE, line
+                ),
             );
         }
     } else {
         // currently in ignore block
         if start {
-            log::warn!(
-                "Cannot start ignore block on line {} before ending previous block: {}{:.50}...",
+            record_log(
+                Warn,
                 i,
-                WHITE,
-                line
+                format!(
+                    " Line {}: cannot start ignore block \
+                        before ending previous block: {}{:.50}...",
+                    i, WHITE, line
+                ),
             );
         }
         if end {

@@ -1,13 +1,15 @@
 use crate::colors::*;
 use crate::indent::*;
+use crate::logging::*;
 use crate::subs::*;
 use crate::wrap::*;
 use crate::Cli;
+use log::Level::Warn;
 
 const MAX_TRIES: u8 = 10;
 
 fn apply_passes(file: &str, args: &Cli) -> String {
-    let (mut new_file, mut indent_errs) = apply_indent(file, args);
+    let mut new_file = apply_indent(file, args);
     let mut finished = false;
     let mut tries = 0;
 
@@ -15,17 +17,11 @@ fn apply_passes(file: &str, args: &Cli) -> String {
         let old_file = new_file.clone();
         new_file = wrap(&new_file);
         new_file = remove_trailing_spaces(&new_file);
-        (new_file, indent_errs) = apply_indent(&new_file, args);
+        new_file = apply_indent(&new_file, args);
         tries += 1;
         if new_file == old_file {
             finished = true;
         }
-    }
-
-    for indent_err in indent_errs {
-        let i = indent_err.0;
-        let line = new_file.lines().nth(i).unwrap();
-        log::error!("Indent is negative on line {}: {}{}", i, WHITE, line);
     }
 
     // check indents return to zero
@@ -33,14 +29,17 @@ fn apply_passes(file: &str, args: &Cli) -> String {
         log::error!("Indent does not return to zero at end of file");
     }
 
+    // TODO move this logging into wrap.rs
     if needs_wrap(&new_file) {
         for (i, line) in new_file.lines().enumerate() {
             if line_needs_wrap(line) {
-                log::warn!(
-                    "Line {} cannot be wrapped: {}{:.50}...",
+                record_log(
+                    Warn,
                     i,
-                    WHITE,
-                    line
+                    format!(
+                        " Line {}: cannot be wrapped: {}{:.50}...",
+                        i, WHITE, line
+                    ),
                 );
             }
         }

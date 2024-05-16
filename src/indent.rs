@@ -1,10 +1,12 @@
 use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
+use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
 use core::cmp::max;
+use log::Level::Error;
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -102,13 +104,15 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
+pub fn apply_indent(file: &str, args: &Cli) -> String {
     log::info!("Indenting file");
+
+    // TODO flush the logs of indent errors first
+
     let mut indent = Indent::new();
     let mut ignore = Ignore::new();
     let mut new_file = String::with_capacity(file.len());
     let mut verbatim_count = 0;
-    let mut indent_errs = vec![];
 
     for (i, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
@@ -130,7 +134,14 @@ pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
             );
 
             if (indent.visual < 0) || (indent.actual < 0) {
-                indent_errs.push((i, indent.clone()))
+                record_log(
+                    Error,
+                    i,
+                    format!(
+                        "Line {}: indent is negative: {}{:.50}",
+                        i, WHITE, line
+                    ),
+                );
             }
 
             if !args.debug {
@@ -159,5 +170,5 @@ pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
         }
     }
 
-    (new_file, indent_errs)
+    new_file
 }
