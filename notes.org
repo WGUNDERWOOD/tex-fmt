@@ -10,3 +10,4 @@
 * Bugs
 ** Handle list items and comments properly
 ** Handle verbatim and ignores better
+** Only print ignore warnings once

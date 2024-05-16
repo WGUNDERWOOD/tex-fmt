@@ -71,12 +71,13 @@ pub fn wrap(file: &str) -> String {
     let mut new_line: String;
     let mut verbatim_count = 0;
     let mut ignore = Ignore::new();
-    for line in file.lines() {
+    for (i, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, ignore);
-        if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore) {
+        ignore = get_ignore(line, i, ignore);
+        if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
+        {
             new_line = wrap_line(line);
             new_file.push_str(&new_line);
         } else {

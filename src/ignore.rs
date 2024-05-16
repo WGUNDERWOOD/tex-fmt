@@ -1,3 +1,5 @@
+use crate::colors::*;
+
 //const IG_STARTS: [&str; 1] = ["\\begin{verbatim}"];
 //const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
 
@@ -15,7 +17,7 @@ impl Ignore {
     }
 }
 
-pub fn get_ignore(line: &str, prev_ignore: Ignore) -> Ignore {
+pub fn get_ignore(line: &str, i: usize, prev_ignore: Ignore) -> Ignore {
     let skip = contains_ignore_skip(line);
     let start = contains_ignore_start(line);
     let end = contains_ignore_end(line);
@@ -27,12 +29,22 @@ pub fn get_ignore(line: &str, prev_ignore: Ignore) -> Ignore {
             block = true
         }
         if end {
-            // TODO ERROR
+            log::warn!(
+                "No ignore block to end on line {}: {}{:.50}...",
+                i,
+                WHITE,
+                line
+            );
         }
     } else {
         // currently in ignore block
         if start {
-            // TODO ERROR
+            log::warn!(
+                "Cannot start ignore block on line {} before ending previous block: {}{:.50}...",
+                i,
+                WHITE,
+                line
+            );
         }
         if end {
             block = false

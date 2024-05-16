@@ -114,7 +114,7 @@ pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, ignore);
+        ignore = get_ignore(line, i, ignore);
         if verbatim_count == 0 && !is_ignored(&ignore) {
             // calculate indent
             let comment_index = find_comment_index(line);
