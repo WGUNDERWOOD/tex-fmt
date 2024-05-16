@@ -105,6 +105,7 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
 pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
     log::info!("Indenting file");
     let mut indent = Indent::new();
+    let mut ignore = Ignore::new();
     let mut new_file = String::with_capacity(file.len());
     let mut verbatim_count = 0;
     let mut indent_errs = vec![];
@@ -113,7 +114,8 @@ pub fn apply_indent(file: &str, args: &Cli) -> (String, Vec<(usize, Indent)>) {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        if verbatim_count == 0 && !is_ignored(line) {
+        ignore = get_ignore(line, ignore);
+        if verbatim_count == 0 && !is_ignored(&ignore) {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
