@@ -1,3 +1,6 @@
+//const IG_STARTS: [&str; 1] = ["\\begin{verbatim}"];
+//const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
+
 pub struct Ignore {
     skip: bool,
     block: bool,
