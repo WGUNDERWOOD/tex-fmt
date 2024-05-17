@@ -130,7 +130,6 @@ pub fn apply_indent(file: &str, filename: &str, args: &Cli) -> String {
             );
 
             if (indent.visual < 0) || (indent.actual < 0) {
-
                 log::warn!(
                     "{}tex-fmt {}{}: {}Line {}. \
                     {}Indent is negative: \
@@ -143,8 +142,7 @@ pub fn apply_indent(file: &str, filename: &str, args: &Cli) -> String {
                     YELLOW,
                     RESET,
                     line,
-                    );
-
+                );
             }
 
             if !args.debug {

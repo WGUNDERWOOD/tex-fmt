@@ -1,11 +1,11 @@
 use crate::colors::*;
 
 pub fn print_script_name() {
-    println!("{}{}{}", PINK, "tex-fmt", RESET);
+    println!("{}tex-fmt{}", PINK, RESET);
 }
 
 pub fn print_filename(filename: &str) {
-    println!("{}{}{}{}{}", PINK, "tex-fmt ", PURPLE, filename, RESET);
+    println!("{}tex-fmt {}{}{}", PINK, PURPLE, filename, RESET);
 }
 
 pub fn print_file(new_file: &str) {
