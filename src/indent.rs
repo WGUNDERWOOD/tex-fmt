@@ -1,4 +1,4 @@
-use crate::colors::*;
+//use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
 use crate::logging::*;
@@ -6,7 +6,7 @@ use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
 use core::cmp::max;
-use log::Level::Error;
+//use log::Level::Error;
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -104,7 +104,12 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, args: &Cli) -> String {
+pub fn apply_indent(
+    file: &str,
+    args: &Cli,
+    filename: &str,
+    logs: &mut Vec<Log>,
+) -> String {
     log::info!("Indenting file");
 
     // TODO flush the logs of indent errors first
@@ -114,34 +119,34 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
     let mut new_file = String::with_capacity(file.len());
     let mut verbatim_count = 0;
 
-    for (i, line) in file.lines().enumerate() {
+    for (linum, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, i, ignore);
+        ignore = get_ignore(line, linum, filename, ignore, logs);
         if verbatim_count == 0 && !is_ignored(&ignore) {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
             indent = get_indent(line_strip, indent);
-            log::info!(
-                "Indent line {}: actual = {}, visual = {}:{} {}",
-                i,
-                indent.actual,
-                indent.visual,
-                WHITE,
-                line,
-            );
+            //log::info!(
+            //"Indent line {}: actual = {}, visual = {}:{} {}",
+            //i,
+            //indent.actual,
+            //indent.visual,
+            //WHITE,
+            //line,
+            //);
 
             if (indent.visual < 0) || (indent.actual < 0) {
-                record_log(
-                    Error,
-                    i,
-                    format!(
-                        "Line {}: indent is negative: {}{:.50}",
-                        i, WHITE, line
-                    ),
-                );
+                //record_log(
+                //Error,
+                //i,
+                //format!(
+                //"Line {}: indent is negative: {}{:.50}",
+                //i, WHITE, line
+                //),
+                //);
             }
 
             if !args.debug {
