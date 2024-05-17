@@ -1,12 +1,10 @@
 //use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
-use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
 use core::cmp::max;
-//use log::Level::Error;
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -112,8 +110,6 @@ pub fn apply_indent(
 ) -> String {
     log::info!("Indenting file");
 
-    // TODO flush the logs of indent errors first
-
     let mut indent = Indent::new();
     let mut ignore = Ignore::new();
     let mut new_file = String::with_capacity(file.len());
@@ -139,14 +135,12 @@ pub fn apply_indent(
             //);
 
             if (indent.visual < 0) || (indent.actual < 0) {
-                //record_log(
-                //Error,
-                //i,
-                //format!(
-                //"Line {}: indent is negative: {}{:.50}",
-                //i, WHITE, line
-                //),
-                //);
+                log::error!(
+                    "Line {}: indent is negative: {}{:.50}",
+                    i,
+                    WHITE,
+                    line
+                );
             }
 
             if !args.debug {
