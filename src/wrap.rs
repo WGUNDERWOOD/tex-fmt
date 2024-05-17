@@ -31,8 +31,8 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-fn wrap_line(line: &str) -> String {
-    //log::info!("Wrap long line: {}{}", WHITE, line);
+fn wrap_line(line: &str, linum: usize) -> String {
+    log::info!("Wrap long line: {}{}", WHITE, line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
@@ -59,6 +59,12 @@ fn wrap_line(line: &str) -> String {
             }
             None => {
                 can_wrap = false;
+                log::error!(
+                    "Line {}: cannot be wrapped: {}{:.50}...",
+                    linum,
+                    WHITE,
+                    line
+                );
             }
         }
     }
@@ -76,10 +82,10 @@ pub fn wrap(file: &str, filename: &str, logs: &mut Vec<Log>) -> String {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, linum, filename, ignore, logs);
+        ignore = get_ignore(line, linum, ignore);
         if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
         {
-            new_line = wrap_line(line);
+            new_line = wrap_line(line, linum);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);

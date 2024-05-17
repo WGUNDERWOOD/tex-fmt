@@ -1,6 +1,6 @@
 //use crate::colors::*;
 use crate::indent::*;
-use crate::logging::*;
+//use crate::logging::*;
 use crate::subs::*;
 use crate::wrap::*;
 use crate::Cli;
@@ -44,15 +44,13 @@ fn apply_passes(
     //Warn,
     //i,
     //format!(
-    //" Line {}: cannot be wrapped: {}{:.50}",
+    //"Line {}: cannot be wrapped: {}{:.50}...",
     //i, WHITE, line
     //),
     //);
     //}
     //}
     //}
-
-    logs.append(&mut new_logs);
     new_file
 }
 
