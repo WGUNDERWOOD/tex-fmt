@@ -19,7 +19,13 @@ impl Ignore {
     }
 }
 
-pub fn get_ignore(line: &str, i: usize, prev_ignore: Ignore) -> Ignore {
+pub fn get_ignore(
+    line: &str,
+    linum: usize,
+    filename: &str,
+    prev_ignore: Ignore,
+    logs: &mut Vec<Log>,
+) -> Ignore {
     let skip = contains_ignore_skip(line);
     let start = contains_ignore_start(line);
     let end = contains_ignore_end(line);
@@ -31,27 +37,32 @@ pub fn get_ignore(line: &str, i: usize, prev_ignore: Ignore) -> Ignore {
             block = true
         }
         if end {
-            record_log(
-                Warn,
-                i,
-                format!(
-                    " Line {}: no ignore block to end: {}{:.50}...",
-                    i, WHITE, line
-                ),
+            let message = format!(
+                " Line {}: no ignore block to end: {}{:.50}",
+                linum, WHITE, line
             );
+            let log = Log {
+                level: Warn,
+                linum,
+                message,
+                filename: filename.to_string(),
+            };
+            record_log(logs, log);
         }
     } else {
         // currently in ignore block
         if start {
-            record_log(
-                Warn,
-                i,
-                format!(
-                    " Line {}: cannot start ignore block \
-                        before ending previous block: {}{:.50}...",
-                    i, WHITE, line
-                ),
+            let message = format!(
+                " Line {}: cannot start ignore block before ending: {}{:.50}",
+                linum, WHITE, line
             );
+            let log = Log {
+                level: Warn,
+                linum,
+                message,
+                filename: filename.to_string(),
+            };
+            record_log(logs, log);
         }
         if end {
             block = false
