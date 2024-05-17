@@ -517,7 +517,6 @@ dependencies = [
  "env_logger",
  "lazy_static",
  "log",
- "once_cell",
  "regex",
  "rstest",
  "rstest_reuse",
