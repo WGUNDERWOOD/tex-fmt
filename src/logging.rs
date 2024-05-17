@@ -1,24 +1,10 @@
 use crate::colors::*;
-use crate::print::*;
 use crate::Cli;
 use env_logger::Builder;
 use log::Level;
-use log::Level::{Debug, Error, Info, Trace, Warn};
+use log::Level::{Error, Info, Warn};
 use log::LevelFilter;
-use once_cell::sync::Lazy;
-use std::collections::HashSet;
 use std::io::Write;
-use std::sync::Mutex;
-
-pub static LOGS: Lazy<Mutex<HashSet<Log>>> =
-    Lazy::new(|| Mutex::new(HashSet::new()));
-
-#[derive(Eq, Hash, PartialEq, Clone)]
-pub struct Log {
-    level: Level,
-    linum: usize,
-    message: String,
-}
 
 fn get_log_style(log_level: Level) -> String {
     match log_level {
@@ -50,25 +36,4 @@ pub fn init_logger(args: &Cli) {
             )
         })
         .init();
-}
-
-pub fn print_logs(filename: &str) {
-    let mut logs: Vec<Log> = vec![];
-    for log in LOGS.lock().unwrap().iter() {
-        logs.push(log.clone());
-    }
-    logs.sort_by_key(|l| l.linum);
-
-    if !logs.is_empty() {
-        print_filename(filename);
-    }
-    for log in logs {
-        match log.level {
-            Error => log::error!("{}", log.message),
-            Warn => log::warn!("{}", log.message),
-            Info => log::info!("{}", log.message),
-            Debug => log::debug!("{}", log.message),
-            Trace => log::trace!("{}", log.message),
-        }
-    }
 }

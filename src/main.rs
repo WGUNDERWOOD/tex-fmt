@@ -41,8 +41,6 @@ fn main() {
     print_script_name();
 
     for filename in &args.filenames {
-        LOGS.lock().unwrap().clear();
-
         if args.verbose {
             print_filename(filename);
         }
@@ -60,7 +58,5 @@ fn main() {
         } else {
             write_file(filename, &new_file);
         }
-
-        print_logs(filename);
     }
 }
