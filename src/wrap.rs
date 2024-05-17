@@ -1,7 +1,6 @@
-//use crate::colors::*;
+use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
-use crate::logging::*;
 use crate::regexes::*;
 
 const WRAP: usize = 80;
@@ -31,7 +30,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-fn wrap_line(line: &str, linum: usize) -> String {
+fn wrap_line(line: &str) -> String {
     log::info!("Wrap long line: {}{}", WHITE, line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
@@ -59,12 +58,6 @@ fn wrap_line(line: &str, linum: usize) -> String {
             }
             None => {
                 can_wrap = false;
-                log::error!(
-                    "Line {}: cannot be wrapped: {}{:.50}...",
-                    linum,
-                    WHITE,
-                    line
-                );
             }
         }
     }
@@ -72,20 +65,20 @@ fn wrap_line(line: &str, linum: usize) -> String {
     new_line
 }
 
-pub fn wrap(file: &str, filename: &str, logs: &mut Vec<Log>) -> String {
-    //log::info!("Wrapping file");
+pub fn wrap(file: &str) -> String {
+    log::info!("Wrapping file");
     let mut new_file = "".to_string();
     let mut new_line: String;
     let mut verbatim_count = 0;
     let mut ignore = Ignore::new();
-    for (linum, line) in file.lines().enumerate() {
+    for (i, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, linum, ignore);
+        ignore = get_ignore(line, i, ignore);
         if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
         {
-            new_line = wrap_line(line, linum);
+            new_line = wrap_line(line);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);

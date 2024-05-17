@@ -19,7 +19,7 @@ mod regexes;
 mod subs;
 mod wrap;
 mod write;
-//use crate::colors::*;
+use crate::colors::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::parse::*;
@@ -38,24 +38,22 @@ fn main() {
     };
 
     init_logger(&args);
-    if args.verbose {
-        print_script_name();
-    }
+    print_script_name();
 
     for filename in &args.filenames {
-        //LOGS.lock().unwrap().clear();
+        LOGS.lock().unwrap().clear();
 
         if args.verbose {
             print_filename(filename);
         }
 
         if !check_extension_valid(filename) {
-            //log::error!("File type invalid for {}{}", WHITE, filename);
+            log::error!("File type invalid for {}{}", WHITE, filename);
             continue;
         };
 
         let file = fs::read_to_string(filename).unwrap();
-        let new_file = format_file(&file, &args, filename, &mut logs);
+        let new_file = format_file(&file, &args);
 
         if args.print {
             print_file(&new_file);
@@ -63,6 +61,6 @@ fn main() {
             write_file(filename, &new_file);
         }
 
-        //print_logs(filename);
+        print_logs(filename);
     }
 }
