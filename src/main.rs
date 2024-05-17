@@ -51,7 +51,7 @@ fn main() {
         };
 
         let file = fs::read_to_string(filename).unwrap();
-        let new_file = format_file(&file, &args);
+        let new_file = format_file(&file, filename, &args);
 
         if args.print {
             print_file(&new_file);
