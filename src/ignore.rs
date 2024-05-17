@@ -17,7 +17,12 @@ impl Ignore {
     }
 }
 
-pub fn get_ignore(line: &str, i: usize, ignore: Ignore, filename: &str) -> Ignore {
+pub fn get_ignore(
+    line: &str,
+    i: usize,
+    ignore: Ignore,
+    filename: &str,
+) -> Ignore {
     let skip = contains_ignore_skip(line);
     let start = contains_ignore_start(line);
     let end = contains_ignore_end(line);

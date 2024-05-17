@@ -104,12 +104,10 @@ pub fn wrap(file: &str, filename: &str) -> String {
                     YELLOW,
                     RESET,
                     line,
-                    );
+                );
             }
         }
     }
-
-
 
     new_file
 }
@@ -122,22 +120,22 @@ fn test_wrap_line() {
         Therefore it should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it should be split.";
-    assert_eq!(wrap_line(s_in, 0), s_out);
+    assert_eq!(wrap_line(s_in), s_out);
     // break before comment
     let s_in = "This line is too long because it has more than eighty characters inside it. \
         Therefore it % should be split.";
     let s_out = "This line is too long because it has more than eighty characters inside it.\n \
         Therefore it % should be split.";
-    assert_eq!(wrap_line(s_in, 0), s_out);
+    assert_eq!(wrap_line(s_in), s_out);
     // break after comment
     let s_in = "This line is too long because % it has more than eighty characters inside it. \
         Therefore it should be split.";
     let s_out = "This line is too long because % it has more than eighty characters inside it.\n\
         % Therefore it should be split.";
-    assert_eq!(wrap_line(s_in, 0), s_out);
+    assert_eq!(wrap_line(s_in), s_out);
     // leading spaces
     let s_in = "    Thislineistoolongbecauseithasmorethaneightycharactersinsideiteventhoughitstartswithspaces. \
         Thereforeitshouldbesplit.";
     let s_out = s_in;
-    assert_eq!(wrap_line(s_in, 0), s_out);
+    assert_eq!(wrap_line(s_in), s_out);
 }
