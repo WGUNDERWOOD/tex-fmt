@@ -5,7 +5,7 @@ pub fn print_script_name() {
 }
 
 pub fn print_filename(filename: &str) {
-    println!("{}", String::new() + PURPLE + filename + RESET);
+    println!("{}{}{}{}{}", PINK, "tex-fmt ", PURPLE, filename, RESET);
 }
 
 pub fn print_file(new_file: &str) {

@@ -1,10 +1,10 @@
-use crate::colors::*;
+//use crate::colors::*;
 use crate::indent::*;
-use crate::logging::*;
+//use crate::logging::*;
 use crate::subs::*;
 use crate::wrap::*;
 use crate::Cli;
-use log::Level::Warn;
+//use log::Level::Warn;
 
 const MAX_TRIES: u8 = 10;
 
@@ -30,20 +30,20 @@ fn apply_passes(file: &str, args: &Cli) -> String {
     }
 
     // TODO move this logging into wrap.rs
-    if needs_wrap(&new_file) {
-        for (i, line) in new_file.lines().enumerate() {
-            if line_needs_wrap(line) {
-                record_log(
-                    Warn,
-                    i,
-                    format!(
-                        " Line {}: cannot be wrapped: {}{:.50}...",
-                        i, WHITE, line
-                    ),
-                );
-            }
-        }
-    }
+    //if needs_wrap(&new_file) {
+    //for (i, line) in new_file.lines().enumerate() {
+    //if line_needs_wrap(line) {
+    //record_log(
+    //Warn,
+    //i,
+    //format!(
+    //"Line {}: cannot be wrapped: {}{:.50}...",
+    //i, WHITE, line
+    //),
+    //);
+    //}
+    //}
+    //}
     new_file
 }
 
