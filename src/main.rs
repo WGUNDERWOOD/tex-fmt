@@ -38,10 +38,12 @@ fn main() {
     };
 
     init_logger(&args);
-    print_script_name();
+    if args.verbose {
+        print_script_name();
+    }
 
     for filename in &args.filenames {
-        LOGS.lock().unwrap().clear();
+        //LOGS.lock().unwrap().clear();
 
         if args.verbose {
             print_filename(filename);
@@ -61,6 +63,6 @@ fn main() {
             write_file(filename, &new_file);
         }
 
-        print_logs(filename);
+        //print_logs(filename);
     }
 }
