@@ -102,7 +102,7 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, args: &Cli) -> String {
+pub fn apply_indent(file: &str, filename: &str, args: &Cli) -> String {
     log::info!("Indenting file");
 
     let mut indent = Indent::new();
@@ -110,11 +110,11 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
     let mut new_file = String::with_capacity(file.len());
     let mut verbatim_count = 0;
 
-    for (i, line) in file.lines().enumerate() {
+    for (linum, line) in file.lines().enumerate() {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, i, ignore);
+        ignore = get_ignore(line, linum, ignore, filename);
         if verbatim_count == 0 && !is_ignored(&ignore) {
             // calculate indent
             let comment_index = find_comment_index(line);
@@ -122,7 +122,7 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
             indent = get_indent(line_strip, indent);
             log::info!(
                 "Indent line {}: actual = {}, visual = {}:{} {}",
-                i,
+                linum,
                 indent.actual,
                 indent.visual,
                 WHITE,
@@ -130,12 +130,21 @@ pub fn apply_indent(file: &str, args: &Cli) -> String {
             );
 
             if (indent.visual < 0) || (indent.actual < 0) {
-                log::error!(
-                    "Line {}: indent is negative: {}{:.50}",
-                    i,
+
+                log::warn!(
+                    "{}tex-fmt {}{}: {}Line {}. \
+                    {}Indent is negative: \
+                    {}{:.50}",
+                    PINK,
+                    PURPLE,
+                    filename,
                     WHITE,
-                    line
-                );
+                    linum,
+                    YELLOW,
+                    RESET,
+                    line,
+                    );
+
             }
 
             if !args.debug {

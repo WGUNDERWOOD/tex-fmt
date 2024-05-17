@@ -17,31 +17,38 @@ impl Ignore {
     }
 }
 
-pub fn get_ignore(line: &str, i: usize, prev_ignore: Ignore) -> Ignore {
+pub fn get_ignore(line: &str, i: usize, ignore: Ignore, filename: &str) -> Ignore {
     let skip = contains_ignore_skip(line);
     let start = contains_ignore_start(line);
     let end = contains_ignore_end(line);
-    let mut block = prev_ignore.block;
+    let mut block = ignore.block;
 
-    if !prev_ignore.block {
+    if !ignore.block {
         // not currently in ignore block
         if start {
             block = true
         }
         if end {
             log::warn!(
-                " Line {}: no ignore block to end: {}{:.50}...",
-                i,
+                "{}tex-fmt {}{}: {}Line {}. \
+                {}No ignore block to end: \
+                {}{:.50}",
+                PINK,
+                PURPLE,
+                filename,
                 WHITE,
-                line
+                i,
+                YELLOW,
+                RESET,
+                line,
             );
         }
     } else {
         // currently in ignore block
         if start {
             log::warn!(
-                " Line {}: cannot start ignore block \
-                        before ending previous block: {}{:.50}...",
+                "Line {}: cannot start ignore block \
+                        before ending previous block: {}{:.50}",
                 i,
                 WHITE,
                 line
