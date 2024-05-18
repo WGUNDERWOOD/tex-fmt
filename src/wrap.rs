@@ -93,7 +93,6 @@ pub fn wrap(
     args: &Cli,
 ) -> String {
     if args.verbose {
-        // TODO this check should be in record_log fn
         record_log(
             logs,
             Info,
