@@ -8,6 +8,8 @@ use log::Level::{Error, Info};
 
 const WRAP: usize = 80;
 
+// TODO add warning about long verbatim lines
+
 pub fn needs_wrap(file: &str) -> bool {
     file.lines().any(|l| l.len() > WRAP)
 }
@@ -78,6 +80,15 @@ fn wrap_line(
             }
             None => {
                 can_wrap = false;
+                record_log(
+                    logs,
+                    Error,
+                    pass,
+                    filename.to_string(),
+                    Some(linum),
+                    Some(line.to_string()),
+                    "Line cannot be wrapped.".to_string(),
+                );
             }
         }
     }
@@ -122,23 +133,6 @@ pub fn wrap(
         new_file.push('\n');
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
-        }
-    }
-
-    if needs_wrap(&new_file) {
-        for (linum, line) in new_file.lines().enumerate() {
-            if line_needs_wrap(line) {
-                // TODO check how this works with verbatim and ignore
-                record_log(
-                    logs,
-                    Error,
-                    pass,
-                    filename.to_string(),
-                    Some(linum),
-                    Some(line.to_string()),
-                    "Line cannot be wrapped.".to_string(),
-                );
-            }
         }
     }
 
