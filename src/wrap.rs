@@ -66,7 +66,12 @@ fn wrap_line(line: &str) -> String {
     new_line
 }
 
-pub fn wrap(file: &str, filename: &str, logs: &mut Vec<Log>, pass: Option<usize>) -> String {
+pub fn wrap(
+    file: &str,
+    filename: &str,
+    logs: &mut Vec<Log>,
+    pass: Option<usize>,
+) -> String {
     //log::info!("Wrapping file");
     let mut new_file = "".to_string();
     let mut new_line: String;

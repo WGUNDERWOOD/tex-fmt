@@ -39,17 +39,18 @@ fn main() {
     init_logger(&args);
 
     for filename in &args.filenames {
-
         let mut logs: Vec<Log> = vec![];
-        record_log(
-            &mut logs,
-            Info,
-            None,
-            filename.to_string(),
-            None,
-            None,
-            "Begin indenting.".to_string(),
-        );
+        if args.verbose {
+            record_log(
+                &mut logs,
+                Info,
+                None,
+                filename.to_string(),
+                None,
+                None,
+                "Begin indenting.".to_string(),
+            );
+        }
 
         let extension_valid = check_extension_valid(filename);
         if extension_valid {

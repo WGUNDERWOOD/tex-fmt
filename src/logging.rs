@@ -5,8 +5,8 @@ use log::Level;
 use log::Level::{Error, Info, Warn};
 use log::LevelFilter;
 use std::io::Write;
-use std::time::Instant;
 use std::path::Path;
+use std::time::Instant;
 
 #[derive(Debug)]
 pub struct Log {
@@ -73,8 +73,7 @@ pub fn init_logger(args: &Cli) {
 }
 
 pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
-
-    if get_log_level(args) == LevelFilter::Warn {
+    if get_log_level(args) == LevelFilter::Warn && !logs.is_empty() {
         let max_pass = &logs.iter().map(|l| l.pass).max().unwrap();
         logs.retain(|l| l.pass == *max_pass || l.pass == None);
     }
@@ -96,7 +95,11 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
             "{}tex-fmt {}{}: {}{}{}{} {}{:.50}",
             PINK,
             PURPLE,
-            Path::new(&log.filename).file_name().unwrap().to_str().unwrap(),
+            Path::new(&log.filename)
+                .file_name()
+                .unwrap()
+                .to_str()
+                .unwrap(),
             WHITE,
             linum,
             YELLOW,

@@ -111,15 +111,17 @@ pub fn apply_indent(
     logs: &mut Vec<Log>,
     pass: Option<usize>,
 ) -> String {
-    record_log(
-        logs,
-        Info,
-        pass,
-        filename.to_string(),
-        None,
-        None,
-        format!("Indent pass {}.", pass.unwrap()),
-    );
+    if args.verbose {
+        record_log(
+            logs,
+            Info,
+            pass,
+            filename.to_string(),
+            None,
+            None,
+            format!("Indent pass {}.", pass.unwrap()),
+        );
+    }
 
     let mut indent = Indent::new();
     let mut ignore = Ignore::new();
@@ -136,15 +138,20 @@ pub fn apply_indent(
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
             indent = get_indent(line_strip, indent);
-            record_log(
-                logs,
-                Info,
-                pass,
-                filename.to_string(),
-                Some(linum),
-                Some(line.to_string()),
-                format!("Indent: actual = {}, visual = {}", indent.actual, indent.visual),
-            );
+            if args.verbose {
+                record_log(
+                    logs,
+                    Info,
+                    pass,
+                    filename.to_string(),
+                    Some(linum),
+                    Some(line.to_string()),
+                    format!(
+                        "Indent: actual = {}, visual = {}",
+                        indent.actual, indent.visual
+                    ),
+                );
+            }
 
             if (indent.visual < 0) || (indent.actual < 0) {
                 record_log(
