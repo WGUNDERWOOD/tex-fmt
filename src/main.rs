@@ -15,7 +15,6 @@ mod ignore;
 mod indent;
 mod logging;
 mod parse;
-mod print;
 mod regexes;
 mod subs;
 mod wrap;
@@ -23,7 +22,6 @@ mod write;
 use crate::format::*;
 use crate::logging::*;
 use crate::parse::*;
-use crate::print::*;
 use crate::write::*;
 
 #[cfg(test)]
@@ -57,7 +55,7 @@ fn main() {
             let file = fs::read_to_string(filename).unwrap();
             let new_file = format_file(&file, filename, &args, &mut logs);
             if args.print {
-                print_file(&new_file);
+                println!("{}", &new_file);
             } else {
                 write_file(filename, &new_file);
             }
