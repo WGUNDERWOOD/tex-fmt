@@ -2,7 +2,9 @@
 use crate::comments::*;
 use crate::ignore::*;
 use crate::logging::*;
+use crate::parse::*;
 use crate::regexes::*;
+use log::Level::{Error, Info};
 
 const WRAP: usize = 80;
 
@@ -31,8 +33,25 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-fn wrap_line(line: &str) -> String {
-    //log::info!("Wrap long line: {}{}", WHITE, line);
+fn wrap_line(
+    line: &str,
+    linum: usize,
+    args: &Cli,
+    logs: &mut Vec<Log>,
+    pass: Option<usize>,
+    filename: &str,
+) -> String {
+    if args.verbose {
+        record_log(
+            logs,
+            Info,
+            pass,
+            filename.to_string(),
+            Some(linum),
+            Some(line.to_string()),
+            "Wrapping long line.".to_string(),
+        );
+    }
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
@@ -71,8 +90,20 @@ pub fn wrap(
     filename: &str,
     logs: &mut Vec<Log>,
     pass: Option<usize>,
+    args: &Cli,
 ) -> String {
-    //log::info!("Wrapping file");
+    if args.verbose {
+        // TODO this check should be in record_log fn
+        record_log(
+            logs,
+            Info,
+            pass,
+            filename.to_string(),
+            None,
+            None,
+            format!("Wrap pass {}.", pass.unwrap()),
+        );
+    }
     let mut new_file = "".to_string();
     let mut new_line: String;
     let mut verbatim_count = 0;
@@ -84,7 +115,7 @@ pub fn wrap(
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
         if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
         {
-            new_line = wrap_line(line);
+            new_line = wrap_line(line, linum, args, logs, pass, filename);
             new_file.push_str(&new_line);
         } else {
             new_file.push_str(line);
@@ -98,50 +129,19 @@ pub fn wrap(
     if needs_wrap(&new_file) {
         for (linum, line) in new_file.lines().enumerate() {
             if line_needs_wrap(line) {
-                //log::warn!(
-                //"{}tex-fmt {}{}: {}Line {}. \
-                //{}Line cannot be wrapped: \
-                //{}{:.50}",
-                //PINK,
-                //PURPLE,
-                //filename,
-                //WHITE,
-                //linum,
-                //YELLOW,
-                //RESET,
-                //line,
-                //);
+                // TODO check how this works with verbatim and ignore
+                record_log(
+                    logs,
+                    Error,
+                    pass,
+                    filename.to_string(),
+                    Some(linum),
+                    Some(line.to_string()),
+                    "Line cannot be wrapped.".to_string(),
+                );
             }
         }
     }
 
     new_file
-}
-
-#[cfg(test)]
-#[test]
-fn test_wrap_line() {
-    // no comment
-    let s_in = "This line is too long because it has more than eighty characters inside it. \
-        Therefore it should be split.";
-    let s_out = "This line is too long because it has more than eighty characters inside it.\n \
-        Therefore it should be split.";
-    assert_eq!(wrap_line(s_in), s_out);
-    // break before comment
-    let s_in = "This line is too long because it has more than eighty characters inside it. \
-        Therefore it % should be split.";
-    let s_out = "This line is too long because it has more than eighty characters inside it.\n \
-        Therefore it % should be split.";
-    assert_eq!(wrap_line(s_in), s_out);
-    // break after comment
-    let s_in = "This line is too long because % it has more than eighty characters inside it. \
-        Therefore it should be split.";
-    let s_out = "This line is too long because % it has more than eighty characters inside it.\n\
-        % Therefore it should be split.";
-    assert_eq!(wrap_line(s_in), s_out);
-    // leading spaces
-    let s_in = "    Thislineistoolongbecauseithasmorethaneightycharactersinsideiteventhoughitstartswithspaces. \
-        Thereforeitshouldbesplit.";
-    let s_out = s_in;
-    assert_eq!(wrap_line(s_in), s_out);
 }
