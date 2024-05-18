@@ -7,10 +7,12 @@
 ** Ignore source lines
 ** Documentation
 ** Find todos
+** \item should be on a new line
 * Bugs
 ** Handle list items and comments properly
 ** Handle verbatim and ignores better
 ** Only print ignore warnings once
+** Off by one in linums?
 * Logging
 ** Store all logs on the fly in a vector
 ** Print them all at the end in an intelligent way

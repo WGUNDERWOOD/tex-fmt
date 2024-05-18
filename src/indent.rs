@@ -129,8 +129,8 @@ pub fn apply_indent(
     let mut verbatim_count = 0;
 
     for (linum, line) in file.lines().enumerate() {
-        if RE_VERBATIM_BEGIN.is_match(line) {
-            verbatim_count += 1;
+        if RE_VERBATIM_END.is_match(line) {
+            verbatim_count -= 1;
         }
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, true);
         if verbatim_count == 0 && !is_ignored(&ignore) {
