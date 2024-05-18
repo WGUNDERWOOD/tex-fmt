@@ -1,7 +1,13 @@
 use lazy_static::lazy_static;
 use regex::Regex;
 
-const LISTS: [&str; 4] = ["itemize", "enumerate", "description", "inlineroman"];
+const LISTS: [&str; 5] = [
+    "itemize",
+    "enumerate",
+    "description",
+    "inlineroman",
+    "inventory",
+];
 
 lazy_static! {
     pub static ref RE_NEWLINES: Regex = Regex::new(r"\n\n\n+").unwrap();

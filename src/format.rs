@@ -3,7 +3,7 @@ use crate::logging::*;
 use crate::subs::*;
 use crate::wrap::*;
 use crate::Cli;
-use log::Level::Error;
+use log::Level::{Error, Info};
 
 const MAX_PASS: usize = 10;
 
@@ -51,6 +51,17 @@ pub fn format_file(
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> String {
+    if args.verbose {
+        record_log(
+            logs,
+            Info,
+            None,
+            filename.to_string(),
+            None,
+            None,
+            "Begin indenting.".to_string(),
+        );
+    }
     let mut new_file = remove_extra_newlines(file);
     new_file = begin_end_environments_new_line(&new_file);
     new_file = remove_tabs(&new_file);

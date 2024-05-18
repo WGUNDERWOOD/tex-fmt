@@ -63,7 +63,7 @@ E = m c^2
 </tr>
 </table>
 
-- ⚡ Very good run-time performance
+- ⚡ Extremely fast run-time performance
 - 🔧 No configuration necessary
 - 📟 Command-line interface
 - 📜 Handles LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`

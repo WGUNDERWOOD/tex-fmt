@@ -1,5 +1,5 @@
 use clap::Parser;
-use log::Level::{Error, Info};
+use log::Level::Error;
 #[allow(unused_imports)]
 use rstest::rstest;
 #[allow(unused_imports)]
@@ -38,18 +38,6 @@ fn main() {
 
     for filename in &args.filenames {
         let mut logs: Vec<Log> = vec![];
-        if args.verbose {
-            record_log(
-                &mut logs,
-                Info,
-                None,
-                filename.to_string(),
-                None,
-                None,
-                "Begin indenting.".to_string(),
-            );
-        }
-
         let extension_valid = check_extension_valid(filename);
         if extension_valid {
             let file = fs::read_to_string(filename).unwrap();
