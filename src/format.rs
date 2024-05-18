@@ -19,7 +19,7 @@ fn apply_passes(
 
     while needs_wrap(&new_file) && !finished && pass < MAX_PASS + 2 {
         let old_file = new_file.clone();
-        new_file = wrap(&new_file, filename, logs, Some(pass));
+        new_file = wrap(&new_file, filename, logs, Some(pass), args);
         new_file = remove_trailing_spaces(&new_file);
         new_file = apply_indent(&new_file, filename, args, logs, Some(pass));
         pass += 1;
@@ -38,7 +38,7 @@ fn apply_passes(
             filename.to_string(),
             None,
             None,
-            "Indent does not return to zero at end of file.".to_string(),
+            "Indent does not return to zero.".to_string(),
         );
     }
 

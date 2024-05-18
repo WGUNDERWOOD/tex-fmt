@@ -75,7 +75,7 @@ pub fn init_logger(args: &Cli) {
 pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
     if get_log_level(args) == LevelFilter::Warn && !logs.is_empty() {
         let max_pass = &logs.iter().map(|l| l.pass).max().unwrap();
-        logs.retain(|l| l.pass == *max_pass || l.pass == None);
+        logs.retain(|l| l.pass == *max_pass || l.pass.is_none());
     }
 
     logs.sort_by_key(|l| l.time);
