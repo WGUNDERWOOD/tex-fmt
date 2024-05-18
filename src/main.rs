@@ -1,4 +1,5 @@
 use clap::Parser;
+use log::Level::{Error, Info};
 #[allow(unused_imports)]
 use rstest::rstest;
 #[allow(unused_imports)]
@@ -19,7 +20,6 @@ mod regexes;
 mod subs;
 mod wrap;
 mod write;
-use crate::colors::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::parse::*;
@@ -30,7 +30,6 @@ use crate::write::*;
 mod tests;
 
 fn main() {
-    // get arguments
     let mut args = Cli::parse();
     if args.debug {
         args.print = true;
@@ -38,25 +37,41 @@ fn main() {
     };
 
     init_logger(&args);
-    print_script_name();
 
     for filename in &args.filenames {
-        if args.verbose {
-            print_filename(filename);
-        }
 
-        if !check_extension_valid(filename) {
-            log::error!("File type invalid for {}{}", WHITE, filename);
-            continue;
+        let mut logs: Vec<Log> = vec![];
+        record_log(
+            &mut logs,
+            Info,
+            None,
+            filename.to_string(),
+            None,
+            None,
+            "Begin indenting.".to_string(),
+        );
+
+        let extension_valid = check_extension_valid(filename);
+        if extension_valid {
+            let file = fs::read_to_string(filename).unwrap();
+            let new_file = format_file(&file, filename, &args, &mut logs);
+            if args.print {
+                print_file(&new_file);
+            } else {
+                write_file(filename, &new_file);
+            }
+        } else {
+            record_log(
+                &mut logs,
+                Error,
+                None,
+                filename.to_string(),
+                None,
+                None,
+                "File type invalid.".to_string(),
+            );
         };
 
-        let file = fs::read_to_string(filename).unwrap();
-        let new_file = format_file(&file, filename, &args);
-
-        if args.print {
-            print_file(&new_file);
-        } else {
-            write_file(filename, &new_file);
-        }
+        print_logs(&args, logs);
     }
 }
