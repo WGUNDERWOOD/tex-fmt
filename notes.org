@@ -11,3 +11,7 @@
 ** Handle list items and comments properly
 ** Handle verbatim and ignores better
 ** Only print ignore warnings once
+* Logging
+** Store all logs on the fly in a vector
+** Print them all at the end in an intelligent way
+** Avoid panics to make sure we always reach the end

@@ -1,10 +1,12 @@
-use crate::colors::*;
+//use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
+use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
 use core::cmp::max;
+use log::Level::{Info, Warn};
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -102,8 +104,22 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
-pub fn apply_indent(file: &str, filename: &str, args: &Cli) -> String {
-    log::info!("Indenting file");
+pub fn apply_indent(
+    file: &str,
+    filename: &str,
+    args: &Cli,
+    logs: &mut Vec<Log>,
+    pass: Option<usize>,
+) -> String {
+    record_log(
+        logs,
+        Info,
+        pass,
+        filename.to_string(),
+        None,
+        None,
+        format!("Indent pass {}.", pass.unwrap()),
+    );
 
     let mut indent = Indent::new();
     let mut ignore = Ignore::new();
@@ -114,34 +130,31 @@ pub fn apply_indent(file: &str, filename: &str, args: &Cli) -> String {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, linum, ignore, filename);
+        ignore = get_ignore(line, linum, ignore, filename, logs, pass, true);
         if verbatim_count == 0 && !is_ignored(&ignore) {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
             indent = get_indent(line_strip, indent);
-            log::info!(
-                "Indent line {}: actual = {}, visual = {}:{} {}",
-                linum,
-                indent.actual,
-                indent.visual,
-                WHITE,
-                line,
+            record_log(
+                logs,
+                Info,
+                pass,
+                filename.to_string(),
+                Some(linum),
+                Some(line.to_string()),
+                format!("Indent: actual = {}, visual = {}", indent.actual, indent.visual),
             );
 
             if (indent.visual < 0) || (indent.actual < 0) {
-                log::warn!(
-                    "{}tex-fmt {}{}: {}Line {}. \
-                    {}Indent is negative: \
-                    {}{:.50}",
-                    PINK,
-                    PURPLE,
-                    filename,
-                    WHITE,
-                    linum,
-                    YELLOW,
-                    RESET,
-                    line,
+                record_log(
+                    logs,
+                    Warn,
+                    pass,
+                    filename.to_string(),
+                    Some(linum),
+                    Some(line.to_string()),
+                    "Indent is negative.".to_string(),
                 );
             }
 

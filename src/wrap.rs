@@ -1,6 +1,7 @@
-use crate::colors::*;
+//use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
+use crate::logging::*;
 use crate::regexes::*;
 
 const WRAP: usize = 80;
@@ -31,7 +32,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
 }
 
 fn wrap_line(line: &str) -> String {
-    log::info!("Wrap long line: {}{}", WHITE, line);
+    //log::info!("Wrap long line: {}{}", WHITE, line);
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
@@ -65,8 +66,8 @@ fn wrap_line(line: &str) -> String {
     new_line
 }
 
-pub fn wrap(file: &str, filename: &str) -> String {
-    log::info!("Wrapping file");
+pub fn wrap(file: &str, filename: &str, logs: &mut Vec<Log>, pass: Option<usize>) -> String {
+    //log::info!("Wrapping file");
     let mut new_file = "".to_string();
     let mut new_line: String;
     let mut verbatim_count = 0;
@@ -75,7 +76,7 @@ pub fn wrap(file: &str, filename: &str) -> String {
         if RE_VERBATIM_BEGIN.is_match(line) {
             verbatim_count += 1;
         }
-        ignore = get_ignore(line, linum, ignore, filename);
+        ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
         if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
         {
             new_line = wrap_line(line);
@@ -92,19 +93,19 @@ pub fn wrap(file: &str, filename: &str) -> String {
     if needs_wrap(&new_file) {
         for (linum, line) in new_file.lines().enumerate() {
             if line_needs_wrap(line) {
-                log::warn!(
-                    "{}tex-fmt {}{}: {}Line {}. \
-                    {}Line cannot be wrapped: \
-                    {}{:.50}",
-                    PINK,
-                    PURPLE,
-                    filename,
-                    WHITE,
-                    linum,
-                    YELLOW,
-                    RESET,
-                    line,
-                );
+                //log::warn!(
+                //"{}tex-fmt {}{}: {}Line {}. \
+                //{}Line cannot be wrapped: \
+                //{}{:.50}",
+                //PINK,
+                //PURPLE,
+                //filename,
+                //WHITE,
+                //linum,
+                //YELLOW,
+                //RESET,
+                //line,
+                //);
             }
         }
     }

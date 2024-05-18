@@ -1,4 +1,5 @@
-use crate::colors::*;
+use crate::logging::*;
+use log::Level::Error;
 
 //const IG_STARTS: [&str; 1] = ["\\begin{verbatim}"];
 //const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
@@ -19,9 +20,12 @@ impl Ignore {
 
 pub fn get_ignore(
     line: &str,
-    i: usize,
+    linum: usize,
     ignore: Ignore,
     filename: &str,
+    logs: &mut Vec<Log>,
+    pass: Option<usize>,
+    warn: bool,
 ) -> Ignore {
     let skip = contains_ignore_skip(line);
     let start = contains_ignore_start(line);
@@ -33,30 +37,28 @@ pub fn get_ignore(
         if start {
             block = true
         }
-        if end {
-            log::warn!(
-                "{}tex-fmt {}{}: {}Line {}. \
-                {}No ignore block to end: \
-                {}{:.50}",
-                PINK,
-                PURPLE,
-                filename,
-                WHITE,
-                i,
-                YELLOW,
-                RESET,
-                line,
+        if end && warn {
+            record_log(
+                logs,
+                Error,
+                pass,
+                filename.to_string(),
+                Some(linum),
+                Some(line.to_string()),
+                "No ignore block to end:".to_string(),
             );
         }
     } else {
         // currently in ignore block
-        if start {
-            log::warn!(
-                "Line {}: cannot start ignore block \
-                        before ending previous block: {}{:.50}",
-                i,
-                WHITE,
-                line
+        if start && warn {
+            record_log(
+                logs,
+                Error,
+                pass,
+                filename.to_string(),
+                Some(linum),
+                Some(line.to_string()),
+                "Cannot start ignore block:".to_string(),
             );
         }
         if end {
