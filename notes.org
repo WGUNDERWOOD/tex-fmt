@@ -8,5 +8,4 @@
 ** Implement all flags
 * Bugs
 ** Handle verbatim and ignores better
-** Off by one in linums
 ** Avoid panics to ensure logs are printed

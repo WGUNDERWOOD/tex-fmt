@@ -82,7 +82,8 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
 
     for log in logs {
         let linum = match log.linum {
-            Some(i) => format!("Line {}. ", i),
+            // linums start from 1
+            Some(i) => format!("Line {}. ", i + 1),
             None => "".to_string(),
         };
 
