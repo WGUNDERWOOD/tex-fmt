@@ -13,6 +13,7 @@ mod comments;
 mod format;
 mod ignore;
 mod indent;
+mod leave;
 mod logging;
 mod parse;
 mod regexes;

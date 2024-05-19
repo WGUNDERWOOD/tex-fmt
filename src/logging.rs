@@ -19,7 +19,6 @@ pub struct Log {
     pub message: String,
 }
 
-// TODO strip message spaces
 pub fn record_log(
     logs: &mut Vec<Log>,
     level: Level,
@@ -89,7 +88,7 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
         };
 
         let line = match &log.line {
-            Some(l) => l.to_string(),
+            Some(l) => l.trim_start().to_string(),
             None => "".to_string(),
         };
 

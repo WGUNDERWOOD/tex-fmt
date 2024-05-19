@@ -6,5 +6,3 @@
 ** Find todos
 * Features
 ** Implement all flags
-* Bugs
-** Handle verbatim and ignores better

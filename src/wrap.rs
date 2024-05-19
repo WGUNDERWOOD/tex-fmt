@@ -1,8 +1,8 @@
 use crate::comments::*;
 use crate::ignore::*;
+use crate::leave::*;
 use crate::logging::*;
 use crate::parse::*;
-use crate::regexes::*;
 use log::Level::{Info, Warn};
 
 const WRAP: usize = 80;
@@ -99,14 +99,12 @@ pub fn wrap(
         );
     }
     let mut new_file = "".to_string();
-    let mut verbatim_count = 0;
     let mut ignore = Ignore::new();
+    let mut leave = Leave::new();
     for (linum, line) in file.lines().enumerate() {
-        if RE_VERBATIM_END.is_match(line) {
-            verbatim_count -= 1;
-        }
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
-        if needs_wrap(line) && verbatim_count == 0 && !ignore.visual {
+        leave = get_leave(line, linum, leave, filename, logs, pass, false);
+        if needs_wrap(line) && !leave.visual && !ignore.visual {
             let new_line = wrap_line(line, linum, args, logs, pass, filename);
             new_file.push_str(&new_line);
             if needs_wrap(&new_line) && !ignore.visual {
@@ -135,9 +133,6 @@ pub fn wrap(
             }
         }
         new_file.push('\n');
-        if RE_VERBATIM_BEGIN.is_match(line) {
-            verbatim_count += 1;
-        }
     }
 
     new_file
