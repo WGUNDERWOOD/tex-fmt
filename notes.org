@@ -3,13 +3,3 @@
 ** Look for problem cases in other latex documents
 ** Tidy code
 ** Documentation
-* Features
-** Implement all flags
-*** DONE print
-**** Do not modify files
-*** TODO trace
-**** Print trace logs
-*** TODO verbose
-**** Print info logs
-*** TODO indent
-**** Do not modify line breaks
