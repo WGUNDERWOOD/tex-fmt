@@ -1,5 +1,7 @@
 #+title: tex-fmt
 * Tasks
-** Look for problem cases in other latex documents
+** Check other latex files
 ** Tidy code
 ** Documentation
+** Try wrapping spaceless lines
+** Substitutions should obey ignores and leaves
