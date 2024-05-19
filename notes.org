@@ -3,6 +3,5 @@
 ** Look for problem cases in other latex documents
 ** Tidy code
 ** Documentation
-** Find todos
 * Features
 ** Implement all flags
