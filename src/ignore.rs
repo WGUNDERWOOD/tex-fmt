@@ -1,9 +1,6 @@
 use crate::logging::*;
 use log::Level::Warn;
 
-//const IG_STARTS: [&str; 1] = ["\\begin{verbatim}"];
-//const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
-
 pub struct Ignore {
     pub actual: bool,
     pub visual: bool,
@@ -28,7 +25,7 @@ pub fn get_ignore(
     warn: bool,
 ) -> Ignore {
     let skip = contains_ignore_skip(line);
-    let start = contains_ignore_start(line);
+    let begin = contains_ignore_begin(line);
     let end = contains_ignore_end(line);
     let actual: bool;
     let visual: bool;
@@ -36,7 +33,7 @@ pub fn get_ignore(
     if skip {
         actual = ignore.actual;
         visual = true;
-    } else if start {
+    } else if begin {
         actual = true;
         visual = true;
         if ignore.actual && warn {
@@ -47,7 +44,7 @@ pub fn get_ignore(
                 filename.to_string(),
                 Some(linum),
                 Some(line.to_string()),
-                "Cannot start ignore block:".to_string(),
+                "Cannot begin ignore block:".to_string(),
             );
         }
     } else if end {
@@ -76,7 +73,7 @@ fn contains_ignore_skip(line: &str) -> bool {
     line.ends_with("% tex-fmt: skip")
 }
 
-fn contains_ignore_start(line: &str) -> bool {
+fn contains_ignore_begin(line: &str) -> bool {
     line.ends_with("% tex-fmt: off")
 }
 

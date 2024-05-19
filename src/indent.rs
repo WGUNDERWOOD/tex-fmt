@@ -1,5 +1,6 @@
 use crate::comments::*;
 use crate::ignore::*;
+use crate::leave::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
@@ -124,15 +125,14 @@ pub fn apply_indent(
 
     let mut indent = Indent::new();
     let mut ignore = Ignore::new();
+    let mut leave = Leave::new();
     let mut new_file = String::with_capacity(file.len());
-    let mut verbatim_count = 0;
 
     for (linum, line) in file.lines().enumerate() {
-        if RE_VERBATIM_END.is_match(line) {
-            verbatim_count -= 1;
-        }
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, true);
-        if verbatim_count == 0 && !ignore.visual {
+        leave = get_leave(line, linum, leave, filename, logs, pass, true);
+
+        if !leave.visual && !ignore.visual {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
@@ -186,9 +186,6 @@ pub fn apply_indent(
             new_file.push_str(line);
         }
         new_file.push('\n');
-        if RE_VERBATIM_BEGIN.is_match(line) {
-            verbatim_count += 1;
-        }
     }
 
     new_file

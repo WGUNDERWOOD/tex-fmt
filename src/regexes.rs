@@ -9,6 +9,8 @@ const LISTS: [&str; 5] = [
     "inventory",
 ];
 
+const LEAVES: [&str; 3] = ["verbatim", "lstlisting", "minted"];
+
 lazy_static! {
     pub static ref RE_NEWLINES: Regex = Regex::new(r"\n\n\n+").unwrap();
     pub static ref RE_TABS: Regex = Regex::new(r"\t").unwrap();
@@ -18,10 +20,14 @@ lazy_static! {
         Regex::new(r"\\begin\{document\}").unwrap();
     pub static ref RE_DOCUMENT_END: Regex =
         Regex::new(r"\\end\{document\}").unwrap();
-    pub static ref RE_VERBATIM_BEGIN: Regex =
-        Regex::new(r"\\begin\{verbatim\}").unwrap();
-    pub static ref RE_VERBATIM_END: Regex =
-        Regex::new(r"\\end\{verbatim\}").unwrap();
+    pub static ref RE_LEAVES_BEGIN: Vec<Regex> = LEAVES
+        .iter()
+        .map(|l| Regex::new(&format!(r"\\begin\{{{}}}", l)).unwrap())
+        .collect();
+    pub static ref RE_LEAVES_END: Vec<Regex> = LEAVES
+        .iter()
+        .map(|l| Regex::new(&format!(r"\\end\{{{}}}", l)).unwrap())
+        .collect();
     pub static ref RE_ENV_BEGIN: Regex = Regex::new(r"\\begin\{").unwrap();
     pub static ref RE_ENV_END: Regex = Regex::new(r"\\end\{").unwrap();
     pub static ref RE_LISTS_BEGIN: Vec<Regex> = LISTS
