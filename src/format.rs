@@ -3,7 +3,7 @@ use crate::logging::*;
 use crate::subs::*;
 use crate::wrap::*;
 use crate::Cli;
-use log::Level::{Error, Info};
+use log::Level::{Warn, Info};
 
 const MAX_PASS: usize = 10;
 
@@ -32,7 +32,7 @@ fn apply_passes(
     if new_file.lines().last().unwrap().starts_with(' ') {
         record_log(
             logs,
-            Error,
+            Warn,
             None,
             filename.to_string(),
             None,

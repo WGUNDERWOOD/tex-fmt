@@ -1,5 +1,5 @@
 use crate::logging::*;
-use log::Level::Error;
+use log::Level::Warn;
 
 //const IG_STARTS: [&str; 1] = ["\\begin{verbatim}"];
 //const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
@@ -40,7 +40,7 @@ pub fn get_ignore(
         if end && warn {
             record_log(
                 logs,
-                Error,
+                Warn,
                 pass,
                 filename.to_string(),
                 Some(linum),
@@ -53,7 +53,7 @@ pub fn get_ignore(
         if start && warn {
             record_log(
                 logs,
-                Error,
+                Warn,
                 pass,
                 filename.to_string(),
                 Some(linum),

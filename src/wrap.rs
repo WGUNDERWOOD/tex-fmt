@@ -3,7 +3,7 @@ use crate::ignore::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
-use log::Level::{Error, Info};
+use log::Level::{Warn, Info};
 
 const WRAP: usize = 80;
 
@@ -112,7 +112,7 @@ pub fn wrap(
             if needs_wrap(&new_line) && !is_ignored(&ignore) {
                 record_log(
                     logs,
-                    Error,
+                    Warn,
                     pass,
                     filename.to_string(),
                     Some(linum),
@@ -125,7 +125,7 @@ pub fn wrap(
             if needs_wrap(line) && !is_ignored(&ignore) {
                 record_log(
                     logs,
-                    Error,
+                    Warn,
                     pass,
                     filename.to_string(),
                     Some(linum),
