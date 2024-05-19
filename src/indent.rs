@@ -1,4 +1,3 @@
-//use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
 use crate::logging::*;
@@ -26,7 +25,7 @@ impl Indent {
     }
 }
 
-/// calculate total indentation change due to current line
+// calculate total indentation change due to current line
 fn get_diff(line: &str) -> i8 {
     // documents get no global indentation
     if RE_DOCUMENT_BEGIN.is_match(line) || RE_DOCUMENT_END.is_match(line) {
@@ -60,7 +59,7 @@ fn get_diff(line: &str) -> i8 {
     diff
 }
 
-/// calculate dedentation for current line compared to previous
+// calculate dedentation for current line compared to previous
 fn get_back(line: &str) -> i8 {
     // documents get no global indentation
     if RE_DOCUMENT_END.is_match(line) {
