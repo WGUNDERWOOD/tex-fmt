@@ -5,9 +5,11 @@
 ** Documentation
 * Features
 ** Implement all flags
-*** indent
-**** Do not modify line breaks
-*** print
+*** DONE print
 **** Do not modify files
-*** verbose
+*** TODO trace
+**** Print trace logs
+*** TODO verbose
 **** Print info logs
+*** TODO indent
+**** Do not modify line breaks
