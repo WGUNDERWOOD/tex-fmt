@@ -5,3 +5,9 @@
 ** Documentation
 * Features
 ** Implement all flags
+*** indent
+**** Do not modify line breaks
+*** print
+**** Do not modify files
+*** verbose
+**** Print info logs

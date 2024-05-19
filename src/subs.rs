@@ -18,7 +18,10 @@ pub fn remove_trailing_spaces(file: &str) -> String {
 pub fn environments_new_line(file: &str) -> String {
     let mut new_file = "".to_string();
     for line in file.lines() {
-        if RE_ENV_BEGIN.is_match(line) || RE_ENV_END.is_match(line) || RE_ITEM.is_match(line) {
+        if RE_ENV_BEGIN.is_match(line)
+            || RE_ENV_END.is_match(line)
+            || RE_ITEM.is_match(line)
+        {
             let comment_index = find_comment_index(line);
             let comment = get_comment(line, comment_index);
             let text = remove_comment(line, comment_index);

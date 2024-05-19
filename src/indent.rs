@@ -162,16 +162,9 @@ pub fn apply_indent(
                     Some(line.to_string()),
                     "Indent is negative.".to_string(),
                 );
+                indent.actual = indent.actual.max(0);
+                indent.visual = indent.visual.max(0);
             }
-
-            if !args.debug {
-                if indent.actual < 0 {
-                    indent.actual = 0;
-                }
-                if indent.visual < 0 {
-                    indent.visual = 0;
-                }
-            };
 
             // apply indent
             let mut new_line = line.trim_start().to_string();
