@@ -147,7 +147,7 @@ pub fn apply_indent(
                     Some(linum),
                     Some(line.to_string()),
                     format!(
-                        "Indent: actual = {}, visual = {}.",
+                        "Indent: actual = {}, visual = {}:",
                         indent.actual, indent.visual
                     ),
                 );

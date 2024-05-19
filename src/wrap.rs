@@ -8,8 +8,6 @@ use log::Level::{Error, Info};
 
 const WRAP: usize = 80;
 
-// TODO add warning about long verbatim lines
-
 pub fn needs_wrap(file: &str) -> bool {
     file.lines().any(|l| l.len() > WRAP)
 }
@@ -80,15 +78,15 @@ fn wrap_line(
             }
             None => {
                 can_wrap = false;
-                record_log(
-                    logs,
-                    Error,
-                    pass,
-                    filename.to_string(),
-                    Some(linum),
-                    Some(line.to_string()),
-                    "Line cannot be wrapped.".to_string(),
-                );
+                //record_log(
+                //logs,
+                //Error,
+                //pass,
+                //filename.to_string(),
+                //Some(linum),
+                //Some(line.to_string()),
+                //"Line cannot be wrapped.".to_string(),
+                //);
             }
         }
     }
@@ -115,7 +113,6 @@ pub fn wrap(
         );
     }
     let mut new_file = "".to_string();
-    let mut new_line: String;
     let mut verbatim_count = 0;
     let mut ignore = Ignore::new();
     for (linum, line) in file.lines().enumerate() {
@@ -125,10 +122,32 @@ pub fn wrap(
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
         if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
         {
-            new_line = wrap_line(line, linum, args, logs, pass, filename);
+            let new_line = wrap_line(line, linum, args, logs, pass, filename);
             new_file.push_str(&new_line);
+            if line_needs_wrap(&new_line) && !is_ignored(&ignore) {
+                record_log(
+                    logs,
+                    Error,
+                    pass,
+                    filename.to_string(),
+                    Some(linum),
+                    Some(new_line),
+                    "Line cannot be wrapped:".to_string(),
+                );
+            }
         } else {
             new_file.push_str(line);
+            if line_needs_wrap(line) && !is_ignored(&ignore) {
+                record_log(
+                    logs,
+                    Error,
+                    pass,
+                    filename.to_string(),
+                    Some(linum),
+                    Some(line.to_string()),
+                    "Line cannot be wrapped:".to_string(),
+                );
+            }
         }
         new_file.push('\n');
         if RE_VERBATIM_BEGIN.is_match(line) {
