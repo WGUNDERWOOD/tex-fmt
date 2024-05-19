@@ -546,17 +546,21 @@ node/.append style={transform shape},}}
     distance=\cmdNW@vertex@distance]\cmdNW@vertex@position:\vertex@Label}}}
     \ifthenelse{\equal{\cmdNW@vertex@layer}{}}{
       \protected@edef\@tempa{%
-        \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,LocalVertexFill,LocalVertexShape,LocalLabel,\cmdNW@vertex@style,LocalPseudo](#1)%
-        at
-      (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
+        \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,
+          LocalVertexFill,LocalVertexShape,LocalLabel,
+        \cmdNW@vertex@style,LocalPseudo](#1)%
+        at (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,
+      \cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
       \@tempa;
     }{
       \begin{scope}[canvas is yx plane at
         z=(\cmdNW@vertex@layer-1)*\NetworkLayerDistance]
         \protected@edef\@tempa{%
-          \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,LocalVertexFill,LocalVertexShape,LocalLabel,\cmdNW@vertex@style,LocalPseudo](#1)%
-          at
-        (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,\cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
+          \noexpand\node[\vstyle,LocalVertexSize,LocalVertexOpacity,
+            LocalVertexFill,LocalVertexShape,LocalLabel,
+          \cmdNW@vertex@style,LocalPseudo](#1)%
+          at (\cmdNW@vertex@x*\DistanceScale\DefaultUnit,
+        \cmdNW@vertex@y*\DistanceScale\DefaultUnit){}}%
         \@tempa;
       \end{scope}
     }
@@ -709,7 +713,9 @@ node/.append style={transform shape},}}
     \fi
     % Check if a label is assigned, if so create a label variable
     \ifthenelse{\not\equal{\cmdNW@edge@label}{}}{
-      \def\edge@Label{node[EdgeLabelStyle,LocalTextOpacity,LocalEdgeFontColor,LocalEdgeFontSize,LocalEdgeFontScale,pos=\cmdNW@edge@distance,\cmdNW@edge@position]{\edge@L}}
+      \def\edge@Label{node[EdgeLabelStyle,LocalTextOpacity,LocalEdgeFontColor,
+          LocalEdgeFontSize,LocalEdgeFontScale,pos=\cmdNW@edge@distance,
+      \cmdNW@edge@position]{\edge@L}}
     }{
       \def\edge@Label{}
     }
@@ -722,17 +728,22 @@ node/.append style={transform shape},}}
           \edef\edge@pts{\edge@pts (\tmp) --}
         }
         \protected@edef\@tempa{%
-        \noexpand\draw[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style] (#2) -- \edge@pts (#3)}      \@tempa;
+          \noexpand\draw[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,
+        LocalArrow,\cmdNW@edge@style] (#2) -- \edge@pts (#3)}      \@tempa;
       }{
         \protected@edef\@tempa{%
-        \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style] (#2) edge [bend left = \cmdNW@edge@bend] \edge@Label (#3)}%
+          \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,
+          LocalArrow,\cmdNW@edge@style] (#2) edge [bend left = \cmdNW@edge@bend]
+        \edge@Label (#3)}%
         \@tempa;
       }
     }{% Self loop
       \protected@edef\@tempa{%
-        \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,LocalArrow,\cmdNW@edge@style]
-        (#2) edge
-      [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,out=\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,loop,distance=\cmdNW@edge@loopsize,] \edge@Label (#3)}%
+        \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,
+        LocalArrow,\cmdNW@edge@style]
+        (#2) edge [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,
+          out=\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,loop,
+      distance=\cmdNW@edge@loopsize,] \edge@Label (#3)}%
       \@tempa;
     }
   \end{scope}
@@ -807,7 +818,8 @@ node/.append style={transform shape},}}
   % Go through each row and create vertices
   \DTLforeach*{vertices}{}{%
     % reset storage variable to default values
-    \edef\vertex@Options{x=0,y=0,label={},size={},color={},fontcolor={},fontsize={},fontscale={},
+    \edef\vertex@Options{x=0,y=0,label={},size={},color={},fontcolor={},
+      fontsize={},fontscale={},
       opacity={},layer={},style={},NoLabel=false,IdAsLabel=false,
     Math=false,RGB=false,Pseudo=false,distance={0},position={center},shape={},}%
     \edef\vertex@rgbValues{}%
@@ -1236,7 +1248,8 @@ node/.append style={transform shape},}}
       \ifNW@plane@NoFill
       \else
       \protected@edef\@tempa{%
-        \noexpand\fill[PlaneFillStyle,LocalPlaneFill,LocalPlaneOpacity](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
+        \noexpand\fill[PlaneFillStyle,LocalPlaneFill,LocalPlaneOpacity](
+        \cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
         rectangle ++
       (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
       \@tempa;
@@ -1246,15 +1259,18 @@ node/.append style={transform shape},}}
         %\protected@edef\@tempa{%
         %\noexpand
         \node[inner sep=0pt,LocalPlaneOpacity] at
-        ($(\cmdNW@plane@width/2,\cmdNW@plane@height/2)+(\cmdNW@plane@x,\cmdNW@plane@y)$)
-        {\includegraphics[width=\cmdNW@plane@width\DefaultUnit,height=\cmdNW@plane@height\DefaultUnit]{\cmdNW@plane@image}};
+        ($(\cmdNW@plane@width/2,\cmdNW@plane@height/2)+
+        (\cmdNW@plane@x,\cmdNW@plane@y)$)
+        {\includegraphics[width=\cmdNW@plane@width\DefaultUnit,
+        height=\cmdNW@plane@height\DefaultUnit]{\cmdNW@plane@image}};
         %}%
         %\@tempa;
       }{}
       % Draw grid on the Plane
       \ifthenelse{\not\equal{\cmdNW@plane@grid}{}}{
         \protected@edef\@tempa{%
-          \noexpand\draw[PlaneGridStyle,step=\cmdNW@plane@grid*\DistanceScale](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
+          \noexpand\draw[PlaneGridStyle,step=\cmdNW@plane@grid*\DistanceScale](
+          \cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
           grid ++
         (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
         \@tempa;
@@ -1263,7 +1279,8 @@ node/.append style={transform shape},}}
       \ifNW@plane@NoBorder
       \else
       \protected@edef\@tempa{%
-        \noexpand\draw[PlaneBorderStyle,\cmdNW@plane@style](\cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
+        \noexpand\draw[PlaneBorderStyle,\cmdNW@plane@style](
+        \cmdNW@plane@x*\DistanceScale,\cmdNW@plane@y*\DistanceScale)
         rectangle ++
       (\cmdNW@plane@width*\DistanceScale,\cmdNW@plane@height*\DistanceScale)}%
       \@tempa;
