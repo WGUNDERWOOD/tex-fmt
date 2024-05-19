@@ -132,7 +132,7 @@ pub fn apply_indent(
             verbatim_count -= 1;
         }
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, true);
-        if verbatim_count == 0 && !is_ignored(&ignore) {
+        if verbatim_count == 0 && !ignore.visual {
             // calculate indent
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);

@@ -5,15 +5,15 @@ use log::Level::Warn;
 //const IG_ENDS: [&str; 1] = ["\\end{verbatim}"];
 
 pub struct Ignore {
-    skip: bool,
-    block: bool,
+    pub actual: bool,
+    pub visual: bool,
 }
 
 impl Ignore {
     pub fn new() -> Self {
         Ignore {
-            skip: false,
-            block: false,
+            actual: false,
+            visual: false,
         }
     }
 }
@@ -30,14 +30,30 @@ pub fn get_ignore(
     let skip = contains_ignore_skip(line);
     let start = contains_ignore_start(line);
     let end = contains_ignore_end(line);
-    let mut block = ignore.block;
+    let actual: bool;
+    let visual: bool;
 
-    if !ignore.block {
-        // not currently in ignore block
-        if start {
-            block = true
+    if skip {
+        actual = ignore.actual;
+        visual = true;
+    } else if start {
+        actual = true;
+        visual = true;
+        if ignore.actual && warn {
+            record_log(
+                logs,
+                Warn,
+                pass,
+                filename.to_string(),
+                Some(linum),
+                Some(line.to_string()),
+                "Cannot start ignore block:".to_string(),
+            );
         }
-        if end && warn {
+    } else if end {
+        actual = false;
+        visual = true;
+        if !ignore.actual && warn {
             record_log(
                 logs,
                 Warn,
@@ -49,28 +65,11 @@ pub fn get_ignore(
             );
         }
     } else {
-        // currently in ignore block
-        if start && warn {
-            record_log(
-                logs,
-                Warn,
-                pass,
-                filename.to_string(),
-                Some(linum),
-                Some(line.to_string()),
-                "Cannot start ignore block:".to_string(),
-            );
-        }
-        if end {
-            block = false
-        }
+        actual = ignore.actual;
+        visual = ignore.actual;
     }
 
-    Ignore { skip, block }
-}
-
-pub fn is_ignored(ignore: &Ignore) -> bool {
-    ignore.skip || ignore.block
+    Ignore { actual, visual }
 }
 
 fn contains_ignore_skip(line: &str) -> bool {
