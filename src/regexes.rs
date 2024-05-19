@@ -36,4 +36,6 @@ lazy_static! {
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\begin\{)").unwrap();
     pub static ref RE_ENV_END_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end\{)").unwrap();
+    pub static ref RE_ITEM_SHARED_LINE: Regex =
+        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
 }

@@ -106,8 +106,7 @@ pub fn wrap(
             verbatim_count -= 1;
         }
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
-        if needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
-        {
+        if needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore) {
             let new_line = wrap_line(line, linum, args, logs, pass, filename);
             new_file.push_str(&new_line);
             if needs_wrap(&new_line) && !is_ignored(&ignore) {

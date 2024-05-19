@@ -177,8 +177,9 @@ pub fn apply_indent(
             let mut new_line = line.trim_start().to_string();
             if !new_line.is_empty() {
                 let n_spaces = indent.visual * TAB;
-                let spaces: String = (0..n_spaces).map(|_| " ").collect();
-                new_line.insert_str(0, &spaces);
+                for _ in 0..n_spaces {
+                    new_line.insert(0, ' ');
+                }
             }
             new_file.push_str(&new_line);
         } else {
