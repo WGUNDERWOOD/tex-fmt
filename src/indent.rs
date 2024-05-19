@@ -6,7 +6,7 @@ use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
 use core::cmp::max;
-use log::Level::{Info, Warn};
+use log::Level::{Info, Trace, Warn};
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -137,10 +137,10 @@ pub fn apply_indent(
             let comment_index = find_comment_index(line);
             let line_strip = remove_comment(line, comment_index);
             indent = get_indent(line_strip, indent);
-            if args.verbose {
+            if args.trace {
                 record_log(
                     logs,
-                    Info,
+                    Trace,
                     pass,
                     filename.to_string(),
                     Some(linum),

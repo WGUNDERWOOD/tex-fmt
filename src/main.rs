@@ -29,7 +29,8 @@ use crate::write::*;
 mod tests;
 
 fn main() {
-    let args = Cli::parse();
+    let mut args = Cli::parse();
+    args.resolve();
     init_logger(&args);
 
     for filename in &args.filenames {

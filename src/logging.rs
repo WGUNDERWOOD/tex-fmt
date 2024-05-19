@@ -2,7 +2,7 @@ use crate::colors::*;
 use crate::Cli;
 use env_logger::Builder;
 use log::Level;
-use log::Level::{Error, Info, Warn};
+use log::Level::{Error, Info, Trace, Warn};
 use log::LevelFilter;
 use std::io::Write;
 use std::path::Path;
@@ -45,14 +45,18 @@ fn get_log_style(log_level: Level) -> String {
         Info => CYAN.to_string(),
         Warn => YELLOW.to_string(),
         Error => RED.to_string(),
+        Trace => GREEN.to_string(),
         _ => panic!(),
     }
 }
 
 fn get_log_level(args: &Cli) -> LevelFilter {
-    match args.verbose {
-        true => LevelFilter::Info,
-        false => LevelFilter::Warn,
+    if args.trace {
+        LevelFilter::Trace
+    } else if args.verbose {
+        LevelFilter::Info
+    } else {
+        LevelFilter::Warn
     }
 }
 
@@ -113,6 +117,7 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
             Error => log::error!("{}", log_string),
             Warn => log::warn!("{}", log_string),
             Info => log::info!("{}", log_string),
+            Trace => log::trace!("{}", log_string),
             _ => panic!(),
         }
     }
