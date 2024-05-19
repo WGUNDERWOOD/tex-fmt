@@ -119,7 +119,7 @@ pub fn apply_indent(
             filename.to_string(),
             None,
             None,
-            format!("Indent pass {}.", pass.unwrap_or_default()),
+            format!("Indent on pass {}.", pass.unwrap_or_default()),
         );
     }
 

@@ -28,6 +28,16 @@ fn apply_passes(
         }
     }
 
+    record_log(
+        logs,
+        Info,
+        None,
+        filename.to_string(),
+        None,
+        None,
+        "Passes completed.".to_string(),
+    );
+
     // check indents return to zero
     if new_file.lines().last().unwrap_or_default().starts_with(' ') {
         record_log(
@@ -58,7 +68,7 @@ pub fn format_file(
             filename.to_string(),
             None,
             None,
-            "Begin indenting.".to_string(),
+            "Begin formatting.".to_string(),
         );
     }
     let mut new_file = remove_extra_newlines(file);

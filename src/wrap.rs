@@ -95,7 +95,7 @@ pub fn wrap(
             filename.to_string(),
             None,
             None,
-            format!("Wrap pass {}.", pass.unwrap_or_default()),
+            format!("Wrap on pass {}.", pass.unwrap_or_default()),
         );
     }
     let mut new_file = "".to_string();
