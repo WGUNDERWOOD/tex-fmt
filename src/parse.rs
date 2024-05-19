@@ -10,8 +10,6 @@ pub struct Cli {
     pub print: bool,
     #[arg(long, short, help = "Increase verbosity")]
     pub verbose: bool,
-    #[arg(long, short, help = "Debug, do not modify files")]
-    pub debug: bool,
     #[arg(required = true)]
     pub filenames: Vec<String>,
 }
@@ -23,7 +21,6 @@ impl Cli {
             indent: false,
             print: false,
             verbose: false,
-            debug: false,
             filenames: Vec::<String>::new(),
         }
     }
