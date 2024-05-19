@@ -11,10 +11,6 @@ pub fn needs_wrap(file: &str) -> bool {
     file.lines().any(|l| l.len() > WRAP)
 }
 
-pub fn line_needs_wrap(line: &str) -> bool {
-    line.len() > WRAP
-}
-
 fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
@@ -54,7 +50,7 @@ fn wrap_line(
     let mut remaining_line = line.to_string();
     let mut new_line = "".to_string();
     let mut can_wrap = true;
-    while line_needs_wrap(&remaining_line) && can_wrap {
+    while needs_wrap(&remaining_line) && can_wrap {
         let wrap_point = find_wrap_point(&remaining_line);
         let comment_index = find_comment_index(&remaining_line);
         match wrap_point {
@@ -110,11 +106,11 @@ pub fn wrap(
             verbatim_count -= 1;
         }
         ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
-        if line_needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
+        if needs_wrap(line) && verbatim_count == 0 && !is_ignored(&ignore)
         {
             let new_line = wrap_line(line, linum, args, logs, pass, filename);
             new_file.push_str(&new_line);
-            if line_needs_wrap(&new_line) && !is_ignored(&ignore) {
+            if needs_wrap(&new_line) && !is_ignored(&ignore) {
                 record_log(
                     logs,
                     Error,
@@ -127,7 +123,7 @@ pub fn wrap(
             }
         } else {
             new_file.push_str(line);
-            if line_needs_wrap(line) && !is_ignored(&ignore) {
+            if needs_wrap(line) && !is_ignored(&ignore) {
                 record_log(
                     logs,
                     Error,
