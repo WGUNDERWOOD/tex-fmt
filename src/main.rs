@@ -37,7 +37,7 @@ fn main() {
     init_logger(&args);
 
     for filename in &args.filenames {
-        let mut logs: Vec<Log> = vec![];
+        let mut logs = Vec::<Log>::new();
         let extension_valid = check_extension_valid(filename);
         if extension_valid {
             let file = fs::read_to_string(filename).unwrap();

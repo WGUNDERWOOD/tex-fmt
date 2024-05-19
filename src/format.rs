@@ -3,7 +3,7 @@ use crate::logging::*;
 use crate::subs::*;
 use crate::wrap::*;
 use crate::Cli;
-use log::Level::{Warn, Info};
+use log::Level::{Info, Warn};
 
 const MAX_PASS: usize = 10;
 
@@ -29,7 +29,7 @@ fn apply_passes(
     }
 
     // check indents return to zero
-    if new_file.lines().last().unwrap().starts_with(' ') {
+    if new_file.lines().last().unwrap_or_default().starts_with(' ') {
         record_log(
             logs,
             Warn,

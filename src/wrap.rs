@@ -3,7 +3,7 @@ use crate::ignore::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
-use log::Level::{Warn, Info};
+use log::Level::{Info, Warn};
 
 const WRAP: usize = 80;
 
@@ -95,7 +95,7 @@ pub fn wrap(
             filename.to_string(),
             None,
             None,
-            format!("Wrap pass {}.", pass.unwrap()),
+            format!("Wrap pass {}.", pass.unwrap_or_default()),
         );
     }
     let mut new_file = "".to_string();

@@ -24,7 +24,7 @@ impl Cli {
             print: false,
             verbose: false,
             debug: false,
-            filenames: vec![],
+            filenames: Vec::<String>::new(),
         }
     }
 }
