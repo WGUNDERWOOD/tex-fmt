@@ -19,6 +19,7 @@ pub struct Log {
     pub message: String,
 }
 
+// TODO strip message spaces
 pub fn record_log(
     logs: &mut Vec<Log>,
     level: Level,

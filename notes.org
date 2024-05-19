@@ -8,4 +8,3 @@
 ** Implement all flags
 * Bugs
 ** Handle verbatim and ignores better
-** Avoid panics to ensure logs are printed
