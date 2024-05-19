@@ -30,7 +30,6 @@ fn apply_passes(
 
     // check indents return to zero
     if new_file.lines().last().unwrap().starts_with(' ') {
-        //log::error!("");
         record_log(
             logs,
             Error,

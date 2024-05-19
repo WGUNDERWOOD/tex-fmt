@@ -1,4 +1,3 @@
-//use crate::colors::*;
 use crate::comments::*;
 use crate::ignore::*;
 use crate::logging::*;
@@ -78,15 +77,6 @@ fn wrap_line(
             }
             None => {
                 can_wrap = false;
-                //record_log(
-                //logs,
-                //Error,
-                //pass,
-                //filename.to_string(),
-                //Some(linum),
-                //Some(line.to_string()),
-                //"Line cannot be wrapped.".to_string(),
-                //);
             }
         }
     }
