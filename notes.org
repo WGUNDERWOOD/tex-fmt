@@ -2,16 +2,11 @@
 * Tasks
 ** Look for problem cases in other latex documents
 ** Tidy code
-* Features
-** Implement new flags
-** Ignore source lines
 ** Documentation
 ** Find todos
-** \item should be on a new line
+* Features
+** Implement all flags
 * Bugs
-** Handle list items and comments properly
 ** Handle verbatim and ignores better
-** Only print ignore warnings once
-** Off by one in linums?
-* Logging
-** Avoid panics to make sure we always reach the end
+** Off by one in linums
+** Avoid panics to ensure logs are printed

@@ -15,6 +15,7 @@ pub fn remove_trailing_spaces(file: &str) -> String {
     RE_TRAIL.replace_all(file, "\n").to_string()
 }
 
+// TODO these should be abstracted together
 pub fn begin_end_environments_new_line(file: &str) -> String {
     let mut new_file = "".to_string();
     for line in file.lines() {
@@ -37,6 +38,7 @@ pub fn begin_end_environments_new_line(file: &str) -> String {
     }
     new_file
 }
+
 pub fn items_new_line(file: &str) -> String {
     let mut new_file = "".to_string();
     for line in file.lines() {
