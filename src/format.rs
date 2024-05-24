@@ -72,7 +72,7 @@ pub fn format_file(
         );
     }
     let mut new_file = remove_extra_newlines(file);
-    new_file = environments_new_line(&new_file);
+    new_file = environments_new_line(&new_file, filename, args, logs);
     new_file = remove_tabs(&new_file);
     new_file = remove_trailing_spaces(&new_file);
     new_file = apply_passes(&new_file, filename, args, logs);
