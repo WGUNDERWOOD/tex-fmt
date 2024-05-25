@@ -4,4 +4,3 @@
 ** Tidy code
 ** Documentation
 ** Try wrapping spaceless lines
-** Substitute multiple items etc on one line
