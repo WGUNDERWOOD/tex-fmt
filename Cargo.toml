@@ -1,7 +1,9 @@
 [package]
 name = "tex-fmt"
+version = "0.2.0"
+authors = ["William George Underwood"]
 license = "MIT"
-version = "0.1.0"
+repository = "https://github.com/WGUNDERWOOD/tex-fmt"
 edition = "2021"
 description = "LaTeX formatter written in Rust"
 
