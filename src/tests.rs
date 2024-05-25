@@ -18,6 +18,7 @@ use crate::Cli;
 #[case::ignore("ignore", "tex")]
 #[case::lists("lists", "tex")]
 #[case::masters_dissertation("masters_dissertation", "tex")]
+#[case::ociam_thesis("ociam_thesis", "cls")]
 #[case::phd_dissertation("phd_dissertation", "tex")]
 #[case::phd_dissertation_refs("phd_dissertation_refs", "bib")]
 #[case::pu_thesis("pu_thesis", "cls")]
@@ -25,6 +26,7 @@ use crate::Cli;
 #[case::short_document("short_document", "tex")]
 #[case::tikz_network("tikz_network", "sty")]
 #[case::verbatim("verbatim", "tex")]
+#[case::verbatim("wgu_cv", "cls")]
 #[case::wrap("wrap", "tex")]
 fn test_file(#[case] filename: &str, #[case] extension: &str) {}
 
