@@ -97,7 +97,7 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
         };
 
         let log_string = format!(
-            "{}tex-fmt {}{}: {}{}{}{} {}{:.50}",
+            "{}tex-fmt {}{}: {}{}{}{} {}{}",
             PINK,
             PURPLE,
             Path::new(&log.filename)
