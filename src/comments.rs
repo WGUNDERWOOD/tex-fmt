@@ -1,6 +1,8 @@
+use unicode_segmentation::UnicodeSegmentation;
+
 pub fn find_comment_index(line: &str) -> Option<usize> {
     // no percent means no comment
-    if !line.contains('%') {
+    if !line.contains("%") {
         return None;
     }
 
@@ -12,8 +14,8 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
     }
 
     // check the first character
-    let mut prev_c: char = line.chars().next().unwrap();
-    if prev_c == '%' {
+    let mut prev_c: &str = line.graphemes(true).next().unwrap();
+    if prev_c == "%" {
         return Some(0);
     }
 
@@ -24,8 +26,8 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
 
     // multi-character line
     for i in 1..n {
-        let c = line.chars().nth(i).unwrap();
-        if c == '%' && (prev_c == ' ' || prev_c != '\\') {
+        let c = line.graphemes(true).nth(i).unwrap();
+        if c == "%" && (prev_c == " " || prev_c != "\\") {
             return Some(i);
         }
         prev_c = c;
@@ -35,7 +37,7 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
 
 pub fn remove_comment(line: &str, comment: Option<usize>) -> &str {
     match comment {
-        Some(c) => &line[0..c],
+        Some(c) => &line.graphemes(true)[0..c],
         None => line,
     }
 }

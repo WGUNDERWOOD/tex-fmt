@@ -3,7 +3,4 @@
 ** Check other latex files
 ** Tidy code
 ** Documentation
-** Try wrapping spaceless lines
-* Bugs
 ** Unicode handling
-*** Down arrow matches opening delimiter
