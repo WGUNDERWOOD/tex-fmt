@@ -3,6 +3,7 @@ use clap::Parser;
 const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 
 #[derive(Debug, Parser)]
+#[command(version, about)]
 pub struct Cli {
     #[arg(long, short, help = "Print to STDOUT, do not modify files")]
     pub print: bool,
