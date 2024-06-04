@@ -10,7 +10,7 @@ https://crates.io/crates/tex-fmt)
 https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
 
-A LaTeX formatter written in Rust.
+An extremely fast LaTeX formatter written in Rust.
 
 <table width="100%">
 <tr>
