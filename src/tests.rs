@@ -26,6 +26,7 @@ use crate::Cli;
 #[case::short_document("short_document", "tex")]
 #[case::tikz_network("tikz_network", "sty")]
 #[case::verbatim("verbatim", "tex")]
+#[case::unicode("unicode", "tex")]
 #[case::verbatim("wgu_cv", "cls")]
 #[case::wrap("wrap", "tex")]
 fn test_file(#[case] filename: &str, #[case] extension: &str) {}

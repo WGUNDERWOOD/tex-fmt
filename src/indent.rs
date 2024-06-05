@@ -135,7 +135,7 @@ pub fn apply_indent(
         if !leave.visual && !ignore.visual {
             // calculate indent
             let comment_index = find_comment_index(line);
-            let line_strip = remove_comment(line, comment_index);
+            let line_strip = &remove_comment(line, comment_index);
             indent = get_indent(line_strip, indent);
             if args.trace {
                 record_log(
