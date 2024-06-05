@@ -53,8 +53,8 @@ pub fn environments_new_line(
                 || RE_ITEM.is_match(line))
         {
             let comment_index = find_comment_index(line);
-            let comment = get_comment(line, comment_index);
-            let text = remove_comment(line, comment_index);
+            let comment = &get_comment(line, comment_index);
+            let text = &remove_comment(line, comment_index);
             let text = &RE_ENV_BEGIN_SHARED_LINE
                 .replace_all(text, "$prev\n$env")
                 .to_string();
