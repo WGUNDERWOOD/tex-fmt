@@ -34,9 +34,6 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
 }
 
 pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
-    dbg!(line);
-    dbg!(line.chars().collect::<Vec<char>>());
-    dbg!(comment);
     match comment {
         Some(c) => line.chars().take(c).collect(),
         None => line.to_string(),
