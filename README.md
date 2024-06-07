@@ -103,7 +103,7 @@ tex-fmt is hundreds of times faster than latexindent.
 - Customization via configuration files not supported
 - Compliance with existing formatting guidelines not guaranteed
 - Editor integration not currently provided
-- No spell checking
+- No spelling or grammar checking
 
 ## Existing tools
 
