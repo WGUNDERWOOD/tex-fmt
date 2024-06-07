@@ -42,7 +42,6 @@ pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
 
 pub fn get_comment(line: &str, comment: Option<usize>) -> String {
     match comment {
-        //Some(c) => &line[c..line.len()],
         Some(c) => line.chars().skip(c).collect(),
         None => "".to_string(),
     }
