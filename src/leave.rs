@@ -46,19 +46,18 @@ pub fn get_leave(
 }
 
 fn get_leave_diff(line: &str) -> i8 {
-    let mut diff = 0;
     if RE_ENV_BEGIN.is_match(line) {
         for re_leave_begin in RE_LEAVES_BEGIN.iter() {
             if re_leave_begin.is_match(line) {
-                diff += 1
+                return 1;
             };
         }
     } else if RE_ENV_END.is_match(line) {
         for re_leave_end in RE_LEAVES_END.iter() {
             if re_leave_end.is_match(line) {
-                diff -= 1
+                return -1;
             };
         }
     }
-    diff
+    0
 }
