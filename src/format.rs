@@ -17,7 +17,7 @@ fn apply_passes(
     let mut finished = false;
     let mut pass = 2;
 
-    while needs_wrap(&new_file) && !finished && pass < MAX_PASS + 2 {
+    while !finished && needs_wrap(&new_file) && pass < MAX_PASS + 2 {
         let old_file = new_file.clone();
         new_file = wrap(&new_file, filename, logs, Some(pass), args);
         new_file = remove_trailing_spaces(&new_file);
