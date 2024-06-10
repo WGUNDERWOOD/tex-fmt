@@ -1,9 +1,5 @@
 use clap::Parser;
 use log::Level::Error;
-#[allow(unused_imports)]
-use rstest::rstest;
-#[allow(unused_imports)]
-use rstest_reuse::{self, *};
 use std::fs;
 
 const TAB: i8 = 2;
