@@ -30,7 +30,7 @@ pub fn get_leave(
     let actual = leave.actual + diff;
     let visual = actual > 0 && leave.actual > 0;
 
-    if (actual < 0) && warn {
+    if warn && (actual < 0) {
         record_log(
             logs,
             Warn,
