@@ -1,6 +1,6 @@
 echo "Getting performance metrics"
 DIR="$(mktemp -d)"
-cp ../tests/*_in.* $DIR
+cp ../tests/in/* $DIR
 cargo build --release
 
 echo "Test files:"

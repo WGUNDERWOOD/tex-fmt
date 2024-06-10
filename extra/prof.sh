@@ -1,15 +1,15 @@
 echo "Making flamegraph profile"
 DIR="$(mktemp -d)"
-cp ../tests/phd_dissertation_in.tex $DIR
+cp ../tests/in/phd_dissertation.tex $DIR
 cargo build --release
 
 echo "Writing large test file"
 for i in {1..5}; do
-    cat $DIR/phd_dissertation_in.tex >> $DIR/large.tex
+    cat $DIR/phd_dissertation.tex >> $DIR/large.tex
     echo "\n\n\n" >> $DIR/large.tex
 done
 
-rm $DIR/phd_dissertation_in.tex
+rm $DIR/phd_dissertation.tex
 
 echo "Test file:"
 for f in $DIR/*.tex; do
