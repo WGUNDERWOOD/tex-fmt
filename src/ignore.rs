@@ -36,7 +36,7 @@ pub fn get_ignore(
     } else if begin {
         actual = true;
         visual = true;
-        if ignore.actual && warn {
+        if warn && ignore.actual {
             record_log(
                 logs,
                 Warn,
@@ -50,7 +50,7 @@ pub fn get_ignore(
     } else if end {
         actual = false;
         visual = true;
-        if !ignore.actual && warn {
+        if warn && !ignore.actual {
             record_log(
                 logs,
                 Warn,
