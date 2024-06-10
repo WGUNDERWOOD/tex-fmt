@@ -1,82 +1,86 @@
-use crate::apply;
 use crate::colors::*;
 use crate::format_file;
 use crate::fs;
 use crate::logging::*;
-use crate::rstest;
-use crate::template;
 use crate::Cli;
+use similar::{ChangeTag, TextDiff};
 
-#[template]
-#[rstest]
-#[case::brackets("brackets", "tex")]
-#[case::comments("comments", "tex")]
-#[case::cv("cv", "tex")]
-#[case::document("document", "tex")]
-#[case::empty("empty", "tex")]
-#[case::environment_lines("environment_lines", "tex")]
-#[case::ignore("ignore", "tex")]
-#[case::lists("lists", "tex")]
-#[case::masters_dissertation("masters_dissertation", "tex")]
-#[case::ociam_thesis("ociam_thesis", "cls")]
-#[case::phd_dissertation("phd_dissertation", "tex")]
-#[case::phd_dissertation_refs("phd_dissertation_refs", "bib")]
-#[case::pu_thesis("pu_thesis", "cls")]
-#[case::readme("readme", "tex")]
-#[case::short_document("short_document", "tex")]
-#[case::tikz_network("tikz_network", "sty")]
-#[case::verbatim("verbatim", "tex")]
-#[case::unicode("unicode", "tex")]
-#[case::verbatim("wgu_cv", "cls")]
-#[case::wrap("wrap", "tex")]
-fn test_file(#[case] filename: &str, #[case] extension: &str) {}
-
-#[apply(test_file)]
-fn test_in_file(filename: &str, extension: &str) {
+fn test_file(in_file: &str, out_file: &str) -> bool {
     let args = Cli::new();
     let mut logs = Vec::<Log>::new();
-    let in_filename = format!("tests/{}_in.{}", filename, extension);
-    let out_filename = format!("tests/{}_out.{}", filename, extension);
-    let in_file = fs::read_to_string(&in_filename).unwrap();
-    let out_file = fs::read_to_string(&out_filename).unwrap();
-    let fmt_in_file = format_file(&in_file, &in_filename, &args, &mut logs);
-    assert!(fmt_in_file == out_file,
-            "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
-            &RED,
-            &YELLOW,
-            &in_filename,
-            &WHITE,
-            &YELLOW,
-            &out_filename,
-            &RESET,
-            &YELLOW,
-            &RESET,
-            &fmt_in_file,
-            &YELLOW,
-            &RESET,
-            &out_file);
+    let in_text = fs::read_to_string(&in_file).unwrap();
+    let out_text = fs::read_to_string(&out_file).unwrap();
+    let fmt_in_text = format_file(&in_text, &in_file, &args, &mut logs);
+
+    if fmt_in_text != out_text {
+        println!(
+            "{}fail {}{} {}-> {}{}",
+            RED, YELLOW, in_file, RESET, YELLOW, out_file
+        );
+        let diff = TextDiff::from_lines(&fmt_in_text, &out_text);
+        for change in diff.iter_all_changes() {
+            match change.tag() {
+                ChangeTag::Delete => print!(
+                    "{}@ {}: {}- {}{}",
+                    PURPLE,
+                    change.old_index().unwrap(),
+                    RED,
+                    change,
+                    RESET
+                ),
+                ChangeTag::Insert => print!(
+                    "{}@ {}: {}+ {}{}",
+                    PURPLE,
+                    change.new_index().unwrap(),
+                    GREEN,
+                    change,
+                    RESET
+                ),
+                ChangeTag::Equal => {}
+            };
+        }
+    }
+
+    fmt_in_text == out_text
 }
 
-#[apply(test_file)]
-fn test_out_file(filename: &str, extension: &str) {
-    let args = Cli::new();
-    let mut logs = Vec::<Log>::new();
-    let out_filename = format!("tests/{}_out.{}", filename, extension);
-    let out_file = fs::read_to_string(&out_filename).unwrap();
-    let fmt_out_file = format_file(&out_file, &out_filename, &args, &mut logs);
-    assert!(fmt_out_file == out_file,
-            "\n{}Test failed: {}{}{} -> {}{}{}\n\n{}Output:\n{}{}{}\nDesired:\n{}{}",
-            &RED,
-            &YELLOW,
-            &out_filename,
-            &WHITE,
-            &YELLOW,
-            &out_filename,
-            &RESET,
-            &YELLOW,
-            &RESET,
-            &fmt_out_file,
-            &YELLOW,
-            &RESET,
-            &out_file);
+fn read_files_from_dir(dir: &str) -> Vec<String> {
+    fs::read_dir(dir)
+        .unwrap()
+        .map(|f| f.unwrap().file_name().into_string().unwrap())
+        .collect()
+}
+
+#[test]
+fn test_in() {
+    let in_files = read_files_from_dir("./tests/in/");
+    let mut fail = false;
+    for file in in_files {
+        if !test_file(
+            &format!("tests/in/{}", file),
+            &format!("tests/out/{}", file),
+        ) {
+            fail = true
+        }
+    }
+    if fail {
+        panic!("Some tests failed")
+    }
+}
+
+#[test]
+fn test_out() {
+    let out_files = read_files_from_dir("./tests/out/");
+    let mut fail = false;
+    for file in out_files {
+        if !test_file(
+            &format!("tests/out/{}", file),
+            &format!("tests/out/{}", file),
+        ) {
+            fail = true
+        }
+    }
+    if fail {
+        panic!("Some tests failed")
+    }
 }
