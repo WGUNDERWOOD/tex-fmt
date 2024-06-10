@@ -28,16 +28,15 @@ impl Indent {
 
 // calculate total indentation change due to current line
 fn get_diff(line: &str) -> i8 {
-    // documents get no global indentation
-    if RE_DOCUMENT_BEGIN.is_match(line) || RE_DOCUMENT_END.is_match(line) {
-        return 0;
-    };
-
     // list environments get double indents
     let mut diff: i8 = 0;
 
     // other environments get single indents
     if RE_ENV_BEGIN.is_match(line) {
+        // documents get no global indentation
+        if RE_DOCUMENT_BEGIN.is_match(line) {
+            return 0;
+        };
         diff += 1;
         for re_list_begin in RE_LISTS_BEGIN.iter() {
             if re_list_begin.is_match(line) {
@@ -45,6 +44,10 @@ fn get_diff(line: &str) -> i8 {
             };
         }
     } else if RE_ENV_END.is_match(line) {
+        // documents get no global indentation
+        if RE_DOCUMENT_END.is_match(line) {
+            return 0;
+        };
         diff -= 1;
         for re_list_end in RE_LISTS_END.iter() {
             if re_list_end.is_match(line) {
@@ -62,11 +65,6 @@ fn get_diff(line: &str) -> i8 {
 
 // calculate dedentation for current line compared to previous
 fn get_back(line: &str) -> i8 {
-    // documents get no global indentation
-    if RE_DOCUMENT_END.is_match(line) {
-        return 0;
-    };
-
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
 
@@ -79,6 +77,10 @@ fn get_back(line: &str) -> i8 {
 
     // other environments get single indents
     if RE_ENV_END.is_match(line) {
+        // documents get no global indentation
+        if RE_DOCUMENT_END.is_match(line) {
+            return 0;
+        };
         // list environments get double indents for indenting items
         for re_list_end in RE_LISTS_END.iter() {
             if re_list_end.is_match(line) {
