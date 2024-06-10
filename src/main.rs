@@ -2,8 +2,6 @@ use clap::Parser;
 use log::Level::Error;
 use std::fs;
 
-const TAB: i8 = 2;
-
 mod colors;
 mod comments;
 mod format;
@@ -20,6 +18,8 @@ use crate::format::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::write::*;
+
+const TAB: i8 = 2;
 
 #[cfg(test)]
 mod tests;
