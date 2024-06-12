@@ -9,8 +9,8 @@ echo
 for file in ./in/*.tex; do
     f=$(basename $file .tex)
     echo "Running latex for $f.tex"
-    (cd ./in && latexmk -pdf -quiet -rc-report- $f.tex >/dev/null 2>&1)
-    (cd ./out && latexmk -pdf -quiet -rc-report- $f.tex >/dev/null 2>&1)
+    (cd ./in && latexmk -pdflua -quiet -rc-report- $f.tex >/dev/null 2>&1)
+    (cd ./out && latexmk -pdflua -quiet -rc-report- $f.tex >/dev/null 2>&1)
     (cd ./in && pdftotext -q $f.pdf >/dev/null 2>&1)
     (cd ./out && pdftotext -q $f.pdf >/dev/null 2>&1)
 done
