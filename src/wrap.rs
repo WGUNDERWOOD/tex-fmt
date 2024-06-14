@@ -8,7 +8,7 @@ use log::Level::{Info, Warn};
 const WRAP: usize = 80;
 
 pub fn needs_wrap(file: &str) -> bool {
-    file.lines().any(|l| l.len() > WRAP)
+    file.lines().any(|l| l.chars().count() > WRAP)
 }
 
 fn find_wrap_point(line: &str) -> Option<usize> {
@@ -65,10 +65,11 @@ fn wrap_line(
                     }
                     None => "",
                 };
-                new_line.push_str(&remaining_line[0..p]);
+                let first_segment: String =
+                    remaining_line.chars().take(p).collect();
+                new_line.push_str(&first_segment);
                 new_line.push('\n');
-                remaining_line =
-                    remaining_line[p..remaining_line.len()].to_string();
+                remaining_line = remaining_line.chars().skip(p).collect();
                 remaining_line.insert_str(0, line_start);
             }
             None => {

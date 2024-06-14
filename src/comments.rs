@@ -4,7 +4,7 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
         return None;
     }
 
-    let n = line.len();
+    let n = line.chars().count();
 
     // empty line has no comment
     if n == 0 {
