@@ -9,7 +9,7 @@ const LISTS: [&str; 5] = [
     "inventory",
 ];
 
-const LEAVES: [&str; 3] = ["verbatim", "lstlisting", "minted"];
+const LEAVES: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
 
 lazy_static! {
     pub static ref RE_NEWLINES: Regex = Regex::new(r"\n\n\n+").unwrap();
