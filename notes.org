@@ -4,9 +4,9 @@
 ** Tidy code
 ** Documentation
 ** Try wrapping spaceless lines
-** Better diffs for failing tests
 ** Use "file" for file names and "text" for contents
 * Features
+** Aim for a single pass of wrapping and indenting
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser

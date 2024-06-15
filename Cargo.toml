@@ -6,6 +6,7 @@ license = "MIT"
 repository = "https://github.com/WGUNDERWOOD/tex-fmt"
 edition = "2021"
 description = "LaTeX formatter written in Rust"
+exclude = ["tests/*", "extra/*", "*.nix", ".github/*"]
 
 [dependencies]
 clap = { version = "4.4.0", features = ["derive"] }
