@@ -6,21 +6,21 @@ cd $DIR
 
 echo
 
-for file in ./in/*.tex; do
+for file in ./source/*.tex; do
     f=$(basename $file .tex)
     echo "Running latex for $f.tex"
-    (cd ./in && latexmk -pdflua $f.tex >/dev/null 2>&1)
-    (cd ./out && latexmk -pdflua $f.tex >/dev/null 2>&1)
-    (cd ./in && pdftotext -q $f.pdf >/dev/null 2>&1)
-    (cd ./out && pdftotext -q $f.pdf >/dev/null 2>&1)
+    (cd ./source && latexmk -pdflua $f.tex >/dev/null 2>&1)
+    (cd ./target && latexmk -pdflua $f.tex >/dev/null 2>&1)
+    (cd ./source && pdftotext -q $f.pdf >/dev/null 2>&1)
+    (cd ./target && pdftotext -q $f.pdf >/dev/null 2>&1)
 done
 
 echo
 
-for file in ./in/*.tex; do
+for file in ./source/*.tex; do
     f=$(basename $file .tex)
     echo "Checking PDF for $f.tex"
-    diff -u ./in/$f.txt ./out/$f.txt | diff-so-fancy
+    diff -u ./source/$f.txt ./target/$f.txt | diff-so-fancy
 done
 
 echo $DIR
