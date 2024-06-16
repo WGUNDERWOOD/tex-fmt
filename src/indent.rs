@@ -107,8 +107,8 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
 }
 
 pub fn apply_indent(
+    text: &str,
     file: &str,
-    filename: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
     pass: Option<usize>,
@@ -118,7 +118,7 @@ pub fn apply_indent(
             logs,
             Info,
             pass,
-            filename.to_string(),
+            file.to_string(),
             None,
             None,
             format!("Indent on pass {}.", pass.unwrap_or_default()),
@@ -128,11 +128,11 @@ pub fn apply_indent(
     let mut indent = Indent::new();
     let mut ignore = Ignore::new();
     let mut leave = Leave::new();
-    let mut new_file = String::with_capacity(file.len());
+    let mut new_text = String::with_capacity(text.len());
 
-    for (linum, line) in file.lines().enumerate() {
-        ignore = get_ignore(line, linum, ignore, filename, logs, pass, true);
-        leave = get_leave(line, linum, leave, filename, logs, pass, true);
+    for (linum, line) in text.lines().enumerate() {
+        ignore = get_ignore(line, linum, ignore, file, logs, pass, true);
+        leave = get_leave(line, linum, leave, file, logs, pass, true);
 
         if !leave.visual && !ignore.visual {
             // calculate indent
@@ -144,7 +144,7 @@ pub fn apply_indent(
                     logs,
                     Trace,
                     pass,
-                    filename.to_string(),
+                    file.to_string(),
                     Some(linum),
                     Some(line.to_string()),
                     format!(
@@ -159,7 +159,7 @@ pub fn apply_indent(
                     logs,
                     Warn,
                     pass,
-                    filename.to_string(),
+                    file.to_string(),
                     Some(linum),
                     Some(line.to_string()),
                     "Indent is negative.".to_string(),
@@ -176,12 +176,12 @@ pub fn apply_indent(
                     new_line.insert(0, ' ');
                 }
             }
-            new_file.push_str(&new_line);
+            new_text.push_str(&new_line);
         } else {
-            new_file.push_str(line);
+            new_text.push_str(line);
         }
-        new_file.push('\n');
+        new_text.push('\n');
     }
 
-    new_file
+    new_text
 }
