@@ -6,8 +6,8 @@ cargo build --release
 calc(){ awk "BEGIN { print "$*" }"; }
 
 echo
-echo -n "Test files: $(ls -l $DIR/in/* $DIR/out/* | wc -l) files, "
-echo -n "$(wc -l --total=only $DIR/in/* $DIR/out/*) lines, "
+echo -n "Test files: $(ls -l $DIR/source/* $DIR/target/* | wc -l) files, "
+echo -n "$(wc -l --total=only $DIR/source/* $DIR/target/*) lines, "
 echo "$(du -hs $DIR | cut -f 1)"
 echo
 
@@ -17,7 +17,7 @@ hyperfine --warmup 10 \
     --export-csv $TEXFMTFILE \
     --command-name "tex-fmt" \
     --prepare "cp -r ../tests/* $DIR" \
-    "../target/release/tex-fmt $DIR/in/* $DIR/out/*"
+    "../target/release/tex-fmt $DIR/source/* $DIR/target/*"
 
 # latexindent
 LATEXINDENTFILE="hyperfine-latexindent.csv"
@@ -26,7 +26,7 @@ hyperfine --warmup 0 \
     --runs 1 \
     --command-name "latexindent" \
     --prepare "cp -r ../tests/* $DIR" \
-    "latexindent $DIR/in/* $DIR/out/*"
+    "latexindent $DIR/source/* $DIR/target/*"
 
 # latexindent -m
 LATEXINDENTMFILE="hyperfine-latexindent-m.csv"
@@ -35,7 +35,7 @@ hyperfine --warmup 0 \
     --runs 1 \
     --command-name "latexindent -m" \
     --prepare "cp -r ../tests/* $DIR" \
-    "latexindent -m $DIR/in/* $DIR/out/*"
+    "latexindent -m $DIR/source/* $DIR/target/*"
 
 # print results
 TEXFMT=$(cat $TEXFMTFILE | tail -n 1 | cut -d "," -f 2)
