@@ -5,6 +5,8 @@
 ** Documentation
 ** Try wrapping spaceless lines
 ** Use "file" for file names and "text" for contents
+** Rename in and out to source and target
+** shell-check
 * Features
 ** Aim for a single pass of wrapping and indenting
 ** Parsing with texlab
