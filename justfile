@@ -1,4 +1,4 @@
-default: test clippy format
+default: test clippy format shellcheck
 
 all: default latex perf prof
 
@@ -24,3 +24,6 @@ perf:
 
 prof:
   @cd extra && bash prof.sh
+
+shellcheck:
+  @shellcheck extra/*.sh

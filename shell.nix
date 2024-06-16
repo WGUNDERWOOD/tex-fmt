@@ -10,5 +10,6 @@ pkgs.mkShell {
     texlive.combined.scheme-full
     diff-so-fancy
     poppler_utils
+    shellcheck
   ];
 }
