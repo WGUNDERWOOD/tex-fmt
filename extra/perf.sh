@@ -1,14 +1,15 @@
+#!/usr/bin/env bash
 echo "Getting performance metrics"
 DIR="$(mktemp -d)"
-cp -r ../tests/* $DIR
+cp -r ../tests/* "$DIR"
 cargo build --release
 
-calc(){ awk "BEGIN { print "$*" }"; }
+calc(){ awk "BEGIN { print ""$*"" }"; }
 
 echo
-echo -n "Test files: $(ls -l $DIR/source/* $DIR/target/* | wc -l) files, "
-echo -n "$(wc -l --total=only $DIR/source/* $DIR/target/*) lines, "
-echo "$(du -hs $DIR | cut -f 1)"
+echo -n "Test files: $(find "$DIR"/*/* | wc -l) files, "
+echo -n "$(wc -l --total=only "$DIR"/source/* "$DIR"/target/*) lines, "
+du -hs "$DIR" | cut -f 1
 echo
 
 # tex-fmt
@@ -42,9 +43,9 @@ TEXFMT=$(cat $TEXFMTFILE | tail -n 1 | cut -d "," -f 2)
 echo "tex-fmt: ${TEXFMT}s"
 
 LATEXINDENT=$(cat $LATEXINDENTFILE | tail -n 1 | cut -d "," -f 2)
-LATEXINDENTTIMES=$(calc $LATEXINDENT/$TEXFMT)
+LATEXINDENTTIMES=$(calc "$LATEXINDENT"/"$TEXFMT")
 echo "latexindent: ${LATEXINDENT}s, x$LATEXINDENTTIMES"
 
 LATEXINDENTM=$(cat $LATEXINDENTMFILE | tail -n 1 | cut -d "," -f 2)
-LATEXINDENTMTIMES=$(calc $LATEXINDENTM/$TEXFMT)
+LATEXINDENTMTIMES=$(calc "$LATEXINDENTM"/"$TEXFMT")
 echo "latexindent -m: ${LATEXINDENTM}s, x$LATEXINDENTMTIMES"
