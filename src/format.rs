@@ -8,22 +8,22 @@ use log::Level::{Info, Warn};
 const MAX_PASS: usize = 10;
 
 fn apply_passes(
+    text: &str,
     file: &str,
-    filename: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> String {
-    let mut new_file = apply_indent(file, filename, args, logs, Some(1));
+    let mut new_text = apply_indent(text, file, args, logs, Some(1));
     let mut finished = false;
     let mut pass = 2;
 
-    while !finished && needs_wrap(&new_file) && pass < MAX_PASS + 2 {
-        let old_file = new_file.clone();
-        new_file = wrap(&new_file, filename, logs, Some(pass), args);
-        new_file = remove_trailing_spaces(&new_file);
-        new_file = apply_indent(&new_file, filename, args, logs, Some(pass));
+    while !finished && needs_wrap(&new_text) && pass < MAX_PASS + 2 {
+        let old_text = new_text.clone();
+        new_text = wrap(&new_text, file, logs, Some(pass), args);
+        new_text = remove_trailing_spaces(&new_text);
+        new_text = apply_indent(&new_text, file, args, logs, Some(pass));
         pass += 1;
-        if new_file == old_file {
+        if new_text == old_text {
             finished = true;
         }
     }
@@ -32,31 +32,31 @@ fn apply_passes(
         logs,
         Info,
         None,
-        filename.to_string(),
+        file.to_string(),
         None,
         None,
         "Passes completed.".to_string(),
     );
 
     // check indents return to zero
-    if new_file.lines().last().unwrap_or_default().starts_with(' ') {
+    if new_text.lines().last().unwrap_or_default().starts_with(' ') {
         record_log(
             logs,
             Warn,
             None,
-            filename.to_string(),
+            file.to_string(),
             None,
             None,
             "Indent does not return to zero.".to_string(),
         );
     }
 
-    new_file
+    new_text
 }
 
 pub fn format_file(
+    text: &str,
     file: &str,
-    filename: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> String {
@@ -65,16 +65,16 @@ pub fn format_file(
             logs,
             Info,
             None,
-            filename.to_string(),
+            file.to_string(),
             None,
             None,
             "Begin formatting.".to_string(),
         );
     }
-    let mut new_file = remove_extra_newlines(file);
-    new_file = environments_new_line(&new_file, filename, args, logs);
-    new_file = remove_tabs(&new_file);
-    new_file = remove_trailing_spaces(&new_file);
-    new_file = apply_passes(&new_file, filename, args, logs);
-    new_file
+    let mut new_text = remove_extra_newlines(text);
+    new_text = environments_new_line(&new_text, file, args, logs);
+    new_text = remove_tabs(&new_text);
+    new_text = remove_trailing_spaces(&new_text);
+    new_text = apply_passes(&new_text, file, args, logs);
+    new_text
 }

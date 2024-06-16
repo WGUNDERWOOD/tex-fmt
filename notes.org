@@ -4,7 +4,6 @@
 ** Tidy code
 ** Documentation
 ** Try wrapping spaceless lines
-** Use "file" for file names and "text" for contents
 * Features
 ** Aim for a single pass of wrapping and indenting
 ** Parsing with texlab

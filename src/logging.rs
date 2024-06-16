@@ -13,7 +13,7 @@ pub struct Log {
     pub level: Level,
     pub pass: Option<usize>,
     pub time: Instant,
-    pub filename: String,
+    pub file: String,
     pub linum: Option<usize>,
     pub line: Option<String>,
     pub message: String,
@@ -23,7 +23,7 @@ pub fn record_log(
     logs: &mut Vec<Log>,
     level: Level,
     pass: Option<usize>,
-    filename: String,
+    file: String,
     linum: Option<usize>,
     line: Option<String>,
     message: String,
@@ -32,7 +32,7 @@ pub fn record_log(
         level,
         pass,
         time: Instant::now(),
-        filename,
+        file,
         linum,
         line,
         message,
@@ -100,7 +100,7 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
             "{}tex-fmt {}{}: {}{}{}{} {}{}",
             PINK,
             PURPLE,
-            Path::new(&log.filename)
+            Path::new(&log.file)
                 .file_name()
                 .unwrap()
                 .to_str()
