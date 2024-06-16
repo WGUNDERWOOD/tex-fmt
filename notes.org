@@ -7,6 +7,7 @@
 ** Use "file" for file names and "text" for contents
 ** Rename in and out to source and target
 ** shell-check
+** More realistic profiler test
 * Features
 ** Aim for a single pass of wrapping and indenting
 ** Parsing with texlab
