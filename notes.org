@@ -6,6 +6,21 @@
 ** Try wrapping spaceless lines
 * Features
 ** Aim for a single pass of wrapping and indenting
+*** Three lists of strings
+**** 1: lines of original file
+**** 2: lines in processing queue
+**** 3: lines of formatted file
+*** Logic flow
+**** If the queue is empty
+***** Take a line from the original file and put it in the queue
+**** Else
+***** Indent the first line in the queue with the global indentation state
+***** Keep the new indentation state in a temporary variable
+***** If it then needs wrapping
+****** Wrap it into several lines and push them all back onto the queue
+***** Else
+****** Move it from the queue to the output file
+****** Update the global indentation state from the temporary variable
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
