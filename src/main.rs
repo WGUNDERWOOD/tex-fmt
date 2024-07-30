@@ -29,23 +29,23 @@ fn main() {
     args.resolve();
     init_logger(&args);
 
-    for filename in &args.filenames {
+    for file in &args.files {
         let mut logs = Vec::<Log>::new();
-        let extension_valid = check_extension_valid(filename);
+        let extension_valid = check_extension_valid(file);
         if extension_valid {
-            let file = fs::read_to_string(filename).unwrap();
-            let new_file = format_file(&file, filename, &args, &mut logs);
+            let text = fs::read_to_string(file).unwrap();
+            let new_text = format_file(&text, file, &args, &mut logs);
             if args.print {
-                println!("{}", &new_file);
+                println!("{}", &new_text);
             } else {
-                write_file(filename, &new_file);
+                write_file(file, &new_text);
             }
         } else {
             record_log(
                 &mut logs,
                 Error,
                 None,
-                filename.to_string(),
+                file.to_string(),
                 None,
                 None,
                 "File type invalid.".to_string(),

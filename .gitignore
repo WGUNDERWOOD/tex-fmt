@@ -1,8 +1,8 @@
-debug/
-target/
+/debug/
+/target/
 **/*.rs.bk
 *.pdb
-result
+/result
 *.html
 *.log
 *.svg
