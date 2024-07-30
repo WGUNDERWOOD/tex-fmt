@@ -15,15 +15,18 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
-    for i in 0..WRAP {
-        if line.chars().nth(i) == Some(' ') && prev_char != Some('\\') {
+    for (i, c) in line.chars().enumerate() {
+        if i >= WRAP && wrap_point.is_some() {
+            break;
+        }
+        if c == ' ' && prev_char != Some('\\') {
             if after_char {
                 wrap_point = Some(i);
             }
-        } else if line.chars().nth(i) != Some('%') {
+        } else if c != '%' {
             after_char = true;
         }
-        prev_char = line.chars().nth(i)
+        prev_char = Some(c)
     }
     wrap_point
 }
