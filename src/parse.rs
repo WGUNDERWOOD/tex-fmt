@@ -12,7 +12,7 @@ pub struct Cli {
     #[arg(long, short, help = "Show trace log messages")]
     pub trace: bool,
     #[arg(required = true)]
-    pub filenames: Vec<String>,
+    pub files: Vec<String>,
 }
 
 impl Cli {
@@ -28,11 +28,11 @@ impl Cli {
             print: false,
             verbose: false,
             trace: false,
-            filenames: Vec::<String>::new(),
+            files: Vec::<String>::new(),
         }
     }
 }
 
-pub fn check_extension_valid(filename: &str) -> bool {
-    EXTENSIONS.iter().any(|e| filename.ends_with(e))
+pub fn check_extension_valid(file: &str) -> bool {
+    EXTENSIONS.iter().any(|e| file.ends_with(e))
 }

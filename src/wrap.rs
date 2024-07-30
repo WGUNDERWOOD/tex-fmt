@@ -7,8 +7,8 @@ use log::Level::{Info, Warn};
 
 const WRAP: usize = 80;
 
-pub fn needs_wrap(file: &str) -> bool {
-    file.lines().any(|l| l.chars().count() > WRAP)
+pub fn needs_wrap(text: &str) -> bool {
+    text.lines().any(|l| l.chars().count() > WRAP)
 }
 
 fn find_wrap_point(line: &str) -> Option<usize> {
@@ -37,14 +37,14 @@ fn wrap_line(
     args: &Cli,
     logs: &mut Vec<Log>,
     pass: Option<usize>,
-    filename: &str,
+    file: &str,
 ) -> String {
     if args.verbose {
         record_log(
             logs,
             Info,
             pass,
-            filename.to_string(),
+            file.to_string(),
             Some(linum),
             Some(line.to_string()),
             "Wrapping long line.".to_string(),
@@ -85,8 +85,8 @@ fn wrap_line(
 }
 
 pub fn wrap(
+    text: &str,
     file: &str,
-    filename: &str,
     logs: &mut Vec<Log>,
     pass: Option<usize>,
     args: &Cli,
@@ -96,48 +96,48 @@ pub fn wrap(
             logs,
             Info,
             pass,
-            filename.to_string(),
+            file.to_string(),
             None,
             None,
             format!("Wrap on pass {}.", pass.unwrap_or_default()),
         );
     }
-    let mut new_file = "".to_string();
+    let mut new_text = "".to_string();
     let mut ignore = Ignore::new();
     let mut leave = Leave::new();
-    for (linum, line) in file.lines().enumerate() {
-        ignore = get_ignore(line, linum, ignore, filename, logs, pass, false);
-        leave = get_leave(line, linum, leave, filename, logs, pass, false);
+    for (linum, line) in text.lines().enumerate() {
+        ignore = get_ignore(line, linum, ignore, file, logs, pass, false);
+        leave = get_leave(line, linum, leave, file, logs, pass, false);
         if needs_wrap(line) && !leave.visual && !ignore.visual {
-            let new_line = wrap_line(line, linum, args, logs, pass, filename);
-            new_file.push_str(&new_line);
+            let new_line = wrap_line(line, linum, args, logs, pass, file);
+            new_text.push_str(&new_line);
             if needs_wrap(&new_line) && !ignore.visual {
                 record_log(
                     logs,
                     Warn,
                     pass,
-                    filename.to_string(),
+                    file.to_string(),
                     Some(linum),
                     Some(new_line),
                     "Line cannot be wrapped:".to_string(),
                 );
             }
         } else {
-            new_file.push_str(line);
+            new_text.push_str(line);
             if needs_wrap(line) && !ignore.visual {
                 record_log(
                     logs,
                     Warn,
                     pass,
-                    filename.to_string(),
+                    file.to_string(),
                     Some(linum),
                     Some(line.to_string()),
                     "Line cannot be wrapped:".to_string(),
                 );
             }
         }
-        new_file.push('\n');
+        new_text.push('\n');
     }
 
-    new_file
+    new_text
 }

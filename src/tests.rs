@@ -5,19 +5,20 @@ use crate::logging::*;
 use crate::Cli;
 use similar::{ChangeTag, TextDiff};
 
-fn test_file(in_file: &str, out_file: &str) -> bool {
+fn test_file(source_file: &str, target_file: &str) -> bool {
     let args = Cli::new();
     let mut logs = Vec::<Log>::new();
-    let in_text = fs::read_to_string(&in_file).unwrap();
-    let out_text = fs::read_to_string(&out_file).unwrap();
-    let fmt_in_text = format_file(&in_text, &in_file, &args, &mut logs);
+    let source_text = fs::read_to_string(&source_file).unwrap();
+    let target_text = fs::read_to_string(&target_file).unwrap();
+    let fmt_source_text =
+        format_file(&source_text, &source_file, &args, &mut logs);
 
-    if fmt_in_text != out_text {
+    if fmt_source_text != target_text {
         println!(
             "{}fail {}{} {}-> {}{}",
-            RED, YELLOW, in_file, RESET, YELLOW, out_file
+            RED, YELLOW, source_file, RESET, YELLOW, target_file
         );
-        let diff = TextDiff::from_lines(&fmt_in_text, &out_text);
+        let diff = TextDiff::from_lines(&fmt_source_text, &target_text);
         for change in diff.iter_all_changes() {
             match change.tag() {
                 ChangeTag::Delete => print!(
@@ -41,7 +42,7 @@ fn test_file(in_file: &str, out_file: &str) -> bool {
         }
     }
 
-    fmt_in_text == out_text
+    fmt_source_text == target_text
 }
 
 fn read_files_from_dir(dir: &str) -> Vec<String> {
@@ -52,13 +53,13 @@ fn read_files_from_dir(dir: &str) -> Vec<String> {
 }
 
 #[test]
-fn test_in() {
-    let in_files = read_files_from_dir("./tests/in/");
+fn test_source() {
+    let source_files = read_files_from_dir("./tests/source/");
     let mut fail = false;
-    for file in in_files {
+    for file in source_files {
         if !test_file(
-            &format!("tests/in/{}", file),
-            &format!("tests/out/{}", file),
+            &format!("tests/source/{}", file),
+            &format!("tests/target/{}", file),
         ) {
             fail = true
         }
@@ -69,13 +70,13 @@ fn test_in() {
 }
 
 #[test]
-fn test_out() {
-    let out_files = read_files_from_dir("./tests/out/");
+fn test_target() {
+    let target_files = read_files_from_dir("./tests/target/");
     let mut fail = false;
-    for file in out_files {
+    for file in target_files {
         if !test_file(
-            &format!("tests/out/{}", file),
-            &format!("tests/out/{}", file),
+            &format!("tests/target/{}", file),
+            &format!("tests/target/{}", file),
         ) {
             fail = true
         }
