@@ -100,11 +100,7 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
             "{}tex-fmt {}{}: {}{}{}{} {}{}",
             PINK,
             PURPLE,
-            Path::new(&log.file)
-                .file_name()
-                .unwrap()
-                .to_str()
-                .unwrap(),
+            Path::new(&log.file).file_name().unwrap().to_str().unwrap(),
             WHITE,
             linum,
             YELLOW,
