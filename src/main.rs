@@ -1,6 +1,7 @@
 use clap::Parser;
 use log::Level::Error;
 use std::fs;
+use std::process::exit;
 
 mod colors;
 mod comments;
@@ -28,6 +29,7 @@ fn main() {
     let mut args = Cli::parse();
     args.resolve();
     init_logger(&args);
+    let mut exit_code = 0;
 
     for file in &args.files {
         let mut logs = Vec::<Log>::new();
@@ -37,6 +39,17 @@ fn main() {
             let new_text = format_file(&text, file, &args, &mut logs);
             if args.print {
                 println!("{}", &new_text);
+            } else if args.check && text != new_text {
+                record_log(
+                    &mut logs,
+                    Error,
+                    None,
+                    file.to_string(),
+                    None,
+                    None,
+                    "File is not correctly formatted.".to_string(),
+                );
+                exit_code = 1;
             } else {
                 write_file(file, &new_text);
             }
@@ -54,4 +67,5 @@ fn main() {
 
         print_logs(&args, logs);
     }
+    exit(exit_code)
 }

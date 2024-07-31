@@ -5,6 +5,8 @@ const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 #[derive(Debug, Parser)]
 #[command(version, about)]
 pub struct Cli {
+    #[arg(long, short, help = "Check formatting, do not modify files")]
+    pub check: bool,
     #[arg(long, short, help = "Print to STDOUT, do not modify files")]
     pub print: bool,
     #[arg(long, short, help = "Show info log messages")]
@@ -25,6 +27,7 @@ impl Cli {
     #[cfg(test)]
     pub fn new() -> Self {
         Cli {
+            check: false,
             print: false,
             verbose: false,
             trace: false,
