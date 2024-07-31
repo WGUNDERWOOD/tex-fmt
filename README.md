@@ -94,7 +94,7 @@ tex-fmt is hundreds of times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 47 | 93k | 3.5M | **0.186s** | 96.0s [x516] | 124.3s [x667] |
+| 47 | 93k | 3.5M | **0.153s** | 102.1s [x668] | 128.4s [x839] |
 
 ## Limitations
 
