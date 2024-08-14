@@ -27,3 +27,6 @@ prof:
 
 shellcheck:
   @shellcheck extra/*.sh
+
+logo:
+  @cd extra && python logo.py
