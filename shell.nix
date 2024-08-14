@@ -5,6 +5,7 @@ pkgs.mkShell {
     python = pkgs.python3.withPackages (ps:
       with ps; [
         matplotlib
+        pillow
       ]);
   in [
     pkgs.cacert
