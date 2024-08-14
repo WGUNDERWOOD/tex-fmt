@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-fonts = fm.findSystemFonts(fontpaths=None, fontext='ttf')
 
 # start plot
 (fig, ax) = plt.subplots(figsize=(5, 5))
@@ -41,19 +40,14 @@ plt.plot([0.5, eps, 1-eps, 0.5], [0.485] * 4,
 
 # text
 fontfamily = "Bungee"
-fonts = [f for f in fonts if fontfamily.split()[0] in f]
-for font in fonts:
-    fm.fontManager.addfont(font)
-
-fontweight = "light"
-fontstyle = "normal"
-case = "lower"
+fonts = fm.findSystemFonts(fontpaths=None, fontext='ttf')
+[fm.fontManager.addfont(f) for f in fonts if fontfamily.split()[0] in f]
 
 fontsize = 100
-plt.text(0.5, 0.72, "TEX", fontsize=fontsize, ha="center", va="center", fontweight=fontweight, c=text_col, fontfamily=fontfamily, fontstyle=fontstyle)
+plt.text(0.5, 0.72, "TEX", fontsize=fontsize, ha="center", va="center", fontweight="light", c=text_col, fontfamily=fontfamily, fontstyle="normal")
 
 fontsize = 96
-plt.text(0.496, 0.25, "FMT", fontsize=fontsize, ha="center", va="center", fontweight=fontweight, c=text_col, fontfamily=fontfamily, fontstyle=fontstyle)
+plt.text(0.496, 0.25, "FMT", fontsize=fontsize, ha="center", va="center", fontweight="light", c=text_col, fontfamily=fontfamily, fontstyle="normal")
 
 # save
 plt.savefig("logo.svg", dpi=1000, transparent=True)
