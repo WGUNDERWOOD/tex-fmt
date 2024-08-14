@@ -46,7 +46,7 @@ L 311.318182 55.8
 L 57.681818 55.8 
 L 57.681818 307.8 
 L 184.5 307.8 
-" clip-path="url(#p350d283973)" style="fill: none; stroke: #e5652e; stroke-width: 24; stroke-linecap: square"/>
+" clip-path="url(#pcfd687b925)" style="fill: none; stroke: #e5652e; stroke-width: 24; stroke-linecap: square"/>
    </g>
    <g id="patch_3">
     <path d="M 184.5 307.8 
@@ -55,7 +55,7 @@ L 311.318182 55.8
 L 57.681818 55.8 
 L 57.681818 307.8 
 z
-" clip-path="url(#p350d283973)" style="fill: #e5652e"/>
+" clip-path="url(#pcfd687b925)" style="fill: #e5652e"/>
    </g>
    <g id="patch_4">
     <path d="M 184.5 295.2 
@@ -64,7 +64,7 @@ L 298.636364 68.4
 L 70.363636 68.4 
 L 70.363636 295.2 
 z
-" clip-path="url(#p350d283973)" style="fill: #191924"/>
+" clip-path="url(#pcfd687b925)" style="fill: #191924"/>
    </g>
    <g id="matplotlib.axis_1"/>
    <g id="matplotlib.axis_2"/>
@@ -75,14 +75,14 @@ L 298.636364 68.4
 L 70.363636 68.4 
 L 70.363636 295.2 
 L 184.5 295.2 
-" clip-path="url(#p350d283973)" style="fill: none; stroke: #191924; stroke-width: 14.4; stroke-linecap: square"/>
+" clip-path="url(#pcfd687b925)" style="fill: none; stroke: #191924; stroke-width: 14.4; stroke-linecap: square"/>
    </g>
    <g id="line2d_3">
     <path d="M 184.5 185.58 
 L 89.386364 185.58 
 L 279.613636 185.58 
 L 184.5 185.58 
-" clip-path="url(#p350d283973)" style="fill: none; stroke: #eed858; stroke-width: 5; stroke-linecap: square"/>
+" clip-path="url(#pcfd687b925)" style="fill: none; stroke: #eed858; stroke-width: 5; stroke-linecap: square"/>
    </g>
    <g id="patch_5">
     <path d="M 45 320.4 
@@ -235,7 +235,7 @@ z
    </g>
    <g id="text_2">
     <!-- FMT -->
-    <g style="fill: #faf7e5" transform="translate(84.720469 278.64) scale(0.94 -0.94)">
+    <g style="fill: #faf7e5" transform="translate(81.582955 279.36) scale(0.96 -0.96)">
      <defs>
       <path id="Bungee-Regular-46" d="M 1664 0 
 L 672 0 
@@ -314,7 +314,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p350d283973">
+  <clipPath id="pcfd687b925">
    <rect x="45" y="43.2" width="279" height="277.2"/>
   </clipPath>
  </defs>
