@@ -1,4 +1,4 @@
-# tex-fmt
+# tex-fmt <img src="https://github.com/WGUNDERWOOD/tex-fmt/raw/develop/extra/logo.svg" alt="tex-fmt" align="right" width=160 />
 
 [![CI](
 https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml/badge.svg)](

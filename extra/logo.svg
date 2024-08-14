@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="360pt" height="360pt" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>1980-01-01T00:00:00+00:00</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.8.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 360 
+L 360 360 
+L 360 0 
+L 0 0 
+L 0 360 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 45 320.4 
+L 324 320.4 
+L 324 43.2 
+L 45 43.2 
+L 45 320.4 
+z
+" style="fill: none"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 184.5 307.8 
+L 311.318182 307.8 
+L 311.318182 55.8 
+L 57.681818 55.8 
+L 57.681818 307.8 
+L 184.5 307.8 
+" clip-path="url(#p350d283973)" style="fill: none; stroke: #e5652e; stroke-width: 24; stroke-linecap: square"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 184.5 307.8 
+L 311.318182 307.8 
+L 311.318182 55.8 
+L 57.681818 55.8 
+L 57.681818 307.8 
+z
+" clip-path="url(#p350d283973)" style="fill: #e5652e"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 184.5 295.2 
+L 298.636364 295.2 
+L 298.636364 68.4 
+L 70.363636 68.4 
+L 70.363636 295.2 
+z
+" clip-path="url(#p350d283973)" style="fill: #191924"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2"/>
+   <g id="line2d_2">
+    <path d="M 184.5 295.2 
+L 298.636364 295.2 
+L 298.636364 68.4 
+L 70.363636 68.4 
+L 70.363636 295.2 
+L 184.5 295.2 
+" clip-path="url(#p350d283973)" style="fill: none; stroke: #191924; stroke-width: 14.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 184.5 185.58 
+L 89.386364 185.58 
+L 279.613636 185.58 
+L 184.5 185.58 
+" clip-path="url(#p350d283973)" style="fill: none; stroke: #eed858; stroke-width: 5; stroke-linecap: square"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 45 320.4 
+L 45 43.2 
+" style="fill: none"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 324 320.4 
+L 324 43.2 
+" style="fill: none"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 45 320.4 
+L 324 320.4 
+" style="fill: none"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 45 43.2 
+L 324 43.2 
+" style="fill: none"/>
+   </g>
+   <g id="text_1">
+    <!-- TEX -->
+    <g style="fill: #faf7e5" transform="translate(82.148438 162.36) scale(1 -1)">
+     <defs>
+      <path id="Bungee-Regular-54" d="M 2618 0 
+L 1581 0 
+Q 1459 0 1404 54 
+Q 1350 109 1350 230 
+L 1350 3373 
+L 410 3373 
+Q 288 3373 233 3427 
+Q 179 3482 179 3603 
+L 179 4378 
+Q 179 4499 233 4553 
+Q 288 4608 410 4608 
+L 3789 4608 
+Q 3910 4608 3964 4553 
+Q 4019 4499 4019 4378 
+L 4019 3603 
+Q 4019 3482 3964 3427 
+Q 3910 3373 3789 3373 
+L 2848 3373 
+L 2848 230 
+Q 2848 109 2793 54 
+Q 2739 0 2618 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="Bungee-Regular-45" d="M 3642 0 
+L 672 0 
+Q 550 0 496 54 
+Q 442 109 442 230 
+L 442 4378 
+Q 442 4499 496 4553 
+Q 550 4608 672 4608 
+L 3642 4608 
+Q 3763 4608 3817 4553 
+Q 3872 4499 3872 4378 
+L 3872 3629 
+Q 3872 3507 3817 3452 
+Q 3763 3398 3642 3398 
+L 1875 3398 
+L 1875 2906 
+L 3123 2906 
+Q 3245 2906 3299 2851 
+Q 3354 2797 3354 2675 
+L 3354 1990 
+Q 3354 1869 3299 1814 
+Q 3245 1760 3123 1760 
+L 1875 1760 
+L 1875 1210 
+L 3642 1210 
+Q 3763 1210 3817 1155 
+Q 3872 1101 3872 979 
+L 3872 230 
+Q 3872 109 3817 54 
+Q 3763 0 3642 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="Bungee-Regular-58" d="M 1818 230 
+Q 1818 109 1763 54 
+Q 1709 0 1587 0 
+L 614 0 
+Q 493 0 438 54 
+Q 384 109 384 230 
+L 384 915 
+Q 384 1210 435 1357 
+Q 486 1504 627 1702 
+L 1146 2400 
+L 627 3098 
+Q 480 3296 432 3443 
+Q 384 3590 384 3885 
+L 384 4378 
+Q 384 4499 438 4553 
+Q 493 4608 614 4608 
+L 1600 4608 
+Q 1722 4608 1776 4553 
+Q 1830 4499 1830 4378 
+L 1830 3936 
+Q 1830 3872 1836 3801 
+Q 1843 3731 1888 3667 
+L 2170 3264 
+Q 2202 3213 2237 3184 
+Q 2272 3155 2323 3155 
+L 2400 3155 
+Q 2451 3155 2483 3184 
+Q 2515 3213 2554 3264 
+L 2842 3667 
+Q 2886 3731 2892 3801 
+Q 2899 3872 2899 3936 
+L 2899 4378 
+Q 2899 4499 2953 4553 
+Q 3008 4608 3130 4608 
+L 4102 4608 
+Q 4224 4608 4278 4553 
+Q 4333 4499 4333 4378 
+L 4333 3885 
+Q 4333 3590 4281 3443 
+Q 4230 3296 4090 3098 
+L 3571 2394 
+L 4090 1702 
+Q 4237 1504 4285 1357 
+Q 4333 1210 4333 915 
+L 4333 230 
+Q 4333 109 4278 54 
+Q 4224 0 4102 0 
+L 3130 0 
+Q 3008 0 2953 54 
+Q 2899 109 2899 230 
+L 2899 864 
+Q 2899 928 2892 998 
+Q 2886 1069 2842 1133 
+L 2560 1536 
+Q 2522 1594 2490 1619 
+Q 2458 1645 2406 1645 
+L 2317 1645 
+Q 2266 1645 2234 1619 
+Q 2202 1594 2163 1536 
+L 1875 1133 
+Q 1830 1069 1824 998 
+Q 1818 928 1818 864 
+L 1818 230 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Bungee-Regular-54"/>
+     <use xlink:href="#Bungee-Regular-45" x="65.599991"/>
+     <use xlink:href="#Bungee-Regular-58" x="130.999985"/>
+    </g>
+   </g>
+   <g id="text_2">
+    <!-- FMT -->
+    <g style="fill: #faf7e5" transform="translate(84.720469 278.64) scale(0.94 -0.94)">
+     <defs>
+      <path id="Bungee-Regular-46" d="M 1664 0 
+L 672 0 
+Q 550 0 496 54 
+Q 442 109 442 230 
+L 442 4378 
+Q 442 4499 496 4553 
+Q 550 4608 672 4608 
+L 3526 4608 
+Q 3648 4608 3702 4553 
+Q 3757 4499 3757 4378 
+L 3757 3616 
+Q 3757 3494 3702 3440 
+Q 3648 3386 3526 3386 
+L 1894 3386 
+L 1894 2720 
+L 3008 2720 
+Q 3130 2720 3184 2665 
+Q 3238 2611 3238 2490 
+L 3238 1722 
+Q 3238 1600 3184 1545 
+Q 3130 1491 3008 1491 
+L 1894 1491 
+L 1894 230 
+Q 1894 109 1840 54 
+Q 1786 0 1664 0 
+z
+" transform="scale(0.015625)"/>
+      <path id="Bungee-Regular-4d" d="M 1626 0 
+L 672 0 
+Q 550 0 496 54 
+Q 442 109 442 230 
+L 442 4378 
+Q 442 4499 496 4553 
+Q 550 4608 672 4608 
+L 1702 4608 
+Q 1805 4608 1872 4563 
+Q 1939 4518 1997 4416 
+L 2573 3373 
+Q 2605 3315 2627 3289 
+Q 2650 3264 2688 3264 
+L 2746 3264 
+Q 2784 3264 2806 3289 
+Q 2829 3315 2861 3373 
+L 3430 4416 
+Q 3488 4518 3555 4563 
+Q 3622 4608 3725 4608 
+L 4762 4608 
+Q 4883 4608 4937 4553 
+Q 4992 4499 4992 4378 
+L 4992 230 
+Q 4992 109 4937 54 
+Q 4883 0 4762 0 
+L 3776 0 
+Q 3654 0 3600 54 
+Q 3546 109 3546 230 
+L 3546 2483 
+L 3168 1786 
+Q 3110 1677 3030 1629 
+Q 2950 1581 2829 1581 
+L 2573 1581 
+Q 2451 1581 2371 1629 
+Q 2291 1677 2234 1786 
+L 1856 2483 
+L 1856 230 
+Q 1856 109 1801 54 
+Q 1747 0 1626 0 
+z
+" transform="scale(0.015625)"/>
+     </defs>
+     <use xlink:href="#Bungee-Regular-46"/>
+     <use xlink:href="#Bungee-Regular-4d" x="61.799988"/>
+     <use xlink:href="#Bungee-Regular-54" x="146.699982"/>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p350d283973">
+   <rect x="45" y="43.2" width="279" height="277.2"/>
+  </clipPath>
+ </defs>
+</svg>
