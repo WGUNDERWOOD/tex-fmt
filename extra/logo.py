@@ -52,8 +52,8 @@ case = "lower"
 fontsize = 100
 plt.text(0.5, 0.72, "TEX", fontsize=fontsize, ha="center", va="center", fontweight=fontweight, c=text_col, fontfamily=fontfamily, fontstyle=fontstyle)
 
-fontsize = 94
-plt.text(0.5, 0.25, "FMT", fontsize=fontsize, ha="center", va="center", fontweight=fontweight, c=text_col, fontfamily=fontfamily, fontstyle=fontstyle)
+fontsize = 96
+plt.text(0.496, 0.25, "FMT", fontsize=fontsize, ha="center", va="center", fontweight=fontweight, c=text_col, fontfamily=fontfamily, fontstyle=fontstyle)
 
 # save
 plt.savefig("logo.svg", dpi=1000, transparent=True)
