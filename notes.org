@@ -21,6 +21,13 @@
 ***** Else
 ****** Move it from the queue to the output file
 ****** Update the global indentation state from the temporary variable
+*** New structs
+**** File{name, text}
+**** Program{args, logs}
+**** Format{linum, ignore, indent, leave}
+*** Rename leave to verbatim
+*** Better logging helper functions
+*** Also include environments on new line logic
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
