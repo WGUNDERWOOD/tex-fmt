@@ -6,6 +6,8 @@ license = "MIT"
 repository = "https://github.com/WGUNDERWOOD/tex-fmt"
 edition = "2021"
 description = "LaTeX formatter written in Rust"
+keywords = ["latex", "formatter"]
+categories = ["command-line-utilities", "development-tools"]
 exclude = ["tests/*", "extra/*", "*.nix", ".github/*"]
 
 [dependencies]
