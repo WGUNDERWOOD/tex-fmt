@@ -1,6 +1,6 @@
 default: test clippy format shellcheck
 
-all: default prof perf latex
+all: default prof perf latex logo
 
 alias t := test
 alias l := latex
@@ -27,3 +27,11 @@ prof:
 
 shellcheck:
   @shellcheck extra/*.sh
+
+logo:
+  @cd extra && python logo.py
+  @cd extra && magick -background none logo.svg -resize 5000x5000 logo.png
+  @cd extra && python card.py
+  @cd extra && magick -background none card.svg -resize 1280x640\! card.png
+  @cd extra && inkscape -w 2560 -h 1280 card.svg -o card.png
+  @cd extra && rm -f logo.png card.svg

@@ -5,6 +5,8 @@
 /result
 *.html
 *.log
-*.svg
+flamegraph.svg
 perf.data*
 *.csv
+*.pdf
+*.png
