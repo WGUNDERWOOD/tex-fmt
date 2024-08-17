@@ -1,6 +1,6 @@
 default: test clippy format shellcheck
 
-all: default prof perf latex logo
+all: default prof perf logo latex
 
 alias b := build
 alias t := test
