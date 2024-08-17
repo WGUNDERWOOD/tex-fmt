@@ -10,8 +10,9 @@ use crate::wrap::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
+use texlab::parser::parse_latex;
+use texlab::syntax::latex::SyntaxNode;
 
-/// Central function to format a file
 pub fn format_file(
     text: &str,
     file: &str,
@@ -77,6 +78,11 @@ pub fn format_file(
 
     new_text = remove_trailing_spaces(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
+
+    let tree = SyntaxNode::new_root(parse_latex(&text));
+    dbg!(&tree);
+
+    let new_text = tree.to_string();
     new_text
 }
 
