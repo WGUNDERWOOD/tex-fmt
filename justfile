@@ -25,6 +25,9 @@ perf:
 prof:
   @cd extra && bash prof.sh
 
+upgrade:
+  @cargo upgrade && cargo update
+
 shellcheck:
   @shellcheck extra/*.sh
 

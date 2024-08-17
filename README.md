@@ -87,6 +87,14 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 nix build "github:wgunderwood/tex-fmt"
 ```
 
+## Usage
+``` shell
+tex-fmt file.tex        # format file.tex and overwrite
+tex-fmt -c file.tex     # check if file.tex is correctly formatted
+tex-fmt -p file.tex     # format file.tex and print to STDOUT
+tex-fmt -h              # view help information
+```
+
 ## Performance
 
 When formatting all of the test cases,
