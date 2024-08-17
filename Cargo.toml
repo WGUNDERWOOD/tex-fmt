@@ -11,12 +11,12 @@ categories = ["command-line-utilities", "development-tools"]
 exclude = ["tests/*", "extra/*", "*.nix", ".github/*"]
 
 [dependencies]
-clap = { version = "4.4.0", features = ["derive"] }
-env_logger = "0.11.3"
-lazy_static = "1.4.0"
-log = "0.4.21"
-regex = "1.10.3"
-similar = "2.5.0"
+clap = { version = "4.5.16", features = ["derive"] }
+env_logger = "0.11.5"
+lazy_static = "1.5.0"
+log = "0.4.22"
+regex = "1.10.6"
+similar = "2.6.0"
 
 [profile.release]
 codegen-units = 1
