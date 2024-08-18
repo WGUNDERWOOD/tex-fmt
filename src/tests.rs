@@ -122,7 +122,7 @@ fn test_short() {
 #[test]
 #[ignore]
 fn test_short() {
-    let file = "short_document.tex";
+    let file = "readme.tex";
     let mut fail = false;
     if !test_file(
             &format!("tests/source/{}", file),

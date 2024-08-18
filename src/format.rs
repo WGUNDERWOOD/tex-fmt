@@ -79,8 +79,10 @@ pub fn format_file(
     new_text = remove_trailing_spaces(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
 
+    // https://docs.rs/rowan/latest/rowan/api/struct.SyntaxNode.html
     let tree = SyntaxNode::new_root(parse_latex(&text));
     dbg!(&tree);
+    dbg!(&tree.kind());
 
     let new_text = tree.to_string();
     new_text
