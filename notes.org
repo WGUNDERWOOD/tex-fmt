@@ -24,3 +24,5 @@
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
+** Parsing with pest
+** Parsing with nom
