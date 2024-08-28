@@ -35,7 +35,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
 pub fn apply_wrap(
     line: &str,
     state: &State
-) -> (String, Option<String>) {
+) -> Option<(String, String)> {
     //if args.verbose {
         //record_log(
             //logs,
@@ -53,7 +53,7 @@ pub fn apply_wrap(
     //while needs_wrap(&remaining_line) && can_wrap {
         let wrap_point = find_wrap_point(&line);
         let comment_index = find_comment_index(&line);
-        let (line_1, line_2) = match wrap_point {
+        match wrap_point {
             Some(p) => {
                 let line_start = match comment_index {
                     Some(c) => {
@@ -68,17 +68,17 @@ pub fn apply_wrap(
                 let line_1 = line.chars().take(p).collect();
                 let mut line_2: String = line.chars().skip(p).collect();
                 line_2.insert_str(0, line_start);
-                (line_1, Some(line_2))
+                Some((line_1, line_2))
             }
             None => {
-                (line.to_string(), None)
+                None
             }
-        };
+        }
     //}
     //new_line.push_str(&remaining_line);
     //new_line
 
-    (line_1, line_2)
+    //(line_1, line_2)
 }
 
 /*
