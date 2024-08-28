@@ -34,12 +34,12 @@ pub fn format_file(text: &str, file: &str) -> String {
             (line, state) = apply_indent(&line, &state);
             if needs_wrap(&line) {
                 let wrapped_lines = apply_wrap(&line, &state);
-                if wrapped_lines.1.is_some() {
-                    queue.push(wrapped_lines.1.unwrap());
-                    queue.push(wrapped_lines.0);
+                if wrapped_lines.is_some() {
+                    queue.push(wrapped_lines.clone().unwrap().1);
+                    queue.push(wrapped_lines.clone().unwrap().0);
                 } else {
                     // TODO raise a wrap warning here
-                    new_text.push_str(&wrapped_lines.0);
+                    new_text.push_str(&line);
                     new_text.push('\n');
                 };
                 //dbg!(wrapped_lines);
