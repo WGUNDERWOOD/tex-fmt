@@ -1,3 +1,4 @@
+/*
 pub fn find_comment_index(line: &str) -> Option<usize> {
     // no percent means no comment
     if !line.contains('%') {
@@ -46,3 +47,4 @@ pub fn get_comment(line: &str, comment: Option<usize>) -> String {
         None => "".to_string(),
     }
 }
+*/

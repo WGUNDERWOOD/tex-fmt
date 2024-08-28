@@ -28,6 +28,24 @@
 *** Rename leave to verbatim
 *** Better logging helper functions
 *** Also include environments on new line logic
+*** Consider
+**** Indenting
+**** Wrapping
+**** Ignores, leaves, comments
+**** Removing trailing spaces (this should also be part of wrapping)
+**** Remove extra newlines (fine for now)
+**** Environments on new lines (fine for now)
+**** Remove tabs (fine for now)
+*** Ideas
+**** Keep a State struct which contains all formatting info
+***** Current old linum
+***** Current new linum
+***** Current indentation level
+***** Current ignore status
+***** Current leave status
+**** For each line in the queue
+***** indent(line, state) -> (new_line, temp_state)
+***** wrap(line, state) -> line
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser

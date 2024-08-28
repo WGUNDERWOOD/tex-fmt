@@ -10,6 +10,9 @@ alias f := format
 test:
   @cargo test -r
 
+testignored:
+  @cargo test -- --ignored
+
 clippy:
   @cargo clippy -r
 

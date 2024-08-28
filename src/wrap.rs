@@ -1,3 +1,4 @@
+/*
 use crate::comments::*;
 use crate::ignore::*;
 use crate::leave::*;
@@ -141,3 +142,4 @@ pub fn wrap(
 
     new_text
 }
+*/

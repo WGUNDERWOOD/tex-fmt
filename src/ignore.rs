@@ -1,3 +1,4 @@
+/*
 use crate::logging::*;
 use log::Level::Warn;
 
@@ -80,3 +81,4 @@ fn contains_ignore_begin(line: &str) -> bool {
 fn contains_ignore_end(line: &str) -> bool {
     line.ends_with("% tex-fmt: on")
 }
+*/

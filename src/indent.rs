@@ -1,3 +1,4 @@
+/*
 use crate::comments::*;
 use crate::ignore::*;
 use crate::leave::*;
@@ -106,6 +107,7 @@ fn get_indent(line: &str, prev_indent: Indent) -> Indent {
     Indent { actual, visual }
 }
 
+// TODO redo this
 pub fn apply_indent(
     text: &str,
     file: &str,
@@ -185,3 +187,4 @@ pub fn apply_indent(
 
     new_text
 }
+*/

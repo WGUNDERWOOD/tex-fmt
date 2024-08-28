@@ -1,3 +1,4 @@
+/*
 use crate::colors::*;
 use crate::Cli;
 use env_logger::Builder;
@@ -118,3 +119,4 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
         }
     }
 }
+*/
