@@ -1,7 +1,6 @@
-/*
 use clap::Parser;
 
-const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
+//const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -19,25 +18,24 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub fn resolve(&mut self) {
-        if self.trace {
-            self.verbose = true;
-        }
-    }
+    //pub fn resolve(&mut self) {
+        //if self.trace {
+            //self.verbose = true;
+        //}
+    //}
 
-    #[cfg(test)]
-    pub fn new() -> Self {
-        Cli {
-            check: false,
-            print: false,
-            verbose: false,
-            trace: false,
-            files: Vec::<String>::new(),
-        }
-    }
+    //#[cfg(test)]
+    //pub fn new() -> Self {
+        //Cli {
+            //check: false,
+            //print: false,
+            //verbose: false,
+            //trace: false,
+            //files: Vec::<String>::new(),
+        //}
+    //}
 }
 
-pub fn check_extension_valid(file: &str) -> bool {
-    EXTENSIONS.iter().any(|e| file.ends_with(e))
-}
-*/
+//pub fn check_extension_valid(file: &str) -> bool {
+    //EXTENSIONS.iter().any(|e| file.ends_with(e))
+//}

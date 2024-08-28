@@ -1,37 +1,83 @@
-/*
 use crate::indent::*;
-use crate::logging::*;
-use crate::subs::*;
+//use crate::program::*;
+//use crate::file::*;
+//use crate::logging::*;
+//use crate::subs::*;
 //use crate::wrap::*;
 use crate::ignore::*;
 use crate::leave::*;
-use crate::Cli;
-use log::Level::{Info};
+//use crate::parse::*;
+//use log::Level::{Info};
 
-const MAX_PASS: usize = 10;
+//const MAX_PASS: usize = 10;
 
-struct Format {
-    linum_old: usize,
-    linum_new: usize,
-    ignore: Ignore,
-    indent: Indent,
-    leave: Leave,
+pub fn format_file(text: &str, file: &str) -> String {
+    let mut state = State::new();
+    let mut old_lines: Vec<&str> = text.lines().rev().collect();
+    let mut queue: Vec<String> = vec![];
+    let mut new_text: String = "".to_string();
+    dbg!(file);
+
+    //dbg!(old_lines);
+
+    loop {
+        if !queue.is_empty() {
+            // process the queue
+            let mut line = queue.pop().unwrap();
+            (line, state) = apply_indent(&line, &state);
+            dbg!(&line);
+            println!("\n\n");
+            new_text.push_str(&line);
+            new_text.push('\n');
+        } else if !old_lines.is_empty() {
+            // move the next line into the queue
+            let line: String = old_lines.pop().unwrap().to_string();
+            //dbg!(&line);
+            queue.push(line);
+        } else {
+            break
+        }
+        //dbg!(&queue);
+    }
+
+    new_text
+}
+
+#[derive(Clone)]
+pub struct State {
+    pub linum_old: usize,
+    pub linum_new: usize,
+    pub ignore: Ignore,
+    pub indent: Indent,
+    pub leave: Leave,
+}
+
+impl State {
+    pub fn new() -> Self {
+        State {
+            linum_old: 0,
+            linum_new: 0,
+            ignore: Ignore::new(),
+            indent: Indent::new(),
+            leave: Leave::new(),
+        }
+    }
 }
 
 // TODO write this function
-fn apply_indent_wrap(
-    text: &str,
-    file: &str,
-    args: &Cli,
-    logs: &mut Vec<Log>,
-) -> String {
+//fn apply_indent_wrap(
+    //text: &str,
+    //file: &str,
+    //args: &Cli,
+    //logs: &mut Vec<Log>,
+//) -> String {
 
-    let old_lines: Vec<&str> = text.lines().collect();
-    let queue: Vec<String> = vec![];
-    let new_lines: Vec<String> = vec![];
+    //let old_lines: Vec<&str> = text.lines().collect();
+    //let queue: Vec<String> = vec![];
+    //let new_lines: Vec<String> = vec![];
 
-    text.to_string()
-}
+    //text.to_string()
+//}
 
 /*
 fn apply_passes(
@@ -82,6 +128,7 @@ fn apply_passes(
 }
 */
 
+/*
 pub fn format_file(
     text: &str,
     file: &str,
