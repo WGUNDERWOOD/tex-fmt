@@ -1,4 +1,3 @@
-/*
 pub fn find_comment_index(line: &str) -> Option<usize> {
     // no percent means no comment
     if !line.contains('%') {
@@ -41,10 +40,9 @@ pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
     }
 }
 
-pub fn get_comment(line: &str, comment: Option<usize>) -> String {
-    match comment {
-        Some(c) => line.chars().skip(c).collect(),
-        None => "".to_string(),
-    }
-}
-*/
+//pub fn get_comment(line: &str, comment: Option<usize>) -> String {
+    //match comment {
+        //Some(c) => line.chars().skip(c).collect(),
+        //None => "".to_string(),
+    //}
+//}

@@ -1,9 +1,8 @@
-/*
-use crate::logging::*;
-use crate::regexes::*;
-use log::Level::Warn;
+//use crate::logging::*;
+//use crate::regexes::*;
+//use log::Level::Warn;
 
-#[derive(Debug)]
+#[derive(Clone,Debug)]
 pub struct Leave {
     pub actual: i8,
     pub visual: bool,
@@ -18,6 +17,7 @@ impl Leave {
     }
 }
 
+/*
 pub fn get_leave(
     line: &str,
     linum: usize,

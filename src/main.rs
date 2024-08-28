@@ -1,29 +1,29 @@
 //use clap::Parser;
 //use log::Level::Error;
-//use std::fs;
+use std::fs;
 //use std::process::exit;
 
-//mod colors;
-//mod comments;
-//mod format;
-//mod ignore;
-//mod indent;
-//mod leave;
+mod colors;
+mod comments;
+mod format;
+mod ignore;
+mod indent;
+mod leave;
 //mod logging;
-//mod parse;
-//mod regexes;
+mod parse;
+mod regexes;
 //mod subs;
 //mod wrap;
 //mod write;
-//use crate::format::*;
+use crate::format::*;
 //use crate::logging::*;
-//use crate::parse::*;
+use crate::parse::*;
 //use crate::write::*;
 
-//const TAB: i8 = 2;
+const TAB: i8 = 2;
 
-//#[cfg(test)]
-//mod tests;
+#[cfg(test)]
+mod tests;
 
 fn main() {
     //let mut args = Cli::parse();
