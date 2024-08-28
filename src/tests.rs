@@ -90,7 +90,7 @@ fn test_target() {
 #[test]
 #[ignore]
 fn test_short() {
-    let file = "short_document.tex";
+    let file = "lists.tex";
     let mut fail = false;
     if !test_file(
             &format!("tests/source/{}", file),
