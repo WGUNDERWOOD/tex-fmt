@@ -12,13 +12,20 @@ use crate::leave::*;
 //const MAX_PASS: usize = 10;
 
 pub fn format_file(text: &str, file: &str) -> String {
-    let mut state = State::new();
-    let mut old_lines: Vec<&str> = text.lines().rev().collect();
-    let mut queue: Vec<String> = vec![];
-    let mut new_text: String = "".to_string();
     //dbg!(file);
 
     //dbg!(old_lines);
+
+    let mut old_text = remove_extra_newlines(text);
+    // TODO
+    //old_text = environments_new_line(&old_text, file);
+    old_text = remove_tabs(&old_text);
+    old_text = remove_trailing_spaces(&old_text);
+
+    let mut state = State::new();
+    let mut old_lines: Vec<&str> = old_text.lines().rev().collect();
+    let mut queue: Vec<String> = vec![];
+    let mut new_text: String = "".to_string();
 
     loop {
         if !queue.is_empty() {
@@ -41,7 +48,7 @@ pub fn format_file(text: &str, file: &str) -> String {
                 new_text.push('\n');
             }
             //dbg!(&line);
-            println!("\n");
+            //println!("\n");
         } else if !old_lines.is_empty() {
             // move the next line into the queue
             let line: String = old_lines.pop().unwrap().to_string();
