@@ -1,3 +1,4 @@
+/*
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -45,3 +46,4 @@ lazy_static! {
     pub static ref RE_ITEM_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
 }
+*/

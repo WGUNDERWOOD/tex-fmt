@@ -1,19 +1,24 @@
+/*
 use crate::indent::*;
 use crate::logging::*;
 use crate::subs::*;
-use crate::wrap::*;
+//use crate::wrap::*;
+use crate::ignore::*;
+use crate::leave::*;
 use crate::Cli;
-use log::Level::{Info, Warn};
+use log::Level::{Info};
 
 const MAX_PASS: usize = 10;
 
 struct Format {
-    linum: usize,
+    linum_old: usize,
+    linum_new: usize,
     ignore: Ignore,
     indent: Indent,
     leave: Leave,
 }
 
+// TODO write this function
 fn apply_indent_wrap(
     text: &str,
     file: &str,
@@ -21,7 +26,11 @@ fn apply_indent_wrap(
     logs: &mut Vec<Log>,
 ) -> String {
 
-    new_text
+    let old_lines: Vec<&str> = text.lines().collect();
+    let queue: Vec<String> = vec![];
+    let new_lines: Vec<String> = vec![];
+
+    text.to_string()
 }
 
 /*
@@ -97,3 +106,4 @@ pub fn format_file(
     new_text = apply_indent_wrap(&new_text, file, args, logs);
     new_text
 }
+*/

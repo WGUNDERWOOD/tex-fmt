@@ -1,3 +1,4 @@
+/*
 use clap::Parser;
 
 const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
@@ -39,3 +40,4 @@ impl Cli {
 pub fn check_extension_valid(file: &str) -> bool {
     EXTENSIONS.iter().any(|e| file.ends_with(e))
 }
+*/
