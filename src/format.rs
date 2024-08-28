@@ -2,8 +2,8 @@ use crate::indent::*;
 //use crate::program::*;
 //use crate::file::*;
 //use crate::logging::*;
-//use crate::subs::*;
-//use crate::wrap::*;
+use crate::subs::*;
+use crate::wrap::*;
 use crate::ignore::*;
 use crate::leave::*;
 //use crate::parse::*;
@@ -16,7 +16,7 @@ pub fn format_file(text: &str, file: &str) -> String {
     let mut old_lines: Vec<&str> = text.lines().rev().collect();
     let mut queue: Vec<String> = vec![];
     let mut new_text: String = "".to_string();
-    dbg!(file);
+    //dbg!(file);
 
     //dbg!(old_lines);
 
@@ -25,10 +25,23 @@ pub fn format_file(text: &str, file: &str) -> String {
             // process the queue
             let mut line = queue.pop().unwrap();
             (line, state) = apply_indent(&line, &state);
-            dbg!(&line);
-            println!("\n\n");
-            new_text.push_str(&line);
-            new_text.push('\n');
+            if needs_wrap(&line) {
+                let wrapped_lines = apply_wrap(&line, &state);
+                if wrapped_lines.1.is_some() {
+                    queue.push(wrapped_lines.1.unwrap());
+                    queue.push(wrapped_lines.0);
+                } else {
+                    // TODO raise a wrap warning here
+                    new_text.push_str(&wrapped_lines.0);
+                    new_text.push('\n');
+                };
+                //dbg!(wrapped_lines);
+            } else {
+                new_text.push_str(&line);
+                new_text.push('\n');
+            }
+            //dbg!(&line);
+            println!("\n");
         } else if !old_lines.is_empty() {
             // move the next line into the queue
             let line: String = old_lines.pop().unwrap().to_string();
@@ -40,6 +53,8 @@ pub fn format_file(text: &str, file: &str) -> String {
         //dbg!(&queue);
     }
 
+    println!("{}", &new_text);
+    //new_text = remove_trailing_spaces(&new_text);
     new_text
 }
 

@@ -1,13 +1,13 @@
-/*
-use crate::comments::*;
-use crate::ignore::*;
-use crate::leave::*;
-use crate::logging::*;
+//use crate::comments::*;
+//use crate::ignore::*;
+//use crate::leave::*;
+//use crate::logging::*;
 use crate::regexes::*;
-use crate::Cli;
-use crate::TAB;
-use log::Level::Info;
+//use crate::Cli;
+//use crate::TAB;
+//use log::Level::Info;
 
+/*
 pub fn remove_extra_newlines(text: &str) -> String {
     RE_NEWLINES.replace_all(text, "\n\n").to_string()
 }
@@ -16,11 +16,13 @@ pub fn remove_tabs(text: &str) -> String {
     let replace = (0..TAB).map(|_| " ").collect::<String>();
     RE_TABS.replace_all(text, replace).to_string()
 }
+*/
 
 pub fn remove_trailing_spaces(text: &str) -> String {
     RE_TRAIL.replace_all(text, "\n").to_string()
 }
 
+/*
 pub fn environments_new_line(
     text: &str,
     file: &str,

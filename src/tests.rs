@@ -90,7 +90,7 @@ fn test_target() {
 #[test]
 #[ignore]
 fn test_short() {
-    let file = "readme.tex";
+    let file = "short_document.tex";
     let mut fail = false;
     if !test_file(
             &format!("tests/source/{}", file),

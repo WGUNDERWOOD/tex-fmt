@@ -207,7 +207,7 @@ pub fn apply_indent(line: &str, state: &State) -> (String, State) {
             let line_strip = &remove_comment(line, comment_index);
             let indent = get_indent(line_strip, &state.indent);
             new_state.indent = indent.clone();
-            dbg!(&indent);
+            //dbg!(&indent);
             //if args.trace {
                 //record_log(
                     //logs,

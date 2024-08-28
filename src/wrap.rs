@@ -1,10 +1,10 @@
-/*
+use crate::format::*;
 use crate::comments::*;
-use crate::ignore::*;
-use crate::leave::*;
-use crate::logging::*;
-use crate::parse::*;
-use log::Level::{Info, Warn};
+//use crate::ignore::*;
+//use crate::leave::*;
+//use crate::logging::*;
+//use crate::parse::*;
+//use log::Level::{Info, Warn};
 
 const WRAP: usize = 80;
 
@@ -32,32 +32,28 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-fn wrap_line(
+pub fn apply_wrap(
     line: &str,
-    linum: usize,
-    args: &Cli,
-    logs: &mut Vec<Log>,
-    pass: Option<usize>,
-    file: &str,
-) -> String {
-    if args.verbose {
-        record_log(
-            logs,
-            Info,
-            pass,
-            file.to_string(),
-            Some(linum),
-            Some(line.to_string()),
-            "Wrapping long line.".to_string(),
-        );
-    }
-    let mut remaining_line = line.to_string();
-    let mut new_line = "".to_string();
-    let mut can_wrap = true;
-    while needs_wrap(&remaining_line) && can_wrap {
-        let wrap_point = find_wrap_point(&remaining_line);
-        let comment_index = find_comment_index(&remaining_line);
-        match wrap_point {
+    state: &State
+) -> (String, Option<String>) {
+    //if args.verbose {
+        //record_log(
+            //logs,
+            //Info,
+            //pass,
+            //file.to_string(),
+            //Some(linum),
+            //Some(line.to_string()),
+            //"Wrapping long line.".to_string(),
+        //);
+    //}
+    //let mut remaining_line = line.to_string();
+    //let mut new_line = "".to_string();
+    //let mut can_wrap = true;
+    //while needs_wrap(&remaining_line) && can_wrap {
+        let wrap_point = find_wrap_point(&line);
+        let comment_index = find_comment_index(&line);
+        let (line_1, line_2) = match wrap_point {
             Some(p) => {
                 let line_start = match comment_index {
                     Some(c) => {
@@ -69,22 +65,23 @@ fn wrap_line(
                     }
                     None => "",
                 };
-                let first_segment: String =
-                    remaining_line.chars().take(p).collect();
-                new_line.push_str(&first_segment);
-                new_line.push('\n');
-                remaining_line = remaining_line.chars().skip(p).collect();
-                remaining_line.insert_str(0, line_start);
+                let line_1 = line.chars().take(p).collect();
+                let mut line_2: String = line.chars().skip(p).collect();
+                line_2.insert_str(0, line_start);
+                (line_1, Some(line_2))
             }
             None => {
-                can_wrap = false;
+                (line.to_string(), None)
             }
-        }
-    }
-    new_line.push_str(&remaining_line);
-    new_line
+        };
+    //}
+    //new_line.push_str(&remaining_line);
+    //new_line
+
+    (line_1, line_2)
 }
 
+/*
 pub fn wrap(
     text: &str,
     file: &str,
