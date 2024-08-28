@@ -50,7 +50,7 @@ fn main() {
                     "File is not correctly formatted.".to_string(),
                 );
                 exit_code = 1;
-            } else {
+            } else if text != new_text {
                 write_file(file, &new_text);
             }
         } else {

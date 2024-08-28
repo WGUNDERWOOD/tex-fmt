@@ -15,6 +15,7 @@ echo
 # tex-fmt
 TEXFMTFILE="hyperfine-tex-fmt.csv"
 hyperfine --warmup 10 \
+    --min-runs 50 \
     --export-csv $TEXFMTFILE \
     --command-name "tex-fmt" \
     --prepare "cp -r ../tests/* $DIR" \
