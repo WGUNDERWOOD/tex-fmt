@@ -40,7 +40,12 @@ fn record_log(
     logs.push(log);
 }
 
-pub fn record_file_log(logs: &mut Vec<Log>, level: Level, file: &str, message: &str) {
+pub fn record_file_log(
+    logs: &mut Vec<Log>,
+    level: Level,
+    file: &str,
+    message: &str,
+) {
     record_log(logs, level, file, None, None, None, message);
 }
 

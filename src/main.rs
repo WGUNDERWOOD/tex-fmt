@@ -42,7 +42,12 @@ fn main() {
             if args.print {
                 println!("{}", &new_text);
             } else if args.check && text != new_text {
-                record_file_log(&mut logs, Error, file, "Incorrect formatting.");
+                record_file_log(
+                    &mut logs,
+                    Error,
+                    file,
+                    "Incorrect formatting.",
+                );
                 exit_code = 1;
             } else if text != new_text {
                 write_file(file, &new_text);

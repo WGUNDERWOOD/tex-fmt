@@ -45,7 +45,15 @@ pub fn apply_wrap(
     logs: &mut Vec<Log>,
 ) -> Option<(String, String)> {
     if args.trace {
-        record_line_log(logs, Trace, file, linum_new, linum_old, line, "Wrapping long line.");
+        record_line_log(
+            logs,
+            Trace,
+            file,
+            linum_new,
+            linum_old,
+            line,
+            "Wrapping long line.",
+        );
     }
     let wrap_point = find_wrap_point(&line);
     let comment_index = find_comment_index(&line);

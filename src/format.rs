@@ -33,8 +33,9 @@ pub fn format_file(
             if needs_wrap(&line, &state, logs) {
                 let linum_new = 0; // TODO implement this
                 let linum_old = 0; // TODO implement this
-                let wrapped_lines =
-                    apply_wrap(&line, linum_new, linum_old, &state, &file, &args, logs);
+                let wrapped_lines = apply_wrap(
+                    &line, linum_new, linum_old, &state, &file, &args, logs,
+                );
                 if wrapped_lines.is_some() {
                     queue.push(wrapped_lines.clone().unwrap().1);
                     queue.push(wrapped_lines.clone().unwrap().0);
@@ -75,6 +76,13 @@ pub struct State {
     pub ignore: Ignore,
     pub indent: Indent,
     pub leave: Leave,
+    //pub file: String,
+}
+
+pub struct Line {
+    pub linum_new: usize,
+    pub linum_old: usize,
+    pub text: String,
 }
 
 impl State {
