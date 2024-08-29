@@ -2,10 +2,14 @@ default: test clippy format shellcheck
 
 all: default prof perf latex logo
 
+alias b := build
 alias t := test
 alias l := latex
 alias c := clippy
 alias f := format
+
+build:
+  @cargo build -r
 
 test:
   @cargo test -r

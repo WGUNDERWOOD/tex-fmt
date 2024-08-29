@@ -1,6 +1,6 @@
-//use crate::logging::*;
+use crate::logging::*;
 use crate::format::*;
-//use log::Level::Warn;
+use log::Level::Warn;
 
 #[derive(Clone, Debug)]
 pub struct Ignore {
@@ -17,7 +17,7 @@ impl Ignore {
     }
 }
 
-pub fn get_ignore(line: &str, state: &State) -> Ignore {
+pub fn get_ignore(line: &str, state: &State, logs: &mut Vec<Log>, warn: bool) -> Ignore {
     let skip = contains_ignore_skip(line);
     let begin = contains_ignore_begin(line);
     let end = contains_ignore_end(line);
@@ -31,14 +31,14 @@ pub fn get_ignore(line: &str, state: &State) -> Ignore {
         actual = true;
         visual = true;
         //if warn && ignore.actual {
-        //record_log(
+        //record_line_log(
         //logs,
         //Warn,
-        //pass,
-        //file.to_string(),
-        //Some(linum),
-        //Some(line.to_string()),
-        //"Cannot begin ignore block:".to_string(),
+        //file,
+        //linum_new,
+        //linum_old,
+        //line,
+        //"Cannot begin ignore block:",
         //);
         //}
     } else if end {

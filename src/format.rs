@@ -1,23 +1,21 @@
-use crate::indent::*;
-//use crate::program::*;
-//use crate::file::*;
-//use crate::logging::*;
 use crate::ignore::*;
+use crate::indent::*;
 use crate::leave::*;
+use crate::logging::*;
+use crate::parse::*;
 use crate::subs::*;
 use crate::wrap::*;
-//use crate::parse::*;
-//use log::Level::{Info};
+use log::Level::{Error, Info, Trace, Warn};
 
-//const MAX_PASS: usize = 10;
-
-pub fn format_file(text: &str, file: &str) -> String {
-    //dbg!(file);
-
-    //dbg!(old_lines);
-
+pub fn format_file(
+    text: &str,
+    file: &str,
+    args: &Cli,
+    logs: &mut Vec<Log>,
+) -> String {
+    record_file_log(logs, Info, file, "Formatting started.");
     let mut old_text = remove_extra_newlines(text);
-    old_text = environments_new_line(&old_text, file);
+    old_text = environments_new_line(&old_text, file, logs);
     old_text = remove_tabs(&old_text);
     old_text = remove_trailing_spaces(&old_text);
 
@@ -31,40 +29,42 @@ pub fn format_file(text: &str, file: &str) -> String {
             // process the queue
             let mut line = queue.pop().unwrap();
             let temp_state: State;
-            (line, temp_state) = apply_indent(&line, &state);
-            if needs_wrap(&line, &state) {
-                let wrapped_lines = apply_wrap(&line, &state);
-                //println!("{}\n", &line);
+            (line, temp_state) = apply_indent(&line, &state, logs);
+            if needs_wrap(&line, &state, logs) {
+                let linum_new = 0; // TODO implement this
+                let linum_old = 0; // TODO implement this
+                let wrapped_lines =
+                    apply_wrap(&line, linum_new, linum_old, &state, &file, &args, logs);
                 if wrapped_lines.is_some() {
                     queue.push(wrapped_lines.clone().unwrap().1);
                     queue.push(wrapped_lines.clone().unwrap().0);
                 } else {
-                    // TODO raise a wrap warning here
                     new_text.push_str(&line);
                     new_text.push('\n');
                 };
-                //dbg!(wrapped_lines);
             } else {
                 state = temp_state;
+                state.linum_new += 1;
                 new_text.push_str(&line);
                 new_text.push('\n');
             }
-            //dbg!(&line);
-            //println!("\n");
         } else if !old_lines.is_empty() {
             // move the next line into the queue
             let line: String = old_lines.pop().unwrap().to_string();
-            //dbg!(&line);
             queue.push(line);
         } else {
             break;
         }
-        //println!("{}", &line);
-        //dbg!(&queue);
     }
 
-    //println!("{}", &new_text);
     new_text = remove_trailing_spaces(&new_text);
+
+    if !indents_return_to_zero(&new_text) {
+        record_file_log(logs, Warn, file, "Indent does not return to zero.");
+    }
+
+    record_file_log(logs, Info, file, "Formatting complete.");
+
     new_text
 }
 
@@ -89,93 +89,6 @@ impl State {
     }
 }
 
-// TODO write this function
-//fn apply_indent_wrap(
-//text: &str,
-//file: &str,
-//args: &Cli,
-//logs: &mut Vec<Log>,
-//) -> String {
-
-//let old_lines: Vec<&str> = text.lines().collect();
-//let queue: Vec<String> = vec![];
-//let new_lines: Vec<String> = vec![];
-
-//text.to_string()
-//}
-
-/*
-fn apply_passes(
-    text: &str,
-    file: &str,
-    args: &Cli,
-    logs: &mut Vec<Log>,
-) -> String {
-    let mut new_text = apply_indent(text, file, args, logs, Some(1));
-    let mut finished = false;
-    let mut pass = 2;
-
-    while !finished && needs_wrap(&new_text) && pass < MAX_PASS + 2 {
-        let old_text = new_text.clone();
-        new_text = wrap(&new_text, file, logs, Some(pass), args);
-        new_text = remove_trailing_spaces(&new_text);
-        new_text = apply_indent(&new_text, file, args, logs, Some(pass));
-        pass += 1;
-        if new_text == old_text {
-            finished = true;
-        }
-    }
-
-    record_log(
-        logs,
-        Info,
-        None,
-        file.to_string(),
-        None,
-        None,
-        "Passes completed.".to_string(),
-    );
-
-    // check indents return to zero
-    if new_text.lines().last().unwrap_or_default().starts_with(' ') {
-        record_log(
-            logs,
-            Warn,
-            None,
-            file.to_string(),
-            None,
-            None,
-            "Indent does not return to zero.".to_string(),
-        );
-    }
-
-    new_text
+fn indents_return_to_zero(text: &str) -> bool {
+    !text.lines().last().unwrap_or_default().starts_with(' ')
 }
-*/
-
-/*
-pub fn format_file(
-    text: &str,
-    file: &str,
-    args: &Cli,
-    logs: &mut Vec<Log>,
-) -> String {
-    if args.verbose {
-        record_log(
-            logs,
-            Info,
-            None,
-            file.to_string(),
-            None,
-            None,
-            "Begin formatting.".to_string(),
-        );
-    }
-    let mut new_text = remove_extra_newlines(text);
-    new_text = environments_new_line(&new_text, file, args, logs);
-    new_text = remove_tabs(&new_text);
-    new_text = remove_trailing_spaces(&new_text);
-    new_text = apply_indent_wrap(&new_text, file, args, logs);
-    new_text
-}
-*/

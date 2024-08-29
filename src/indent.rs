@@ -2,7 +2,7 @@ use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
 use crate::leave::*;
-//use crate::logging::*;
+use crate::logging::*;
 //use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
@@ -189,13 +189,11 @@ pub fn apply_indent(
 }
 */
 
-pub fn apply_indent(line: &str, state: &State) -> (String, State) {
+pub fn apply_indent(line: &str, state: &State, logs: &mut Vec<Log>) -> (String, State) {
     let mut new_line = line.to_string();
     let mut new_state = state.clone();
 
-    //for (linum, line) in text.lines().enumerate() {
-    //ignore = get_ignore(line, linum, ignore, file, logs, pass, true);
-    new_state.ignore = get_ignore(line, state);
+    new_state.ignore = get_ignore(line, state, logs, true);
     new_state.leave = get_leave(line, state);
 
     if !new_state.leave.visual && !new_state.ignore.visual {
@@ -204,9 +202,6 @@ pub fn apply_indent(line: &str, state: &State) -> (String, State) {
         let line_strip = &remove_comment(line, comment_index);
         let indent = get_indent(line_strip, &state.indent);
         new_state.indent = indent.clone();
-        //new_state.ignore = ignore.clone();
-        //new_state.leave = leave.clone();
-        //dbg!(&indent);
         //if args.trace {
         //record_log(
         //logs,
@@ -244,9 +239,7 @@ pub fn apply_indent(line: &str, state: &State) -> (String, State) {
                 new_line.insert(0, ' ');
             }
         }
-        //new_text.push_str(&new_line);
     }
-    //new_text.push('\n');
 
     (new_line, new_state)
 }

@@ -2,7 +2,7 @@ use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
 use crate::leave::*;
-//use crate::logging::*;
+use crate::logging::*;
 use crate::regexes::*;
 //use crate::Cli;
 use crate::TAB;
@@ -25,7 +25,7 @@ pub fn environments_new_line(
     text: &str,
     file: &str,
     //args: &Cli,
-    //logs: &mut Vec<Log>,
+    logs: &mut Vec<Log>,
 ) -> String {
     //if args.verbose {
     //record_log(
@@ -45,7 +45,7 @@ pub fn environments_new_line(
     let mut new_text = String::with_capacity(text.len());
 
     for (linum, line) in text.lines().enumerate() {
-        state.ignore = get_ignore(line, &state);
+        state.ignore = get_ignore(line, &state, logs, false);
         state.leave = get_leave(line, &state);
 
         if !state.leave.visual
