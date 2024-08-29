@@ -2,10 +2,10 @@ use crate::indent::*;
 //use crate::program::*;
 //use crate::file::*;
 //use crate::logging::*;
-use crate::subs::*;
-use crate::wrap::*;
 use crate::ignore::*;
 use crate::leave::*;
+use crate::subs::*;
+use crate::wrap::*;
 //use crate::parse::*;
 //use log::Level::{Info};
 
@@ -17,8 +17,7 @@ pub fn format_file(text: &str, file: &str) -> String {
     //dbg!(old_lines);
 
     let mut old_text = remove_extra_newlines(text);
-    // TODO
-    //old_text = environments_new_line(&old_text, file);
+    old_text = environments_new_line(&old_text, file);
     old_text = remove_tabs(&old_text);
     old_text = remove_trailing_spaces(&old_text);
 
@@ -31,9 +30,11 @@ pub fn format_file(text: &str, file: &str) -> String {
         if !queue.is_empty() {
             // process the queue
             let mut line = queue.pop().unwrap();
-            (line, state) = apply_indent(&line, &state);
-            if needs_wrap(&line) {
+            let temp_state: State;
+            (line, temp_state) = apply_indent(&line, &state);
+            if needs_wrap(&line, &state) {
                 let wrapped_lines = apply_wrap(&line, &state);
+                //println!("{}\n", &line);
                 if wrapped_lines.is_some() {
                     queue.push(wrapped_lines.clone().unwrap().1);
                     queue.push(wrapped_lines.clone().unwrap().0);
@@ -44,6 +45,7 @@ pub fn format_file(text: &str, file: &str) -> String {
                 };
                 //dbg!(wrapped_lines);
             } else {
+                state = temp_state;
                 new_text.push_str(&line);
                 new_text.push('\n');
             }
@@ -55,13 +57,14 @@ pub fn format_file(text: &str, file: &str) -> String {
             //dbg!(&line);
             queue.push(line);
         } else {
-            break
+            break;
         }
+        //println!("{}", &line);
         //dbg!(&queue);
     }
 
-    println!("{}", &new_text);
-    //new_text = remove_trailing_spaces(&new_text);
+    //println!("{}", &new_text);
+    new_text = remove_trailing_spaces(&new_text);
     new_text
 }
 
@@ -88,17 +91,17 @@ impl State {
 
 // TODO write this function
 //fn apply_indent_wrap(
-    //text: &str,
-    //file: &str,
-    //args: &Cli,
-    //logs: &mut Vec<Log>,
+//text: &str,
+//file: &str,
+//args: &Cli,
+//logs: &mut Vec<Log>,
 //) -> String {
 
-    //let old_lines: Vec<&str> = text.lines().collect();
-    //let queue: Vec<String> = vec![];
-    //let new_lines: Vec<String> = vec![];
+//let old_lines: Vec<&str> = text.lines().collect();
+//let queue: Vec<String> = vec![];
+//let new_lines: Vec<String> = vec![];
 
-    //text.to_string()
+//text.to_string()
 //}
 
 /*

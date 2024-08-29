@@ -19,23 +19,23 @@ pub struct Cli {
 
 impl Cli {
     //pub fn resolve(&mut self) {
-        //if self.trace {
-            //self.verbose = true;
-        //}
+    //if self.trace {
+    //self.verbose = true;
+    //}
     //}
 
     //#[cfg(test)]
     //pub fn new() -> Self {
-        //Cli {
-            //check: false,
-            //print: false,
-            //verbose: false,
-            //trace: false,
-            //files: Vec::<String>::new(),
-        //}
+    //Cli {
+    //check: false,
+    //print: false,
+    //verbose: false,
+    //trace: false,
+    //files: Vec::<String>::new(),
+    //}
     //}
 }
 
 //pub fn check_extension_valid(file: &str) -> bool {
-    //EXTENSIONS.iter().any(|e| file.ends_with(e))
+//EXTENSIONS.iter().any(|e| file.ends_with(e))
 //}

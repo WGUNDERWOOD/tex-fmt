@@ -11,7 +11,7 @@ test:
   @cargo test -r
 
 testignored:
-  @cargo test -- --ignored
+  @cargo test -r -- --ignored
 
 clippy:
   @cargo clippy -r

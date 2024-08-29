@@ -1,15 +1,18 @@
-use crate::format::*;
 use crate::comments::*;
-//use crate::ignore::*;
-//use crate::leave::*;
+use crate::format::*;
+use crate::ignore::*;
+use crate::leave::*;
 //use crate::logging::*;
 //use crate::parse::*;
 //use log::Level::{Info, Warn};
 
-const WRAP: usize = 80;
+const WRAP_MIN: usize = 70;
+const WRAP_MAX: usize = 80;
 
-pub fn needs_wrap(text: &str) -> bool {
-    text.lines().any(|l| l.chars().count() > WRAP)
+pub fn needs_wrap(line: &str, state: &State) -> bool {
+    let ignore = get_ignore(line, &state);
+    let leave = get_leave(line, &state);
+    (line.chars().count() > WRAP_MAX) && !leave.visual && !ignore.visual
 }
 
 fn find_wrap_point(line: &str) -> Option<usize> {
@@ -17,7 +20,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
     for (i, c) in line.chars().enumerate() {
-        if i >= WRAP && wrap_point.is_some() {
+        if i >= WRAP_MIN && wrap_point.is_some() {
             break;
         }
         if c == ' ' && prev_char != Some('\\') {
@@ -32,48 +35,43 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
-pub fn apply_wrap(
-    line: &str,
-    state: &State
-) -> Option<(String, String)> {
+pub fn apply_wrap(line: &str, state: &State) -> Option<(String, String)> {
     //if args.verbose {
-        //record_log(
-            //logs,
-            //Info,
-            //pass,
-            //file.to_string(),
-            //Some(linum),
-            //Some(line.to_string()),
-            //"Wrapping long line.".to_string(),
-        //);
+    //record_log(
+    //logs,
+    //Info,
+    //pass,
+    //file.to_string(),
+    //Some(linum),
+    //Some(line.to_string()),
+    //"Wrapping long line.".to_string(),
+    //);
     //}
     //let mut remaining_line = line.to_string();
     //let mut new_line = "".to_string();
     //let mut can_wrap = true;
     //while needs_wrap(&remaining_line) && can_wrap {
-        let wrap_point = find_wrap_point(&line);
-        let comment_index = find_comment_index(&line);
-        match wrap_point {
-            Some(p) => {
-                let line_start = match comment_index {
-                    Some(c) => {
-                        if p > c {
-                            "%"
-                        } else {
-                            ""
-                        }
+    let wrap_point = find_wrap_point(&line);
+    let comment_index = find_comment_index(&line);
+    match wrap_point {
+        Some(p) => {
+            let line_start = match comment_index {
+                Some(c) => {
+                    if p > c {
+                        "%"
+                    } else {
+                        ""
                     }
-                    None => "",
-                };
-                let line_1 = line.chars().take(p).collect();
-                let mut line_2: String = line.chars().skip(p).collect();
-                line_2.insert_str(0, line_start);
-                Some((line_1, line_2))
-            }
-            None => {
-                None
-            }
+                }
+                None => "",
+            };
+            let line_1 = line.chars().take(p).collect();
+            let mut line_2: String = line.chars().skip(p).collect();
+            line_2.insert_str(0, line_start);
+            Some((line_1, line_2))
         }
+        None => None,
+    }
     //}
     //new_line.push_str(&remaining_line);
     //new_line

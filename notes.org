@@ -49,3 +49,4 @@
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
+** TODO Put higher categories tex and bib tests back

@@ -1,8 +1,9 @@
 //use crate::logging::*;
-//use crate::regexes::*;
+use crate::format::*;
+use crate::regexes::*;
 //use log::Level::Warn;
 
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub struct Leave {
     pub actual: i8,
     pub visual: bool,
@@ -17,31 +18,22 @@ impl Leave {
     }
 }
 
-/*
-pub fn get_leave(
-    line: &str,
-    linum: usize,
-    leave: Leave,
-    file: &str,
-    logs: &mut Vec<Log>,
-    pass: Option<usize>,
-    warn: bool,
-) -> Leave {
+pub fn get_leave(line: &str, state: &State) -> Leave {
     let diff = get_leave_diff(line);
-    let actual = leave.actual + diff;
-    let visual = actual > 0 && leave.actual > 0;
+    let actual = state.leave.actual + diff;
+    let visual = actual > 0 && state.leave.actual > 0;
 
-    if warn && (actual < 0) {
-        record_log(
-            logs,
-            Warn,
-            pass,
-            file.to_string(),
-            Some(linum),
-            Some(line.to_string()),
-            "Leave count is negative.".to_string(),
-        );
-    }
+    //if warn && (actual < 0) {
+    //record_log(
+    //logs,
+    //Warn,
+    //pass,
+    //file.to_string(),
+    //Some(linum),
+    //Some(line.to_string()),
+    //"Leave count is negative.".to_string(),
+    //);
+    //}
 
     Leave { actual, visual }
 }
@@ -62,4 +54,3 @@ fn get_leave_diff(line: &str) -> i8 {
     }
     0
 }
-*/

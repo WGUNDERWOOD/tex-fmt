@@ -1,6 +1,7 @@
-//use crate::comments::*;
-//use crate::ignore::*;
-//use crate::leave::*;
+use crate::comments::*;
+use crate::format::*;
+use crate::ignore::*;
+use crate::leave::*;
 //use crate::logging::*;
 use crate::regexes::*;
 //use crate::Cli;
@@ -20,35 +21,35 @@ pub fn remove_trailing_spaces(text: &str) -> String {
     RE_TRAIL.replace_all(text, "\n").to_string()
 }
 
-/*
 pub fn environments_new_line(
     text: &str,
     file: &str,
-    args: &Cli,
-    logs: &mut Vec<Log>,
+    //args: &Cli,
+    //logs: &mut Vec<Log>,
 ) -> String {
-    if args.verbose {
-        record_log(
-            logs,
-            Info,
-            None,
-            file.to_string(),
-            None,
-            None,
-            "Ensuring environments on new lines.".to_string(),
-        );
-    }
+    //if args.verbose {
+    //record_log(
+    //logs,
+    //Info,
+    //None,
+    //file.to_string(),
+    //None,
+    //None,
+    //"Ensuring environments on new lines.".to_string(),
+    //);
+    //}
 
-    let mut ignore = Ignore::new();
-    let mut leave = Leave::new();
+    //let mut ignore = Ignore::new();
+    //let mut leave = Leave::new();
+    let mut state = State::new();
     let mut new_text = String::with_capacity(text.len());
 
     for (linum, line) in text.lines().enumerate() {
-        ignore = get_ignore(line, linum, ignore, file, logs, None, false);
-        leave = get_leave(line, linum, leave, file, logs, None, false);
+        state.ignore = get_ignore(line, &state);
+        state.leave = get_leave(line, &state);
 
-        if !leave.visual
-            && !ignore.visual
+        if !state.leave.visual
+            && !state.ignore.visual
             && (RE_ENV_BEGIN.is_match(line)
                 || RE_ENV_END.is_match(line)
                 || RE_ITEM.is_match(line))
@@ -74,4 +75,3 @@ pub fn environments_new_line(
     }
     new_text
 }
-*/

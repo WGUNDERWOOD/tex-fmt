@@ -477,22 +477,22 @@ node/.append style={transform shape},}}
     }{
       \tikzset{LocalVertexSize/.style={}}
     }
-    % Check if the font size of the vertex label is redefined, if so the new
-    % style is used
+    % Check if the font size of the vertex label is redefined, if so
+    % the new style is used
     \ifthenelse{\not\equal{\cmdNW@vertex@fontsize}{}}{
       \tikzset{LocalVertexFontSize/.style={font = \cmdNW@vertex@fontsize}}
     }{
       \tikzset{LocalVertexFontSize/.style={}}
     }
-    % Check if the font scale of the vertex label is redefined, if so the new
-    % style is used
+    % Check if the font scale of the vertex label is redefined, if so
+    % the new style is used
     \ifthenelse{\not\equal{\cmdNW@vertex@fontscale}{}}{
       \tikzset{LocalVertexFontScale/.style={scale = \cmdNW@vertex@fontscale}}
     }{
       \tikzset{LocalVertexFontScale/.style={}}
     }
-    % Check if the opacity of the vertex is redefined, if so the new style is
-    % used
+    % Check if the opacity of the vertex is redefined, if so the new
+    % style is used
     \ifthenelse{\not\equal{\cmdNW@vertex@opacity}{}}{
       \tikzset{LocalVertexOpacity/.style={fill opacity = \cmdNW@vertex@opacity}}
     }{
@@ -651,8 +651,8 @@ node/.append style={transform shape},}}
     }{
       \tikzset{LocalEdgeLW/.style={}}
     }
-    % Check if the opacity of the vertex is redefined, if so the new style is
-    % used
+    % Check if the opacity of the vertex is redefined, if so the new
+    % style is used
     \ifthenelse{\not\equal{\cmdNW@edge@opacity}{}}{
       \tikzset{LocalEdgeOpacity/.style={opacity = \cmdNW@edge@opacity}}
       \tikzset{LocalTextOpacity/.style={text opacity = \cmdNW@edge@opacity}}
@@ -733,15 +733,16 @@ node/.append style={transform shape},}}
       }{
         \protected@edef\@tempa{%
           \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,
-          LocalArrow,\cmdNW@edge@style] (#2) edge [bend left = \cmdNW@edge@bend]
-        \edge@Label (#3)}%
+          LocalArrow,\cmdNW@edge@style] (#2) edge [bend left =
+        \cmdNW@edge@bend] \edge@Label (#3)}%
         \@tempa;
       }
     }{% Self loop
       \protected@edef\@tempa{%
         \noexpand\path[\estyle,LocalEdgeLW,LocalEdgeOpacity,LocalEdgeColor,
         LocalArrow,\cmdNW@edge@style]
-        (#2) edge [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,
+        (#2) edge
+        [in=-\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,
           out=\cmdNW@edge@loopshape/2+\cmdNW@edge@loopposition,loop,
       distance=\cmdNW@edge@loopsize,] \edge@Label (#3)}%
       \@tempa;
@@ -994,8 +995,8 @@ node/.append style={transform shape},}}
     \DTLforeach*{edges}{}{%
       % reset storage variable to default values
       \edef\edge@Options{label = {}, lw = {}, color = {}, opacity = {}, style =
-        {}, RGB = false, Math = false, Direct = false, NotInBG = false, bend =
-        {0}, loopsize =
+        {}, RGB = false, Math = false, Direct = false, NotInBG =
+        false, bend = {0}, loopsize =
         {1\DefaultUnit}, position = {}, loopposition = {0}, loopshape = {90},
       distance = {.5}, path = {}, fontcolor = {}, fontsize = {}, fontscale ={},}
       \edef\edge@rgbValues{}%
@@ -1235,8 +1236,8 @@ node/.append style={transform shape},}}
       \tikzset{LocalPlaneFill/.style={}}
     }
     \fi
-    % Check if the opacity of the plane is redefined, if so the new style is
-    % used
+    % Check if the opacity of the plane is redefined, if so the new
+    % style is used
     \ifthenelse{\not\equal{\cmdNW@plane@opacity}{}}{
       \tikzset{LocalPlaneOpacity/.style={fill opacity = \cmdNW@plane@opacity}}
     }{
@@ -1379,8 +1380,8 @@ node/.append style={transform shape},}}
   }{
     \tikzset{LocalTextAnchor/.style={}}
   }
-  % Check if the text width of the text is redefined, if so the new style is
-  % used
+  % Check if the text width of the text is redefined, if so the new
+  % style is used
   \ifthenelse{\not\equal{\cmdNW@text@width}{}}{
     \tikzset{LocalTextWidth/.style={text width = \cmdNW@text@width}}
   }{
