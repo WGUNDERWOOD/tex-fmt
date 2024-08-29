@@ -53,3 +53,4 @@
 ** TODO Logging is messy, maybe include info in the state
 ** TODO State should include logs, file name
 ** TODO Line type
+** TODO Care with multiple printing of the same warning logs

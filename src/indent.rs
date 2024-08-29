@@ -3,11 +3,11 @@ use crate::format::*;
 use crate::ignore::*;
 use crate::leave::*;
 use crate::logging::*;
-//use crate::parse::*;
+use crate::parse::*;
 use crate::regexes::*;
 use crate::TAB;
 use core::cmp::max;
-//use log::Level::{Info, Trace, Warn};
+use log::Level::{Trace, Warn};
 
 const OPENS: [char; 3] = ['(', '[', '{'];
 const CLOSES: [char; 3] = [')', ']', '}'];
@@ -107,133 +107,58 @@ fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
     Indent { actual, visual }
 }
 
-/*
-pub fn apply_indent(
-    text: &str,
-    file: &str,
-    args: &Cli,
-    logs: &mut Vec<Log>,
-    pass: Option<usize>,
-) -> String {
-    if args.verbose {
-        record_log(
-            logs,
-            Info,
-            pass,
-            file.to_string(),
-            None,
-            None,
-            format!("Indent on pass {}.", pass.unwrap_or_default()),
-        );
-    }
-
-    let mut indent = Indent::new();
-    let mut ignore = Ignore::new();
-    let mut leave = Leave::new();
-    let mut new_text = String::with_capacity(text.len());
-
-    for (linum, line) in text.lines().enumerate() {
-        ignore = get_ignore(line, linum, ignore, file, logs, pass, true);
-        leave = get_leave(line, linum, leave, file, logs, pass, true);
-
-        if !leave.visual && !ignore.visual {
-            // calculate indent
-            let comment_index = find_comment_index(line);
-            let line_strip = &remove_comment(line, comment_index);
-            indent = get_indent(line_strip, indent);
-            if args.trace {
-                record_log(
-                    logs,
-                    Trace,
-                    pass,
-                    file.to_string(),
-                    Some(linum),
-                    Some(line.to_string()),
-                    format!(
-                        "Indent: actual = {}, visual = {}:",
-                        indent.actual, indent.visual
-                    ),
-                );
-            }
-
-            if (indent.visual < 0) || (indent.actual < 0) {
-                record_log(
-                    logs,
-                    Warn,
-                    pass,
-                    file.to_string(),
-                    Some(linum),
-                    Some(line.to_string()),
-                    "Indent is negative.".to_string(),
-                );
-                indent.actual = indent.actual.max(0);
-                indent.visual = indent.visual.max(0);
-            }
-
-            // apply indent
-            let mut new_line = line.trim_start().to_string();
-            if !new_line.is_empty() {
-                let n_spaces = indent.visual * TAB;
-                for _ in 0..n_spaces {
-                    new_line.insert(0, ' ');
-                }
-            }
-            new_text.push_str(&new_line);
-        } else {
-            new_text.push_str(line);
-        }
-        new_text.push('\n');
-    }
-
-    new_text
-}
-*/
-
 pub fn apply_indent(
     line: &str,
     state: &State,
     logs: &mut Vec<Log>,
+    linum_new: usize,
+    linum_old: usize,
+    file: &str,
+    args: &Cli,
 ) -> (String, State) {
     let mut new_line = line.to_string();
     let mut new_state = state.clone();
 
-    new_state.ignore = get_ignore(line, state, logs, true);
-    new_state.leave = get_leave(line, state);
+    new_state.ignore =
+        get_ignore(line, state, logs, file, linum_new, linum_old, true);
+    new_state.leave = get_leave(line, state, logs, file, true);
 
     if !new_state.leave.visual && !new_state.ignore.visual {
         // calculate indent
         let comment_index = find_comment_index(line);
         let line_strip = &remove_comment(line, comment_index);
-        let indent = get_indent(line_strip, &state.indent);
+        let mut indent = get_indent(line_strip, &state.indent);
         new_state.indent = indent.clone();
-        //if args.trace {
-        //record_log(
-        //logs,
-        //Trace,
-        //pass,
-        //file.to_string(),
-        //Some(linum),
-        //Some(line.to_string()),
-        //format!(
-        //"Indent: actual = {}, visual = {}:",
-        //indent.actual, indent.visual
-        //),
-        //);
-        //}
+        let linum_new = 0; // TODO implement this
+        let linum_old = 0; // TODO implement this
+        if args.trace {
+            record_line_log(
+                logs,
+                Trace,
+                file,
+                linum_new,
+                linum_old,
+                line,
+                &format!(
+                    "Indent: actual = {}, visual = {}:",
+                    indent.actual, indent.visual
+                ),
+            );
+        }
 
-        //if (indent.visual < 0) || (indent.actual < 0) {
-        //record_log(
-        //logs,
-        //Warn,
-        //pass,
-        //file.to_string(),
-        //Some(linum),
-        //Some(line.to_string()),
-        //"Indent is negative.".to_string(),
-        //);
-        //indent.actual = indent.actual.max(0);
-        //indent.visual = indent.visual.max(0);
-        //}
+        if (indent.visual < 0) || (indent.actual < 0) {
+            record_line_log(
+                logs,
+                Warn,
+                file,
+                linum_new,
+                linum_old,
+                line,
+                "Indent is negative.",
+            );
+            indent.actual = indent.actual.max(0);
+            indent.visual = indent.visual.max(0);
+        }
 
         // apply indent
         new_line = line.trim_start().to_string();
