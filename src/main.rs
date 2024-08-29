@@ -51,12 +51,7 @@ fn main() {
                     write_file(file, &new_text);
                 }
             } else {
-                record_file_log(
-                    &mut logs,
-                    Error,
-                    file,
-                    "Could not open file.",
-                );
+                record_file_log(&mut logs, Error, file, "Could not open file.");
                 exit_code = 1;
             }
         } else {
