@@ -2,7 +2,7 @@
 use crate::format::*;
 //use log::Level::Warn;
 
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub struct Ignore {
     pub actual: bool,
     pub visual: bool,
@@ -31,29 +31,29 @@ pub fn get_ignore(line: &str, state: &State) -> Ignore {
         actual = true;
         visual = true;
         //if warn && ignore.actual {
-            //record_log(
-                //logs,
-                //Warn,
-                //pass,
-                //file.to_string(),
-                //Some(linum),
-                //Some(line.to_string()),
-                //"Cannot begin ignore block:".to_string(),
-            //);
+        //record_log(
+        //logs,
+        //Warn,
+        //pass,
+        //file.to_string(),
+        //Some(linum),
+        //Some(line.to_string()),
+        //"Cannot begin ignore block:".to_string(),
+        //);
         //}
     } else if end {
         actual = false;
         visual = true;
         //if warn && !ignore.actual {
-            //record_log(
-                //logs,
-                //Warn,
-                //pass,
-                //file.to_string(),
-                //Some(linum),
-                //Some(line.to_string()),
-                //"No ignore block to end:".to_string(),
-            //);
+        //record_log(
+        //logs,
+        //Warn,
+        //pass,
+        //file.to_string(),
+        //Some(linum),
+        //Some(line.to_string()),
+        //"No ignore block to end:".to_string(),
+        //);
         //}
     } else {
         actual = state.ignore.actual;

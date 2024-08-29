@@ -112,10 +112,10 @@
 %% Additional packages, and their options.
 %%
 %%%%%
-\RequirePackage{graphicx}           % Required for the UC Logo (on the title
-% page)
-\RequirePackage{calc}               % Used for calculating margins and laying
-% out the title page
+\RequirePackage{graphicx}           % Required for the UC Logo (on
+% the title page)
+\RequirePackage{calc}               % Used for calculating margins
+% and laying out the title page
 
 % Create the index
 \ifcam@index
@@ -161,41 +161,41 @@
 %% @param  4  bottom margin.
 \DeclareRobustCommand{\cam@calcpaperdims}[4]{%
   % MARGINS
-  % 'Top margin' is the distance between the top of the text and the top of the
-  % page.
-  % 'Bottom margin' is the distance between the bottom of the footer (the page
-  % number) and the bottom of the page.
+  % 'Top margin' is the distance between the top of the text and the
+  % top of the page.
+  % 'Bottom margin' is the distance between the bottom of the footer
+  % (the page number) and the bottom of the page.
   \setlength{\cam@oddmargin}{#1}        % inner margin
   \setlength{\cam@evenmargin}{#2}       % outer margin
-  \setlength{\cam@topmargin}{#3}        % top margin        (the distance from
-  % the top of the page to the top of the body text -- the header is located
-  % between)
-  \setlength{\cam@bottommargin}{#4}     % bottom margin     (the distance from
-  % the bottom of the page to the bottom of the body text -- the footer is
-  % located between)
+  \setlength{\cam@topmargin}{#3}        % top margin        (the
+  % distance from the top of the page to the top of the body text --
+  % the header is located between)
+  \setlength{\cam@bottommargin}{#4}     % bottom margin     (the
+  % distance from the bottom of the page to the bottom of the body
+  % text -- the footer is located between)
   % Horizontal spacing
-  \setlength{\textwidth}{\paperwidth-\cam@oddmargin-\cam@evenmargin}     % text
-  % takes the remaining width (210 - inner - outer)
-  \setlength{\oddsidemargin}{\cam@oddmargin-1in}   % Counter the LaTeX 1in
-  % margin
-  \setlength{\evensidemargin}{\cam@evenmargin-1in} % Counter the LaTeX 1in
-  % margin
-  \setlength{\marginparwidth}{\cam@evenmargin-8mm} % the margin only has
-  % 'outer' space available, so we have to make it a bit thinner.
+  \setlength{\textwidth}{\paperwidth-\cam@oddmargin-\cam@evenmargin}
+  % text takes the remaining width (210 - inner - outer)
+  \setlength{\oddsidemargin}{\cam@oddmargin-1in}   % Counter the
+  % LaTeX 1in margin
+  \setlength{\evensidemargin}{\cam@evenmargin-1in} % Counter the
+  % LaTeX 1in margin
+  \setlength{\marginparwidth}{\cam@evenmargin-8mm} % the margin only
+  % has 'outer' space available, so we have to make it a bit thinner.
   \setlength{\marginparsep}{3mm}
 
   % Vertical spacing
-  \setlength{\headheight}{5mm}      % The height of the box where the heading
-  % text lives
-  \setlength{\headsep}{5mm}         % The distance between the heading and the
-  % top of the text
-  \setlength{\topmargin}{\cam@topmargin-\headheight-\headsep-1in} % Counter the
-  % LaTeX 1in margin
+  \setlength{\headheight}{5mm}      % The height of the box where the
+  % heading text lives
+  \setlength{\headsep}{5mm}         % The distance between the
+  % heading and the top of the text
+  \setlength{\topmargin}{\cam@topmargin-\headheight-\headsep-1in} %
+  % Counter the LaTeX 1in margin
 
-  \setlength{\textheight}{\paperheight-\cam@topmargin-1.7\cam@bottommargin}   %
+  \setlength{\textheight}{\paperheight-\cam@topmargin-1.7\cam@bottommargin}
   % text takes the remaining height (297 - top margin - bottom margin)
-  \setlength{\footskip}{.7\cam@bottommargin} % The distance from the bottom of
-  % the text to the bottom of the footer
+  \setlength{\footskip}{.7\cam@bottommargin} % The distance from the
+  % bottom of the text to the bottom of the footer
 }
 \ifcam@techreport
 \cam@calcpaperdims{25mm}{25mm}{20mm}{20mm}
@@ -434,22 +434,22 @@
     \else
     \chapter*{Declaration}
     \thispagestyle{empty}
-    This dissertation is the result of my own work and includes nothing which
-    is the outcome
-    of work done in collaboration except as declared in the Preface and
-    specified in the text.
-    It is not substantially the same as any that I have submitted, or am
-    concurrently
+    This dissertation is the result of my own work and includes
+    nothing which is the outcome
+    of work done in collaboration except as declared in the Preface
+    and specified in the text.
+    It is not substantially the same as any that I have submitted, or
+    am concurrently
     submitting, for a degree or diploma or other qualification at the
     University of Cambridge
-    or any other University or similar institution except as declared in the
-    Preface and
-    specified in the text. I further state that no substantial part of my
-    dissertation has
-    already been submitted, or is being concurrently submitted, for any such
-    degree, diploma
-    or other qualification at the University of Cambridge or any other
-    University or similar
+    or any other University or similar institution except as declared
+    in the Preface and
+    specified in the text. I further state that no substantial part
+    of my dissertation has
+    already been submitted, or is being concurrently submitted, for
+    any such degree, diploma
+    or other qualification at the University of Cambridge or any
+    other University or similar
     institution except as declared in the Preface and specified in the text.
     This dissertation does not exceed the prescribed limit of 60\,000 words.
 
@@ -481,8 +481,8 @@
   \chapter*{Abstract}
   \thispagestyle{empty}
 
-  % Cambridge thesis submission guidelines require the title and author be in
-  % the abstract.
+  % Cambridge thesis submission guidelines require the title and
+  % author be in the abstract.
 % For more info see https://www.cambridgestudents.cam.ac.uk/your-course/examinations/graduate-exam-information/after-examination/degree-approval-and-1 % tex-fmt: skip
   \textbf{\large \@title}
   \par\vspace{0.3cm}

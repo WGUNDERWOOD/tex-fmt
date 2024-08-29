@@ -10,15 +10,18 @@ fn test_file(source_file: &str, target_file: &str) -> bool {
     //let mut logs = Vec::<Log>::new();
     let source_text = fs::read_to_string(&source_file).unwrap();
     let target_text = fs::read_to_string(&target_file).unwrap();
-    let fmt_source_text =
-        format_file(&source_text, &source_file);
-        //format_file(&source_text, &source_file, &args, &mut logs);
+    let fmt_source_text = format_file(&source_text, &source_file);
+    //format_file(&source_text, &source_file, &args, &mut logs);
 
     if fmt_source_text != target_text {
         println!(
-            "{}fail {}{} {}-> {}{}",
-            RED, YELLOW, source_file, RESET, YELLOW, target_file
+            "{}fail {}{} {}-> {}{}{}",
+            RED, YELLOW, source_file, RESET, YELLOW, target_file, RESET
         );
+        //println!("{}", &fmt_source_text);
+        //println!("{}", &target_text);
+        // TODO remove this
+        //let fmt_source_text = target_text.clone();
         let diff = TextDiff::from_lines(&fmt_source_text, &target_text);
         for change in diff.iter_all_changes() {
             match change.tag() {
@@ -90,15 +93,42 @@ fn test_target() {
 #[test]
 #[ignore]
 fn test_short() {
-    let file = "lists.tex";
+    let files = vec![
+        "brackets.tex",
+        "cam-thesis.cls",
+        "comments.tex",
+        "cv.tex",
+        "document.tex",
+        "environment_lines.tex",
+        "heavy_wrap.tex",
+        //"higher_categories_thesis.bib",
+        //"higher_categories_thesis.tex",
+        "ignore.tex",
+        "lists.tex",
+        "masters_dissertation.tex",
+        "ociamthesis.cls",
+        "phd_dissertation.tex",
+        "phd_dissertation_refs.bib",
+        "puthesis.cls",
+        "quiver.sty",
+        "readme.tex",
+        "short_document.tex",
+        "tikz_network.sty",
+        "unicode.tex",
+        "verbatim.tex",
+        "wgu-cv.cls",
+        "wrap.tex",
+    ];
     let mut fail = false;
-    if !test_file(
+    for file in files {
+        if !test_file(
             &format!("tests/source/{}", file),
             &format!("tests/target/{}", file),
         ) {
-        fail = true
+            fail = true
+        }
     }
     if fail {
-        panic!("Test failed")
+        panic!("Some tests failed")
     }
 }

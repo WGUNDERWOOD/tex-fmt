@@ -32,41 +32,41 @@ fn main() {
     //let mut exit_code = 0;
 
     //for file in &args.files {
-        //let mut logs = Vec::<Log>::new();
-        //let extension_valid = check_extension_valid(file);
-        //if extension_valid {
-            //let text = fs::read_to_string(file).unwrap();
-            // do the formatting
-            //let new_text = format_file(&text, file, &args, &mut logs);
-            //if args.print {
-                //println!("{}", &new_text);
-            //} else if args.check && text != new_text {
-                //record_log(
-                    //&mut logs,
-                    //Error,
-                    //None,
-                    //file.to_string(),
-                    //None,
-                    //None,
-                    //"File is not correctly formatted.".to_string(),
-                //);
-                //exit_code = 1;
-            //} else if text != new_text {
-                //write_file(file, &new_text);
-            //}
-        //} else {
-            //record_log(
-                //&mut logs,
-                //Error,
-                //None,
-                //file.to_string(),
-                //None,
-                //None,
-                //"File type invalid.".to_string(),
-            //);
-        //};
+    //let mut logs = Vec::<Log>::new();
+    //let extension_valid = check_extension_valid(file);
+    //if extension_valid {
+    //let text = fs::read_to_string(file).unwrap();
+    // do the formatting
+    //let new_text = format_file(&text, file, &args, &mut logs);
+    //if args.print {
+    //println!("{}", &new_text);
+    //} else if args.check && text != new_text {
+    //record_log(
+    //&mut logs,
+    //Error,
+    //None,
+    //file.to_string(),
+    //None,
+    //None,
+    //"File is not correctly formatted.".to_string(),
+    //);
+    //exit_code = 1;
+    //} else if text != new_text {
+    //write_file(file, &new_text);
+    //}
+    //} else {
+    //record_log(
+    //&mut logs,
+    //Error,
+    //None,
+    //file.to_string(),
+    //None,
+    //None,
+    //"File type invalid.".to_string(),
+    //);
+    //};
 
-        //print_logs(&args, logs);
+    //print_logs(&args, logs);
     //}
     //exit(exit_code)
 }
