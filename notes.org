@@ -6,28 +6,7 @@
 ** Try wrapping spaceless lines
 * Features
 ** Aim for a single pass of wrapping and indenting
-*** Three lists of strings
-**** 1: lines of original file
-**** 2: lines in processing queue
-**** 3: lines of formatted file
-*** Logic flow
-**** If the queue is empty
-***** Take a line from the original file and put it in the queue
-**** Else
-***** Indent the first line in the queue with the global indentation state
-***** Keep the new indentation state in a temporary variable
-***** If it then needs wrapping
-****** Wrap it into several lines and push them all back onto the queue
-***** Else
-****** Move it from the queue to the output file
-****** Update the global indentation state from the temporary variable
-*** New structs
-**** File{name, text}
-**** Program{args, logs}
-**** Format{linum, ignore, indent, leave}
-*** Rename leave to verbatim
-*** Better logging helper functions
-*** Also include environments on new line logic
+*** TODO Rename leave to verbatim
 *** Consider
 **** Indenting
 **** Wrapping
@@ -49,8 +28,6 @@
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
-** TODO Put higher categories tex and bib tests back
 ** TODO Logging is messy, maybe include info in the state
-** TODO State should include logs, file name
-** TODO Line type
+** TODO Reduce arguments to functions
 ** TODO Care with multiple printing of the same warning logs
