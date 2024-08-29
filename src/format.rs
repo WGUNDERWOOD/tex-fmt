@@ -34,7 +34,7 @@ pub fn format_file(
             (line, temp_state) = apply_indent(
                 &line, &state, logs, linum_new, linum_old, file, args,
             );
-            if needs_wrap(&line, &state, file, logs) {
+            if needs_wrap(&line, &temp_state) {
                 let wrapped_lines =
                     apply_wrap(&line, linum_new, linum_old, file, args, logs);
                 if wrapped_lines.is_some() {

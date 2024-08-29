@@ -1,7 +1,5 @@
 use crate::comments::*;
 use crate::format::*;
-use crate::ignore::*;
-use crate::leave::*;
 use crate::logging::*;
 use crate::parse::*;
 use log::Level::{Trace, Warn};
@@ -9,18 +7,10 @@ use log::Level::{Trace, Warn};
 const WRAP_MIN: usize = 70;
 const WRAP_MAX: usize = 80;
 
-pub fn needs_wrap(
-    line: &str,
-    state: &State,
-    file: &str,
-    logs: &mut Vec<Log>,
-) -> bool {
-    let linum_new = 0; // TODO implement this
-    let linum_old = 0; // TODO implement this
-    let ignore =
-        get_ignore(line, state, logs, file, linum_new, linum_old, false);
-    let leave = get_leave(line, state, logs, file, true);
-    (line.chars().count() > WRAP_MAX) && !leave.visual && !ignore.visual
+pub fn needs_wrap(line: &str, state: &State) -> bool {
+    (line.chars().count() > WRAP_MAX)
+        && !state.leave.visual
+        && !state.ignore.visual
 }
 
 fn find_wrap_point(line: &str) -> Option<usize> {
