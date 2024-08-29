@@ -6,10 +6,10 @@
 ** Try wrapping spaceless lines
 * Features
 ** Aim for a single pass of wrapping and indenting
+*** TODO Implement line number logging
 *** TODO Logging is messy, maybe include info in the state
 *** TODO Reduce number of arguments to functions
 *** TODO Care with multiple printing of the same logs
-*** TODO Implement line number logging
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
