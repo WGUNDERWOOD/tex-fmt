@@ -110,15 +110,13 @@ pub fn print_logs(mut logs: Vec<Log>) {
 
     for log in logs {
         let linum_new = match log.linum_new {
-            // linums start from 1
-            Some(i) => format!("Line {}. ", i + 1),
+            Some(i) => format!("Line {} ", i),
             None => "".to_string(),
         };
 
         let linum_old = match log.linum_old {
-            // linums start from 1
-            Some(i) => format!("Line {}. ", i + 1),
-            None => "".to_string(),
+            Some(i) => format!("({}). ", i),
+            None => ".".to_string(),
         };
 
         let line = match &log.line {

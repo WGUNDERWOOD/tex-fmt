@@ -35,8 +35,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
 
 pub fn apply_wrap(
     line: &str,
-    linum_new: usize,
-    linum_old: usize,
+    state: &State,
     file: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
@@ -46,8 +45,8 @@ pub fn apply_wrap(
             logs,
             Trace,
             file,
-            linum_new,
-            linum_old,
+            state.linum_new,
+            state.linum_old,
             line,
             "Wrapping long line.",
         );
@@ -76,8 +75,8 @@ pub fn apply_wrap(
                 logs,
                 Warn,
                 file,
-                linum_new,
-                linum_old,
+                state.linum_new,
+                state.linum_old,
                 line,
                 "Line cannot be wrapped.",
             );

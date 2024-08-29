@@ -6,28 +6,10 @@
 ** Try wrapping spaceless lines
 * Features
 ** Aim for a single pass of wrapping and indenting
-*** TODO Rename leave to verbatim
-*** Consider
-**** Indenting
-**** Wrapping
-**** Ignores, leaves, comments
-**** Removing trailing spaces (this should also be part of wrapping)
-**** Remove extra newlines (fine for now)
-**** Environments on new lines (fine for now)
-**** Remove tabs (fine for now)
-*** Ideas
-**** Keep a State struct which contains all formatting info
-***** Current old linum
-***** Current new linum
-***** Current indentation level
-***** Current ignore status
-***** Current leave status
-**** For each line in the queue
-***** indent(line, state) -> (new_line, temp_state)
-***** wrap(line, state) -> line
+*** TODO Logging is messy, maybe include info in the state
+*** TODO Reduce number of arguments to functions
+*** TODO Care with multiple printing of the same logs
+*** TODO Implement line number logging
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
-** TODO Logging is messy, maybe include info in the state
-** TODO Reduce arguments to functions
-** TODO Care with multiple printing of the same warning logs
