@@ -32,9 +32,9 @@ pub fn format_file(
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
-            println!("{}", &line);
-            dbg!(linum_old);
-            println!("\n");
+            //println!("{}", &line);
+            //dbg!(linum_old);
+            //println!("\n");
             let temp_state: State;
             (line, temp_state) =
                 apply_indent(&line, linum_old, &state, logs, file, args);
