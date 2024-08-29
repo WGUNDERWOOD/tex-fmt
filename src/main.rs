@@ -56,7 +56,7 @@ fn main() {
             record_file_log(&mut logs, Error, file, "File type invalid.");
         };
 
-        print_logs(&args, logs);
+        print_logs(logs);
     }
     exit(exit_code)
 }

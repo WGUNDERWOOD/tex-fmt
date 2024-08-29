@@ -4,14 +4,22 @@ use crate::ignore::*;
 use crate::leave::*;
 use crate::logging::*;
 use crate::parse::*;
-use log::Level::{Info, Trace, Warn};
+use log::Level::{Trace, Warn};
 
 const WRAP_MIN: usize = 70;
 const WRAP_MAX: usize = 80;
 
-pub fn needs_wrap(line: &str, state: &State, logs: &mut Vec<Log>) -> bool {
-    let ignore = get_ignore(line, &state, logs, false);
-    let leave = get_leave(line, &state);
+pub fn needs_wrap(
+    line: &str,
+    state: &State,
+    file: &str,
+    logs: &mut Vec<Log>,
+) -> bool {
+    let linum_new = 0; // TODO implement this
+    let linum_old = 0; // TODO implement this
+    let ignore =
+        get_ignore(line, state, logs, file, linum_new, linum_old, false);
+    let leave = get_leave(line, state, logs, file, true);
     (line.chars().count() > WRAP_MAX) && !leave.visual && !ignore.visual
 }
 
@@ -39,7 +47,6 @@ pub fn apply_wrap(
     line: &str,
     linum_new: usize,
     linum_old: usize,
-    state: &State,
     file: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
@@ -55,8 +62,8 @@ pub fn apply_wrap(
             "Wrapping long line.",
         );
     }
-    let wrap_point = find_wrap_point(&line);
-    let comment_index = find_comment_index(&line);
+    let wrap_point = find_wrap_point(line);
+    let comment_index = find_comment_index(line);
     match wrap_point {
         Some(p) => {
             let line_start = match comment_index {

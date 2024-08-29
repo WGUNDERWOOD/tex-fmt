@@ -105,7 +105,7 @@ pub fn init_logger(args: &Cli) {
         .init();
 }
 
-pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
+pub fn print_logs(mut logs: Vec<Log>) {
     logs.sort_by_key(|l| l.time);
 
     for log in logs {

@@ -5,7 +5,7 @@ use crate::logging::*;
 use crate::parse::*;
 use crate::subs::*;
 use crate::wrap::*;
-use log::Level::{Error, Info, Trace, Warn};
+use log::Level::{Info, Warn};
 
 pub fn format_file(
     text: &str,
@@ -15,7 +15,7 @@ pub fn format_file(
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");
     let mut old_text = remove_extra_newlines(text);
-    old_text = environments_new_line(&old_text, file, logs);
+    old_text = environments_new_line(&old_text, file, args, logs);
     old_text = remove_tabs(&old_text);
     old_text = remove_trailing_spaces(&old_text);
 
@@ -29,13 +29,14 @@ pub fn format_file(
             // process the queue
             let mut line = queue.pop().unwrap();
             let temp_state: State;
-            (line, temp_state) = apply_indent(&line, &state, logs);
-            if needs_wrap(&line, &state, logs) {
-                let linum_new = 0; // TODO implement this
-                let linum_old = 0; // TODO implement this
-                let wrapped_lines = apply_wrap(
-                    &line, linum_new, linum_old, &state, &file, &args, logs,
-                );
+            let linum_new = 0; // TODO implement this
+            let linum_old = 0; // TODO implement this
+            (line, temp_state) = apply_indent(
+                &line, &state, logs, linum_new, linum_old, file, args,
+            );
+            if needs_wrap(&line, &state, file, logs) {
+                let wrapped_lines =
+                    apply_wrap(&line, linum_new, linum_old, file, args, logs);
                 if wrapped_lines.is_some() {
                     queue.push(wrapped_lines.clone().unwrap().1);
                     queue.push(wrapped_lines.clone().unwrap().0);
@@ -76,13 +77,6 @@ pub struct State {
     pub ignore: Ignore,
     pub indent: Indent,
     pub leave: Leave,
-    //pub file: String,
-}
-
-pub struct Line {
-    pub linum_new: usize,
-    pub linum_old: usize,
-    pub text: String,
 }
 
 impl State {
