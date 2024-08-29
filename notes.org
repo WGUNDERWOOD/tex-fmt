@@ -51,3 +51,5 @@
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
 ** TODO Put higher categories tex and bib tests back
 ** TODO Logging is messy, maybe include info in the state
+** TODO State should include logs, file name
+** TODO Line type

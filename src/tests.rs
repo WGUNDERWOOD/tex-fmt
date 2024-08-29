@@ -2,16 +2,16 @@ use crate::colors::*;
 use crate::format_file;
 use crate::fs;
 use crate::logging::*;
-//use crate::Cli;
+use crate::Cli;
 use similar::{ChangeTag, TextDiff};
 
 fn test_file(source_file: &str, target_file: &str) -> bool {
-    //let args = Cli::new();
+    let args = Cli::new();
     let mut logs = Vec::<Log>::new();
     let source_text = fs::read_to_string(&source_file).unwrap();
     let target_text = fs::read_to_string(&target_file).unwrap();
-    let fmt_source_text = format_file(&source_text, &source_file, &mut logs);
-    //format_file(&source_text, &source_file, &args, &mut logs);
+    let fmt_source_text =
+        format_file(&source_text, &source_file, &args, &mut logs);
 
     if fmt_source_text != target_text {
         println!(

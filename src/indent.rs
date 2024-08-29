@@ -189,7 +189,11 @@ pub fn apply_indent(
 }
 */
 
-pub fn apply_indent(line: &str, state: &State, logs: &mut Vec<Log>) -> (String, State) {
+pub fn apply_indent(
+    line: &str,
+    state: &State,
+    logs: &mut Vec<Log>,
+) -> (String, State) {
     let mut new_line = line.to_string();
     let mut new_state = state.clone();
 

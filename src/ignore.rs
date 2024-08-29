@@ -1,5 +1,5 @@
-use crate::logging::*;
 use crate::format::*;
+use crate::logging::*;
 use log::Level::Warn;
 
 #[derive(Clone, Debug)]
@@ -17,7 +17,12 @@ impl Ignore {
     }
 }
 
-pub fn get_ignore(line: &str, state: &State, logs: &mut Vec<Log>, warn: bool) -> Ignore {
+pub fn get_ignore(
+    line: &str,
+    state: &State,
+    logs: &mut Vec<Log>,
+    warn: bool,
+) -> Ignore {
     let skip = contains_ignore_skip(line);
     let begin = contains_ignore_begin(line);
     let end = contains_ignore_end(line);
