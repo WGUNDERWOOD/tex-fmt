@@ -109,18 +109,26 @@ fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
 
 pub fn apply_indent(
     line: &str,
+    linum_old: usize,
     state: &State,
     logs: &mut Vec<Log>,
-    linum_new: usize,
-    linum_old: usize,
     file: &str,
     args: &Cli,
 ) -> (String, State) {
     let mut new_line = line.to_string();
     let mut new_state = state.clone();
+    new_state.linum_new += 1;
+    new_state.linum_old = linum_old;
 
-    new_state.ignore =
-        get_ignore(line, state, logs, file, linum_new, linum_old, true);
+    new_state.ignore = get_ignore(
+        line,
+        state,
+        logs,
+        file,
+        new_state.linum_new,
+        new_state.linum_old,
+        true,
+    );
     new_state.leave = get_leave(line, state, logs, file, true);
 
     if !new_state.leave.visual && !new_state.ignore.visual {
@@ -129,15 +137,13 @@ pub fn apply_indent(
         let line_strip = &remove_comment(line, comment_index);
         let mut indent = get_indent(line_strip, &state.indent);
         new_state.indent = indent.clone();
-        let linum_new = 0; // TODO implement this
-        let linum_old = 0; // TODO implement this
         if args.trace {
             record_line_log(
                 logs,
                 Trace,
                 file,
-                linum_new,
-                linum_old,
+                state.linum_new,
+                new_state.linum_old,
                 line,
                 &format!(
                     "Indent: actual = {}, visual = {}:",
@@ -151,8 +157,8 @@ pub fn apply_indent(
                 logs,
                 Warn,
                 file,
-                linum_new,
-                linum_old,
+                new_state.linum_new,
+                new_state.linum_old,
                 line,
                 "Indent is negative.",
             );

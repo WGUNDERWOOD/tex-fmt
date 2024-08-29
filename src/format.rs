@@ -6,6 +6,7 @@ use crate::parse::*;
 use crate::subs::*;
 use crate::wrap::*;
 use log::Level::{Info, Warn};
+use std::iter::zip;
 
 pub fn format_file(
     text: &str,
@@ -20,40 +21,45 @@ pub fn format_file(
     old_text = remove_trailing_spaces(&old_text);
 
     let mut state = State::new();
-    let mut old_lines: Vec<&str> = old_text.lines().rev().collect();
-    let mut queue: Vec<String> = vec![];
+
+    let old_lines = old_text.lines().rev();
+    let linums_old = (1..old_lines.clone().count() + 1).rev();
+    let mut old_lines: Vec<(usize, &str)> =
+        zip(linums_old, old_lines).collect();
+
+    let mut queue: Vec<(usize, String)> = vec![];
     let mut new_text: String = "".to_string();
 
     loop {
-        if !queue.is_empty() {
-            // process the queue
-            let mut line = queue.pop().unwrap();
+        if let Some((linum_old, mut line)) = queue.pop() {
+            println!("{}", &line);
+            dbg!(linum_old);
+            println!("\n");
             let temp_state: State;
-            let linum_new = 0; // TODO implement this
-            let linum_old = 0; // TODO implement this
-            (line, temp_state) = apply_indent(
-                &line, &state, logs, linum_new, linum_old, file, args,
-            );
+            (line, temp_state) =
+                apply_indent(&line, linum_old, &state, logs, file, args);
             if needs_wrap(&line, &temp_state) {
                 let wrapped_lines =
-                    apply_wrap(&line, linum_new, linum_old, file, args, logs);
+                    apply_wrap(&line, &temp_state, file, args, logs);
                 if wrapped_lines.is_some() {
-                    queue.push(wrapped_lines.clone().unwrap().1);
-                    queue.push(wrapped_lines.clone().unwrap().0);
+                    queue.push((linum_old, wrapped_lines.clone().unwrap().1));
+                    queue.push((linum_old, wrapped_lines.clone().unwrap().0));
                 } else {
                     new_text.push_str(&line);
+                    //dbg!(&state);
                     new_text.push('\n');
                 };
             } else {
                 state = temp_state;
-                state.linum_new += 1;
                 new_text.push_str(&line);
+                //println!("{}", &line);
+                //dbg!(&state.linum_old);
+                //dbg!(&state.linum_new);
+                //println!("\n");
                 new_text.push('\n');
             }
-        } else if !old_lines.is_empty() {
-            // move the next line into the queue
-            let line: String = old_lines.pop().unwrap().to_string();
-            queue.push(line);
+        } else if let Some((linum_old, line)) = old_lines.pop() {
+            queue.push((linum_old, line.to_string()));
         } else {
             break;
         }
@@ -70,7 +76,7 @@ pub fn format_file(
     new_text
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct State {
     pub linum_old: usize,
     pub linum_new: usize,
