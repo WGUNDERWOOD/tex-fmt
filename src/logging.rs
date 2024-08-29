@@ -116,7 +116,7 @@ pub fn print_logs(mut logs: Vec<Log>) {
 
         let linum_old = match log.linum_old {
             Some(i) => format!("({}). ", i),
-            None => ".".to_string(),
+            None => "".to_string(),
         };
 
         let line = match &log.line {

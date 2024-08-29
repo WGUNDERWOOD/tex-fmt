@@ -35,25 +35,33 @@ fn main() {
         let mut logs = Vec::<Log>::new();
         let extension_valid = check_extension_valid(file);
         if extension_valid {
-            // TODO handle file not found errors first
-            // TODO this should happen before extension checking
-            let text = fs::read_to_string(file).unwrap();
-            let new_text = format_file(&text, file, &args, &mut logs);
-            if args.print {
-                println!("{}", &new_text);
-            } else if args.check && text != new_text {
+            if let Ok(text) = fs::read_to_string(file) {
+                let new_text = format_file(&text, file, &args, &mut logs);
+                if args.print {
+                    println!("{}", &new_text);
+                } else if args.check && text != new_text {
+                    record_file_log(
+                        &mut logs,
+                        Error,
+                        file,
+                        "Incorrect formatting.",
+                    );
+                    exit_code = 1;
+                } else if text != new_text {
+                    write_file(file, &new_text);
+                }
+            } else {
                 record_file_log(
                     &mut logs,
                     Error,
                     file,
-                    "Incorrect formatting.",
+                    "Could not open file.",
                 );
                 exit_code = 1;
-            } else if text != new_text {
-                write_file(file, &new_text);
             }
         } else {
             record_file_log(&mut logs, Error, file, "File type invalid.");
+            exit_code = 1;
         };
 
         print_logs(logs);
