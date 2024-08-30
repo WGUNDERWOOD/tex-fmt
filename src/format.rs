@@ -32,9 +32,6 @@ pub fn format_file(
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
-            //println!("{}", &line);
-            //dbg!(linum_old);
-            //println!("\n");
             let temp_state: State;
             (line, temp_state) =
                 apply_indent(&line, linum_old, &state, logs, file, args);
@@ -46,16 +43,12 @@ pub fn format_file(
                     queue.push((linum_old, wrapped_lines.clone().unwrap().0));
                 } else {
                     new_text.push_str(&line);
-                    //dbg!(&state);
+                    state.linum_new += 1;
                     new_text.push('\n');
                 };
             } else {
                 state = temp_state;
                 new_text.push_str(&line);
-                //println!("{}", &line);
-                //dbg!(&state.linum_old);
-                //dbg!(&state.linum_new);
-                //println!("\n");
                 new_text.push('\n');
             }
         } else if let Some((linum_old, line)) = old_lines.pop() {

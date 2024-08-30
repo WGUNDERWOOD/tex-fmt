@@ -120,16 +120,8 @@ pub fn apply_indent(
     new_state.linum_new += 1;
     new_state.linum_old = linum_old;
 
-    new_state.ignore = get_ignore(
-        line,
-        state,
-        logs,
-        file,
-        new_state.linum_new,
-        new_state.linum_old,
-        true,
-    );
-    new_state.leave = get_leave(line, state, logs, file, true);
+    new_state.ignore = get_ignore(line, &new_state, logs, file, true);
+    new_state.leave = get_leave(line, &new_state, logs, file, true);
 
     if !new_state.leave.visual && !new_state.ignore.visual {
         // calculate indent

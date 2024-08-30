@@ -40,10 +40,7 @@ pub fn environments_new_line(
     let mut new_text = String::with_capacity(text.len());
 
     for line in text.lines() {
-        let linum_new = 0; // TODO implement this
-        let linum_old = 0; // TODO implement this
-        state.ignore =
-            get_ignore(line, &state, logs, file, linum_new, linum_old, false);
+        state.ignore = get_ignore(line, &state, logs, file, false);
         state.leave = get_leave(line, &state, logs, file, true);
 
         if !state.leave.visual

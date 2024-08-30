@@ -22,8 +22,6 @@ pub fn get_ignore(
     state: &State,
     logs: &mut Vec<Log>,
     file: &str,
-    linum_new: usize,
-    linum_old: usize,
     warn: bool,
 ) -> Ignore {
     let skip = contains_ignore_skip(line);
@@ -43,8 +41,8 @@ pub fn get_ignore(
                 logs,
                 Warn,
                 file,
-                linum_new,
-                linum_old,
+                state.linum_new,
+                state.linum_old,
                 line,
                 "Cannot begin ignore block:",
             );
@@ -57,8 +55,8 @@ pub fn get_ignore(
                 logs,
                 Warn,
                 file,
-                linum_new,
-                linum_old,
+                state.linum_new,
+                state.linum_old,
                 line,
                 "No ignore block to end.",
             );

@@ -29,15 +29,13 @@ pub fn get_leave(
     let actual = state.leave.actual + diff;
     let visual = actual > 0 && state.leave.actual > 0;
 
-    let linum_new = 0; // TODO implement this
-    let linum_old = 0; // TODO implement this
     if warn && (actual < 0) {
         record_line_log(
             logs,
             Warn,
             file,
-            linum_new,
-            linum_old,
+            state.linum_new,
+            state.linum_old,
             line,
             "Leave count is negative.",
         );
