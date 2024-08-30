@@ -8,6 +8,7 @@ pkgs.mkShell {
         pillow
       ]);
   in [
+    pkgs.bacon
     pkgs.cacert
     pkgs.cargo-flamegraph
     pkgs.clippy
