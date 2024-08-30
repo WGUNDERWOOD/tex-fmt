@@ -53,6 +53,22 @@ pub fn apply_wrap(
     }
     let wrap_point = find_wrap_point(line);
     let comment_index = find_comment_index(line);
+
+    match wrap_point {
+        Some(p) if p <= WRAP_MAX => {}
+        _ => {
+            record_line_log(
+                logs,
+                Warn,
+                file,
+                state.linum_new,
+                state.linum_old,
+                line,
+                "Line cannot be wrapped.",
+            );
+        }
+    };
+
     match wrap_point {
         Some(p) => {
             let line_start = match comment_index {
@@ -70,17 +86,6 @@ pub fn apply_wrap(
             line_2.insert_str(0, line_start);
             Some((line_1, line_2))
         }
-        None => {
-            record_line_log(
-                logs,
-                Warn,
-                file,
-                state.linum_new,
-                state.linum_old,
-                line,
-                "Line cannot be wrapped.",
-            );
-            None
-        }
+        None => None,
     }
 }

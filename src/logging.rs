@@ -7,6 +7,7 @@ use log::LevelFilter;
 use std::io::Write;
 use std::path::Path;
 use std::time::Instant;
+use std::cmp::Reverse;
 
 #[derive(Debug)]
 pub struct Log {
@@ -106,6 +107,13 @@ pub fn init_logger(args: &Cli) {
 }
 
 pub fn print_logs(mut logs: Vec<Log>) {
+    logs.sort_by_key(|l| {
+        (l.level, l.linum_new, l.linum_old, l.message.clone(), Reverse(l.time))
+    });
+    logs.dedup_by(|a, b| {
+        (a.level, a.linum_new, a.linum_old, &a.message)
+            == (b.level, b.linum_new, b.linum_old, &b.message)
+    });
     logs.sort_by_key(|l| l.time);
 
     for log in logs {

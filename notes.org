@@ -1,14 +1,10 @@
 #+title: tex-fmt
 * Tasks
-** Check other latex files
 ** Tidy code
+** Check other latex files
 ** Documentation
 ** Try wrapping spaceless lines
 * Features
-** Aim for a single pass of wrapping and indenting
-*** TODO Care with multiple printing of the same logs
-*** TODO Logging is messy, maybe include info in the state
-*** TODO Reduce number of arguments to functions
 ** Parsing with texlab
 *** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
 *** https://github.com/latex-lsp/texlab/tree/master/crates/parser
