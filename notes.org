@@ -1,6 +1,7 @@
 #+title: tex-fmt
 * Tasks
 ** Tidy code
+** Include environments on new lines logic in main loop
 ** Check other latex files
 ** Documentation
 ** Try wrapping spaceless lines
