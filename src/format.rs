@@ -28,7 +28,7 @@ pub fn format_file(
         zip(linums_old, old_lines).collect();
 
     let mut queue: Vec<(usize, String)> = vec![];
-    let mut new_text: String = "".to_string();
+    let mut new_text = String::with_capacity(text.len());
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
@@ -57,8 +57,6 @@ pub fn format_file(
             break;
         }
     }
-
-    new_text = remove_trailing_spaces(&new_text);
 
     if !indents_return_to_zero(&new_text) {
         record_file_log(logs, Warn, file, "Indent does not return to zero.");

@@ -81,7 +81,8 @@ pub fn apply_wrap(
                 }
                 None => "",
             };
-            let line_1 = line.chars().take(p).collect();
+            let mut line_1: String = line.chars().take(p).collect();
+            line_1 = line_1.trim_end().to_string();
             let mut line_2: String = line.chars().skip(p).collect();
             line_2.insert_str(0, line_start);
             Some((line_1, line_2))
