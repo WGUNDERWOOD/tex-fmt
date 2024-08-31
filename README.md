@@ -92,6 +92,7 @@ nix build "github:wgunderwood/tex-fmt"
 tex-fmt file.tex        # format file.tex and overwrite
 tex-fmt -c file.tex     # check if file.tex is correctly formatted
 tex-fmt -p file.tex     # format file.tex and print to STDOUT
+tex-fmt -k file.tex     # keep lines, do not wrap
 tex-fmt -h              # view help information
 ```
 
