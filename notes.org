@@ -1,16 +1,1 @@
 #+title: tex-fmt
-* Tasks
-** Tidy code
-** Include environments on new lines logic in main loop
-** Check other latex files
-** Documentation
-** Try wrapping spaceless lines
-* Features
-** Parsing with texlab
-*** https://github.com/rust-lang/rust-analyzer/blob/master/docs/dev/syntax.md
-*** https://github.com/latex-lsp/texlab/tree/master/crates/parser
-* Formatting logic
-** Get line = (text, linum_old, linum_new = None) from file
-** State represents the state after the last line was added to the output file
-*** State only needs actual ignore, indent, leave
-** Get the state () of this line
