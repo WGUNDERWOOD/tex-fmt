@@ -98,7 +98,7 @@ tex-fmt -h              # view help information
 ## Performance
 
 When formatting all of the test cases,
-tex-fmt is hundreds of times faster than latexindent.
+tex-fmt is over a thousand times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
