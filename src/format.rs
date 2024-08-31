@@ -6,7 +6,6 @@ use crate::parse::*;
 use crate::subs::*;
 use crate::wrap::*;
 use log::Level::{Info, Warn};
-use std::iter::zip;
 
 pub fn format_file(
     text: &str,
