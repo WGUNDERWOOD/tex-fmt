@@ -9,6 +9,8 @@ pub struct Cli {
     pub check: bool,
     #[arg(long, short, help = "Print to STDOUT, do not modify files")]
     pub print: bool,
+    #[arg(long, short, help = "Keep lines, do not wrap")]
+    pub keep: bool,
     #[arg(long, short, help = "Show info log messages")]
     pub verbose: bool,
     #[arg(long, short, help = "Show trace log messages")]
@@ -29,6 +31,7 @@ impl Cli {
         Cli {
             check: false,
             print: false,
+            keep: false,
             verbose: false,
             trace: false,
             files: Vec::<String>::new(),

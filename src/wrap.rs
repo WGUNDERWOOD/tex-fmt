@@ -7,10 +7,11 @@ use log::Level::{Trace, Warn};
 const WRAP_MIN: usize = 70;
 const WRAP_MAX: usize = 80;
 
-pub fn needs_wrap(line: &str, state: &State) -> bool {
-    (line.chars().count() > WRAP_MAX)
+pub fn needs_wrap(line: &str, state: &State, args: &Cli) -> bool {
+    !args.keep
         && !state.leave.visual
         && !state.ignore.visual
+        && (line.chars().count() > WRAP_MAX)
 }
 
 fn find_wrap_point(line: &str) -> Option<usize> {
