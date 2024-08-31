@@ -1,4 +1,5 @@
 use crate::comments::*;
+use crate::format::*;
 use crate::ignore::*;
 use crate::leave::*;
 use crate::logging::*;
@@ -27,27 +28,23 @@ pub fn environments_new_line(
     logs: &mut Vec<Log>,
 ) -> String {
     if args.verbose {
-        record_log(
+        record_file_log(
             logs,
             Info,
-            None,
-            file.to_string(),
-            None,
-            None,
-            "Ensuring environments on new lines.".to_string(),
+            file,
+            "Ensuring environments on new lines.",
         );
     }
 
-    let mut ignore = Ignore::new();
-    let mut leave = Leave::new();
+    let mut state = State::new();
     let mut new_text = String::with_capacity(text.len());
 
-    for (linum, line) in text.lines().enumerate() {
-        ignore = get_ignore(line, linum, ignore, file, logs, None, false);
-        leave = get_leave(line, linum, leave, file, logs, None, false);
+    for line in text.lines() {
+        state.ignore = get_ignore(line, &state, logs, file, false);
+        state.leave = get_leave(line, &state, logs, file, true);
 
-        if !leave.visual
-            && !ignore.visual
+        if !state.leave.visual
+            && !state.ignore.visual
             && (RE_ENV_BEGIN.is_match(line)
                 || RE_ENV_END.is_match(line)
                 || RE_ITEM.is_match(line))

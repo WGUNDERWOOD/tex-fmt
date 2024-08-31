@@ -4,6 +4,7 @@ use env_logger::Builder;
 use log::Level;
 use log::Level::{Error, Info, Trace, Warn};
 use log::LevelFilter;
+use std::cmp::Reverse;
 use std::io::Write;
 use std::path::Path;
 use std::time::Instant;
@@ -11,33 +12,62 @@ use std::time::Instant;
 #[derive(Debug)]
 pub struct Log {
     pub level: Level,
-    pub pass: Option<usize>,
     pub time: Instant,
     pub file: String,
-    pub linum: Option<usize>,
+    pub linum_new: Option<usize>,
+    pub linum_old: Option<usize>,
     pub line: Option<String>,
     pub message: String,
 }
 
-pub fn record_log(
+fn record_log(
     logs: &mut Vec<Log>,
     level: Level,
-    pass: Option<usize>,
-    file: String,
-    linum: Option<usize>,
+    file: &str,
+    linum_new: Option<usize>,
+    linum_old: Option<usize>,
     line: Option<String>,
-    message: String,
+    message: &str,
 ) {
     let log = Log {
         level,
-        pass,
         time: Instant::now(),
-        file,
-        linum,
+        file: file.to_string(),
+        linum_new,
+        linum_old,
         line,
-        message,
+        message: message.to_string(),
     };
     logs.push(log);
+}
+
+pub fn record_file_log(
+    logs: &mut Vec<Log>,
+    level: Level,
+    file: &str,
+    message: &str,
+) {
+    record_log(logs, level, file, None, None, None, message);
+}
+
+pub fn record_line_log(
+    logs: &mut Vec<Log>,
+    level: Level,
+    file: &str,
+    linum_new: usize,
+    linum_old: usize,
+    line: &str,
+    message: &str,
+) {
+    record_log(
+        logs,
+        level,
+        file,
+        Some(linum_new),
+        Some(linum_old),
+        Some(line.to_string()),
+        message,
+    );
 }
 
 fn get_log_style(log_level: Level) -> String {
@@ -76,18 +106,30 @@ pub fn init_logger(args: &Cli) {
         .init();
 }
 
-pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
-    if get_log_level(args) == LevelFilter::Warn && !logs.is_empty() {
-        let max_pass = &logs.iter().map(|l| l.pass).max().unwrap();
-        logs.retain(|l| l.pass == *max_pass || l.pass.is_none());
-    }
-
+pub fn print_logs(mut logs: Vec<Log>) {
+    logs.sort_by_key(|l| {
+        (
+            l.level,
+            l.linum_new,
+            l.linum_old,
+            l.message.clone(),
+            Reverse(l.time),
+        )
+    });
+    logs.dedup_by(|a, b| {
+        (a.level, a.linum_new, a.linum_old, &a.message)
+            == (b.level, b.linum_new, b.linum_old, &b.message)
+    });
     logs.sort_by_key(|l| l.time);
 
     for log in logs {
-        let linum = match log.linum {
-            // linums start from 1
-            Some(i) => format!("Line {}. ", i + 1),
+        let linum_new = match log.linum_new {
+            Some(i) => format!("Line {} ", i),
+            None => "".to_string(),
+        };
+
+        let linum_old = match log.linum_old {
+            Some(i) => format!("({}). ", i),
             None => "".to_string(),
         };
 
@@ -97,12 +139,13 @@ pub fn print_logs(args: &Cli, mut logs: Vec<Log>) {
         };
 
         let log_string = format!(
-            "{}tex-fmt {}{}: {}{}{}{} {}{}",
+            "{}tex-fmt {}{}: {}{}{}{}{} {}{}",
             PINK,
             PURPLE,
             Path::new(&log.file).file_name().unwrap().to_str().unwrap(),
             WHITE,
-            linum,
+            linum_new,
+            linum_old,
             YELLOW,
             log.message,
             RESET,

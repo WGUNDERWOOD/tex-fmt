@@ -14,6 +14,9 @@ build:
 test:
   @cargo test -r
 
+testignored:
+  @cargo test -r -- --ignored
+
 clippy:
   @cargo clippy -r
 

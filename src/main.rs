@@ -35,37 +35,31 @@ fn main() {
         let mut logs = Vec::<Log>::new();
         let extension_valid = check_extension_valid(file);
         if extension_valid {
-            let text = fs::read_to_string(file).unwrap();
-            let new_text = format_file(&text, file, &args, &mut logs);
-            if args.print {
-                println!("{}", &new_text);
-            } else if args.check && text != new_text {
-                record_log(
-                    &mut logs,
-                    Error,
-                    None,
-                    file.to_string(),
-                    None,
-                    None,
-                    "File is not correctly formatted.".to_string(),
-                );
+            if let Ok(text) = fs::read_to_string(file) {
+                let new_text = format_file(&text, file, &args, &mut logs);
+                if args.print {
+                    println!("{}", &new_text);
+                } else if args.check && text != new_text {
+                    record_file_log(
+                        &mut logs,
+                        Error,
+                        file,
+                        "Incorrect formatting.",
+                    );
+                    exit_code = 1;
+                } else if text != new_text {
+                    write_file(file, &new_text);
+                }
+            } else {
+                record_file_log(&mut logs, Error, file, "Could not open file.");
                 exit_code = 1;
-            } else if text != new_text {
-                write_file(file, &new_text);
             }
         } else {
-            record_log(
-                &mut logs,
-                Error,
-                None,
-                file.to_string(),
-                None,
-                None,
-                "File type invalid.".to_string(),
-            );
+            record_file_log(&mut logs, Error, file, "File type invalid.");
+            exit_code = 1;
         };
 
-        print_logs(&args, logs);
+        print_logs(logs);
     }
     exit(exit_code)
 }
