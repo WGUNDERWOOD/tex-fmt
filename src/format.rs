@@ -22,10 +22,7 @@ pub fn format_file(
 
     let mut state = State::new();
 
-    let old_lines = old_text.lines().rev();
-    let linums_old = (1..old_lines.clone().count() + 1).rev();
-    let mut old_lines: Vec<(usize, &str)> =
-        zip(linums_old, old_lines).collect();
+    let mut old_lines = old_text.lines().enumerate();
 
     let mut queue: Vec<(usize, String)> = vec![];
     let mut new_text = String::with_capacity(text.len());
@@ -43,15 +40,15 @@ pub fn format_file(
                     queue.push((linum_old, wrapped_lines.clone().unwrap().0));
                 } else {
                     new_text.push_str(&line);
-                    state.linum_new += 1;
                     new_text.push('\n');
+                    state.linum_new += 1;
                 };
             } else {
                 state = temp_state;
                 new_text.push_str(&line);
                 new_text.push('\n');
             }
-        } else if let Some((linum_old, line)) = old_lines.pop() {
+        } else if let Some((linum_old, line)) = old_lines.next() {
             queue.push((linum_old, line.to_string()));
         } else {
             break;
