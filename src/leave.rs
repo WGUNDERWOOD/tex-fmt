@@ -1,8 +1,9 @@
+use crate::format::*;
 use crate::logging::*;
 use crate::regexes::*;
 use log::Level::Warn;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Leave {
     pub actual: i8,
     pub visual: bool,
@@ -19,26 +20,24 @@ impl Leave {
 
 pub fn get_leave(
     line: &str,
-    linum: usize,
-    leave: Leave,
-    file: &str,
+    state: &State,
     logs: &mut Vec<Log>,
-    pass: Option<usize>,
+    file: &str,
     warn: bool,
 ) -> Leave {
     let diff = get_leave_diff(line);
-    let actual = leave.actual + diff;
-    let visual = actual > 0 && leave.actual > 0;
+    let actual = state.leave.actual + diff;
+    let visual = actual > 0 && state.leave.actual > 0;
 
     if warn && (actual < 0) {
-        record_log(
+        record_line_log(
             logs,
             Warn,
-            pass,
-            file.to_string(),
-            Some(linum),
-            Some(line.to_string()),
-            "Leave count is negative.".to_string(),
+            file,
+            state.linum_new,
+            state.linum_old,
+            line,
+            "Leave count is negative.",
         );
     }
 
@@ -46,18 +45,15 @@ pub fn get_leave(
 }
 
 fn get_leave_diff(line: &str) -> i8 {
-    if RE_ENV_BEGIN.is_match(line) {
-        for re_leave_begin in RE_LEAVES_BEGIN.iter() {
-            if re_leave_begin.is_match(line) {
-                return 1;
-            };
-        }
-    } else if RE_ENV_END.is_match(line) {
-        for re_leave_end in RE_LEAVES_END.iter() {
-            if re_leave_end.is_match(line) {
-                return -1;
-            };
-        }
+    if RE_ENV_BEGIN.is_match(line)
+        && RE_LEAVES_BEGIN.iter().any(|r| r.is_match(line))
+    {
+        1
+    } else if RE_ENV_END.is_match(line)
+        && RE_LEAVES_END.iter().any(|r| r.is_match(line))
+    {
+        -1
+    } else {
+        0
     }
-    0
 }

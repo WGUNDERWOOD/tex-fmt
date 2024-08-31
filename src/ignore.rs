@@ -1,6 +1,8 @@
+use crate::format::*;
 use crate::logging::*;
 use log::Level::Warn;
 
+#[derive(Clone, Debug)]
 pub struct Ignore {
     pub actual: bool,
     pub visual: bool,
@@ -17,11 +19,9 @@ impl Ignore {
 
 pub fn get_ignore(
     line: &str,
-    linum: usize,
-    ignore: Ignore,
-    file: &str,
+    state: &State,
     logs: &mut Vec<Log>,
-    pass: Option<usize>,
+    file: &str,
     warn: bool,
 ) -> Ignore {
     let skip = contains_ignore_skip(line);
@@ -31,39 +31,39 @@ pub fn get_ignore(
     let visual: bool;
 
     if skip {
-        actual = ignore.actual;
+        actual = state.ignore.actual;
         visual = true;
     } else if begin {
         actual = true;
         visual = true;
-        if warn && ignore.actual {
-            record_log(
+        if warn && state.ignore.actual {
+            record_line_log(
                 logs,
                 Warn,
-                pass,
-                file.to_string(),
-                Some(linum),
-                Some(line.to_string()),
-                "Cannot begin ignore block:".to_string(),
+                file,
+                state.linum_new,
+                state.linum_old,
+                line,
+                "Cannot begin ignore block:",
             );
         }
     } else if end {
         actual = false;
         visual = true;
-        if warn && !ignore.actual {
-            record_log(
+        if warn && !state.ignore.actual {
+            record_line_log(
                 logs,
                 Warn,
-                pass,
-                file.to_string(),
-                Some(linum),
-                Some(line.to_string()),
-                "No ignore block to end:".to_string(),
+                file,
+                state.linum_new,
+                state.linum_old,
+                line,
+                "No ignore block to end.",
             );
         }
     } else {
-        actual = ignore.actual;
-        visual = ignore.actual;
+        actual = state.ignore.actual;
+        visual = state.ignore.actual;
     }
 
     Ignore { actual, visual }

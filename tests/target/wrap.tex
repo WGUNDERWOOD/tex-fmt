@@ -3,20 +3,20 @@
 \begin{document}
 
 % no comment
-This line is too long because it has more than eighty characters inside it.
-Therefore it should be split.
+This line is too long because it has more than eighty characters
+inside it. Therefore it should be split.
 
 % break before comment
-This line is too long because it has more than eighty characters inside it.
-Therefore it % should be split.
+This line is too long because it has more than eighty characters
+inside it. Therefore it % should be split.
 
 % break after spaced comment
-This line is too long because it has more than % eighty characters inside it.
-% Therefore it should be split.
+This line is too long because it has more than % eighty characters
+% inside it. Therefore it should be split.
 
 % break after non-spaced comment
-This line is too long because it has more than% eighty characters inside it.
-% Therefore it should be split.
+This line is too long because it has more than% eighty characters
+% inside it. Therefore it should be split.
 
 % unbreakable line
 Thislineistoolongbecauseithasmorethan%eightycharactersinsideit.Buttherearenospacessoitcannotbesplit.
@@ -27,22 +27,33 @@ where there are some spaces so we can split this line here
 
 % long line only after indenting
 (
-  1234567890 1234567890 1234567890 1234567890 1234567890 1234567890 1234567890
-  123
+  1234567890 1234567890 1234567890 1234567890 1234567890 1234567890
+  1234567890 123
 )
 
 % double break after comment
-This line has a long comment. % This comment is very long so needs to be split
-% over three lines which is another edge case which should be checked here with
-% all these extra words
+This line has a long comment. % This comment is very long so needs to
+% be split over three lines which is another edge case which should
+% be checked here with all these extra words
 
 % double break after only comment
-% This line is all a long comment. This comment is very long so needs to be
-% split over three lines which is another edge case which should be checked
-% here with all these extra words
+% This line is all a long comment. This comment is very long so needs
+% to be split over three lines which is another edge case which
+% should be checked here with all these extra words
 
 % lines containing \<space>
 This line would usually be split at the special character part with a
 slash\ but it's best to break the line earlier.
+
+% long lines with brackets
+(This line is too long because it has more than eighty characters
+  inside it. Therefore it should be split. It also needs splitting onto
+multiple lines, and the middle lines should be indented due to these brackets.)
+
+% long lines with double brackets
+((This line is too long because it has more than eighty characters
+    inside it. Therefore it should be split. It also needs splitting onto
+    multiple lines, and the middle lines should be doubly indented due to
+these brackets.))
 
 \end{document}
