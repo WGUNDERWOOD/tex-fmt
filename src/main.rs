@@ -20,10 +20,16 @@ use crate::logging::*;
 use crate::parse::*;
 use crate::write::*;
 
-const TAB: i8 = 2;
-
 #[cfg(test)]
 mod tests;
+
+const TAB: i8 = 2;
+
+#[cfg(target_family = "unix")]
+const LINE_END: &str = "\n";
+
+#[cfg(target_family = "windows")]
+const LINE_END: &str = "\r\n";
 
 fn main() {
     let mut args = Cli::parse();

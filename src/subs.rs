@@ -5,11 +5,12 @@ use crate::leave::*;
 use crate::logging::*;
 use crate::regexes::*;
 use crate::Cli;
-use crate::TAB;
+use crate::{LINE_END, TAB};
 use log::Level::Info;
 
 pub fn remove_extra_newlines(text: &str) -> String {
-    RE_NEWLINES.replace_all(text, "\n\n").to_string()
+    let double_line_end = format!("{}{}", LINE_END, LINE_END);
+    RE_NEWLINES.replace_all(text, double_line_end).to_string()
 }
 
 pub fn remove_tabs(text: &str) -> String {
@@ -18,7 +19,7 @@ pub fn remove_tabs(text: &str) -> String {
 }
 
 pub fn remove_trailing_spaces(text: &str) -> String {
-    RE_TRAIL.replace_all(text, "\n").to_string()
+    RE_TRAIL.replace_all(text, LINE_END).to_string()
 }
 
 pub fn environments_new_line(
@@ -53,20 +54,20 @@ pub fn environments_new_line(
             let comment = &get_comment(line, comment_index);
             let text = &remove_comment(line, comment_index);
             let text = &RE_ENV_BEGIN_SHARED_LINE
-                .replace_all(text, "$prev\n$env")
+                .replace_all(text, format!("$prev{}$env", LINE_END))
                 .to_string();
             let text = &RE_ENV_END_SHARED_LINE
-                .replace_all(text, "$prev\n$env")
+                .replace_all(text, format!("$prev{}$env", LINE_END))
                 .to_string();
             let text = &RE_ITEM_SHARED_LINE
-                .replace_all(text, "$prev\n$env")
+                .replace_all(text, format!("$prev{}$env", LINE_END))
                 .to_string();
             new_text.push_str(text);
             new_text.push_str(comment);
         } else {
             new_text.push_str(line);
         }
-        new_text.push('\n');
+        new_text.push_str(LINE_END);
     }
     new_text
 }

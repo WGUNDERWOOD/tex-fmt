@@ -5,6 +5,7 @@ use crate::logging::*;
 use crate::parse::*;
 use crate::subs::*;
 use crate::wrap::*;
+use crate::LINE_END;
 use log::Level::{Info, Warn};
 
 pub fn format_file(
@@ -39,13 +40,13 @@ pub fn format_file(
                     queue.push((linum_old, wrapped_lines.clone().unwrap().0));
                 } else {
                     new_text.push_str(&line);
-                    new_text.push('\n');
+                    new_text.push_str(LINE_END);
                     state.linum_new += 1;
                 };
             } else {
                 state = temp_state;
                 new_text.push_str(&line);
-                new_text.push('\n');
+                new_text.push_str(LINE_END);
             }
         } else if let Some((linum_old, line)) = old_lines.next() {
             queue.push((linum_old, line.to_string()));
