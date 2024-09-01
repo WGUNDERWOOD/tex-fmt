@@ -50,4 +50,4 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: nix build
-    - run: nix flake check
+    - run: nix flake check --all-systems
