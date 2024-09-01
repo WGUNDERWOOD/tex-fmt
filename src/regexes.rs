@@ -14,7 +14,8 @@ const LEAVES: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
 
 lazy_static! {
     pub static ref RE_NEWLINES: Regex =
-        Regex::new(&format!(r"{}{}{}+", LINE_END, LINE_END, LINE_END)).unwrap();
+        Regex::new(&format!(r"{}{}({})+", LINE_END, LINE_END, LINE_END))
+            .unwrap();
     pub static ref RE_TABS: Regex = Regex::new(r"\t").unwrap();
     pub static ref RE_TRAIL: Regex =
         Regex::new(&format!(r" +{}", LINE_END)).unwrap();
