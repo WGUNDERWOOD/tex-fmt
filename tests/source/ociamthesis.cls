@@ -37,7 +37,7 @@
 
 
 %
-% Setup choosen crest/logo
+% Setup chosen crest/logo
 %
 
 \ifthenelse{\equal{\logoversion}{shieldcrest}}%
