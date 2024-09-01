@@ -36,7 +36,7 @@
 \def\college#1{\gdef\@college{#1}}
 
 %
-% Setup choosen crest/logo
+% Setup chosen crest/logo
 %
 
 \ifthenelse{\equal{\logoversion}{shieldcrest}}%
