@@ -1,0 +1,85 @@
+name: "Publish"
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build (${{ matrix.archive  }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            program: cargo
+            archive: tex-fmt-x86_64-windows.zip
+          - os: windows-latest
+            target: i686-pc-windows-msvc
+            program: cargo
+            archive: tex-fmt-i686-windows.zip
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            program: cargo
+            archive: tex-fmt-aarch64-windows.zip
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            program: cargo
+            archive: tex-fmt-x86_64-macos.tar.gz
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            program: cargo
+            archive: tex-fmt-aarch64-macos.tar.gz
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            program: cargo
+            archive: tex-fmt-x86_64-linux.tar.gz
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            program: cross
+            archive: tex-fmt-aarch64-linux.tar.gz
+          - os: ubuntu-latest
+            target: armv7-unknown-linux-gnueabihf
+            program: cross
+            archive: tex-fmt-armv7hf-linux.tar.gz
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            program: cargo
+            archive: tex-fmt-x86_64-alpine.tar.gz
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: Install cross
+        if: ${{ matrix.program == 'cross' }}
+        run: cargo install cross
+      - name: Build
+        run: ${{ matrix.program }} build --target ${{ matrix.target }} --all-features --release --locked
+      - name: Compress (windows)
+        if: ${{ contains(matrix.os, 'windows') }}
+        run: ${{ format('Compress-Archive target/{0}/release/tex-fmt.exe {1}', matrix.target, matrix.archive) }}
+      - name: Compress (macos)
+        if: ${{ contains(matrix.os, 'macos') }}
+        run: ${{ format('gtar -czvf {1} -C target/{0}/release tex-fmt', matrix.target, matrix.archive) }}
+      - name: Compress (linux)
+        if: ${{ contains(matrix.os, 'ubuntu') }}
+        run: ${{ format('tar -czvf {1} -C target/{0}/release tex-fmt', matrix.target, matrix.archive) }}
+      - name: Upload binary archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ matrix.archive }}
+  github:
+    name: GitHub
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+      - name: Publish binaries
+        run: |
+          gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.zip)
+          gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
