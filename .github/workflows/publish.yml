@@ -83,28 +83,3 @@ jobs:
           gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  crates:
-    name: crates.io publish
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - id: cargo_release_cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo/bin/cargo-release
-          key: ${{ runner.os }}-cargo-release
-      - run: cargo install cargo-release
-        if: steps.cargo_release_cache.outputs.cache-hit != 'true'
-      - run: cargo login ${{ secrets.CRATES_IO_API_TOKEN }}
-      - name: "cargo release publish"
-        run: |-
-          cargo release \
-            publish \
-            --workspace \
-            --all-features \
-            --allow-branch HEAD \
-            --no-confirm \
-            #--no-verify \
-            --execute
