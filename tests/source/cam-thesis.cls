@@ -211,12 +211,12 @@
 %%
 %%%%%
 
-% DOCVAR: abstract (The text that will be instered into the abstract of the
+% DOCVAR: abstract (The text that will be inserted into the abstract of the
 % thesis.)
 \newcommand{\@abstract}{}
 \renewcommand{\abstract}[1]{\renewcommand{\@abstract}{#1}}
 
-% DOCVAR: acknowledgements (The text that will be instered into the
+% DOCVAR: acknowledgements (The text that will be inserted into the
 % acknowledgments of the thesis.)
 \newcommand{\@acknowledgements}{}
 \newcommand{\acknowledgements}[1]{\renewcommand{\@acknowledgements}{#1}}
