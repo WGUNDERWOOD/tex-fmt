@@ -1,8 +1,8 @@
 # tex-fmt <img src="https://github.com/WGUNDERWOOD/tex-fmt/raw/main/extra/logo.svg" alt="tex-fmt" align="right" width=160 />
 
 [![CI](
-https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml/badge.svg)](
-https://github.com/wgunderwood/tex-fmt/actions/workflows/flake.yml)
+https://github.com/wgunderwood/tex-fmt/actions/workflows/ci.yml/badge.svg)](
+https://github.com/wgunderwood/tex-fmt/actions/workflows/ci.yml)
 [![crates.io](
 https://img.shields.io/crates/v/tex-fmt?logo=rust)](
 https://crates.io/crates/tex-fmt)
