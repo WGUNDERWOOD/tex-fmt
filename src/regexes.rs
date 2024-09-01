@@ -1,3 +1,4 @@
+use crate::LINE_END;
 use lazy_static::lazy_static;
 use regex::Regex;
 
@@ -12,9 +13,11 @@ const LISTS: [&str; 5] = [
 const LEAVES: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
 
 lazy_static! {
-    pub static ref RE_NEWLINES: Regex = Regex::new(r"\n\n\n+").unwrap();
+    pub static ref RE_NEWLINES: Regex =
+        Regex::new(&format!(r"{}{}{}+", LINE_END, LINE_END, LINE_END)).unwrap();
     pub static ref RE_TABS: Regex = Regex::new(r"\t").unwrap();
-    pub static ref RE_TRAIL: Regex = Regex::new(r" +\n").unwrap();
+    pub static ref RE_TRAIL: Regex =
+        Regex::new(&format!(r" +{}", LINE_END)).unwrap();
     pub static ref RE_ITEM: Regex = Regex::new(r"\\item").unwrap();
     pub static ref RE_DOCUMENT_BEGIN: Regex =
         Regex::new(r"\\begin\{document\}").unwrap();

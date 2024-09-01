@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 jobs:
   test:
-    name: Cargo build (${{ matrix.os }})
+    name: Cargo test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -47,7 +47,7 @@ jobs:
     - uses: cachix/install-nix-action@v25
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-        nix_path: nixpkgs=channel:nixos-23.11
+        nix_path: nixpkgs=channel:nixos-unstable
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: nix build
     - run: nix flake check
