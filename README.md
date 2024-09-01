@@ -92,8 +92,32 @@ nix build "github:wgunderwood/tex-fmt"
 tex-fmt file.tex        # format file.tex and overwrite
 tex-fmt -c file.tex     # check if file.tex is correctly formatted
 tex-fmt -p file.tex     # format file.tex and print to STDOUT
+tex-fmt -k file.tex     # keep lines, do not wrap
 tex-fmt -h              # view help information
 ```
+
+### Disabling the formatter
+
+Ending a source line with `% tex-fmt: skip` disables the formatter for that line.
+To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
+
+``` tex
+\documentclass{article}
+
+\begin{document}
+
+This line is skipped % tex-fmt: skip
+
+% tex-fmt: off
+  These lines are also
+    not formatted or wrapped
+% tex-fmt: on
+
+\end{document}
+```
+
+Verbatim environments including `verbatim`, `Verbatim`, `lstlisting`
+and `minted` are automatically skipped.
 
 ## Performance
 
@@ -102,7 +126,12 @@ tex-fmt is over a thousand times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 47 | 93k | 3.5M | **0.096s** | 97s [x1001] | 125s [x1288] |
+| 49 | 94k | 3.5M | **0.096s** | 97s [x1001] | 125s [x1288] |
+
+## Contribution
+
+Please feel free to open an issue or submit a pull request,
+including as much information as you can.
 
 ## Limitations
 
