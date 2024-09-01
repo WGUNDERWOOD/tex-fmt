@@ -71,7 +71,7 @@ jobs:
           name: ${{ matrix.target }}
           path: ${{ matrix.archive }}
   github:
-    name: GitHub
+    name: GitHub archive upload
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -84,7 +84,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   crates:
-    name: crates.io
+    name: crates.io publish
     needs: [build]
     runs-on: ubuntu-latest
     steps:
