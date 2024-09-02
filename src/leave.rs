@@ -10,8 +10,8 @@ pub struct Leave {
 }
 
 impl Leave {
-    pub fn new() -> Self {
-        Leave {
+    pub const fn new() -> Self {
+        Self {
             actual: 0,
             visual: false,
         }
@@ -45,11 +45,11 @@ pub fn get_leave(
 }
 
 fn get_leave_diff(line: &str) -> i8 {
-    if RE_ENV_BEGIN.is_match(line)
+    if line.contains(ENV_BEGIN)
         && RE_LEAVES_BEGIN.iter().any(|r| r.is_match(line))
     {
         1
-    } else if RE_ENV_END.is_match(line)
+    } else if line.contains(ENV_END)
         && RE_LEAVES_END.iter().any(|r| r.is_match(line))
     {
         -1

@@ -15,7 +15,7 @@ pub fn remove_extra_newlines(text: &str) -> String {
 
 pub fn remove_tabs(text: &str) -> String {
     let replace = (0..TAB).map(|_| " ").collect::<String>();
-    RE_TABS.replace_all(text, replace).to_string()
+    text.replace('\t', &replace)
 }
 
 pub fn remove_trailing_spaces(text: &str) -> String {
@@ -46,9 +46,9 @@ pub fn environments_new_line(
 
         if !state.leave.visual
             && !state.ignore.visual
-            && (RE_ENV_BEGIN.is_match(line)
-                || RE_ENV_END.is_match(line)
-                || RE_ITEM.is_match(line))
+            && (line.contains(ENV_BEGIN)
+                || line.contains(ENV_END)
+                || line.contains(ITEM))
         {
             let comment_index = find_comment_index(line);
             let comment = &get_comment(line, comment_index);

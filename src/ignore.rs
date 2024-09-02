@@ -9,8 +9,8 @@ pub struct Ignore {
 }
 
 impl Ignore {
-    pub fn new() -> Self {
-        Ignore {
+    pub const fn new() -> Self {
+        Self {
             actual: false,
             visual: false,
         }
