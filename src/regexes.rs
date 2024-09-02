@@ -23,22 +23,16 @@ lazy_static! {
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();
     pub static ref RE_TRAIL: Regex =
         Regex::new(&format!(r" +{LINE_END}")).unwrap();
-    pub static ref RE_VERBATIMS_BEGIN: Vec<Regex> = VERBATIMS
+    pub static ref VERBATIMS_BEGIN: Vec<String> = VERBATIMS
         .iter()
-        .map(|l| Regex::new(&format!(r"\\begin\{{{l}}}")).unwrap())
+        .map(|l| format!("\\begin{{{l}}}"))
         .collect();
-    pub static ref RE_VERBATIMS_END: Vec<Regex> = VERBATIMS
-        .iter()
-        .map(|l| Regex::new(&format!(r"\\end\{{{l}}}")).unwrap())
-        .collect();
-    pub static ref RE_LISTS_BEGIN: Vec<Regex> = LISTS
-        .iter()
-        .map(|l| Regex::new(&format!(r"\\begin\{{{l}}}")).unwrap())
-        .collect();
-    pub static ref RE_LISTS_END: Vec<Regex> = LISTS
-        .iter()
-        .map(|l| Regex::new(&format!(r"\\end\{{{l}}}")).unwrap())
-        .collect();
+    pub static ref VERBATIMS_END: Vec<String> =
+        VERBATIMS.iter().map(|l| format!("\\end{{{l}}}")).collect();
+    pub static ref LISTS_BEGIN: Vec<String> =
+        LISTS.iter().map(|l| format!("\\begin{{{l}}}")).collect();
+    pub static ref LISTS_END: Vec<String> =
+        LISTS.iter().map(|l| format!("\\end{{{l}}}")).collect();
     pub static ref RE_ENV_BEGIN_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\begin\{)").unwrap();
     pub static ref RE_ENV_END_SHARED_LINE: Regex =

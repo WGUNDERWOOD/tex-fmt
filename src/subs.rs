@@ -1,9 +1,9 @@
 use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
-use crate::verbatim::*;
 use crate::logging::*;
 use crate::regexes::*;
+use crate::verbatim::*;
 use crate::Cli;
 use crate::{LINE_END, TAB};
 use log::Level::Info;

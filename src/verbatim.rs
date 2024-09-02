@@ -46,11 +46,11 @@ pub fn get_verbatim(
 
 fn get_verbatim_diff(line: &str) -> i8 {
     if line.contains(ENV_BEGIN)
-        && RE_VERBATIMS_BEGIN.iter().any(|r| r.is_match(line))
+        && VERBATIMS_BEGIN.iter().any(|r| line.contains(r))
     {
         1
     } else if line.contains(ENV_END)
-        && RE_VERBATIMS_END.iter().any(|r| r.is_match(line))
+        && VERBATIMS_END.iter().any(|r| line.contains(r))
     {
         -1
     } else {

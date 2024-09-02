@@ -1,10 +1,10 @@
 use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
-use crate::verbatim::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
+use crate::verbatim::*;
 use crate::TAB;
 use core::cmp::max;
 use log::Level::{Trace, Warn};
@@ -39,22 +39,20 @@ fn get_diff(line: &str) -> i8 {
             return 0;
         };
         diff += 1;
-        for re_list_begin in RE_LISTS_BEGIN.iter() {
-            if re_list_begin.is_match(line) {
-                diff += 1;
-            };
-        }
+        diff += i8::try_from(
+            LISTS_BEGIN.iter().filter(|&r| line.contains(r)).count(),
+        )
+        .unwrap();
     } else if line.contains(ENV_END) {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
         };
         diff -= 1;
-        for re_list_end in RE_LISTS_END.iter() {
-            if re_list_end.is_match(line) {
-                diff -= 1;
-            };
-        }
+        diff -= i8::try_from(
+            LISTS_END.iter().filter(|&r| line.contains(r)).count(),
+        )
+        .unwrap();
     };
 
     // indent for delimiters
@@ -85,8 +83,8 @@ fn get_back(line: &str) -> i8 {
             return 0;
         };
         // list environments get double indents for indenting items
-        for re_list_end in RE_LISTS_END.iter() {
-            if re_list_end.is_match(line) {
+        for r in LISTS_END.iter() {
+            if line.contains(r) {
                 return 2;
             };
         }

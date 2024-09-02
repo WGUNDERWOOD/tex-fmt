@@ -2,10 +2,10 @@
 
 use crate::ignore::*;
 use crate::indent::*;
-use crate::verbatim::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::subs::*;
+use crate::verbatim::*;
 use crate::wrap::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
