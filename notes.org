@@ -1,2 +1,1 @@
 #+title: tex-fmt
-* TODO Simplify other regexes
