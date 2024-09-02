@@ -63,11 +63,11 @@ E = m c^2
 </tr>
 </table>
 
-- ⚡ Extremely fast run-time performance
-- 🔧 No configuration necessary
-- 📟 Command-line interface
-- 📜 Handles LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
-- 🦀 Written entirely in safe Rust
+- ⚡&nbsp; Extremely fast run-time performance
+- 🔧&nbsp; Minimal configuration required
+- 📟&nbsp; Command-line interface
+- 📜&nbsp; Handles LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
+- 🦀&nbsp; Written entirely in safe Rust
 
 ## Installation
 
@@ -87,18 +87,23 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 nix build "github:wgunderwood/tex-fmt"
 ```
 
+### Binary download
+
+Binaries for various platforms are available on the GitHub
+[releases](https://github.com/WGUNDERWOOD/tex-fmt/releases) page.
+
 ## Usage
 ``` shell
-tex-fmt file.tex        # format file.tex and overwrite
-tex-fmt -c file.tex     # check if file.tex is correctly formatted
-tex-fmt -p file.tex     # format file.tex and print to STDOUT
-tex-fmt -k file.tex     # keep lines, do not wrap
-tex-fmt -h              # view help information
+tex-fmt file.tex             # format file.tex and overwrite
+tex-fmt --check file.tex     # check if file.tex is correctly formatted
+tex-fmt --print file.tex     # format file.tex and print to STDOUT
+tex-fmt --keep file.tex      # keep lines, do not wrap
+tex-fmt --help               # view help information
 ```
 
 ### Disabling the formatter
 
-Ending a source line with `% tex-fmt: skip` disables the formatter for that line.
+Ending a source line with `% tex-fmt: skip` disables formatting for that line.
 To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
 
 ``` tex
@@ -106,7 +111,7 @@ To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
 
 \begin{document}
 
-This line is skipped % tex-fmt: skip
+    This line is skipped % tex-fmt: skip
 
 % tex-fmt: off
   These lines are also
@@ -131,7 +136,8 @@ tex-fmt is over a thousand times faster than latexindent.
 ## Contribution
 
 Please feel free to open an issue or submit a pull request,
-including as much information as you can.
+including as much information as you can. Documentation of internals
+can be accessed by cloning this repository and running `cargo doc`.
 
 ## Limitations
 
