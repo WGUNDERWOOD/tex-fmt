@@ -1,8 +1,9 @@
-default: test clippy format shellcheck
+default: test doc clippy format shellcheck
 
 all: default prof perf logo latex
 
 alias b := build
+alias d := doc
 alias t := test
 alias l := latex
 alias c := clippy
@@ -13,6 +14,9 @@ build:
 
 test:
   @cargo test -r
+
+doc:
+  @cargo doc
 
 testignored:
   @cargo test -r -- --ignored
