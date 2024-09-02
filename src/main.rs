@@ -35,12 +35,12 @@ use crate::write::*;
 #[cfg(test)]
 mod tests;
 
-const TAB: i8 = 2;
-
 #[cfg(target_family = "unix")]
+/// Line ending for unix
 const LINE_END: &str = "\n";
 
 #[cfg(target_family = "windows")]
+/// Line ending for Windows
 const LINE_END: &str = "\r\n";
 
 fn main() {

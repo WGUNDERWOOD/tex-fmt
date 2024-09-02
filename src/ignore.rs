@@ -1,14 +1,20 @@
+//! Utilities for ignoring/skipping source lines
+
 use crate::format::*;
 use crate::logging::*;
 use log::Level::Warn;
 
+/// Information on the ignored state of a line
 #[derive(Clone, Debug)]
 pub struct Ignore {
+    /// Whether the line is in an ignore block
     pub actual: bool,
+    /// Whether the line should be ignored/skipped
     pub visual: bool,
 }
 
 impl Ignore {
+    /// Construct a new ignore state
     pub const fn new() -> Self {
         Self {
             actual: false,
@@ -17,6 +23,7 @@ impl Ignore {
     }
 }
 
+/// Determine whether a line should be ignored
 pub fn get_ignore(
     line: &str,
     state: &State,
@@ -69,14 +76,17 @@ pub fn get_ignore(
     Ignore { actual, visual }
 }
 
+/// Check if a line contains a skip directive
 fn contains_ignore_skip(line: &str) -> bool {
     line.ends_with("% tex-fmt: skip")
 }
 
+/// Check if a line contains the start of an ignore block
 fn contains_ignore_begin(line: &str) -> bool {
     line.ends_with("% tex-fmt: off")
 }
 
+/// Check if a line contains the end of an ignore block
 fn contains_ignore_end(line: &str) -> bool {
     line.ends_with("% tex-fmt: on")
 }
