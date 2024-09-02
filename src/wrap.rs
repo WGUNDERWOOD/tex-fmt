@@ -9,7 +9,7 @@ const WRAP_MAX: usize = 80;
 
 pub fn needs_wrap(line: &str, state: &State, args: &Cli) -> bool {
     !args.keep
-        && !state.leave.visual
+        && !state.verbatim.visual
         && !state.ignore.visual
         && (line.chars().count() > WRAP_MAX)
 }

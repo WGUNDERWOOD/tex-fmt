@@ -16,18 +16,18 @@ const LISTS: [&str; 5] = [
     "inventory",
 ];
 
-const LEAVES: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
+const VERBATIMS: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
 
 lazy_static! {
     pub static ref RE_NEWLINES: Regex =
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();
     pub static ref RE_TRAIL: Regex =
         Regex::new(&format!(r" +{LINE_END}")).unwrap();
-    pub static ref RE_LEAVES_BEGIN: Vec<Regex> = LEAVES
+    pub static ref RE_VERBATIMS_BEGIN: Vec<Regex> = VERBATIMS
         .iter()
         .map(|l| Regex::new(&format!(r"\\begin\{{{l}}}")).unwrap())
         .collect();
-    pub static ref RE_LEAVES_END: Vec<Regex> = LEAVES
+    pub static ref RE_VERBATIMS_END: Vec<Regex> = VERBATIMS
         .iter()
         .map(|l| Regex::new(&format!(r"\\end\{{{l}}}")).unwrap())
         .collect();
