@@ -1,3 +1,6 @@
+//! tex-fmt
+//! An extremely fast LaTeX formatter written in Rust
+
 #![warn(missing_docs)]
 #![warn(clippy::nursery)]
 #![warn(clippy::cargo)]
