@@ -19,8 +19,8 @@ pub struct Indent {
 }
 
 impl Indent {
-    pub fn new() -> Self {
-        Indent {
+    pub const fn new() -> Self {
+        Self {
             actual: 0,
             visual: 0,
         }
@@ -33,9 +33,9 @@ fn get_diff(line: &str) -> i8 {
     let mut diff: i8 = 0;
 
     // other environments get single indents
-    if RE_ENV_BEGIN.is_match(line) {
+    if line.contains(ENV_BEGIN) {
         // documents get no global indentation
-        if RE_DOCUMENT_BEGIN.is_match(line) {
+        if line.contains(DOC_BEGIN) {
             return 0;
         };
         diff += 1;
@@ -44,9 +44,9 @@ fn get_diff(line: &str) -> i8 {
                 diff += 1
             };
         }
-    } else if RE_ENV_END.is_match(line) {
+    } else if line.contains(ENV_END) {
         // documents get no global indentation
-        if RE_DOCUMENT_END.is_match(line) {
+        if line.contains(DOC_END) {
             return 0;
         };
         diff -= 1;
@@ -77,9 +77,9 @@ fn get_back(line: &str) -> i8 {
     }
 
     // other environments get single indents
-    if RE_ENV_END.is_match(line) {
+    if line.contains(ENV_END) {
         // documents get no global indentation
-        if RE_DOCUMENT_END.is_match(line) {
+        if line.contains(DOC_END) {
             return 0;
         };
         // list environments get double indents for indenting items
@@ -92,7 +92,7 @@ fn get_back(line: &str) -> i8 {
     };
 
     // deindent items to make the rest of item environment appear indented
-    if RE_ITEM.is_match(line) {
+    if line.contains(ITEM) {
         back += 1;
     };
 

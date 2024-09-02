@@ -74,8 +74,8 @@ pub struct State {
 }
 
 impl State {
-    pub fn new() -> Self {
-        State {
+    pub const fn new() -> Self {
+        Self {
             linum_old: 0,
             linum_new: 0,
             ignore: Ignore::new(),

@@ -80,7 +80,7 @@ fn get_log_style(log_level: Level) -> String {
     }
 }
 
-fn get_log_level(args: &Cli) -> LevelFilter {
+const fn get_log_level(args: &Cli) -> LevelFilter {
     if args.trace {
         LevelFilter::Trace
     } else if args.verbose {
@@ -123,20 +123,18 @@ pub fn print_logs(mut logs: Vec<Log>) {
     logs.sort_by_key(|l| l.time);
 
     for log in logs {
-        let linum_new = match log.linum_new {
-            Some(i) => format!("Line {} ", i),
-            None => "".to_string(),
-        };
+        let linum_new = log
+            .linum_new
+            .map_or_else(|| "".to_string(), |i| format!("Line {} ", i));
 
-        let linum_old = match log.linum_old {
-            Some(i) => format!("({}). ", i),
-            None => "".to_string(),
-        };
+        let linum_old = log
+            .linum_old
+            .map_or_else(|| "".to_string(), |i| format!("({}). ", i));
 
-        let line = match &log.line {
-            Some(l) => l.trim_start().to_string(),
-            None => "".to_string(),
-        };
+        let line = log
+            .line
+            .as_ref()
+            .map_or_else(|| "".to_string(), |l| l.trim_start().to_string());
 
         let log_string = format!(
             "{}tex-fmt {}{}: {}{}{}{}{} {}{}",

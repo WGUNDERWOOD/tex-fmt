@@ -34,15 +34,9 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
 }
 
 pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
-    match comment {
-        Some(c) => line.chars().take(c).collect(),
-        None => line.to_string(),
-    }
+    comment.map_or_else(|| line.to_string(), |c| line.chars().take(c).collect())
 }
 
 pub fn get_comment(line: &str, comment: Option<usize>) -> String {
-    match comment {
-        Some(c) => line.chars().skip(c).collect(),
-        None => "".to_string(),
-    }
+    comment.map_or_else(|| "".to_string(), |c| line.chars().skip(c).collect())
 }

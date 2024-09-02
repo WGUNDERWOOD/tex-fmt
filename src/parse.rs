@@ -27,8 +27,8 @@ impl Cli {
     }
 
     #[cfg(test)]
-    pub fn new() -> Self {
-        Cli {
+    pub const fn new() -> Self {
+        Self {
             check: false,
             print: false,
             keep: false,

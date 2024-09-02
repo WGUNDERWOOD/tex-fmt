@@ -70,24 +70,13 @@ pub fn apply_wrap(
         }
     };
 
-    match wrap_point {
-        Some(p) => {
-            let line_start = match comment_index {
-                Some(c) => {
-                    if p > c {
-                        "%"
-                    } else {
-                        ""
-                    }
-                }
-                None => "",
-            };
-            let mut line_1: String = line.chars().take(p).collect();
-            line_1 = line_1.trim_end().to_string();
-            let mut line_2: String = line.chars().skip(p).collect();
-            line_2.insert_str(0, line_start);
-            Some((line_1, line_2))
-        }
-        None => None,
-    }
+    wrap_point.map(|p| {
+        let line_start =
+            comment_index.map_or("", |c| if p > c { "%" } else { "" });
+        let mut line_1: String = line.chars().take(p).collect();
+        line_1 = line_1.trim_end().to_string();
+        let mut line_2: String = line.chars().skip(p).collect();
+        line_2.insert_str(0, line_start);
+        (line_1, line_2)
+    })
 }

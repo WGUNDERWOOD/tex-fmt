@@ -2,6 +2,12 @@ use crate::LINE_END;
 use lazy_static::lazy_static;
 use regex::Regex;
 
+pub const ITEM: &str = "\\item";
+pub const DOC_BEGIN: &str = "\\begin{document}";
+pub const DOC_END: &str = "\\end{document}";
+pub const ENV_BEGIN: &str = "\\begin{";
+pub const ENV_END: &str = "\\end{";
+
 const LISTS: [&str; 5] = [
     "itemize",
     "enumerate",
@@ -16,14 +22,8 @@ lazy_static! {
     pub static ref RE_NEWLINES: Regex =
         Regex::new(&format!(r"{}{}({})+", LINE_END, LINE_END, LINE_END))
             .unwrap();
-    pub static ref RE_TABS: Regex = Regex::new(r"\t").unwrap();
     pub static ref RE_TRAIL: Regex =
         Regex::new(&format!(r" +{}", LINE_END)).unwrap();
-    pub static ref RE_ITEM: Regex = Regex::new(r"\\item").unwrap();
-    pub static ref RE_DOCUMENT_BEGIN: Regex =
-        Regex::new(r"\\begin\{document\}").unwrap();
-    pub static ref RE_DOCUMENT_END: Regex =
-        Regex::new(r"\\end\{document\}").unwrap();
     pub static ref RE_LEAVES_BEGIN: Vec<Regex> = LEAVES
         .iter()
         .map(|l| Regex::new(&format!(r"\\begin\{{{}}}", l)).unwrap())
@@ -32,8 +32,6 @@ lazy_static! {
         .iter()
         .map(|l| Regex::new(&format!(r"\\end\{{{}}}", l)).unwrap())
         .collect();
-    pub static ref RE_ENV_BEGIN: Regex = Regex::new(r"\\begin\{").unwrap();
-    pub static ref RE_ENV_END: Regex = Regex::new(r"\\end\{").unwrap();
     pub static ref RE_LISTS_BEGIN: Vec<Regex> = LISTS
         .iter()
         .map(|l| Regex::new(&format!(r"\\begin\{{{}}}", l)).unwrap())
