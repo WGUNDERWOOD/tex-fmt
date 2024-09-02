@@ -15,8 +15,8 @@ fn test_file(source_file: &str, target_file: &str) -> bool {
 
     if fmt_source_text != target_text {
         println!(
-            "{}fail {}{} {}-> {}{}{}",
-            RED, YELLOW, source_file, RESET, YELLOW, target_file, RESET
+            "{RED}fail {YELLOW}{source_file} {RESET}\
+            -> {YELLOW}{target_file}{RESET}",
         );
         let diff = TextDiff::from_lines(&fmt_source_text, &target_text);
         for change in diff.iter_all_changes() {
@@ -58,15 +58,13 @@ fn test_source() {
     let mut fail = false;
     for file in source_files {
         if !test_file(
-            &format!("tests/source/{}", file),
-            &format!("tests/target/{}", file),
+            &format!("tests/source/{file}"),
+            &format!("tests/target/{file}"),
         ) {
-            fail = true
+            fail = true;
         }
     }
-    if fail {
-        panic!("Some tests failed")
-    }
+    assert!(!fail, "Some tests failed");
 }
 
 #[test]
@@ -75,15 +73,13 @@ fn test_target() {
     let mut fail = false;
     for file in target_files {
         if !test_file(
-            &format!("tests/target/{}", file),
-            &format!("tests/target/{}", file),
+            &format!("tests/target/{file}"),
+            &format!("tests/target/{file}"),
         ) {
-            fail = true
+            fail = true;
         }
     }
-    if fail {
-        panic!("Some tests failed")
-    }
+    assert!(!fail, "Some tests failed");
 }
 
 #[test]
@@ -118,13 +114,11 @@ fn test_short() {
     let mut fail = false;
     for file in files {
         if !test_file(
-            &format!("tests/source/{}", file),
-            &format!("tests/target/{}", file),
+            &format!("tests/source/{file}"),
+            &format!("tests/target/{file}"),
         ) {
-            fail = true
+            fail = true;
         }
     }
-    if fail {
-        panic!("Some tests failed")
-    }
+    assert!(!fail, "Some tests failed");
 }

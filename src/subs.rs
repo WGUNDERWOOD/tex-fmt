@@ -9,7 +9,7 @@ use crate::{LINE_END, TAB};
 use log::Level::Info;
 
 pub fn remove_extra_newlines(text: &str) -> String {
-    let double_line_end = format!("{}{}", LINE_END, LINE_END);
+    let double_line_end = format!("{LINE_END}{LINE_END}");
     RE_NEWLINES.replace_all(text, double_line_end).to_string()
 }
 
@@ -54,13 +54,13 @@ pub fn environments_new_line(
             let comment = &get_comment(line, comment_index);
             let text = &remove_comment(line, comment_index);
             let text = &RE_ENV_BEGIN_SHARED_LINE
-                .replace_all(text, format!("$prev{}$env", LINE_END))
+                .replace_all(text, format!("$prev{LINE_END}$env"))
                 .to_string();
             let text = &RE_ENV_END_SHARED_LINE
-                .replace_all(text, format!("$prev{}$env", LINE_END))
+                .replace_all(text, format!("$prev{LINE_END}$env"))
                 .to_string();
             let text = &RE_ITEM_SHARED_LINE
-                .replace_all(text, format!("$prev{}$env", LINE_END))
+                .replace_all(text, format!("$prev{LINE_END}$env"))
                 .to_string();
             new_text.push_str(text);
             new_text.push_str(comment);

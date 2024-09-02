@@ -41,7 +41,7 @@ fn get_diff(line: &str) -> i8 {
         diff += 1;
         for re_list_begin in RE_LISTS_BEGIN.iter() {
             if re_list_begin.is_match(line) {
-                diff += 1
+                diff += 1;
             };
         }
     } else if line.contains(ENV_END) {
@@ -52,14 +52,16 @@ fn get_diff(line: &str) -> i8 {
         diff -= 1;
         for re_list_end in RE_LISTS_END.iter() {
             if re_list_end.is_match(line) {
-                diff -= 1
+                diff -= 1;
             };
         }
     };
 
     // indent for delimiters
-    diff += line.chars().filter(|x| OPENS.contains(x)).count() as i8;
-    diff -= line.chars().filter(|x| CLOSES.contains(x)).count() as i8;
+    diff += i8::try_from(line.chars().filter(|x| OPENS.contains(x)).count())
+        .unwrap();
+    diff -= i8::try_from(line.chars().filter(|x| CLOSES.contains(x)).count())
+        .unwrap();
 
     diff
 }
@@ -71,8 +73,8 @@ fn get_back(line: &str) -> i8 {
 
     // delimiters
     for c in line.chars() {
-        cumul -= OPENS.contains(&c) as i8;
-        cumul += CLOSES.contains(&c) as i8;
+        cumul -= i8::from(OPENS.contains(&c));
+        cumul += i8::from(CLOSES.contains(&c));
         back = max(cumul, back);
     }
 

@@ -29,7 +29,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
         } else if c != '%' {
             after_char = true;
         }
-        prev_char = Some(c)
+        prev_char = Some(c);
     }
     wrap_point
 }

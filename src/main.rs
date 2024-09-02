@@ -1,10 +1,11 @@
 //#![warn(missing_docs)]
 #![warn(clippy::nursery)]
-//#![warn(clippy::cargo)]
+#![warn(clippy::cargo)]
 //#![warn(clippy::missing_docs_in_private_items)]
-//#![warn(clippy::pedantic)]
-//#![allow(clippy::wildcard_imports)]
-//#![allow(clippy::module_name_repetitions)]
+#![warn(clippy::pedantic)]
+#![allow(clippy::wildcard_imports)]
+#![allow(clippy::struct_excessive_bools)]
+#![allow(clippy::module_name_repetitions)]
 
 use clap::Parser;
 use log::Level::Error;

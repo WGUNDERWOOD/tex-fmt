@@ -38,5 +38,5 @@ pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
 }
 
 pub fn get_comment(line: &str, comment: Option<usize>) -> String {
-    comment.map_or_else(|| "".to_string(), |c| line.chars().skip(c).collect())
+    comment.map_or_else(String::new, |c| line.chars().skip(c).collect())
 }
