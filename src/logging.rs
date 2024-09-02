@@ -2,7 +2,7 @@ use crate::colors::*;
 use crate::Cli;
 use env_logger::Builder;
 use log::Level;
-use log::Level::{Error, Info, Trace, Warn};
+use log::Level::{Debug, Error, Info, Trace, Warn};
 use log::LevelFilter;
 use std::cmp::Reverse;
 use std::io::Write;
@@ -76,7 +76,7 @@ fn get_log_style(log_level: Level) -> String {
         Warn => YELLOW.to_string(),
         Error => RED.to_string(),
         Trace => GREEN.to_string(),
-        _ => panic!(),
+        Debug => panic!(),
     }
 }
 
@@ -125,16 +125,16 @@ pub fn print_logs(mut logs: Vec<Log>) {
     for log in logs {
         let linum_new = log
             .linum_new
-            .map_or_else(|| "".to_string(), |i| format!("Line {} ", i));
+            .map_or_else(String::new, |i| format!("Line {i} "));
 
         let linum_old = log
             .linum_old
-            .map_or_else(|| "".to_string(), |i| format!("({}). ", i));
+            .map_or_else(String::new, |i| format!("({i}). "));
 
         let line = log
             .line
             .as_ref()
-            .map_or_else(|| "".to_string(), |l| l.trim_start().to_string());
+            .map_or_else(String::new, |l| l.trim_start().to_string());
 
         let log_string = format!(
             "{}tex-fmt {}{}: {}{}{}{}{} {}{}",
@@ -155,7 +155,7 @@ pub fn print_logs(mut logs: Vec<Log>) {
             Warn => log::warn!("{}", log_string),
             Info => log::info!("{}", log_string),
             Trace => log::trace!("{}", log_string),
-            _ => panic!(),
+            Debug => panic!(),
         }
     }
 }
