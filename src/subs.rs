@@ -1,3 +1,5 @@
+//! Utilities for performing text substitutions
+
 use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
@@ -5,23 +7,27 @@ use crate::logging::*;
 use crate::regexes::*;
 use crate::verbatim::*;
 use crate::Cli;
-use crate::{LINE_END, TAB};
+use crate::{LINE_END};
 use log::Level::Info;
 
+/// Remove multiple line breaks
 pub fn remove_extra_newlines(text: &str) -> String {
     let double_line_end = format!("{LINE_END}{LINE_END}");
     RE_NEWLINES.replace_all(text, double_line_end).to_string()
 }
 
+/// Replace tabs with spaces
 pub fn remove_tabs(text: &str) -> String {
     let replace = (0..TAB).map(|_| " ").collect::<String>();
     text.replace('\t', &replace)
 }
 
+/// Remove trailing spaces from line endings
 pub fn remove_trailing_spaces(text: &str) -> String {
     RE_TRAIL.replace_all(text, LINE_END).to_string()
 }
 
+/// Ensure LaTeX environments begin on new lines
 pub fn environments_new_line(
     text: &str,
     file: &str,

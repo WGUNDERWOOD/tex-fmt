@@ -1,13 +1,24 @@
+//! Regexes and matching utilities
+
 use crate::LINE_END;
 use lazy_static::lazy_static;
 use regex::Regex;
 
+/// Number of spaces for tabs and indents
+pub const TAB: i8 = 2;
+
+/// Match a LaTeX \item
 pub const ITEM: &str = "\\item";
+/// Match a LaTeX \begin{document}
 pub const DOC_BEGIN: &str = "\\begin{document}";
+/// Match a LaTeX \end{document}
 pub const DOC_END: &str = "\\end{document}";
+/// Match a LaTeX \begin{...}
 pub const ENV_BEGIN: &str = "\\begin{";
+/// Match a LaTeX \end{...}
 pub const ENV_END: &str = "\\end{";
 
+/// Names of LaTeX list environments
 const LISTS: [&str; 5] = [
     "itemize",
     "enumerate",
@@ -16,6 +27,7 @@ const LISTS: [&str; 5] = [
     "inventory",
 ];
 
+/// Names of LaTeX verbatim environments
 const VERBATIMS: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
 
 lazy_static! {

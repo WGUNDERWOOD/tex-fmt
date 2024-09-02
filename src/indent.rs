@@ -1,3 +1,5 @@
+//! Utilities for indenting source lines
+
 use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
@@ -5,20 +7,25 @@ use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
 use crate::verbatim::*;
-use crate::TAB;
 use core::cmp::max;
 use log::Level::{Trace, Warn};
 
+/// Opening delimiters
 const OPENS: [char; 3] = ['(', '[', '{'];
+/// Closing delimiters
 const CLOSES: [char; 3] = [')', ']', '}'];
 
+/// Information on the indentation state of a line
 #[derive(Debug, Clone)]
 pub struct Indent {
+    /// The indentation level of a line
     pub actual: i8,
+    /// The visual indentation level of a line
     pub visual: i8,
 }
 
 impl Indent {
+    /// Construct a new indentation state
     pub const fn new() -> Self {
         Self {
             actual: 0,
@@ -27,7 +34,7 @@ impl Indent {
     }
 }
 
-// calculate total indentation change due to current line
+/// Calculate total indentation change due to the current line
 fn get_diff(line: &str) -> i8 {
     // list environments get double indents
     let mut diff: i8 = 0;
@@ -64,7 +71,7 @@ fn get_diff(line: &str) -> i8 {
     diff
 }
 
-// calculate dedentation for current line compared to previous
+/// Calculate dedentation for the current line
 fn get_back(line: &str) -> i8 {
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
@@ -99,6 +106,7 @@ fn get_back(line: &str) -> i8 {
     back
 }
 
+/// Calculate indentation properties of the current line
 fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
     let diff = get_diff(line);
     let back = get_back(line);
@@ -107,6 +115,7 @@ fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
     Indent { actual, visual }
 }
 
+/// Apply the correct indentation to a line
 pub fn apply_indent(
     line: &str,
     linum_old: usize,

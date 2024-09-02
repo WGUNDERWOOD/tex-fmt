@@ -83,6 +83,7 @@ pub struct State {
 }
 
 impl State {
+    /// Construct a new default state
     pub const fn new() -> Self {
         Self {
             linum_old: 0,
@@ -94,6 +95,7 @@ impl State {
     }
 }
 
+/// Ensure that the indentation returns to zero at the end of the file
 fn indents_return_to_zero(text: &str) -> bool {
     !text.lines().last().unwrap_or_default().starts_with(' ')
 }

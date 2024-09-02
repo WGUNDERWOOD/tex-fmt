@@ -1,7 +1,13 @@
+//! Utilities for reading the command line arguments
+
 use clap::Parser;
 
+/// Acceptable file extensions
 const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 
+/// Command line arguments
+#[allow(missing_docs)]
+#[allow(clippy::missing_docs_in_private_items)]
 #[derive(Debug, Parser)]
 #[command(version, about)]
 pub struct Cli {
@@ -20,6 +26,7 @@ pub struct Cli {
 }
 
 impl Cli {
+    /// Ensure the provided arguments are consistent
     pub fn resolve(&mut self) {
         if self.trace {
             self.verbose = true;
@@ -39,6 +46,7 @@ impl Cli {
     }
 }
 
+/// Verify the file extension
 pub fn check_extension_valid(file: &str) -> bool {
     EXTENSIONS.iter().any(|e| file.ends_with(e))
 }

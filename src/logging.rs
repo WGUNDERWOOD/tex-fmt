@@ -1,3 +1,5 @@
+//! Utilities for logging
+
 use crate::colors::*;
 use crate::Cli;
 use env_logger::Builder;
@@ -9,17 +11,26 @@ use std::io::Write;
 use std::path::Path;
 use std::time::Instant;
 
+/// Holds a log entry
 #[derive(Debug)]
 pub struct Log {
+    /// Log entry level
     pub level: Level,
+    /// Time when the entry was logged
     pub time: Instant,
+    /// File name associated with the entry
     pub file: String,
+    /// Line number in the formatted file
     pub linum_new: Option<usize>,
+    /// Line number in the original file
     pub linum_old: Option<usize>,
+    /// Line content
     pub line: Option<String>,
+    /// Entry-specific message
     pub message: String,
 }
 
+/// Append a log to the logs list
 fn record_log(
     logs: &mut Vec<Log>,
     level: Level,
@@ -41,6 +52,7 @@ fn record_log(
     logs.push(log);
 }
 
+/// Append a file log to the logs list
 pub fn record_file_log(
     logs: &mut Vec<Log>,
     level: Level,
@@ -50,6 +62,7 @@ pub fn record_file_log(
     record_log(logs, level, file, None, None, None, message);
 }
 
+/// Append a line log to the logs list
 pub fn record_line_log(
     logs: &mut Vec<Log>,
     level: Level,
@@ -70,6 +83,7 @@ pub fn record_line_log(
     );
 }
 
+/// Get the formatting style of a log level
 fn get_log_style(log_level: Level) -> String {
     match log_level {
         Info => CYAN.to_string(),
@@ -80,6 +94,7 @@ fn get_log_style(log_level: Level) -> String {
     }
 }
 
+/// Parse the log level from the command line arguments
 const fn get_log_level(args: &Cli) -> LevelFilter {
     if args.trace {
         LevelFilter::Trace
@@ -90,6 +105,7 @@ const fn get_log_level(args: &Cli) -> LevelFilter {
     }
 }
 
+/// Start the logger
 pub fn init_logger(args: &Cli) {
     Builder::new()
         .filter_level(get_log_level(args))
@@ -106,6 +122,7 @@ pub fn init_logger(args: &Cli) {
         .init();
 }
 
+/// Display all of the logs collected
 pub fn print_logs(mut logs: Vec<Log>) {
     logs.sort_by_key(|l| {
         (

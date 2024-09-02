@@ -1,12 +1,17 @@
+//! Utilities for wrapping long lines
+
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::parse::*;
 use log::Level::{Trace, Warn};
 
-const WRAP_MIN: usize = 70;
+/// Maximum allowed line length
 const WRAP_MAX: usize = 80;
+/// Length to which long lines are trimmed
+const WRAP_MIN: usize = 70;
 
+/// Check if a line needs wrapping
 pub fn needs_wrap(line: &str, state: &State, args: &Cli) -> bool {
     !args.keep
         && !state.verbatim.visual
@@ -14,6 +19,7 @@ pub fn needs_wrap(line: &str, state: &State, args: &Cli) -> bool {
         && (line.chars().count() > WRAP_MAX)
 }
 
+/// Find the best place to break a long line
 fn find_wrap_point(line: &str) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
@@ -34,6 +40,7 @@ fn find_wrap_point(line: &str) -> Option<usize> {
     wrap_point
 }
 
+/// Wrap a long line into a short prefix and a suffix
 pub fn apply_wrap(
     line: &str,
     state: &State,
