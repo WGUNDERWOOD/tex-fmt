@@ -1,3 +1,5 @@
+//! Core methodology for formatting a file
+
 use crate::ignore::*;
 use crate::indent::*;
 use crate::leave::*;
@@ -8,6 +10,7 @@ use crate::wrap::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 
+/// Central function to format a file
 pub fn format_file(
     text: &str,
     file: &str,
@@ -64,12 +67,18 @@ pub fn format_file(
     new_text
 }
 
+/// Information on the current state during formatting
 #[derive(Clone, Debug)]
 pub struct State {
+    /// Corresponding line number in the original file
     pub linum_old: usize,
+    /// Corresponding line number in the formatted file
     pub linum_new: usize,
+    /// Ignored status of the current line
     pub ignore: Ignore,
+    /// Indentation status of the current line
     pub indent: Indent,
+    /// Verbatim status of the current line
     pub leave: Leave,
 }
 
