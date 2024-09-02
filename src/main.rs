@@ -20,7 +20,7 @@ mod comments;
 mod format;
 mod ignore;
 mod indent;
-mod leave;
+mod verbatim;
 mod logging;
 mod parse;
 mod regexes;

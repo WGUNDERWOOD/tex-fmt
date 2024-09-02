@@ -1,7 +1,7 @@
 use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
-use crate::leave::*;
+use crate::verbatim::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::regexes::*;
@@ -123,9 +123,9 @@ pub fn apply_indent(
     new_state.linum_old = linum_old;
 
     new_state.ignore = get_ignore(line, &new_state, logs, file, true);
-    new_state.leave = get_leave(line, &new_state, logs, file, true);
+    new_state.verbatim = get_verbatim(line, &new_state, logs, file, true);
 
-    if !new_state.leave.visual && !new_state.ignore.visual {
+    if !new_state.verbatim.visual && !new_state.ignore.visual {
         // calculate indent
         let comment_index = find_comment_index(line);
         let line_strip = &remove_comment(line, comment_index);

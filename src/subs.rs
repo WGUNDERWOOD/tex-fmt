@@ -1,7 +1,7 @@
 use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
-use crate::leave::*;
+use crate::verbatim::*;
 use crate::logging::*;
 use crate::regexes::*;
 use crate::Cli;
@@ -42,9 +42,9 @@ pub fn environments_new_line(
 
     for line in text.lines() {
         state.ignore = get_ignore(line, &state, logs, file, false);
-        state.leave = get_leave(line, &state, logs, file, true);
+        state.verbatim = get_verbatim(line, &state, logs, file, true);
 
-        if !state.leave.visual
+        if !state.verbatim.visual
             && !state.ignore.visual
             && (line.contains(ENV_BEGIN)
                 || line.contains(ENV_END)

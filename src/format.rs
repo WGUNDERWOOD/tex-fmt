@@ -2,7 +2,7 @@
 
 use crate::ignore::*;
 use crate::indent::*;
-use crate::leave::*;
+use crate::verbatim::*;
 use crate::logging::*;
 use crate::parse::*;
 use crate::subs::*;
@@ -79,7 +79,7 @@ pub struct State {
     /// Indentation status of the current line
     pub indent: Indent,
     /// Verbatim status of the current line
-    pub leave: Leave,
+    pub verbatim: Verbatim,
 }
 
 impl State {
@@ -89,7 +89,7 @@ impl State {
             linum_new: 0,
             ignore: Ignore::new(),
             indent: Indent::new(),
-            leave: Leave::new(),
+            verbatim: Verbatim::new(),
         }
     }
 }
