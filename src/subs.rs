@@ -7,7 +7,7 @@ use crate::logging::*;
 use crate::regexes::*;
 use crate::verbatim::*;
 use crate::Cli;
-use crate::{LINE_END};
+use crate::LINE_END;
 use log::Level::Info;
 
 /// Remove multiple line breaks
