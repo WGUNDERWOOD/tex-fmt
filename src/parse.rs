@@ -20,6 +20,8 @@ pub struct Cli {
     pub keep: bool,
     #[arg(long, short, help = "Show info log messages")]
     pub verbose: bool,
+    #[arg(long, short, help = "Hide warning messages")]
+    pub quiet: bool,
     #[arg(long, short, help = "Show trace log messages")]
     pub trace: bool,
     #[arg(required = true)]
@@ -41,6 +43,7 @@ impl Cli {
             print: false,
             keep: false,
             verbose: false,
+            quiet: false,
             trace: false,
             files: Vec::<String>::new(),
         }
