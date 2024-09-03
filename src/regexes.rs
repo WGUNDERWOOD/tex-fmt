@@ -17,6 +17,8 @@ pub const DOC_END: &str = "\\end{document}";
 pub const ENV_BEGIN: &str = "\\begin{";
 /// Match a LaTeX \end{...}
 pub const ENV_END: &str = "\\end{";
+/// Acceptable LaTeX file extensions
+pub const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 
 /// Names of LaTeX list environments
 const LISTS: [&str; 5] = [
@@ -30,6 +32,7 @@ const LISTS: [&str; 5] = [
 /// Names of LaTeX verbatim environments
 const VERBATIMS: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
 
+// Regexes
 lazy_static! {
     pub static ref RE_NEWLINES: Regex =
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();

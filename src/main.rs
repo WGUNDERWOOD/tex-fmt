@@ -11,7 +11,6 @@
 #![allow(clippy::module_name_repetitions)]
 
 use clap::Parser;
-use log::Level::Error;
 use std::fs;
 use std::process::exit;
 
@@ -51,29 +50,12 @@ fn main() {
 
     for file in &args.files {
         let mut logs = Vec::<Log>::new();
-        let extension_valid = check_extension_valid(file);
-        if extension_valid {
-            if let Ok(text) = fs::read_to_string(file) {
-                let new_text = format_file(&text, file, &args, &mut logs);
-                if args.print {
-                    println!("{}", &new_text);
-                } else if args.check && text != new_text {
-                    record_file_log(
-                        &mut logs,
-                        Error,
-                        file,
-                        "Incorrect formatting.",
-                    );
-                    exit_code = 1;
-                } else if text != new_text {
-                    write_file(file, &new_text);
-                }
-            } else {
-                record_file_log(&mut logs, Error, file, "Could not open file.");
-                exit_code = 1;
-            }
+        if let Some(text) = read(file, &mut logs) {
+            let new_text = format_file(&text, file, &args, &mut logs);
+            exit_code = process_output(
+                &args, file, &text, &new_text, exit_code, &mut logs,
+            );
         } else {
-            record_file_log(&mut logs, Error, file, "File type invalid.");
             exit_code = 1;
         };
 
