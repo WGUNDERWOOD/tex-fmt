@@ -60,14 +60,11 @@ pub fn environments_new_line(
             let comment = &get_comment(line, comment_index);
             let text = &remove_comment(line, comment_index);
             let text = &RE_ENV_BEGIN_SHARED_LINE
-                .replace_all(text, format!("$prev{LINE_END}$env"))
-                .to_string();
+                .replace_all(text, format!("$prev{LINE_END}$env"));
             let text = &RE_ENV_END_SHARED_LINE
-                .replace_all(text, format!("$prev{LINE_END}$env"))
-                .to_string();
+                .replace_all(text, format!("$prev{LINE_END}$env"));
             let text = &RE_ITEM_SHARED_LINE
-                .replace_all(text, format!("$prev{LINE_END}$env"))
-                .to_string();
+                .replace_all(text, format!("$prev{LINE_END}$env"));
             new_text.push_str(text);
             new_text.push_str(comment);
         } else {
