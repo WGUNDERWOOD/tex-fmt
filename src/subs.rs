@@ -48,7 +48,7 @@ pub fn environments_new_line(
 
     for line in text.lines() {
         state.ignore = get_ignore(line, &state, logs, file, false);
-        state.verbatim = get_verbatim(line, &state, logs, file, true);
+        state.verbatim = get_verbatim(line, &state, logs, file, false);
 
         if !state.verbatim.visual
             && !state.ignore.visual
