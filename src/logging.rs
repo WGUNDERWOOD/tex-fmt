@@ -100,6 +100,8 @@ const fn get_log_level(args: &Cli) -> LevelFilter {
         LevelFilter::Trace
     } else if args.verbose {
         LevelFilter::Info
+    } else if args.quiet {
+        LevelFilter::Error
     } else {
         LevelFilter::Warn
     }
