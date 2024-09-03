@@ -1,9 +1,10 @@
 //! Utilities for reading the command line arguments
 
+use crate::logging::*;
+use crate::regexes::*;
 use clap::Parser;
-
-/// Acceptable file extensions
-const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
+use log::Level::Error;
+use std::fs;
 
 /// Command line arguments
 #[allow(missing_docs)]
@@ -46,7 +47,22 @@ impl Cli {
     }
 }
 
-/// Verify the file extension
-pub fn check_extension_valid(file: &str) -> bool {
-    EXTENSIONS.iter().any(|e| file.ends_with(e))
+/// Add a missing extension and read the file
+pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<String> {
+    // check if file has an accepted extension
+    let has_ext = EXTENSIONS.iter().any(|e| file.ends_with(e));
+    // if no valid extension, try adding .tex
+    let mut new_file = file.to_owned();
+    if !has_ext {
+        new_file.push_str(".tex");
+    };
+    if let Ok(text) = fs::read_to_string(&new_file) {
+        return Some(text);
+    }
+    if has_ext {
+        record_file_log(logs, Error, file, "Could not open file.");
+    } else {
+        record_file_log(logs, Error, file, "File type invalid.");
+    }
+    None
 }
