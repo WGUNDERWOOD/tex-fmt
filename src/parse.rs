@@ -48,7 +48,7 @@ impl Cli {
 }
 
 /// Add a missing extension and read the file
-pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<String> {
+pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
     // check if file has an accepted extension
     let has_ext = EXTENSIONS.iter().any(|e| file.ends_with(e));
     // if no valid extension, try adding .tex
@@ -57,7 +57,7 @@ pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<String> {
         new_file.push_str(".tex");
     };
     if let Ok(text) = fs::read_to_string(&new_file) {
-        return Some(text);
+        return Some((new_file, text));
     }
     if has_ext {
         record_file_log(logs, Error, file, "Could not open file.");

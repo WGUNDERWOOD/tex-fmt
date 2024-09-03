@@ -50,10 +50,10 @@ fn main() {
 
     for file in &args.files {
         let mut logs = Vec::<Log>::new();
-        if let Some(text) = read(file, &mut logs) {
-            let new_text = format_file(&text, file, &args, &mut logs);
+        if let Some((file, text)) = read(file, &mut logs) {
+            let new_text = format_file(&text, &file, &args, &mut logs);
             exit_code = process_output(
-                &args, file, &text, &new_text, exit_code, &mut logs,
+                &args, &file, &text, &new_text, exit_code, &mut logs,
             );
         } else {
             exit_code = 1;
