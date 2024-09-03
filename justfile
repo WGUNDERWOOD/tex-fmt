@@ -1,6 +1,6 @@
 default: test doc clippy format shellcheck
 
-all: default prof perf logo latex
+all: default prof perf binary logo latex
 
 alias b := build
 alias d := doc
@@ -35,6 +35,9 @@ perf:
 
 prof:
   @cd extra && bash prof.sh
+
+binary:
+  @cd extra && bash binary.sh
 
 upgrade:
   @cargo upgrade && cargo update
