@@ -139,6 +139,9 @@ Please feel free to open an issue or submit a pull request,
 including as much information as you can. Documentation of internals
 can be accessed by cloning this repository and running `cargo doc`.
 
+Alternatively, you can
+[Buy Me a Coffee](https://buymeacoffee.com/wgunderwood)!
+
 ## Limitations
 
 - Semantic parsing of LaTeX code not conducted
