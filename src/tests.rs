@@ -1,8 +1,8 @@
-use crate::colors::*;
 use crate::format_file;
 use crate::fs;
 use crate::logging::*;
 use crate::Cli;
+use colored::Colorize;
 use similar::{ChangeTag, TextDiff};
 
 fn test_file(source_file: &str, target_file: &str) -> bool {
@@ -15,27 +15,27 @@ fn test_file(source_file: &str, target_file: &str) -> bool {
 
     if fmt_source_text != target_text {
         println!(
-            "{RED}fail {YELLOW}{source_file} {RESET}\
-            -> {YELLOW}{target_file}{RESET}",
+            "{} {} -> {}",
+            "fail".red().bold(),
+            source_file.yellow().bold(),
+            target_file.yellow().bold()
         );
         let diff = TextDiff::from_lines(&fmt_source_text, &target_text);
         for change in diff.iter_all_changes() {
             match change.tag() {
                 ChangeTag::Delete => print!(
-                    "{}@ {}: {}- {}{}",
-                    PURPLE,
-                    change.old_index().unwrap(),
-                    RED,
-                    change,
-                    RESET
+                    "{} {}",
+                    format!("@ {}:", change.old_index().unwrap())
+                        .blue()
+                        .bold(),
+                    format!("- {}", change).red().bold(),
                 ),
                 ChangeTag::Insert => print!(
-                    "{}@ {}: {}+ {}{}",
-                    PURPLE,
-                    change.new_index().unwrap(),
-                    GREEN,
-                    change,
-                    RESET
+                    "{} {}",
+                    format!("@ {}:", change.new_index().unwrap())
+                        .blue()
+                        .bold(),
+                    format!("+ {}", change).green().bold(),
                 ),
                 ChangeTag::Equal => {}
             };
