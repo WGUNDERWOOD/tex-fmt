@@ -7,6 +7,7 @@
 #![warn(clippy::missing_docs_in_private_items)]
 #![warn(clippy::pedantic)]
 #![allow(clippy::wildcard_imports)]
+#![allow(clippy::multiple_crate_versions)]
 #![allow(clippy::struct_excessive_bools)]
 #![allow(clippy::module_name_repetitions)]
 
