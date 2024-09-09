@@ -1,7 +1,7 @@
 //! Utilities for logging
 
-use crate::colors::*;
 use crate::Cli;
+use colored::{Color, Colorize};
 use env_logger::Builder;
 use log::Level;
 use log::Level::{Debug, Error, Info, Trace, Warn};
@@ -83,13 +83,13 @@ pub fn record_line_log(
     );
 }
 
-/// Get the formatting style of a log level
-fn get_log_style(log_level: Level) -> String {
+/// Get the color of a log level
+fn get_log_color(log_level: Level) -> Color {
     match log_level {
-        Info => CYAN.to_string(),
-        Warn => YELLOW.to_string(),
-        Error => RED.to_string(),
-        Trace => GREEN.to_string(),
+        Info => Color::Cyan,
+        Warn => Color::Yellow,
+        Error => Color::Red,
+        Trace => Color::Green,
         Debug => panic!(),
     }
 }
@@ -114,10 +114,12 @@ pub fn init_logger(args: &Cli) {
         .format(|buf, record| {
             writeln!(
                 buf,
-                "{}{}:{} {}",
-                get_log_style(record.level()),
-                record.level(),
-                RESET,
+                "{}: {}",
+                record
+                    .level()
+                    .to_string()
+                    .color(get_log_color(record.level()))
+                    .bold(),
                 record.args()
             )
         })
@@ -156,16 +158,18 @@ pub fn print_logs(mut logs: Vec<Log>) {
             .map_or_else(String::new, |l| l.trim_start().to_string());
 
         let log_string = format!(
-            "{}tex-fmt {}{}: {}{}{}{}{} {}{}",
-            PINK,
-            PURPLE,
-            Path::new(&log.file).file_name().unwrap().to_str().unwrap(),
-            WHITE,
-            linum_new,
-            linum_old,
-            YELLOW,
-            log.message,
-            RESET,
+            "{} {}: {}{}{} {}",
+            "tex-fmt".magenta().bold(),
+            Path::new(&log.file)
+                .file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .blue()
+                .bold(),
+            linum_new.white().bold(),
+            linum_old.white().bold(),
+            log.message.yellow().bold(),
             line,
         );
 
