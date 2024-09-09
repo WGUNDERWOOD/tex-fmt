@@ -14,7 +14,6 @@ use clap::Parser;
 use std::fs;
 use std::process::exit;
 
-mod colors;
 mod comments;
 mod format;
 mod ignore;
