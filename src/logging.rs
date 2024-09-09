@@ -84,7 +84,7 @@ pub fn record_line_log(
 }
 
 /// Get the color of a log level
-fn get_log_color(log_level: Level) -> Color {
+const fn get_log_color(log_level: Level) -> Color {
     match log_level {
         Info => Color::Cyan,
         Warn => Color::Yellow,
