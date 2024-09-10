@@ -1,6 +1,5 @@
 //! Utilities for logging
 
-use crate::Cli;
 use colored::{Color, Colorize};
 use env_logger::Builder;
 use log::Level;
@@ -94,23 +93,10 @@ const fn get_log_color(log_level: Level) -> Color {
     }
 }
 
-/// Parse the log level from the command line arguments
-const fn get_log_level(args: &Cli) -> LevelFilter {
-    if args.trace {
-        LevelFilter::Trace
-    } else if args.verbose {
-        LevelFilter::Info
-    } else if args.quiet {
-        LevelFilter::Error
-    } else {
-        LevelFilter::Warn
-    }
-}
-
 /// Start the logger
-pub fn init_logger(args: &Cli) {
+pub fn init_logger(level_filter: LevelFilter) {
     Builder::new()
-        .filter_level(get_log_level(args))
+        .filter_level(level_filter)
         .format(|buf, record| {
             writeln!(
                 buf,
