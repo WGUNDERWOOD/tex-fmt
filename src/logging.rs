@@ -113,7 +113,7 @@ pub fn init_logger(level_filter: LevelFilter) {
 }
 
 /// Display all of the logs collected
-pub fn print_logs(mut logs: Vec<Log>) {
+pub fn print_logs(logs: &mut Vec<Log>) {
     logs.sort_by_key(|l| {
         (
             l.level,
@@ -146,13 +146,16 @@ pub fn print_logs(mut logs: Vec<Log>) {
         let log_string = format!(
             "{} {}: {}{}{} {}",
             "tex-fmt".magenta().bold(),
-            Path::new(&log.file)
-                .file_name()
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .blue()
-                .bold(),
+            match log.file.as_str() {
+                "<STDIN>" | "" => "<STDIN>".blue().bold(),
+                _ => Path::new(&log.file)
+                    .file_name()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .blue()
+                    .bold(),
+            },
             linum_new.white().bold(),
             linum_old.white().bold(),
             log.message.yellow().bold(),

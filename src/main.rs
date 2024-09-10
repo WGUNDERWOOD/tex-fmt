@@ -46,34 +46,33 @@ fn main() {
     let mut args = Cli::parse();
     init_logger(args.log_level());
 
-    args.resolve();
-    let mut exit_code = 0;
+    let mut logs = Vec::<Log>::new();
+    let mut exit_code = args.resolve(&mut logs);
 
-    if args.stdin {
-        let mut logs = vec![];
-        if let Some((file, text)) = read_stdin(&mut logs) {
-            let new_text = format_file(&text, &file, &args, &mut logs);
-            exit_code = process_output(
-                &args, &file, &text, &new_text, exit_code, &mut logs,
-            );
-        } else {
-            exit_code = 1;
-        }
-        print_logs(logs);
-    } else {
-        for file in &args.files {
-            let mut logs = vec![];
-            if let Some((file, text)) = read(file, &mut logs) {
+    if exit_code == 0 {
+        if args.stdin {
+            if let Some((file, text)) = read_stdin(&mut logs) {
                 let new_text = format_file(&text, &file, &args, &mut logs);
                 exit_code = process_output(
                     &args, &file, &text, &new_text, exit_code, &mut logs,
                 );
             } else {
                 exit_code = 1;
-            };
-            print_logs(logs);
+            }
+        } else {
+            for file in &args.files {
+                if let Some((file, text)) = read(file, &mut logs) {
+                    let new_text = format_file(&text, &file, &args, &mut logs);
+                    exit_code = process_output(
+                        &args, &file, &text, &new_text, exit_code, &mut logs,
+                    );
+                } else {
+                    exit_code = 1;
+                };
+            }
         }
     }
 
+    print_logs(&mut logs);
     exit(exit_code)
 }
