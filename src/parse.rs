@@ -3,9 +3,10 @@
 use crate::logging::*;
 use crate::regexes::*;
 use clap::Parser;
-use log::Level::Error;
+use log::Level::{Error, Trace};
 use log::LevelFilter;
 use std::fs;
+use std::io::Read;
 
 /// Command line arguments
 #[allow(missing_docs)]
@@ -25,12 +26,12 @@ pub struct Cli {
     pub quiet: bool,
     #[arg(long, short, help = "Show trace log messages")]
     pub trace: bool,
-    #[arg(help = "List of files that should be formatted")]
+    #[arg(help = "List of files to be formatted")]
     pub files: Vec<String>,
     #[arg(
         long,
         short,
-        help = "Process STDIN as a single file and output formatted text to STDOUT"
+        help = "Process STDIN as a single file, output formatted text to STDOUT"
     )]
     pub stdin: bool,
 }
@@ -50,22 +51,30 @@ impl Cli {
     }
 
     /// Ensure the provided arguments are consistent
-    pub fn resolve(&mut self) {
-        use std::process::exit;
-
-        if self.trace {
-            self.verbose = true;
-        }
+    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> i32 {
+        let mut exit_code = 0;
+        self.verbose |= self.trace;
         self.print |= self.stdin;
 
         if !self.stdin && self.files.is_empty() {
-            log::error!("No files specified, either provide at least one filename or set the --stdin flag.");
-            exit(1);
+            record_file_log(
+                logs,
+                Error,
+                "",
+                "No files specified. Either provide filenames or provide --stdin.",
+            );
+            exit_code = 1;
         }
         if self.stdin && !self.files.is_empty() {
-            log::warn!("Provided file name(s) will be ignored when using the --stdin flag.");
-            self.files.clear();
+            record_file_log(
+                logs,
+                Error,
+                "",
+                "Do not provide file name(s) when using --stdin.",
+            );
+            exit_code = 1;
         }
+        exit_code
     }
 
     #[cfg(test)]
@@ -103,16 +112,14 @@ pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
     None
 }
 
-/// Attempts to read from STDIN and return the filename `<STDIN>` and text.
+/// Attempts to read from STDIN and return the filename `<STDIN>` and text
 pub fn read_stdin(logs: &mut Vec<Log>) -> Option<(String, String)> {
-    use std::io::Read;
-
     let mut text = String::new();
     match std::io::stdin().read_to_string(&mut text) {
         Ok(bytes) => {
             record_file_log(
                 logs,
-                log::Level::Trace,
+                Trace,
                 "<STDIN>",
                 &format!("Read {bytes} bytes."),
             );
