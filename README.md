@@ -97,7 +97,8 @@ Binaries for various platforms are available on the GitHub
 tex-fmt file.tex             # format file.tex and overwrite
 tex-fmt --check file.tex     # check if file.tex is correctly formatted
 tex-fmt --print file.tex     # format file.tex and print to STDOUT
-tex-fmt --keep file.tex      # keep lines, do not wrap
+tex-fmt --keep file.tex      # do not wrap long lines
+tex-fmt --stdin              # read from STDIN and print to STDOUT
 tex-fmt --help               # view help information
 ```
 
