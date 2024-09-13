@@ -11,4 +11,4 @@ echo -n "$(wc -l --total=only "$DIR"/source/* "$DIR"/target/*) lines, "
 du -hs "$DIR" | cut -f 1
 echo
 
-flamegraph -F 10000 -- $BINARY "$DIR/source/"* "$DIR/target/"*
+flamegraph -F 10000 -- "$BINARY" "$DIR/source/"* "$DIR/target/"*
