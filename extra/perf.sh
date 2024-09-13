@@ -4,6 +4,7 @@ DIR="$(mktemp -d)"
 cp -r ../tests/* "$DIR"
 TRIPLET=$(gcc -dumpmachine)
 BINARY="../target/$TRIPLET/release/tex-fmt"
+cargo build -r
 
 calc(){ awk "BEGIN { print ""$*"" }"; }
 
@@ -21,6 +22,15 @@ hyperfine --warmup 10 \
     --command-name "tex-fmt" \
     --prepare "cp -r ../tests/* $DIR" \
     "$BINARY $DIR/source/* $DIR/target/*"
+
+# tex-fmt (no pgo)
+TEXFMTNOPGOFILE="hyperfine-tex-fmt-nopgo.csv"
+hyperfine --warmup 10 \
+    --min-runs 50 \
+    --export-csv $TEXFMTNOPGOFILE \
+    --command-name "tex-fmt (no PGO)" \
+    --prepare "cp -r ../tests/* $DIR" \
+    "../target/release/tex-fmt $DIR/source/* $DIR/target/*"
 
 # latexindent
 LATEXINDENTFILE="hyperfine-latexindent.csv"
@@ -43,6 +53,10 @@ hyperfine --warmup 0 \
 # print results
 TEXFMT=$(cat $TEXFMTFILE | tail -n 1 | cut -d "," -f 2)
 echo "tex-fmt: ${TEXFMT}s"
+
+TEXFMTNOPGO=$(cat $TEXFMTNOPGOFILE | tail -n 1 | cut -d "," -f 2)
+TEXFMTNOPGOTIMES=$(calc "$TEXFMTNOPGO"/"$TEXFMT")
+echo "tex-fmt (no PGO): ${TEXFMTNOPGO}s, x$TEXFMTNOPGOTIMES"
 
 LATEXINDENT=$(cat $LATEXINDENTFILE | tail -n 1 | cut -d "," -f 2)
 LATEXINDENTTIMES=$(calc "$LATEXINDENT"/"$TEXFMT")
