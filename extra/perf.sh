@@ -26,7 +26,7 @@ hyperfine --warmup 10 \
 # tex-fmt (no pgo)
 TEXFMTNOPGOFILE="hyperfine-tex-fmt-nopgo.csv"
 hyperfine --warmup 10 \
-    --min-runs 50 \
+    --min-runs 20 \
     --export-csv $TEXFMTNOPGOFILE \
     --command-name "tex-fmt (no PGO)" \
     --prepare "cp -r ../tests/* $DIR" \
