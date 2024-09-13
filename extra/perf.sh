@@ -2,7 +2,7 @@
 echo "Getting performance metrics"
 DIR="$(mktemp -d)"
 cp -r ../tests/* "$DIR"
-cargo build --release
+#cargo build --release
 
 calc(){ awk "BEGIN { print ""$*"" }"; }
 
@@ -19,7 +19,8 @@ hyperfine --warmup 10 \
     --export-csv $TEXFMTFILE \
     --command-name "tex-fmt" \
     --prepare "cp -r ../tests/* $DIR" \
-    "../target/release/tex-fmt $DIR/source/* $DIR/target/*"
+    "../target/x86_64-unknown-linux-gnu/release/tex-fmt $DIR/source/* $DIR/target/*"
+    #"../target/release/tex-fmt $DIR/source/* $DIR/target/*"
 
 # latexindent
 LATEXINDENTFILE="hyperfine-latexindent.csv"

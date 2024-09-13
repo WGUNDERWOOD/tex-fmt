@@ -14,10 +14,12 @@ pkgs.mkShell {
     pkgs.cacert
     pkgs.cargo-flamegraph
     pkgs.cargo-edit
+    pkgs.cargo-pgo
     pkgs.clippy
     pkgs.diff-so-fancy
     pkgs.gh
     pkgs.hyperfine
+    pkgs.libllvm
     pkgs.poppler_utils
     pkgs.rustfmt
     pkgs.shellcheck
