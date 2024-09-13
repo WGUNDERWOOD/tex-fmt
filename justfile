@@ -1,4 +1,4 @@
-default: test doc clippy format shellcheck
+default: test doc clippy format shellcheck build
 
 all: default prof perf binary logo latex
 
@@ -10,7 +10,7 @@ alias c := clippy
 alias f := format
 
 build:
-  @cargo build -r
+  @cd extra && bash build.sh
 
 test:
   @cargo test
@@ -22,7 +22,7 @@ testignored:
   @cargo test -- --ignored
 
 clippy:
-  @cargo clippy -r
+  @cargo clippy
 
 format:
   @cargo fmt

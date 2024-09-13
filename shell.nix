@@ -19,6 +19,7 @@ pkgs.mkShell {
     pkgs.diff-so-fancy
     pkgs.gh
     pkgs.hyperfine
+    pkgs.libgcc
     pkgs.libllvm
     pkgs.poppler_utils
     pkgs.rustfmt

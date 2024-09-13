@@ -2,10 +2,11 @@
 echo "Testing binary"
 DIR="$(mktemp -d)"
 cp -r ../tests/* "$DIR"
-cargo build --release
+TRIPLET=$(gcc -dumpmachine)
+BINARY="../target/$TRIPLET/release/tex-fmt"
 
 # run tex-fmt
-../target/release/tex-fmt "$DIR/source"/* "$DIR/target"/*
+$BINARY "$DIR/source"/* "$DIR/target"/*
 
 # tex-fmt agrees with target files
 for file in ../tests/source/*; do

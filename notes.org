@@ -1,1 +1,8 @@
 #+title: tex-fmt
+* LTO-PGO
+** DONE Justfile
+** DONE Prof
+** DONE Binary
+** TODO Nix package
+** TODO GitHub actions
+** TODO Others?
