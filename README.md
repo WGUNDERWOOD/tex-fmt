@@ -6,6 +6,8 @@ https://github.com/wgunderwood/tex-fmt/actions/workflows/ci.yml)
 [![crates.io](
 https://img.shields.io/crates/v/tex-fmt?logo=rust)](
 https://crates.io/crates/tex-fmt)
+![AUR Version](
+https://img.shields.io/aur/version/tex-fmt?logo=archlinux&label=AUR)
 [![license: MIT](
 https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
@@ -85,6 +87,16 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 
 ``` shell
 nix build "github:wgunderwood/tex-fmt"
+```
+
+### Arch Linux
+
+Install from the
+[Arch User Repository](https://aur.archlinux.org/packages/tex-fmt).
+For example, using the `yay` AUR helper:
+
+``` shell
+yay -S tex-fmt
 ```
 
 ### Binary download
