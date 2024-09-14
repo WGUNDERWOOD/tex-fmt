@@ -6,8 +6,9 @@ https://github.com/wgunderwood/tex-fmt/actions/workflows/ci.yml)
 [![crates.io](
 https://img.shields.io/crates/v/tex-fmt?logo=rust)](
 https://crates.io/crates/tex-fmt)
-![AUR Version](
-https://img.shields.io/aur/version/tex-fmt?logo=archlinux&label=AUR)
+[![AUR Version](
+https://img.shields.io/aur/version/tex-fmt?logo=archlinux&label=AUR)](
+https://aur.archlinux.org/packages/tex-fmt)
 [![license: MIT](
 https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
