@@ -26,6 +26,7 @@ clippy:
 
 format:
   @cargo fmt
+  @alejandra -q .
 
 latex:
   @cd extra && bash latex.sh
@@ -44,6 +45,7 @@ upgrade:
 
 shellcheck:
   @shellcheck extra/*.sh
+
 
 logo:
   @cd extra && python logo.py
