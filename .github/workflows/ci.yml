@@ -35,7 +35,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Format
-        run: cargo fmt
+        run: cargo fmt --check
   cross:
     name: Cargo cross build (${{ matrix.target }})
     runs-on: ubuntu-latest
