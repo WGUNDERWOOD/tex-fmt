@@ -9,12 +9,14 @@ pkgs.mkShell {
         pillow
       ]);
   in [
+    pkgs.alejandra
     pkgs.bacon
     pkgs.cacert
     pkgs.cargo-flamegraph
     pkgs.cargo-edit
     pkgs.clippy
     pkgs.diff-so-fancy
+    pkgs.gh
     pkgs.hyperfine
     pkgs.poppler_utils
     python
