@@ -23,6 +23,19 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Test
         run: cargo test
+  format:
+    name: Cargo format (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt
   cross:
     name: Cargo cross build (${{ matrix.target }})
     runs-on: ubuntu-latest
