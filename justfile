@@ -46,7 +46,6 @@ upgrade:
 shellcheck:
   @shellcheck extra/*.sh
 
-
 logo:
   @cd extra && python logo.py
   @cd extra && magick -background none logo.svg -resize 5000x5000 logo.png
