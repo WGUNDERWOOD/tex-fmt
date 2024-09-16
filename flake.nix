@@ -20,5 +20,8 @@
           default = pkgs.callPackage ./shell.nix {inherit pkgs;};
         };
       }
-    );
+    )
+    // {
+      overlays.default = import ./overlay.nix;
+    };
 }
