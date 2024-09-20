@@ -86,6 +86,12 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 
 ### Nix
 
+If you would like tex-fmt to appear in
+[nixpkgs](https://github.com/NixOS/nixpkgs),
+please add a 👍 reaction to the
+[pull request](https://github.com/NixOS/nixpkgs/pull/341818).
+Alternatively, to build from source, use
+
 ``` shell
 nix build "github:wgunderwood/tex-fmt"
 ```
@@ -94,7 +100,7 @@ nix build "github:wgunderwood/tex-fmt"
 
 Install from the
 [Arch User Repository](https://aur.archlinux.org/packages/tex-fmt).
-For example, using the `yay` AUR helper:
+For example, using the [yay](https://github.com/Jguer/yay) AUR helper:
 
 ``` shell
 yay -S tex-fmt
