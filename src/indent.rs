@@ -170,7 +170,7 @@ pub fn apply_indent(
         // apply indent
         new_line = line.trim_start().to_string();
         if !new_line.is_empty() {
-            let n_spaces = indent.visual * TAB;
+            let n_spaces = indent.visual * args.tab;
             for _ in 0..n_spaces {
                 new_line.insert(0, ' ');
             }

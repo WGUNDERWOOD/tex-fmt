@@ -17,8 +17,8 @@ pub fn remove_extra_newlines(text: &str) -> String {
 }
 
 /// Replace tabs with spaces
-pub fn remove_tabs(text: &str) -> String {
-    let replace = (0..TAB).map(|_| " ").collect::<String>();
+pub fn remove_tabs(text: &str, args: &Cli) -> String {
+    let replace = (0..args.tab).map(|_| " ").collect::<String>();
     text.replace('\t', &replace)
 }
 

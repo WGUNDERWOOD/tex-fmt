@@ -4,9 +4,6 @@ use crate::LINE_END;
 use lazy_static::lazy_static;
 use regex::Regex;
 
-/// Number of spaces for tabs and indents
-pub const TAB: i8 = 2;
-
 /// Match a LaTeX \item
 pub const ITEM: &str = "\\item";
 /// Match a LaTeX \begin{document}
