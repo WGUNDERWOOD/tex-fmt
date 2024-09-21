@@ -34,6 +34,12 @@ pub struct Cli {
         help = "Process STDIN as a single file, output formatted text to STDOUT"
     )]
     pub stdin: bool,
+    #[arg(
+        long,
+        help = "Number of spaces to use as tab size",
+        default_value_t = 2
+    )]
+    pub tab: i8,
 }
 
 impl Cli {
@@ -88,6 +94,7 @@ impl Cli {
             quiet: false,
             trace: false,
             files: Vec::<String>::new(),
+            tab: 2,
         }
     }
 }
@@ -112,7 +119,7 @@ pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
     None
 }
 
-/// Attempts to read from STDIN and return the filename `<STDIN>` and text
+/// Attempt to read from STDIN, return filename `<STDIN>` and text
 pub fn read_stdin(logs: &mut Vec<Log>) -> Option<(String, String)> {
     let mut text = String::new();
     match std::io::stdin().read_to_string(&mut text) {
