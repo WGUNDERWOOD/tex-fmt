@@ -21,3 +21,4 @@ similar = "2.6.0"
 
 [profile.release]
 codegen-units = 1
+lto = true
