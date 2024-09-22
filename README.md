@@ -111,6 +111,12 @@ yay -S tex-fmt
 Binaries for various platforms are available on the GitHub
 [releases](https://github.com/WGUNDERWOOD/tex-fmt/releases) page.
 
+### Visual Studio Code
+Integration with VS Code is provided by the
+[LaTeX Workshop](https://github.com/James-Yu/LaTeX-Workshop)
+extension. You will need to first install tex-fmt
+through one of the above methods.
+
 ## Usage
 ``` shell
 tex-fmt file.tex             # format file.tex and overwrite
@@ -168,7 +174,6 @@ Alternatively, you can
 - No linting or correction of syntax errors
 - Customization via configuration files not supported
 - Compliance with existing formatting guidelines not guaranteed
-- Editor integration not currently provided
 - No spelling or grammar checking
 
 ## Existing tools
