@@ -6,6 +6,7 @@ use crate::logging::*;
 use crate::regexes::*;
 use crate::Cli;
 use crate::LINE_END;
+use log::Level::Trace;
 
 /// Remove multiple line breaks
 pub fn remove_extra_newlines(text: &str) -> String {
@@ -24,7 +25,8 @@ pub fn remove_trailing_spaces(text: &str) -> String {
     RE_TRAIL.replace_all(text, LINE_END).to_string()
 }
 
-pub fn needs_env_new_line(line: &str, state: &State, args: &Cli) -> bool {
+/// Check if environment should be split onto a new line
+pub fn needs_env_new_line(line: &str, state: &State) -> bool {
     !state.verbatim.visual
         && !state.ignore.visual
         && (line.contains(ENV_BEGIN)
@@ -43,24 +45,42 @@ pub fn put_env_new_line(
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> Option<(String, String)> {
+    if args.trace {
+        record_line_log(
+            logs,
+            Trace,
+            file,
+            state.linum_new,
+            state.linum_old,
+            line,
+            "Placing environment on new line.",
+        );
+    }
     let comment_index = find_comment_index(line);
     let comment = &get_comment(line, comment_index);
     let mut text = &remove_comment(line, comment_index);
-    let mut temp = 
-        RE_ENV_BEGIN_SHARED_LINE.replace(text, format!("$prev{LINE_END}$env")).to_string();
+    let mut temp = RE_ENV_BEGIN_SHARED_LINE
+        .replace(text, format!("$prev{LINE_END}$env"))
+        .to_string();
     text = &temp;
     if !text.contains(LINE_END) {
-        temp = RE_ENV_END_SHARED_LINE.replace(text, format!("$prev{LINE_END}$env")).to_string();
+        temp = RE_ENV_END_SHARED_LINE
+            .replace(text, format!("$prev{LINE_END}$env"))
+            .to_string();
         text = &temp;
     }
     if !text.contains(LINE_END) {
-        temp = RE_ITEM_SHARED_LINE.replace(text, format!("$prev{LINE_END}$env")).to_string();
+        temp = RE_ITEM_SHARED_LINE
+            .replace(text, format!("$prev{LINE_END}$env"))
+            .to_string();
         text = &temp;
     }
     if text.contains(LINE_END) {
         let split = text.split_once(LINE_END).unwrap();
-        dbg!(&split);
-        return Some((split.0.to_string(), split.1.to_string()))
+        let split_0 = split.0.to_string();
+        let mut split_1 = split.1.to_string();
+        split_1.push_str(comment);
+        return Some((split_0, split_1));
     }
     None
 }
