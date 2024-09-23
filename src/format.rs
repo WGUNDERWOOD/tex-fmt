@@ -20,7 +20,6 @@ pub fn format_file(
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");
     let mut old_text = remove_extra_newlines(text);
-    old_text = environments_new_line(&old_text, file, args, logs);
     old_text = remove_tabs(&old_text, args);
     old_text = remove_trailing_spaces(&old_text);
 
@@ -35,13 +34,26 @@ pub fn format_file(
             let temp_state: State;
             (line, temp_state) =
                 apply_indent(&line, linum_old, &state, logs, file, args);
-            if needs_wrap(&line, &temp_state, args) {
+            if needs_env_new_line(&line, &temp_state, args) {
+                let env_lines =
+                    put_env_new_line(&line, &temp_state, file, args, logs);
+                if env_lines.is_some() {
+                    queue.push((linum_old, env_lines.clone().unwrap().1));
+                    queue.push((linum_old, env_lines.clone().unwrap().0));
+                } else {
+                    state = temp_state;
+                    new_text.push_str(&line);
+                    new_text.push_str(LINE_END);
+                    state.linum_new += 1;
+                };
+            } else if needs_wrap(&line, &temp_state, args) {
                 let wrapped_lines =
                     apply_wrap(&line, &temp_state, file, args, logs);
                 if wrapped_lines.is_some() {
                     queue.push((linum_old, wrapped_lines.clone().unwrap().1));
                     queue.push((linum_old, wrapped_lines.clone().unwrap().0));
                 } else {
+                    state = temp_state;
                     new_text.push_str(&line);
                     new_text.push_str(LINE_END);
                     state.linum_new += 1;
@@ -65,8 +77,10 @@ pub fn format_file(
 
     record_file_log(logs, Info, file, "Formatting complete.");
 
+    new_text = remove_trailing_spaces(&new_text);
     new_text
 }
+
 
 /// Information on the current state during formatting
 #[derive(Clone, Debug)]
