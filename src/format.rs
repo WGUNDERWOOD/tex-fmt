@@ -34,7 +34,7 @@ pub fn format_file(
             let temp_state: State;
             (line, temp_state) =
                 apply_indent(&line, linum_old, &state, logs, file, args);
-            if needs_env_new_line(&line, &temp_state, args) {
+            if needs_env_new_line(&line, &temp_state) {
                 let env_lines =
                     put_env_new_line(&line, &temp_state, file, args, logs);
                 if env_lines.is_some() {
@@ -80,7 +80,6 @@ pub fn format_file(
     new_text = remove_trailing_spaces(&new_text);
     new_text
 }
-
 
 /// Information on the current state during formatting
 #[derive(Clone, Debug)]
