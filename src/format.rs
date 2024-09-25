@@ -75,9 +75,8 @@ pub fn format_file(
         record_file_log(logs, Warn, file, "Indent does not return to zero.");
     }
 
-    record_file_log(logs, Info, file, "Formatting complete.");
-
     new_text = remove_trailing_spaces(&new_text);
+    record_file_log(logs, Info, file, "Formatting complete.");
     new_text
 }
 
