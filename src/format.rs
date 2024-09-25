@@ -25,10 +25,8 @@ pub fn format_file(
     old_text = remove_trailing_spaces(&old_text);
 
     let mut state = State::new();
-
     let old_lines = old_text.lines();
     let mut old_lines = zip(1.., old_lines);
-
     let mut queue: Vec<(usize, String)> = vec![];
     let mut new_text = String::with_capacity(text.len());
 
