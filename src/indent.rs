@@ -35,7 +35,7 @@ impl Indent {
 }
 
 /// Calculate total indentation change due to the current line
-fn get_diff(line: &str) -> i8 {
+fn get_diff(line: &str, contains_env_end: bool) -> i8 {
     // list environments get double indents
     let mut diff: i8 = 0;
 
@@ -50,7 +50,7 @@ fn get_diff(line: &str) -> i8 {
             LISTS_BEGIN.iter().filter(|&r| line.contains(r)).count(),
         )
         .unwrap();
-    } else if line.contains(ENV_END) {
+    } else if contains_env_end {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
@@ -72,7 +72,7 @@ fn get_diff(line: &str) -> i8 {
 }
 
 /// Calculate dedentation for the current line
-fn get_back(line: &str) -> i8 {
+fn get_back(line: &str, contains_env_end: bool) -> i8 {
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
 
@@ -84,7 +84,7 @@ fn get_back(line: &str) -> i8 {
     }
 
     // other environments get single indents
-    if line.contains(ENV_END) {
+    if contains_env_end {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
@@ -106,10 +106,16 @@ fn get_back(line: &str) -> i8 {
     back
 }
 
+/// Check if a line contains an environment end
+fn check_contains_env_end(line: &str) -> bool {
+    line.contains(ENV_END)
+}
+
 /// Calculate indentation properties of the current line
 fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
-    let diff = get_diff(line);
-    let back = get_back(line);
+    let contains_env_end = check_contains_env_end(line);
+    let diff = get_diff(line, contains_env_end);
+    let back = get_back(line, contains_env_end);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
