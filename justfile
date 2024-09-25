@@ -13,13 +13,13 @@ build:
   @cargo build -r
 
 test:
-  @cargo test -r
+  @cargo test
 
 doc:
   @cargo doc
 
 testignored:
-  @cargo test -r -- --ignored
+  @cargo test -- --ignored
 
 clippy:
   @cargo clippy -r
