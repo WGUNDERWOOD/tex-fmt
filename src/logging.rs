@@ -124,8 +124,8 @@ pub fn print_logs(logs: &mut Vec<Log>) {
         )
     });
     logs.dedup_by(|a, b| {
-        (a.level, a.linum_new, a.linum_old, &a.message)
-            == (b.level, b.linum_new, b.linum_old, &b.message)
+        (a.level, &a.file, a.linum_new, a.linum_old, &a.line, &a.message)
+            == (b.level, &b.file, b.linum_new, b.linum_old, &b.line, &b.message)
     });
     logs.sort_by_key(|l| l.time);
 
