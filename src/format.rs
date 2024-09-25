@@ -9,6 +9,7 @@ use crate::verbatim::*;
 use crate::wrap::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
+use std::iter::zip;
 
 /// Central function to format a file
 pub fn format_file(
@@ -25,7 +26,8 @@ pub fn format_file(
 
     let mut state = State::new();
 
-    let mut old_lines = old_text.lines().enumerate();
+    let old_lines = old_text.lines();
+    let mut old_lines = zip(1.., old_lines);
 
     let mut queue: Vec<(usize, String)> = vec![];
     let mut new_text = String::with_capacity(text.len());
@@ -50,6 +52,7 @@ pub fn format_file(
                 state = temp_state;
                 new_text.push_str(&line);
                 new_text.push_str(LINE_END);
+                state.linum_new += 1;
             }
         } else if let Some((linum_old, line)) = old_lines.next() {
             queue.push((linum_old, line.to_string()));
@@ -86,8 +89,8 @@ impl State {
     /// Construct a new default state
     pub const fn new() -> Self {
         Self {
-            linum_old: 0,
-            linum_new: 0,
+            linum_old: 1,
+            linum_new: 1,
             ignore: Ignore::new(),
             indent: Indent::new(),
             verbatim: Verbatim::new(),

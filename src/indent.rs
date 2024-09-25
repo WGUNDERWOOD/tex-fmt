@@ -126,7 +126,6 @@ pub fn apply_indent(
 ) -> (String, State) {
     let mut new_line = line.to_string();
     let mut new_state = state.clone();
-    new_state.linum_new += 1;
     new_state.linum_old = linum_old;
 
     new_state.ignore = get_ignore(line, &new_state, logs, file, true);
