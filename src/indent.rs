@@ -11,9 +11,9 @@ use core::cmp::max;
 use log::Level::{Trace, Warn};
 
 /// Opening delimiters
-const OPENS: [char; 3] = ['(', '[', '{'];
+const OPENS: [char; 3] = ['{', '(', '['];
 /// Closing delimiters
-const CLOSES: [char; 3] = [')', ']', '}'];
+const CLOSES: [char; 3] = ['}', ')', ']'];
 
 /// Information on the indentation state of a line
 #[derive(Debug, Clone)]
