@@ -1,6 +1,6 @@
 [package]
 name = "tex-fmt"
-version = "0.4.3"
+version = "0.4.4"
 authors = ["William George Underwood"]
 license = "MIT"
 repository = "https://github.com/WGUNDERWOOD/tex-fmt"
@@ -11,7 +11,7 @@ categories = ["command-line-utilities", "development-tools"]
 exclude = ["tests/*", "extra/*", "*.nix", ".github/*"]
 
 [dependencies]
-clap = { version = "4.5.16", features = ["derive"] }
+clap = { version = "4.5.18", features = ["derive"] }
 colored = "2.1.0"
 env_logger = "0.11.5"
 lazy_static = "1.5.0"
