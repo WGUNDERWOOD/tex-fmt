@@ -19,9 +19,9 @@ pkgs.mkShell {
     pkgs.gh
     pkgs.hyperfine
     pkgs.poppler_utils
-    python
     pkgs.rustfmt
     pkgs.shellcheck
     pkgs.texlive.combined.scheme-full
+    python
   ];
 }
