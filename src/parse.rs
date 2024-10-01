@@ -40,6 +40,8 @@ pub struct Cli {
         default_value_t = 2
     )]
     pub tab: i8,
+    #[arg(long, help = "Use tabs instead of spaces for indentation")]
+    pub usetabs: bool,
 }
 
 impl Cli {
@@ -95,6 +97,7 @@ impl Cli {
             trace: false,
             files: Vec::<String>::new(),
             tab: 2,
+            usetabs: false,
         }
     }
 }
