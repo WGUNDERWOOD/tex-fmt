@@ -26,12 +26,16 @@ pub fn remove_trailing_spaces(text: &str) -> String {
 }
 
 /// Check if environment should be split onto a new line
-pub fn needs_env_new_line(line: &str, state: &State) -> bool {
+pub fn needs_env_new_line(
+    line: &str,
+    state: &State,
+    pattern: &Pattern,
+) -> bool {
     !state.verbatim.visual
         && !state.ignore.visual
-        && (line.contains(ENV_BEGIN)
-            || line.contains(ENV_END)
-            || line.contains(ITEM))
+        && (pattern.contains_env_begin
+            || pattern.contains_env_end
+            || pattern.contains_item)
         && (RE_ENV_BEGIN_SHARED_LINE.is_match(line)
             || RE_ENV_END_SHARED_LINE.is_match(line)
             || RE_ITEM_SHARED_LINE.is_match(line))

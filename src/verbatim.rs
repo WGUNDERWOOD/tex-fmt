@@ -31,8 +31,9 @@ pub fn get_verbatim(
     logs: &mut Vec<Log>,
     file: &str,
     warn: bool,
+    pattern: &Pattern,
 ) -> Verbatim {
-    let diff = get_verbatim_diff(line);
+    let diff = get_verbatim_diff(line, pattern);
     let actual = state.verbatim.actual + diff;
     let visual = actual > 0 && state.verbatim.actual > 0;
 
@@ -52,12 +53,12 @@ pub fn get_verbatim(
 }
 
 /// Calculate total verbatim depth change
-fn get_verbatim_diff(line: &str) -> i8 {
-    if line.contains(ENV_BEGIN)
+fn get_verbatim_diff(line: &str, pattern: &Pattern) -> i8 {
+    if pattern.contains_env_begin
         && VERBATIMS_BEGIN.iter().any(|r| line.contains(r))
     {
         1
-    } else if line.contains(ENV_END)
+    } else if pattern.contains_env_end
         && VERBATIMS_END.iter().any(|r| line.contains(r))
     {
         -1

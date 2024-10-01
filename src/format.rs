@@ -4,6 +4,7 @@ use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
 use crate::parse::*;
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
@@ -33,10 +34,12 @@ pub fn format_file(
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
+            let pattern = Pattern::new(&line);
             let temp_state: State;
-            (line, temp_state) =
-                apply_indent(&line, linum_old, &state, logs, file, args);
-            if needs_env_new_line(&line, &temp_state) {
+            (line, temp_state) = apply_indent(
+                &line, linum_old, &state, logs, file, args, &pattern,
+            );
+            if needs_env_new_line(&line, &temp_state, &pattern) {
                 let env_lines =
                     put_env_new_line(&line, &temp_state, file, args, logs);
                 if env_lines.is_some() {
@@ -106,6 +109,27 @@ impl State {
             ignore: Ignore::new(),
             indent: Indent::new(),
             verbatim: Verbatim::new(),
+        }
+    }
+}
+
+/// Record whether a line contains certain patterns to avoid recomputing
+pub struct Pattern {
+    /// Whether a begin environment pattern is present
+    pub contains_env_begin: bool,
+    /// Whether an end environment pattern is present
+    pub contains_env_end: bool,
+    /// Whether an item pattern is present
+    pub contains_item: bool,
+}
+
+impl Pattern {
+    /// Check if a string contains patterns
+    pub fn new(s: &str) -> Self {
+        Self {
+            contains_env_begin: s.contains(ENV_BEGIN),
+            contains_env_end: s.contains(ENV_END),
+            contains_item: s.contains(ITEM),
         }
     }
 }
