@@ -20,7 +20,9 @@ pub fn format_file(
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");
     let mut old_text = remove_extra_newlines(text);
-    old_text = remove_tabs(&old_text, args);
+    if !args.usetabs {
+        old_text = remove_tabs(&old_text, args);
+    }
     old_text = remove_trailing_spaces(&old_text);
 
     let mut state = State::new();

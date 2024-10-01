@@ -175,9 +175,13 @@ pub fn apply_indent(
         // apply indent
         new_line = line.trim_start().to_string();
         if !new_line.is_empty() {
-            let n_spaces = indent.visual * args.tab;
-            for _ in 0..n_spaces {
-                new_line.insert(0, ' ');
+            let n_indent_chars = indent.visual * args.tab;
+            for _ in 0..n_indent_chars {
+                if args.usetabs {
+                    new_line.insert(0, '\t');
+                } else {
+                    new_line.insert(0, ' ');
+                }
             }
         }
     }
