@@ -76,24 +76,41 @@ E = m c^2
 
 ### Cargo
 
-``` shell
-# install stable release
-cargo install tex-fmt
+Install the [stable release](https://crates.io/crates/tex-fmt) with
 
-# install from github
+``` shell
+cargo install tex-fmt
+```
+
+Install from [GitHub](https://github.com/WGUNDERWOOD/tex-fmt) with
+
+```shell
 cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ```
 
 ### Nix
 
-If you would like tex-fmt to appear in
-[nixpkgs](https://github.com/NixOS/nixpkgs),
-please add a 👍 reaction to the
-[pull request](https://github.com/NixOS/nixpkgs/pull/341818).
-Alternatively, to build from source, use
+Install from
+[nixpkgs-unstable](
+https://search.nixos.org/packages?channel=unstable&query=tex-fmt)
+into a temporary shell with
+
+``` shell
+nix-shell -p tex-fmt
+```
+
+Build from source using flakes with
 
 ``` shell
 nix build "github:wgunderwood/tex-fmt"
+```
+
+Add to your NixOS installation with
+
+```nix
+environment.systemPackages = [
+  pkgs.tex-fmt
+];
 ```
 
 ### Arch Linux
