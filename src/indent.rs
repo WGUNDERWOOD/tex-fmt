@@ -35,12 +35,13 @@ impl Indent {
 }
 
 /// Calculate total indentation change due to the current line
-fn get_diff(line: &str, contains_env_end: bool) -> i8 {
+fn get_diff(line: &str, pattern: &Pattern) -> i8 {
     // list environments get double indents
     let mut diff: i8 = 0;
 
     // other environments get single indents
-    if line.contains(ENV_BEGIN) {
+    if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
+        // double check here as pattern might have matched inside comment
         // documents get no global indentation
         if line.contains(DOC_BEGIN) {
             return 0;
@@ -50,7 +51,8 @@ fn get_diff(line: &str, contains_env_end: bool) -> i8 {
             LISTS_BEGIN.iter().filter(|&r| line.contains(r)).count(),
         )
         .unwrap();
-    } else if contains_env_end {
+    } else if pattern.contains_env_end && line.contains(ENV_END) {
+        // double check here as pattern might have matched inside comment
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
@@ -72,7 +74,7 @@ fn get_diff(line: &str, contains_env_end: bool) -> i8 {
 }
 
 /// Calculate dedentation for the current line
-fn get_back(line: &str, contains_env_end: bool) -> i8 {
+fn get_back(line: &str, pattern: &Pattern) -> i8 {
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
 
@@ -84,7 +86,7 @@ fn get_back(line: &str, contains_env_end: bool) -> i8 {
     }
 
     // other environments get single indents
-    if contains_env_end {
+    if pattern.contains_env_end {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
@@ -99,23 +101,17 @@ fn get_back(line: &str, contains_env_end: bool) -> i8 {
     };
 
     // deindent items to make the rest of item environment appear indented
-    if line.contains(ITEM) {
+    if pattern.contains_item && line.contains(ITEM) {
         back += 1;
     };
 
     back
 }
 
-/// Check if a line contains an environment end
-fn check_contains_env_end(line: &str) -> bool {
-    line.contains(ENV_END)
-}
-
 /// Calculate indentation properties of the current line
-fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
-    let contains_env_end = check_contains_env_end(line);
-    let diff = get_diff(line, contains_env_end);
-    let back = get_back(line, contains_env_end);
+fn get_indent(line: &str, prev_indent: &Indent, pattern: &Pattern) -> Indent {
+    let diff = get_diff(line, pattern);
+    let back = get_back(line, pattern);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
@@ -129,19 +125,21 @@ pub fn apply_indent(
     logs: &mut Vec<Log>,
     file: &str,
     args: &Cli,
+    pattern: &Pattern,
 ) -> (String, State) {
     let mut new_line = line.to_string();
     let mut new_state = state.clone();
     new_state.linum_old = linum_old;
 
     new_state.ignore = get_ignore(line, &new_state, logs, file, true);
-    new_state.verbatim = get_verbatim(line, &new_state, logs, file, true);
+    new_state.verbatim =
+        get_verbatim(line, &new_state, logs, file, true, pattern);
 
     if !new_state.verbatim.visual && !new_state.ignore.visual {
         // calculate indent
         let comment_index = find_comment_index(line);
         let line_strip = &remove_comment(line, comment_index);
-        let mut indent = get_indent(line_strip, &state.indent);
+        let mut indent = get_indent(line_strip, &state.indent, pattern);
         new_state.indent = indent.clone();
         if args.trace {
             record_line_log(
