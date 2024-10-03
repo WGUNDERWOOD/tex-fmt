@@ -5,9 +5,7 @@ TRIPLET=$(gcc -dumpmachine)
 BINARY="../target/$TRIPLET/release/tex-fmt"
 cargo pgo build
 
-hyperfine --warmup 10 \
-    --min-runs 200 \
-    --command-name "tex-fmt" \
+hyperfine --min-runs 10 \
     --prepare "cp -r ../tests/* $DIR" \
     "$BINARY $DIR/source/* $DIR/target/*"
 
