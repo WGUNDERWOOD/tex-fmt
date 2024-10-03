@@ -91,7 +91,7 @@ cargo install --git "https://github.com/wgunderwood/tex-fmt"
 ### Nix
 
 Install from
-[nixpkgs-unstable](
+[nixpkgs](
 https://search.nixos.org/packages?channel=unstable&query=tex-fmt)
 into a temporary shell with
 
