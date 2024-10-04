@@ -13,7 +13,7 @@
 
 use clap::Parser;
 use std::fs;
-use std::process::exit;
+use std::process::ExitCode;
 
 mod comments;
 mod format;
@@ -42,7 +42,7 @@ const LINE_END: &str = "\n";
 /// Line ending for Windows
 const LINE_END: &str = "\r\n";
 
-fn main() {
+fn main() -> ExitCode {
     let mut args = Cli::parse();
     init_logger(args.log_level());
 
@@ -74,5 +74,5 @@ fn main() {
     }
 
     print_logs(&mut logs);
-    exit(exit_code)
+    ExitCode::from(exit_code)
 }
