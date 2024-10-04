@@ -126,8 +126,8 @@ pub fn apply_indent(
     file: &str,
     args: &Cli,
     pattern: &Pattern,
+    indent_char: &str,
 ) -> (String, State) {
-    let mut new_line = line.to_string();
     let mut new_state = state.clone();
     new_state.linum_old = linum_old;
 
@@ -135,7 +135,9 @@ pub fn apply_indent(
     new_state.verbatim =
         get_verbatim(line, &new_state, logs, file, true, pattern);
 
-    if !new_state.verbatim.visual && !new_state.ignore.visual {
+    let new_line = if new_state.verbatim.visual || new_state.ignore.visual {
+        line.to_string()
+    } else {
         // calculate indent
         let comment_index = find_comment_index(line);
         let line_strip = &remove_comment(line, comment_index);
@@ -171,29 +173,18 @@ pub fn apply_indent(
         }
 
         // apply indent
-        trim_start_in_place(&mut new_line);
-        if !new_line.is_empty() {
-            let n_indent_chars = indent.visual * args.tab;
-            for _ in 0..n_indent_chars {
-                if args.usetabs {
-                    new_line.insert(0, '\t');
-                } else {
-                    new_line.insert(0, ' ');
-                }
-            }
+        let trimmed_line = line.trim_start();
+        if !trimmed_line.is_empty() {
+            let n_indent_chars = usize::try_from(indent.visual * args.tab).expect("Both `indent.visual` and `args.tab` should be non-negative integers");
+            let mut new_line =
+                String::with_capacity(trimmed_line.len() + n_indent_chars);
+            new_line.insert_str(0, &indent_char.repeat(n_indent_chars));
+            new_line.insert_str(n_indent_chars, trimmed_line);
+            new_line
+        } else {
+            String::new()
         }
-    }
+    };
 
     (new_line, new_state)
-}
-
-/// Faster, in-place implementation of trim_start
-fn trim_start_in_place(s: &mut String) {
-    let trimmed: &str = s.trim_start();
-    let start = trimmed.as_ptr() as usize - s.as_ptr() as usize;
-    let len = trimmed.len();
-    if start != 0 {
-        s.drain(..start);
-    }
-    s.truncate(len);
 }
