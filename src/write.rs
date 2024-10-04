@@ -18,9 +18,9 @@ pub fn process_output(
     file: &str,
     text: &str,
     new_text: &str,
-    exit_code: i32,
+    exit_code: u8,
     logs: &mut Vec<Log>,
-) -> i32 {
+) -> u8 {
     let mut new_exit_code = exit_code;
     if args.print {
         println!("{}", &new_text);

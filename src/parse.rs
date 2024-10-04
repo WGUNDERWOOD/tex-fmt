@@ -59,7 +59,7 @@ impl Cli {
     }
 
     /// Ensure the provided arguments are consistent
-    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> i32 {
+    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
         let mut exit_code = 0;
         self.verbose |= self.trace;
         self.print |= self.stdin;
