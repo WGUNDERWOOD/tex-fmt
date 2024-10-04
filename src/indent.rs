@@ -171,7 +171,7 @@ pub fn apply_indent(
         }
 
         // apply indent
-        new_line = line.trim_start().to_string();
+        trim_start_in_place(&mut new_line);
         if !new_line.is_empty() {
             let n_indent_chars = indent.visual * args.tab;
             for _ in 0..n_indent_chars {
@@ -185,4 +185,15 @@ pub fn apply_indent(
     }
 
     (new_line, new_state)
+}
+
+/// Faster, in-place implementation of trim_start
+fn trim_start_in_place(s: &mut String) {
+    let trimmed: &str = s.trim_start();
+    let start = trimmed.as_ptr() as usize - s.as_ptr() as usize;
+    let len = trimmed.len();
+    if start != 0 {
+        s.drain(..start);
+    }
+    s.truncate(len);
 }
