@@ -178,7 +178,8 @@ pub fn apply_indent(
         if trimmed_line.is_empty() {
             String::new()
         } else {
-            let n_indent_chars = usize::try_from(indent.visual * args.tab).expect("Both `indent.visual` and `args.tab` should be non-negative integers");
+            let n_indent_chars =
+                usize::try_from(indent.visual * args.tab).unwrap();
             let mut new_line =
                 String::with_capacity(trimmed_line.len() + n_indent_chars);
             for idx in 0..n_indent_chars {
