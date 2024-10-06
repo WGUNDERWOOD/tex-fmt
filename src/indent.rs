@@ -178,7 +178,9 @@ pub fn apply_indent(
             let n_indent_chars = usize::try_from(indent.visual * args.tab).expect("Both `indent.visual` and `args.tab` should be non-negative integers");
             let mut new_line =
                 String::with_capacity(trimmed_line.len() + n_indent_chars);
-            new_line.insert_str(0, &indent_char.repeat(n_indent_chars));
+            for idx in 0..n_indent_chars {
+                new_line.insert_str(idx, indent_char);
+            }
             new_line.insert_str(n_indent_chars, trimmed_line);
             new_line
         } else {
