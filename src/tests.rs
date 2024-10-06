@@ -26,12 +26,12 @@ fn test_file(source_file: &str, target_file: &str) -> bool {
                 ChangeTag::Delete => print!(
                     "{} {}",
                     format!("@ {}:", change.old_index().unwrap()).blue().bold(),
-                    format!("- {}", change).red().bold(),
+                    format!("- {change}").red().bold(),
                 ),
                 ChangeTag::Insert => print!(
                     "{} {}",
                     format!("@ {}:", change.new_index().unwrap()).blue().bold(),
-                    format!("+ {}", change).green().bold(),
+                    format!("+ {change}").green().bold(),
                 ),
                 ChangeTag::Equal => {}
             };
