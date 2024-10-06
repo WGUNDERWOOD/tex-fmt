@@ -31,13 +31,21 @@ pub fn format_file(
     let mut old_lines = zip(1.., old_lines);
     let mut queue: Vec<(usize, String)> = vec![];
     let mut new_text = String::with_capacity(text.len());
+    let indent_char = if args.usetabs { "\t" } else { " " };
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
             let pattern = Pattern::new(&line);
             let temp_state: State;
             (line, temp_state) = apply_indent(
-                &line, linum_old, &state, logs, file, args, &pattern,
+                &line,
+                linum_old,
+                &state,
+                logs,
+                file,
+                args,
+                &pattern,
+                indent_char,
             );
             if needs_env_new_line(&line, &temp_state, &pattern) {
                 let env_lines =
