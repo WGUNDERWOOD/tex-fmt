@@ -86,7 +86,7 @@ fn get_back(line: &str, pattern: &Pattern) -> i8 {
     }
 
     // other environments get single indents
-    if pattern.contains_env_end {
+    if pattern.contains_env_end && line.contains(ENV_END) {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
