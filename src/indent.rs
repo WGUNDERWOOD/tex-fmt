@@ -41,7 +41,6 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
 
     // other environments get single indents
     if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
-        // double check here as pattern might have matched inside comment
         // documents get no global indentation
         if line.contains(DOC_BEGIN) {
             return 0;
@@ -52,7 +51,6 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
         )
         .unwrap();
     } else if pattern.contains_env_end && line.contains(ENV_END) {
-        // double check here as pattern might have matched inside comment
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
