@@ -61,8 +61,8 @@ pub fn put_env_new_line(
         );
     }
     let comment_index = find_comment_index(line);
-    let comment = &get_comment(line, comment_index);
-    let mut text = &remove_comment(line, comment_index);
+    let comment = get_comment(line, comment_index);
+    let mut text = remove_comment(line, comment_index);
     let mut temp = RE_ENV_BEGIN_SHARED_LINE
         .replace(text, format!("$prev{LINE_END}$env"))
         .to_string();
