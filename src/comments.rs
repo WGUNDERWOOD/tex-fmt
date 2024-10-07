@@ -2,9 +2,8 @@
 
 /// Find the location where a comment begins in a line
 pub fn find_comment_index(line: &str) -> Option<usize> {
-    let chars = line.chars();
     let mut prev_c = ' ';
-    for (i, c) in chars.enumerate() {
+    for (i, c) in line.chars().enumerate() {
         if c == '%' && prev_c != '\\' {
             return Some(i);
         }
