@@ -3,7 +3,7 @@
 /// Find the location where a comment begins in a line
 pub fn find_comment_index(line: &str) -> Option<usize> {
     let mut prev_c = ' ';
-    for (i, c) in line.chars().enumerate() {
+    for (i, c) in line.char_indices() {
         if c == '%' && prev_c != '\\' {
             return Some(i);
         }
@@ -13,11 +13,11 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
 }
 
 /// Remove a comment from the end of a line
-pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
-    comment.map_or_else(|| line.to_string(), |c| line.chars().take(c).collect())
+pub fn remove_comment(line: &str, comment: Option<usize>) -> &str {
+    comment.map_or_else(|| line, |c| &line[0..c])
 }
 
 /// Extract a comment from the end of a line
-pub fn get_comment(line: &str, comment: Option<usize>) -> String {
-    comment.map_or_else(String::new, |c| line.chars().skip(c).collect())
+pub fn get_comment(line: &str, comment: Option<usize>) -> &str {
+    comment.map_or_else(|| "", |c| &line[c..])
 }
