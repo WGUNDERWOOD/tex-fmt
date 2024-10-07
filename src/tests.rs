@@ -100,6 +100,7 @@ fn test_short() {
         //"puthesis.cls",
         //"quiver.sty",
         //"readme.tex",
+        // "sections.tex",
         //"short_document.tex",
         //"tikz_network.sty",
         //"unicode.tex",
