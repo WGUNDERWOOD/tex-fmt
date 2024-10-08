@@ -80,8 +80,7 @@ pub fn apply_wrap(
     wrap_point.map(|p| {
         let line_start =
             comment_index.map_or("", |c| if p > c { "%" } else { "" });
-        let mut line_1: String = line.chars().take(p).collect();
-        line_1 = line_1.trim_end().to_string();
+        let line_1: String = line.chars().take(p).collect();
         let mut line_2: String = line.chars().skip(p).collect();
         line_2.insert_str(0, line_start);
         (line_1, line_2)
