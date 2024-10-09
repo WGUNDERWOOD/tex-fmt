@@ -43,13 +43,13 @@ pub struct Cli {
     #[arg(long, help = "Use tabs instead of spaces for indentation")]
     pub usetabs: bool,
     #[arg(long, help = "Line length for wrapping", default_value_t = 80)]
-    pub wrap: usize,
+    pub wrap: u8,
     #[clap(skip)]
-    pub wrap_min: usize,
+    pub wrap_min: u8,
 }
 
 impl Cli {
-    /// Get the log level.
+    /// Get the log level
     pub const fn log_level(&self) -> LevelFilter {
         if self.trace {
             LevelFilter::Trace

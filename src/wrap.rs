@@ -11,7 +11,7 @@ pub fn needs_wrap(line: &str, state: &State, args: &Cli) -> bool {
     !args.keep
         && !state.verbatim.visual
         && !state.ignore.visual
-        && (line.chars().count() > args.wrap)
+        && (line.chars().count() > args.wrap.into())
 }
 
 /// Find the best place to break a long line
@@ -20,7 +20,7 @@ fn find_wrap_point(line: &str, args: &Cli) -> Option<usize> {
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
     for (i, c) in line.chars().enumerate() {
-        if i >= args.wrap_min && wrap_point.is_some() {
+        if i >= args.wrap_min.into() && wrap_point.is_some() {
             break;
         }
         if c == ' ' && prev_char != Some('\\') {
@@ -58,7 +58,7 @@ pub fn apply_wrap(
     let comment_index = find_comment_index(line);
 
     match wrap_point {
-        Some(p) if p <= args.wrap => {}
+        Some(p) if p <= args.wrap.into() => {}
         _ => {
             record_line_log(
                 logs,
