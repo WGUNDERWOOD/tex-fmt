@@ -46,20 +46,14 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
             return 0;
         };
         diff += 1;
-        diff += i8::try_from(
-            LISTS_BEGIN.iter().any(|r| line.contains(r)),
-        )
-        .unwrap();
+        diff += i8::from(LISTS_BEGIN.iter().any(|r| line.contains(r)));
     } else if pattern.contains_env_end && line.contains(ENV_END) {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
         };
         diff -= 1;
-        diff -= i8::try_from(
-            LISTS_END.iter().any(|r| line.contains(r)),
-        )
-        .unwrap();
+        diff -= i8::from(LISTS_END.iter().any(|r| line.contains(r)));
     };
 
     // indent for delimiters
