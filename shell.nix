@@ -22,7 +22,6 @@ pkgs.mkShell {
     pkgs.rustfmt
     pkgs.shellcheck
     pkgs.texlive.combined.scheme-full
-    pkgs.valgrind
     python
   ];
 }

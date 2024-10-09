@@ -12,5 +12,3 @@ du -hs "$DIR" | cut -f 1
 echo
 
 flamegraph -F 10000 -- "$BIN" "$DIR/source/"* "$DIR/target/"*
-valgrind --tool=cachegrind --cachegrind-out-file=cachegrind.out "$BIN" "$DIR/source/"* "$DIR/target/"*
-cg_annotate cachegrind.out
