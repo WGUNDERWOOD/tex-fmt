@@ -42,6 +42,10 @@ pub struct Cli {
     pub tab: i8,
     #[arg(long, help = "Use tabs instead of spaces for indentation")]
     pub usetabs: bool,
+    #[arg(long, help = "Line length for wrapping", default_value_t = 80)]
+    pub wrap: usize,
+    #[clap(skip)]
+    pub wrap_min: usize,
 }
 
 impl Cli {
@@ -63,6 +67,11 @@ impl Cli {
         let mut exit_code = 0;
         self.verbose |= self.trace;
         self.print |= self.stdin;
+        self.wrap_min = if self.wrap >= 50 {
+            self.wrap - 10
+        } else {
+            self.wrap
+        };
 
         if !self.stdin && self.files.is_empty() {
             record_file_log(
@@ -98,6 +107,8 @@ impl Cli {
             files: Vec::<String>::new(),
             tab: 2,
             usetabs: false,
+            wrap: 80,
+            wrap_min: 70,
         }
     }
 }
