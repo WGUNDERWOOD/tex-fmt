@@ -47,7 +47,7 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
         };
         diff += 1;
         diff += i8::try_from(
-            LISTS_BEGIN.iter().filter(|&r| line.contains(r)).count(),
+            LISTS_BEGIN.iter().any(|r| line.contains(r)),
         )
         .unwrap();
     } else if pattern.contains_env_end && line.contains(ENV_END) {
@@ -57,7 +57,7 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
         };
         diff -= 1;
         diff -= i8::try_from(
-            LISTS_END.iter().filter(|&r| line.contains(r)).count(),
+            LISTS_END.iter().any(|r| line.contains(r)),
         )
         .unwrap();
     };
