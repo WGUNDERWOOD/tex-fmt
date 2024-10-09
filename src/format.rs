@@ -30,7 +30,7 @@ pub fn format_file(
     let old_lines = old_text.lines();
     let mut old_lines = zip(1.., old_lines);
     let mut queue: Vec<(usize, String)> = vec![];
-    let mut new_text = String::with_capacity(text.len());
+    let mut new_text = String::with_capacity(2 * text.len());
     let indent_char = if args.usetabs { "\t" } else { " " };
 
     loop {
