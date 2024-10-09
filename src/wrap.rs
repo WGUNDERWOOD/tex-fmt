@@ -6,26 +6,21 @@ use crate::logging::*;
 use crate::parse::*;
 use log::Level::{Trace, Warn};
 
-/// Maximum allowed line length
-const WRAP_MAX: usize = 80;
-/// Length to which long lines are trimmed
-const WRAP_MIN: usize = 70;
-
 /// Check if a line needs wrapping
 pub fn needs_wrap(line: &str, state: &State, args: &Cli) -> bool {
     !args.keep
         && !state.verbatim.visual
         && !state.ignore.visual
-        && (line.chars().count() > WRAP_MAX)
+        && (line.chars().count() > args.wrap)
 }
 
 /// Find the best place to break a long line
-fn find_wrap_point(line: &str) -> Option<usize> {
+fn find_wrap_point(line: &str, args: &Cli) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
     for (i, c) in line.chars().enumerate() {
-        if i >= WRAP_MIN && wrap_point.is_some() {
+        if i >= args.wrap_min && wrap_point.is_some() {
             break;
         }
         if c == ' ' && prev_char != Some('\\') {
@@ -59,11 +54,11 @@ pub fn apply_wrap(
             "Wrapping long line.",
         );
     }
-    let wrap_point = find_wrap_point(line);
+    let wrap_point = find_wrap_point(line, args);
     let comment_index = find_comment_index(line);
 
     match wrap_point {
-        Some(p) if p <= WRAP_MAX => {}
+        Some(p) if p <= args.wrap => {}
         _ => {
             record_line_log(
                 logs,
