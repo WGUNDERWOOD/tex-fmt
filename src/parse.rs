@@ -5,13 +5,14 @@ use crate::regexes::*;
 use clap::Parser;
 use log::Level::{Error, Trace};
 use log::LevelFilter;
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Read;
 
 /// Command line arguments
 #[allow(missing_docs)]
 #[allow(clippy::missing_docs_in_private_items)]
-#[derive(Debug, Parser)]
+#[derive(Debug, Parser, Serialize, Deserialize, Clone)]
 #[command(version, about)]
 pub struct Cli {
     #[arg(long, short, help = "Check formatting, do not modify files")]
