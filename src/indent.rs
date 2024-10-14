@@ -4,7 +4,7 @@ use crate::comments::*;
 use crate::format::*;
 use crate::ignore::*;
 use crate::logging::*;
-use crate::parse::*;
+use crate::cli::*;
 use crate::regexes::*;
 use crate::verbatim::*;
 use core::cmp::max;

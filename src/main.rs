@@ -20,7 +20,8 @@ mod format;
 mod ignore;
 mod indent;
 mod logging;
-mod parse;
+mod cli;
+mod read;
 mod regexes;
 mod subs;
 mod verbatim;
@@ -28,7 +29,8 @@ mod wrap;
 mod write;
 use crate::format::*;
 use crate::logging::*;
-use crate::parse::*;
+use crate::cli::*;
+use crate::read::*;
 use crate::write::*;
 
 #[cfg(test)]
