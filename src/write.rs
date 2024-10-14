@@ -1,8 +1,8 @@
 //! Utilities for writing formatted files
 
+use crate::cli::*;
 use crate::fs;
 use crate::logging::*;
-use crate::cli::*;
 use log::Level::Error;
 use std::path;
 
