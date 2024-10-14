@@ -15,21 +15,21 @@ use clap::Parser;
 use std::fs;
 use std::process::ExitCode;
 
+mod cli;
 mod comments;
 mod format;
 mod ignore;
 mod indent;
 mod logging;
-mod cli;
 mod read;
 mod regexes;
 mod subs;
 mod verbatim;
 mod wrap;
 mod write;
+use crate::cli::*;
 use crate::format::*;
 use crate::logging::*;
-use crate::cli::*;
 use crate::read::*;
 use crate::write::*;
 

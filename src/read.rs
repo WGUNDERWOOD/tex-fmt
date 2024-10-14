@@ -1,8 +1,10 @@
+//! Utilities for reading files
+
 use crate::logging::*;
 use crate::regexes::*;
 use log::Level::{Error, Trace};
-use std::io::Read;
 use std::fs;
+use std::io::Read;
 
 /// Add a missing extension and read the file
 pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
