@@ -3,7 +3,7 @@
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
-use crate::parse::*;
+use crate::cli::*;
 use log::Level::{Trace, Warn};
 
 /// Check if a line needs wrapping

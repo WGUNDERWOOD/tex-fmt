@@ -2,7 +2,7 @@
 
 use crate::fs;
 use crate::logging::*;
-use crate::parse::*;
+use crate::cli::*;
 use log::Level::Error;
 use std::path;
 

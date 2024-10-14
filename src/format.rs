@@ -3,7 +3,7 @@
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
-use crate::parse::*;
+use crate::cli::*;
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
 use crate::subs::*;
 use crate::verbatim::*;
