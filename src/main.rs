@@ -17,6 +17,7 @@ use std::process::ExitCode;
 
 mod cli;
 mod comments;
+mod config;
 mod format;
 mod ignore;
 mod indent;
