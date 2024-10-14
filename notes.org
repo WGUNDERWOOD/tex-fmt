@@ -9,3 +9,11 @@
 ** Publish GitHub release with notes
 *** GitHub binaries published automatically with actions
 ** Publish in nixpkgs when bot makes pull request
+* Configuration files
+** Configuration file precedence
+*** File passed with --config
+*** File in directory where tex-fmt is executed
+*** If in git repo, parent directories from execution dir to project root
+*** ~/.config/tex-fmt/ or equivalent
+*** Default tex-fmt settings
+** Finally CLI arguments overwrite any selected config file
