@@ -18,6 +18,7 @@ lazy_static = "1.5.0"
 log = "0.4.22"
 regex = "1.11.0"
 similar = "2.6.0"
+unicode-width = "0.2.0"
 
 [profile.release]
 codegen-units = 1
