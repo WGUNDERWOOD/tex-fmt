@@ -1,9 +1,9 @@
 //! Core methodology for formatting a file
 
+use crate::cli::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
-use crate::parse::*;
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
 use crate::subs::*;
 use crate::verbatim::*;

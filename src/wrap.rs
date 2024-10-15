@@ -1,9 +1,9 @@
 //! Utilities for wrapping long lines
 
+use crate::cli::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
-use crate::parse::*;
 use log::Level::{Trace, Warn};
 
 /// Check if a line needs wrapping
