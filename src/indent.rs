@@ -7,6 +7,7 @@ use crate::ignore::*;
 use crate::logging::*;
 use crate::regexes::*;
 use crate::verbatim::*;
+use crate::Config;
 use core::cmp::max;
 use log::Level::{Trace, Warn};
 
@@ -116,7 +117,7 @@ pub fn apply_indent(
     state: &State,
     logs: &mut Vec<Log>,
     file: &str,
-    args: &Cli,
+    args: &Config,
     pattern: &Pattern,
     indent_char: &str,
 ) -> (String, State) {

@@ -8,6 +8,7 @@ use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
+use crate::Config;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
@@ -16,7 +17,7 @@ use std::iter::zip;
 pub fn format_file(
     text: &str,
     file: &str,
-    args: &Cli,
+    args: &Config,
     logs: &mut Vec<Log>,
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");

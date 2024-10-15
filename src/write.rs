@@ -3,6 +3,7 @@
 use crate::cli::*;
 use crate::fs;
 use crate::logging::*;
+use crate::Config;
 use log::Level::Error;
 use std::path;
 
@@ -14,7 +15,7 @@ fn write_file(file: &str, text: &str) {
 
 /// Handle the newly formatted file
 pub fn process_output(
-    args: &Cli,
+    args: &Config,
     file: &str,
     text: &str,
     new_text: &str,
