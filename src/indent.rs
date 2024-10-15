@@ -68,11 +68,14 @@ fn get_back(line: &str, pattern: &Pattern) -> i8 {
     let mut back: i8 = 0;
     let mut cumul: i8 = 0;
 
-    // delimiters
-    for c in line.chars() {
-        cumul -= i8::from(OPENS.contains(&c));
-        cumul += i8::from(CLOSES.contains(&c));
-        back = max(cumul, back);
+    // Dedent delimiters
+    // Check first whether there are any closing delimiters
+    if CLOSES.iter().any(|c| line.contains(*c)) {
+        for c in line.chars() {
+            cumul -= i8::from(OPENS.contains(&c));
+            cumul += i8::from(CLOSES.contains(&c));
+            back = max(cumul, back);
+        }
     }
 
     // other environments get single indents
