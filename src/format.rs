@@ -205,7 +205,6 @@ impl Pattern {
 }
 
 /// Ensure that the indentation returns to zero at the end of the file
-fn indents_return_to_zero(state: &State) -> bool {
-    #![allow(clippy::missing_const_for_fn)]
+const fn indents_return_to_zero(state: &State) -> bool {
     state.indent.actual == 0
 }
