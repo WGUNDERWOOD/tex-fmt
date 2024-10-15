@@ -16,8 +16,3 @@ pub fn find_comment_index(line: &str) -> Option<usize> {
 pub fn remove_comment(line: &str, comment: Option<usize>) -> &str {
     comment.map_or_else(|| line, |c| &line[0..c])
 }
-
-/// Extract a comment from the end of a line
-pub fn get_comment(line: &str, comment: Option<usize>) -> &str {
-    comment.map_or_else(|| "", |c| &line[c..])
-}
