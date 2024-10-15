@@ -2,12 +2,15 @@
 
 /// Find the location where a comment begins in a line
 pub fn find_comment_index(line: &str) -> Option<usize> {
-    let mut prev_c = ' ';
-    for (i, c) in line.char_indices() {
-        if c == '%' && prev_c != '\\' {
-            return Some(i);
+    // often there is no '%' so check this first
+    if line.contains('%') {
+        let mut prev_c = ' ';
+        for (i, c) in line.char_indices() {
+            if c == '%' && prev_c != '\\' {
+                return Some(i);
+            }
+            prev_c = c;
         }
-        prev_c = c;
     }
     None
 }
