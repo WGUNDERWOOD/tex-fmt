@@ -3,10 +3,8 @@
 use crate::cli::*;
 use crate::comments::*;
 use crate::format::*;
-use crate::ignore::*;
 use crate::logging::*;
 use crate::regexes::*;
-use crate::verbatim::*;
 use core::cmp::max;
 use log::Level::{Trace, Warn};
 
@@ -109,78 +107,82 @@ fn get_indent(line: &str, prev_indent: &Indent, pattern: &Pattern) -> Indent {
     Indent { actual, visual }
 }
 
-/// Apply the correct indentation to a line
-pub fn apply_indent(
+/// Calculates the indent for `line` based on its contents. This functions saves the calculated [Indent], which might be
+/// negative, to the given [State], and then ensures that the returned [Indent] is non-negative.
+pub fn calculate_indent(
     line: &str,
-    linum_old: usize,
-    state: &State,
+    state: &mut State,
     logs: &mut Vec<Log>,
     file: &str,
     args: &Cli,
     pattern: &Pattern,
+) -> Indent {
+    // Calculate the new indent by first removing the comment from the line (if there is one) to ignore diffs from
+    // characters in there.
+    let comment_index = find_comment_index(line);
+    let line_strip = remove_comment(line, comment_index);
+    let mut indent = get_indent(line_strip, &state.indent, pattern);
+
+    // Record the indent to the logs.
+    if args.trace {
+        record_line_log(
+            logs,
+            Trace,
+            file,
+            state.linum_new,
+            state.linum_old,
+            line,
+            &format!(
+                "Indent: actual = {}, visual = {}:",
+                indent.actual, indent.visual
+            ),
+        );
+    }
+
+    // Save the indent to the state. Note, this indent might be negative; it is saved without correction so that this is
+    // not forgotten for the next iterations.
+    state.indent = indent.clone();
+
+    // However, we can't negatively indent a line. So we log the negative indent and reset the values to 0.
+    if (indent.visual < 0) || (indent.actual < 0) {
+        record_line_log(
+            logs,
+            Warn,
+            file,
+            state.linum_new,
+            state.linum_old,
+            line,
+            "Indent is negative.",
+        );
+        indent.actual = indent.actual.max(0);
+        indent.visual = indent.visual.max(0);
+    }
+
+    indent
+}
+
+/// Apply the given indentation to a line
+pub fn apply_indent(
+    line: &str,
+    indent: &Indent,
+    args: &Cli,
     indent_char: &str,
-) -> (String, State) {
-    #![allow(clippy::too_many_arguments)]
-    let mut new_state = state.clone();
-    new_state.linum_old = linum_old;
+) -> String {
+    // Remove white space from the start of the line
+    let trimmed_line = line.trim_start();
 
-    new_state.ignore = get_ignore(line, &new_state, logs, file, true);
-    new_state.verbatim =
-        get_verbatim(line, &new_state, logs, file, true, pattern);
-
-    let new_line = if new_state.verbatim.visual || new_state.ignore.visual {
-        line.to_string()
+    // If the line is now empty, return a new empty String
+    if trimmed_line.is_empty() {
+        String::new()
+    // Otherwise, allocate enough memory to fit line with the added indentation and insert the appropriate string slices
     } else {
-        // calculate indent
-        let comment_index = find_comment_index(line);
-        let line_strip = &remove_comment(line, comment_index);
-        let mut indent = get_indent(line_strip, &state.indent, pattern);
-        new_state.indent = indent.clone();
-        if args.trace {
-            record_line_log(
-                logs,
-                Trace,
-                file,
-                state.linum_new,
-                new_state.linum_old,
-                line,
-                &format!(
-                    "Indent: actual = {}, visual = {}:",
-                    indent.actual, indent.visual
-                ),
-            );
+        let n_indent_chars = usize::try_from(indent.visual * args.tab).unwrap();
+        let mut new_line =
+            String::with_capacity(trimmed_line.len() + n_indent_chars);
+        for idx in 0..n_indent_chars {
+            new_line.insert_str(idx, indent_char);
         }
-
-        if (indent.visual < 0) || (indent.actual < 0) {
-            record_line_log(
-                logs,
-                Warn,
-                file,
-                new_state.linum_new,
-                new_state.linum_old,
-                line,
-                "Indent is negative.",
-            );
-            indent.actual = indent.actual.max(0);
-            indent.visual = indent.visual.max(0);
-        }
-
-        // apply indent
-        let trimmed_line = line.trim_start();
-        if trimmed_line.is_empty() {
-            String::new()
-        } else {
-            let n_indent_chars =
-                usize::try_from(indent.visual * args.tab).unwrap();
-            let mut new_line =
-                String::with_capacity(trimmed_line.len() + n_indent_chars);
-            for idx in 0..n_indent_chars {
-                new_line.insert_str(idx, indent_char);
-            }
-            new_line.insert_str(n_indent_chars, trimmed_line);
-            new_line
-        }
-    };
-
-    (new_line, new_state)
+        new_line.insert_str(n_indent_chars, trimmed_line);
+        new_line
+    }
 }
