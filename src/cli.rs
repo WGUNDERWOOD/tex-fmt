@@ -75,7 +75,7 @@ impl Cli {
                 logs,
                 Error,
                 "",
-                "No files specified. Either provide filenames or provide --stdin.",
+                "No files specified. Provide filenames or pass --stdin.",
             );
             exit_code = 1;
         }

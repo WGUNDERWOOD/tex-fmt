@@ -107,8 +107,10 @@ fn get_indent(line: &str, prev_indent: &Indent, pattern: &Pattern) -> Indent {
     Indent { actual, visual }
 }
 
-/// Calculates the indent for `line` based on its contents. This functions saves the calculated [Indent], which might be
-/// negative, to the given [State], and then ensures that the returned [Indent] is non-negative.
+/// Calculates the indent for `line` based on its contents.
+/// This functions saves the calculated [Indent], which might be
+/// negative, to the given [State], and then ensures that the returned
+/// [Indent] is non-negative.
 pub fn calculate_indent(
     line: &str,
     state: &mut State,
@@ -117,8 +119,8 @@ pub fn calculate_indent(
     args: &Cli,
     pattern: &Pattern,
 ) -> Indent {
-    // Calculate the new indent by first removing the comment from the line (if there is one) to ignore diffs from
-    // characters in there.
+    // Calculate the new indent by first removing the comment from the line
+    // (if there is one) to ignore diffs from characters in there.
     let comment_index = find_comment_index(line);
     let line_strip = remove_comment(line, comment_index);
     let mut indent = get_indent(line_strip, &state.indent, pattern);
@@ -139,11 +141,13 @@ pub fn calculate_indent(
         );
     }
 
-    // Save the indent to the state. Note, this indent might be negative; it is saved without correction so that this is
+    // Save the indent to the state. Note, this indent might be negative;
+    // it is saved without correction so that this is
     // not forgotten for the next iterations.
     state.indent = indent.clone();
 
-    // However, we can't negatively indent a line. So we log the negative indent and reset the values to 0.
+    // However, we can't negatively indent a line.
+    // So we log the negative indent and reset the values to 0.
     if (indent.visual < 0) || (indent.actual < 0) {
         record_line_log(
             logs,
@@ -174,7 +178,8 @@ pub fn apply_indent(
     // If the line is now empty, return a new empty String
     if trimmed_line.is_empty() {
         String::new()
-    // Otherwise, allocate enough memory to fit line with the added indentation and insert the appropriate string slices
+    // Otherwise, allocate enough memory to fit line with the added
+    // indentation and insert the appropriate string slices
     } else {
         let n_indent_chars = usize::try_from(indent.visual * args.tab).unwrap();
         let mut new_line =

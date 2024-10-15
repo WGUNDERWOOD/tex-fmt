@@ -43,26 +43,27 @@ pub fn needs_env_new_line(
 
     // If we're not ignoring and we've matched an environment ...
     if not_ignored_and_contains_env {
-        // ... return `true` if the comment index is `None` (which implies the split point must be in text), otherwise
+        // ... return `true` if the comment index is `None`
+        // (which implies the split point must be in text), otherwise
         // compare the index of the comment with the split point.
         find_comment_index(line).map_or(true, |comment_index| {
             if RE_ENV_ITEM_SHARED_LINE
                 .captures(line)
-                .unwrap() // Doesn't panic because we've matched split point.
+                .unwrap() // Matched split point so no panic.
                 .get(2)
-                .unwrap() // Doesn't panic because the regex has 4 groups so index 2 is in bounds.
+                .unwrap() // Regex has 4 groups so index 2 is in bounds.
                 .start()
                 > comment_index
             {
-                // If the split point is past the comment index, then we don't split the line,
+                // If split point is past the comment index, don't split.
                 false
             } else {
-                // otherwise, the split point is before the comment and we do split the line.
+                // Otherwise, split point is before comment and we do split.
                 true
             }
         })
     } else {
-        // If we're ignoring or we didn't match an environment, we don't need a new line.
+        // If ignoring or didn't match an environment, don't need a new line.
         false
     }
 }
