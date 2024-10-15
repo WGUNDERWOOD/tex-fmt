@@ -15,20 +15,22 @@ use clap::Parser;
 use std::fs;
 use std::process::ExitCode;
 
+mod cli;
 mod comments;
 mod format;
 mod ignore;
 mod indent;
 mod logging;
-mod parse;
+mod read;
 mod regexes;
 mod subs;
 mod verbatim;
 mod wrap;
 mod write;
+use crate::cli::*;
 use crate::format::*;
 use crate::logging::*;
-use crate::parse::*;
+use crate::read::*;
 use crate::write::*;
 
 #[cfg(test)]

@@ -51,16 +51,14 @@ fn read_files_from_dir(dir: &str) -> Vec<String> {
 #[test]
 fn test_source() {
     let source_files = read_files_from_dir("./tests/source/");
-    let mut fail = false;
     for file in source_files {
         if !test_file(
             &format!("tests/source/{file}"),
             &format!("tests/target/{file}"),
         ) {
-            fail = true;
+            panic!("Failed in {file}");
         }
     }
-    assert!(!fail, "Some tests failed");
 }
 
 #[test]
