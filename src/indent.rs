@@ -55,10 +55,10 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
     };
 
     // indent for delimiters
-    diff += i8::try_from(line.chars().filter(|x| OPENS.contains(x)).count())
-        .unwrap();
-    diff -= i8::try_from(line.chars().filter(|x| CLOSES.contains(x)).count())
-        .unwrap();
+    diff += line
+        .chars()
+        .map(|x| i8::from(OPENS.contains(&x)) - i8::from(CLOSES.contains(&x)))
+        .sum::<i8>();
 
     diff
 }
