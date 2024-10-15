@@ -52,7 +52,8 @@ pub fn format_file(
                 file,
                 &pattern,
             ) {
-                // Check if the line should be split because of a pattern that should begin on a new line.
+                // Check if the line should be split because of a pattern
+                // that should begin on a new line.
                 if needs_env_new_line(&line, &temp_state, &pattern) {
                     // Split the line into two ...
                     let (this_line, next_line) =
@@ -62,7 +63,8 @@ pub fn format_file(
                     line = this_line.to_string();
                 }
 
-                // Calculate the indent based on the current state and the patterns in the line.
+                // Calculate the indent based on the current state
+                // and the patterns in the line.
                 let indent = calculate_indent(
                     &line,
                     &mut temp_state,
@@ -75,7 +77,8 @@ pub fn format_file(
                 let indent_length = usize::try_from(indent.visual * args.tab)
                     .expect("Visual indent is non-negative.");
 
-                // Wrap the line before applying the indent, and loop back if the line needed wrapping.
+                // Wrap the line before applying the indent, and loop back
+                // if the line needed wrapping.
                 if needs_wrap(line.trim_start(), indent_length, args) {
                     let wrapped_lines = apply_wrap(
                         line.trim_start(),
@@ -122,8 +125,8 @@ pub fn format_file(
     new_text
 }
 
-/// Sets the `ignore` and `verbatim` flags in the given [State] based on `line` and returns whether `line` should be
-/// ignored by formatting.
+/// Sets the `ignore` and `verbatim` flags in the given [State] based on
+/// `line` and returns whether `line` should be ignored by formatting.
 fn set_ignore_and_report(
     line: &str,
     temp_state: &mut State,
@@ -138,7 +141,8 @@ fn set_ignore_and_report(
     temp_state.verbatim.visual || temp_state.ignore.visual
 }
 
-/// Cleans the given text by removing extra line breaks and trailing spaces, and tabs if they shouldn't be used.
+/// Cleans the given text by removing extra line breaks and trailing spaces,
+/// and also tabs if they shouldn't be used.
 fn clean_text(text: &str, args: &Cli) -> String {
     let mut text = remove_extra_newlines(text);
 
