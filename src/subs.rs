@@ -5,6 +5,7 @@ use crate::format::*;
 use crate::logging::*;
 use crate::regexes::*;
 use crate::Cli;
+use crate::Config;
 use crate::LINE_END;
 use log::Level::Trace;
 
@@ -15,7 +16,7 @@ pub fn remove_extra_newlines(text: &str) -> String {
 }
 
 /// Replace tabs with spaces
-pub fn remove_tabs(text: &str, args: &Cli) -> String {
+pub fn remove_tabs(text: &str, args: &Config) -> String {
     let replace = (0..args.tab).map(|_| " ").collect::<String>();
     text.replace('\t', &replace)
 }
@@ -46,7 +47,7 @@ pub fn put_env_new_line(
     line: &str,
     state: &State,
     file: &str,
-    args: &Cli,
+    args: &Config,
     logs: &mut Vec<Log>,
 ) -> Option<(String, String)> {
     if args.trace {

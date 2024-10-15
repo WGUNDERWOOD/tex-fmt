@@ -22,6 +22,7 @@ use std::process::ExitCode;
 
 mod cli;
 mod comments;
+mod config;
 mod format;
 mod ignore;
 mod indent;
@@ -33,6 +34,7 @@ mod verbatim;
 mod wrap;
 mod write;
 use crate::cli::*;
+use crate::config::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::read::*;
@@ -54,22 +56,9 @@ fn main() -> ExitCode {
     let cli_args = Cli::parse();
 
     // initilize default config
-    let default_options = Cli {
-        check: false,
-        print: false,
-        keep: false,
-        verbose: false,
-        stdin: false,
-        quiet: false,
-        trace: false,
-        files: Vec::<String>::new(),
-        tab: 2,
-        usetabs: false,
-        wrap: 80,
-        wrap_min: 70,
-    };
+    let default_options = Config::default();
     // set args to cli. Will be overwritten if config file is found
-    let mut args = cli_args.clone();
+    let mut config_file_args = default_options.clone();
 
     // check for config file and override defaults if found
     // TODO: find names for qualifier and organization
@@ -77,52 +66,28 @@ fn main() -> ExitCode {
         let config_file = project_dirs.config_dir().join("config.toml");
         // TODO: also check for local config
         if config_file.exists() {
-            args = Figment::new()
-                .merge(Serialized::defaults(default_options.clone()))
+            config_file_args = Figment::new()
+                .merge(Serialized::defaults(default_options))
                 .merge(Toml::file(config_file))
                 // TODO: override with local config if found
                 .extract()
                 .unwrap();
-
-            if cli_args.check != default_options.check {
-                args.check = cli_args.check;
-            }
-            if cli_args.print != default_options.print {
-                args.print = cli_args.print;
-            }
-            // NOTE: If keep is set to true in config file, it can't be set to false with the CLI
-            if cli_args.keep != default_options.keep {
-                args.keep = cli_args.keep;
-            }
-            if cli_args.verbose != default_options.verbose {
-                args.verbose = cli_args.verbose;
-            }
-            if cli_args.stdin != default_options.stdin {
-                args.stdin = cli_args.stdin;
-            }
-            if cli_args.quiet != default_options.quiet {
-                args.quiet = cli_args.quiet;
-            }
-            if cli_args.trace != default_options.trace {
-                args.trace = cli_args.trace;
-            }
-            if cli_args.files != default_options.files {
-                args.files = cli_args.files;
-            }
-            if cli_args.tab != default_options.tab {
-                args.tab = cli_args.tab;
-            }
-            if cli_args.usetabs != default_options.usetabs {
-                args.usetabs = cli_args.usetabs;
-            }
-            if cli_args.wrap != default_options.wrap {
-                args.wrap = cli_args.wrap;
-            }
-            if cli_args.wrap_min != default_options.wrap_min {
-                args.wrap_min = cli_args.wrap_min;
-            }
         }
     }
+    let mut args = Config {
+        check: cli_args.check.unwrap_or(config_file_args.check),
+        print: cli_args.print.unwrap_or(config_file_args.print),
+        keep: cli_args.keep.unwrap_or(config_file_args.keep),
+        verbose: cli_args.verbose.unwrap_or(config_file_args.verbose),
+        quiet: cli_args.quiet.unwrap_or(config_file_args.quiet),
+        trace: cli_args.trace.unwrap_or(config_file_args.trace),
+        files: cli_args.files.unwrap_or(config_file_args.files),
+        stdin: cli_args.stdin.unwrap_or(config_file_args.stdin),
+        tab: cli_args.tab.unwrap_or(config_file_args.tab),
+        usetabs: cli_args.usetabs.unwrap_or(config_file_args.usetabs),
+        wrap: cli_args.wrap.unwrap_or(config_file_args.wrap),
+        wrap_min: cli_args.wrap_min.unwrap_or(config_file_args.wrap_min),
+    };
 
     init_logger(args.log_level());
 
