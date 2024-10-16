@@ -66,17 +66,6 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
 /// Calculate dedentation for the current line
 fn get_back(line: &str, pattern: &Pattern) -> i8 {
     let mut back: i8 = 0;
-    let mut cumul: i8 = 0;
-
-    // Dedent delimiters
-    // Check first whether there are any closing delimiters
-    if CLOSES.iter().any(|c| line.contains(*c)) {
-        for c in line.chars() {
-            cumul -= i8::from(OPENS.contains(&c));
-            cumul += i8::from(CLOSES.contains(&c));
-            back = max(cumul, back);
-        }
-    }
 
     // other environments get single indents
     if pattern.contains_env_end && line.contains(ENV_END) {
@@ -92,6 +81,17 @@ fn get_back(line: &str, pattern: &Pattern) -> i8 {
         }
         back += 1;
     };
+
+    // Dedent delimiters
+    // Check first whether there are any closing delimiters
+    if CLOSES.iter().any(|c| line.contains(*c)) {
+        let mut cumul: i8 = back;
+        for c in line.chars() {
+            cumul -= i8::from(OPENS.contains(&c));
+            cumul += i8::from(CLOSES.contains(&c));
+            back = max(cumul, back);
+        }
+    }
 
     // deindent items to make the rest of item environment appear indented
     if pattern.contains_item && line.contains(ITEM) {
