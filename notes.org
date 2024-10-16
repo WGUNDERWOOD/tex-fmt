@@ -39,3 +39,10 @@
 *** ~/.config/tex-fmt/ or equivalent
 *** Default tex-fmt settings
 ** Finally CLI arguments overwrite any selected config file
+** Workflow:
+*** User supplies cli arguments
+*** If --config is passed
+**** Let config = read_from_cli(), panic if this does not exist
+*** Else
+**** Try to get config from the other sources, falling back on default values
+*** Then merge in the other cli args

@@ -1,6 +1,7 @@
 //! Utilities for reading the command line arguments
 
 use crate::logging::*;
+use crate::config::*;
 use clap::Parser;
 use log::Level::Error;
 use log::LevelFilter;
@@ -43,6 +44,8 @@ pub struct Cli {
     pub wrap: u8,
     #[clap(skip)]
     pub wrap_min: u8,
+    #[arg(long, help = "Path to config file")]
+    pub config: Option<String>,
 }
 
 impl Cli {
@@ -88,6 +91,7 @@ impl Cli {
             );
             exit_code = 1;
         }
+        let config = get_config(self);
         exit_code
     }
 
@@ -106,6 +110,7 @@ impl Cli {
             usetabs: false,
             wrap: 80,
             wrap_min: 70,
+            config: None,
         }
     }
 }
