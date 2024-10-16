@@ -5,7 +5,6 @@ use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
 use log::Level::{Trace, Warn};
-use unicode_width::UnicodeWidthChar;
 
 /// String slice to start wrapped text lines
 pub const TEXT_LINE_START: &str = "";
@@ -14,16 +13,7 @@ pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Cli) -> bool {
-    !args.keep
-        && ({
-            let mut line_length = 0;
-            for c in line.chars() {
-                line_length +=
-                    c.width().expect("Why control character in text?");
-            }
-            line_length
-        } + indent_length
-            > args.wrap.into())
+    !args.keep && (line.chars().count() + indent_length > args.wrap.into())
 }
 
 /// Find the best place to break a long line
@@ -42,8 +32,7 @@ fn find_wrap_point(
 
     // Return *byte* index rather than *char* index.
     for (i, c) in line.char_indices() {
-        line_width += c.width().expect("No control characters in text.");
-
+        line_width += 1;
         if line_width > wrap_boundary && wrap_point.is_some() {
             break;
         }
