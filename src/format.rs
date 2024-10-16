@@ -74,7 +74,7 @@ pub fn format_file(
                     &pattern,
                 );
 
-                let indent_length = usize::try_from(indent.visual * args.tab)
+                let indent_length = usize::try_from(indent.visual * args.tab as i8)
                     .expect("Visual indent is non-negative.");
 
                 // Wrap the line before applying the indent, and loop back

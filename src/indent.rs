@@ -184,7 +184,7 @@ pub fn apply_indent(
     // Otherwise, allocate enough memory to fit line with the added
     // indentation and insert the appropriate string slices
     } else {
-        let n_indent_chars = usize::try_from(indent.visual * args.tab).unwrap();
+        let n_indent_chars = usize::try_from(indent.visual * args.tab as i8).unwrap();
         let mut new_line =
             String::with_capacity(trimmed_line.len() + n_indent_chars);
         for idx in 0..n_indent_chars {
