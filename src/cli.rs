@@ -36,7 +36,7 @@ pub struct Cli {
         help = "Number of spaces to use as tab size",
         default_value_t = 2
     )]
-    pub tab: i8,
+    pub tab: u8,
     #[arg(long, help = "Use tabs instead of spaces for indentation")]
     pub usetabs: bool,
     #[arg(long, help = "Line length for wrapping", default_value_t = 80)]
