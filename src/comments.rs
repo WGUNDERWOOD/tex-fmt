@@ -2,22 +2,20 @@
 
 /// Find the location where a comment begins in a line
 pub fn find_comment_index(line: &str) -> Option<usize> {
-    let mut prev_c = ' ';
-    for (i, c) in line.chars().enumerate() {
-        if c == '%' && prev_c != '\\' {
-            return Some(i);
+    // often there is no '%' so check this first
+    if line.contains('%') {
+        let mut prev_c = ' ';
+        for (i, c) in line.char_indices() {
+            if c == '%' && prev_c != '\\' {
+                return Some(i);
+            }
+            prev_c = c;
         }
-        prev_c = c;
     }
     None
 }
 
 /// Remove a comment from the end of a line
-pub fn remove_comment(line: &str, comment: Option<usize>) -> String {
-    comment.map_or_else(|| line.to_string(), |c| line.chars().take(c).collect())
-}
-
-/// Extract a comment from the end of a line
-pub fn get_comment(line: &str, comment: Option<usize>) -> String {
-    comment.map_or_else(String::new, |c| line.chars().skip(c).collect())
+pub fn remove_comment(line: &str, comment: Option<usize>) -> &str {
+    comment.map_or_else(|| line, |c| &line[0..c])
 }

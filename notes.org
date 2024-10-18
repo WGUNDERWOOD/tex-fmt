@@ -1,1 +1,11 @@
 #+title: tex-fmt
+* Release process
+** Update version number in Cargo.toml
+** Push to GitHub and check tests pass
+** Create a git tag
+*** git tag vX.X.X
+*** git push --tags
+** Publish to crates.io with cargo publish
+** Publish GitHub release with notes
+*** GitHub binaries published automatically with actions
+** Publish in nixpkgs when bot makes pull request

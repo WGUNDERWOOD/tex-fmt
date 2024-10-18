@@ -31,24 +31,59 @@ pub fn needs_env_new_line(
     state: &State,
     pattern: &Pattern,
 ) -> bool {
-    !state.verbatim.visual
+    // Check if we should format this line and if we've matched an environment.
+    let not_ignored_and_contains_env = !state.verbatim.visual
         && !state.ignore.visual
         && (pattern.contains_env_begin
             || pattern.contains_env_end
             || pattern.contains_item)
         && (RE_ENV_BEGIN_SHARED_LINE.is_match(line)
             || RE_ENV_END_SHARED_LINE.is_match(line)
-            || RE_ITEM_SHARED_LINE.is_match(line))
+            || RE_ITEM_SHARED_LINE.is_match(line));
+
+    // If we're not ignoring and we've matched an environment ...
+    if not_ignored_and_contains_env {
+        // ... return `true` if the comment index is `None`
+        // (which implies the split point must be in text), otherwise
+        // compare the index of the comment with the split point.
+        find_comment_index(line).map_or(true, |comment_index| {
+            if RE_ENV_ITEM_SHARED_LINE
+                .captures(line)
+                .unwrap() // Matched split point so no panic.
+                .get(2)
+                .unwrap() // Regex has 4 groups so index 2 is in bounds.
+                .start()
+                > comment_index
+            {
+                // If split point is past the comment index, don't split.
+                false
+            } else {
+                // Otherwise, split point is before comment and we do split.
+                true
+            }
+        })
+    } else {
+        // If ignoring or didn't match an environment, don't need a new line.
+        false
+    }
 }
 
-/// Ensure LaTeX environments begin on new lines
-pub fn put_env_new_line(
-    line: &str,
+/// Ensure LaTeX environments begin on new lines.
+///
+/// Returns a tuple containing:
+/// 1. a reference to the line that was given, shortened because of the split
+/// 2. a reference to the part of the line that was split
+pub fn put_env_new_line<'a>(
+    line: &'a str,
     state: &State,
     file: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
-) -> Option<(String, String)> {
+) -> (&'a str, &'a str) {
+    let captures = RE_ENV_ITEM_SHARED_LINE.captures(line).unwrap();
+
+    let (line, [prev, rest, _]) = captures.extract();
+
     if args.trace {
         record_line_log(
             logs,
@@ -60,31 +95,5 @@ pub fn put_env_new_line(
             "Placing environment on new line.",
         );
     }
-    let comment_index = find_comment_index(line);
-    let comment = &get_comment(line, comment_index);
-    let mut text = &remove_comment(line, comment_index);
-    let mut temp = RE_ENV_BEGIN_SHARED_LINE
-        .replace(text, format!("$prev{LINE_END}$env"))
-        .to_string();
-    text = &temp;
-    if !text.contains(LINE_END) {
-        temp = RE_ENV_END_SHARED_LINE
-            .replace(text, format!("$prev{LINE_END}$env"))
-            .to_string();
-        text = &temp;
-    }
-    if !text.contains(LINE_END) {
-        temp = RE_ITEM_SHARED_LINE
-            .replace(text, format!("$prev{LINE_END}$env"))
-            .to_string();
-        text = &temp;
-    }
-    if text.contains(LINE_END) {
-        let split = text.split_once(LINE_END).unwrap();
-        let split_0 = split.0.to_string();
-        let mut split_1 = split.1.to_string();
-        split_1.push_str(comment);
-        return Some((split_0, split_1));
-    }
-    None
+    (prev, rest)
 }

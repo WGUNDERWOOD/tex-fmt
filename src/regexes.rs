@@ -51,4 +51,22 @@ lazy_static! {
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end\{)").unwrap();
     pub static ref RE_ITEM_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
+    // Regex that matches any splitting command with non-whitespace
+    // characters before it and catches the previous text in a group called
+    // "prev" and captures the command itself and the remaining text
+    // in a group called "env".
+    pub static ref RE_ENV_ITEM_SHARED_LINE: Regex = Regex::new(
+        r"(?x)          # Enable extended mode
+        (?P<prev>\S.*?) # <prev>: captures any number of characters starting
+                        # with a non-whitespace character until the start
+                        # of the next group;
+        (?P<env>(       # <env>: captures any LaTeX command before which the
+                        # line should be split
+            \\begin\{   # start of environments
+            |\\end\{    # end of environments
+            |\\item )   # list items (note the space before the closing bracket)
+        .*)             # and any characters that follow the command
+        "
+    )
+    .unwrap();
 }

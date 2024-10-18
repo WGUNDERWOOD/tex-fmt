@@ -10,3 +10,4 @@ perf.data*
 *.csv
 *.pdf
 *.png
+cachegrind.out
