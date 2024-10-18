@@ -54,7 +54,7 @@ pub fn format_file(
             ) {
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.
-                if needs_env_new_line(&line, &temp_state, &pattern) {
+                if needs_env_new_line(&line, &pattern) {
                     // Split the line into two ...
                     let (this_line, next_line) =
                         put_env_new_line(&line, &temp_state, file, args, logs);
