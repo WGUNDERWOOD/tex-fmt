@@ -36,10 +36,12 @@ pub fn needs_env_new_line(
         && !state.ignore.visual
         && (pattern.contains_env_begin
             || pattern.contains_env_end
-            || pattern.contains_item)
+            || pattern.contains_item
+            || pattern.contains_sectioning)
         && (RE_ENV_BEGIN_SHARED_LINE.is_match(line)
             || RE_ENV_END_SHARED_LINE.is_match(line)
-            || RE_ITEM_SHARED_LINE.is_match(line));
+            || RE_ITEM_SHARED_LINE.is_match(line)
+            || RE_SECTION_SHARED_LINE.is_match(line));
 
     // If we're not ignoring and we've matched an environment ...
     if not_ignored_and_contains_env {
@@ -47,7 +49,7 @@ pub fn needs_env_new_line(
         // (which implies the split point must be in text), otherwise
         // compare the index of the comment with the split point.
         find_comment_index(line).map_or(true, |comment_index| {
-            if RE_ENV_ITEM_SHARED_LINE
+            if RE_ENV_ITEM_SEC_SHARED_LINE
                 .captures(line)
                 .unwrap() // Matched split point so no panic.
                 .get(2)
@@ -80,7 +82,7 @@ pub fn put_env_new_line<'a>(
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> (&'a str, &'a str) {
-    let captures = RE_ENV_ITEM_SHARED_LINE.captures(line).unwrap();
+    let captures = RE_ENV_ITEM_SEC_SHARED_LINE.captures(line).unwrap();
 
     let (line, [prev, rest, _]) = captures.extract();
 
