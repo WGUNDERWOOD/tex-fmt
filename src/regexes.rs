@@ -51,20 +51,59 @@ lazy_static! {
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end\{)").unwrap();
     pub static ref RE_ITEM_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
+    // Regex that matches sectioning commands
+    pub static ref RE_SECTIONING: Regex = Regex::new(
+        r"(?x)              # Enable extended mode
+        (                   # matches any LaTeX sectioning command before which
+                            # the line should be split
+            \\part\{            # a part,
+            |\\chapter\{        # a chapter,
+            |\\section\{        # a section,
+            |\\subsection\{     # a subsection,
+            |\\subsubsection\{  # a subsubsection,
+        )
+        "
+    )
+    .unwrap();
+    // Regex that matches sectioning commands with non-whitespace characters
+    // before it.
+    pub static ref RE_SECTION_SHARED_LINE: Regex = Regex::new(
+        r"(?x)              # Enable extended mode
+        (\S.*?)             # matches any number of characters starting
+                            # with a non-whitespace character until the start
+                            # of the next group;
+        ((                  # matches any LaTeX sectioning command before which
+                            # the line should be split
+            \\part\{            # a part,
+            |\\chapter\{        # a chapter,
+            |\\section\{        # a section,
+            |\\subsection\{     # a subsection,
+            |\\subsubsection\{  # a subsubsection,
+        )
+        .*)                 # and any characters that follow the command.
+        "
+    )
+    .unwrap();
     // Regex that matches any splitting command with non-whitespace
     // characters before it and catches the previous text in a group called
     // "prev" and captures the command itself and the remaining text
     // in a group called "env".
-    pub static ref RE_ENV_ITEM_SHARED_LINE: Regex = Regex::new(
+    pub static ref RE_ENV_ITEM_SEC_SHARED_LINE: Regex = Regex::new(
         r"(?x)          # Enable extended mode
         (?P<prev>\S.*?) # <prev>: captures any number of characters starting
                         # with a non-whitespace character until the start
                         # of the next group;
         (?P<env>(       # <env>: captures any LaTeX command before which the
                         # line should be split
-            \\begin\{   # start of environments
-            |\\end\{    # end of environments
-            |\\item )   # list items (note the space before the closing bracket)
+            \\begin\{           # start of environments
+            |\\end\{            # end of environments
+            |\\part\{           # a part,
+            |\\chapter\{        # a chapter,
+            |\\section\{        # a section,
+            |\\subsection\{     # a subsection,
+            |\\subsubsection\{  # a subsubsection,
+            |\\item )           # list items (note the space before the closing
+                                # bracket)
         .*)             # and any characters that follow the command
         "
     )
