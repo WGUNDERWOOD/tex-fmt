@@ -218,3 +218,19 @@ Vim plugin, does not apply indentation
 
 - [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend
+
+## Options
+
+tex-fmt only offers the following options:
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `tab` | `2` | Number of spaces to use as tab size. |
+| `usetabs` |  | Use tabs instead of spaces for indentation. |
+
+<!-- Default `tex-fmt.toml`, note you do not need to explicitly specify each option if you want to use the defaults:
+
+```toml
+tab = 2
+usetabs = false
+``` -->
