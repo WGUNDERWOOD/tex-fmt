@@ -123,6 +123,15 @@ For example, using the [yay](https://github.com/Jguer/yay) AUR helper:
 yay -S tex-fmt
 ```
 
+### Homebrew
+
+Install using
+[Homebrew](https://formulae.brew.sh/formula/tex-fmt) with
+
+```shell
+brew install tex-fmt
+```
+
 ### Binary download
 
 Binaries for various platforms are available on the GitHub
