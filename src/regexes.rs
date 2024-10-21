@@ -27,7 +27,8 @@ const LISTS: [&str; 5] = [
 ];
 
 /// Names of LaTeX verbatim environments
-const VERBATIMS: [&str; 5] = ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
+const VERBATIMS: [&str; 5] =
+    ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
 
 // Regexes
 lazy_static! {
