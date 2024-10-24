@@ -58,10 +58,15 @@ lazy_static! {
         (                   # matches any LaTeX sectioning command before which
                             # the line should be split
             \\part\{            # a part,
+            |\\part\*\{
             |\\chapter\{        # a chapter,
+            |\\chapter\*\{
             |\\section\{        # a section,
+            |\\section\*\{
             |\\subsection\{     # a subsection,
+            |\\subsection\*\{
             |\\subsubsection\{  # a subsubsection,
+            |\\subsubsection\*\{
         )
         "
     )
@@ -76,10 +81,15 @@ lazy_static! {
         ((                  # matches any LaTeX sectioning command before which
                             # the line should be split
             \\part\{            # a part,
+            |\\part\*\{
             |\\chapter\{        # a chapter,
+            |\\chapter\*\{
             |\\section\{        # a section,
+            |\\section\*\{
             |\\subsection\{     # a subsection,
+            |\\subsection\*\{
             |\\subsubsection\{  # a subsubsection,
+            |\\subsubsection\*\{
         )
         .*)                 # and any characters that follow the command.
         "
@@ -99,10 +109,15 @@ lazy_static! {
             \\begin\{           # start of environments
             |\\end\{            # end of environments
             |\\part\{           # a part,
+            |\\part\*\{
             |\\chapter\{        # a chapter,
+            |\\chapter\*\{
             |\\section\{        # a section,
+            |\\section\*\{
             |\\subsection\{     # a subsection,
+            |\\subsection\*\{
             |\\subsubsection\{  # a subsubsection,
+            |\\subsubsection\*\{
             |\\item )           # list items (note the space before the closing
                                 # bracket)
         .*)             # and any characters that follow the command
