@@ -101,7 +101,12 @@ fn get_back(line: &str, pattern: &Pattern, state: &State) -> i8 {
 }
 
 /// Calculate indentation properties of the current line
-fn get_indent(line: &str, prev_indent: &Indent, pattern: &Pattern, state: &State) -> Indent {
+fn get_indent(
+    line: &str,
+    prev_indent: &Indent,
+    pattern: &Pattern,
+    state: &State,
+) -> Indent {
     let diff = get_diff(line, pattern);
     let back = get_back(line, pattern, state);
     let actual = prev_indent.actual + diff;
