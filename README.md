@@ -6,9 +6,9 @@ https://github.com/wgunderwood/tex-fmt/actions/workflows/ci.yml)
 [![crates.io](
 https://img.shields.io/crates/v/tex-fmt?logo=rust)](
 https://crates.io/crates/tex-fmt)
-[![AUR Version](
-https://img.shields.io/aur/version/tex-fmt?logo=archlinux&label=AUR)](
-https://aur.archlinux.org/packages/tex-fmt)
+[![Packaging status](
+https://repology.org/badge/tiny-repos/tex-fmt.svg)](
+https://repology.org/project/tex-fmt/versions)
 [![license: MIT](
 https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
@@ -121,6 +121,15 @@ For example, using the [yay](https://github.com/Jguer/yay) AUR helper:
 
 ``` shell
 yay -S tex-fmt
+```
+
+### Homebrew
+
+Install using
+[Homebrew](https://formulae.brew.sh/formula/tex-fmt) with
+
+```shell
+brew install tex-fmt
 ```
 
 ### Binary download
