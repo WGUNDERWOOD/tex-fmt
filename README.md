@@ -221,16 +221,18 @@ Visual Studio plugin, uses latexindent as the backend
 
 ## Options
 
-tex-fmt only offers the following options:
+The following options are offered by tex-fmt:
 
 | Option | Default | Description |
 | --- | --- | --- |
+| `check` |  | Check formatting, do not modify files. |
+| `print` |  | Print to STDOUT, do not modify files. |
+| `keep` |  | Keep lines, do not wrap. |
+| `verbose` |  | Show info log messages. |
+| `quiet` |  | Hide warning messages. |
+| `trace` |  | Show trace log messages. |
+| `stdin` |  | Process STDIN as a single file, output formatted text to STDOUT. |
 | `tab` | `2` | Number of spaces to use as tab size. |
 | `usetabs` |  | Use tabs instead of spaces for indentation. |
+| `wrap` | `80` | Line length for wrapping. |
 
-<!-- Default `tex-fmt.toml`, note you do not need to explicitly specify each option if you want to use the defaults:
-
-```toml
-tab = 2
-usetabs = false
-``` -->
