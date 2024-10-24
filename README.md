@@ -179,11 +179,11 @@ and `minted` are automatically skipped.
 ## Performance
 
 When formatting all of the test cases,
-tex-fmt is over a thousand times faster than latexindent.
+tex-fmt is over two thousand times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 49 | 94k | 3.5M | **0.052s** | 99s [x1904] | 132s [x2538] |
+| 49 | 94k | 3.5M | **0.047s** | 106s [x2208] | 127s [x2661] |
 
 ## Contribution
 
