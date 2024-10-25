@@ -227,3 +227,21 @@ Vim plugin, does not apply indentation
 
 - [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend
+
+## Options
+
+The following options are offered by tex-fmt:
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `check` |  | Check formatting, do not modify files. |
+| `print` |  | Print to STDOUT, do not modify files. |
+| `keep` |  | Keep lines, do not wrap. |
+| `verbose` |  | Show info log messages. |
+| `quiet` |  | Hide warning messages. |
+| `trace` |  | Show trace log messages. |
+| `stdin` |  | Process STDIN as a single file, output formatted text to STDOUT. |
+| `tab` | `2` | Number of spaces to use as tab size. |
+| `usetabs` |  | Use tabs instead of spaces for indentation. |
+| `wrap` | `80` | Line length for wrapping. |
+
