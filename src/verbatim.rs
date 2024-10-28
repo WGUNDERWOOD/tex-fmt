@@ -35,7 +35,7 @@ pub fn get_verbatim(
 ) -> Verbatim {
     let diff = get_verbatim_diff(line, pattern);
     let actual = state.verbatim.actual + diff;
-    let visual = actual > 0 && state.verbatim.actual > 0;
+    let visual = actual > 0 || state.verbatim.actual > 0;
 
     if warn && (actual < 0) {
         record_line_log(
