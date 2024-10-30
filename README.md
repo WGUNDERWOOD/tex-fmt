@@ -179,11 +179,11 @@ and `minted` are automatically skipped.
 ## Performance
 
 When formatting all of the test cases,
-tex-fmt is over a thousand times faster than latexindent.
+tex-fmt is over two thousand times faster than latexindent.
 
 | **Files** | **Lines** | **Size** | **tex-fmt** | **latexindent** | **latexindent -m** |
 | --- | --- | --- | --- | --- | --- |
-| 49 | 94k | 3.5M | **0.052s** | 99s [x1904] | 132s [x2538] |
+| 49 | 94k | 3.5M | **0.047s** | 106s [x2208] | 127s [x2661] |
 
 ## Contribution
 
@@ -227,3 +227,22 @@ Vim plugin, does not apply indentation
 
 - [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend
+
+## Options
+
+The following command-line options are offered by tex-fmt.
+
+| Option      | Alias | Default | Description |
+| ----------- | ----- | ------- | --- |
+| `--check`   | `-c`  |         | Check formatting, do not modify files. |
+| `--print`   | `-p`  |         | Print to STDOUT, do not modify files. |
+| `--keep`    | `-k`  |         | Keep lines, do not wrap. |
+| `--verbose` | `-v`  |         | Show info log messages. |
+| `--quiet`   | `-q`  |         | Hide warning messages. |
+| `--trace`   | `-t`  |         | Show trace log messages. |
+| `--stdin`   | `-s`  |         | Process STDIN as a single file, output formatted text to STDOUT. |
+| `--tab`     |       | `2`     | Number of spaces to use as tab size. |
+| `--usetabs` |       |         | Use tabs instead of spaces for indentation. |
+| `--wrap`    |       | `80`    | Line length for wrapping. |
+| `--help`    | `-h`  |         | Print help. |
+| `--version` | `-V`  |         | Print version. |

@@ -8,4 +8,18 @@
 ** Publish to crates.io with cargo publish
 ** Publish GitHub release with notes
 *** GitHub binaries published automatically with actions
-** Publish in nixpkgs when bot makes pull request
+** Publish in nixpkgs
+*** Check out master branch of nixpkgs fork
+*** git fetch upstream
+*** git rebase upstream/master
+*** git push --force-with-lease origin master
+*** git switch --create update-tex-fmt upstream/master
+*** nvim pkgs/by-name/te/tex-fmt/package.nix
+*** Update version and invalidate src.hash and cargoHash
+*** nix-build -A tex-fmt
+*** Fix hashes and repeat until successful build
+*** git switch --create update-tex-fmt upstream/master
+*** git commit -m "tex-fmt: X.X.X -> Y.Y.Y"
+*** git push --set-upstream origin HEAD
+*** Click the link to create a pull request
+*** Submit pull request and check relevant boxes
