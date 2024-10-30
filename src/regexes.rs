@@ -30,8 +30,28 @@ const LISTS: [&str; 5] = [
 const VERBATIMS: [&str; 5] =
     ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
 
+/// Regex matches for sectioning commands
+const SECTIONING_COMMANDS: [&str; 10] = [
+    r"\\part\{",
+    r"\\part\*\{",
+    r"\\chapter\{",
+    r"\\chapter\*\{",
+    r"\\section\{",
+    r"\\section\*\{",
+    r"\\subsection\{",
+    r"\\subsection\*\{",
+    r"\\subsubsection\{",
+    r"\\subsubsection\*\{",
+];
+
 // Regexes
 lazy_static! {
+    /// A static `String` which is a valid regex to match any one of the [`SECTIONING_COMMANDS`].
+    pub static ref SECTIONING_OR_GROUP: String = [
+        "(",
+        SECTIONING_COMMANDS.join("|").as_str(),
+        ")",
+    ].concat();
     pub static ref RE_NEWLINES: Regex =
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();
     pub static ref RE_TRAIL: Regex =
@@ -53,23 +73,7 @@ lazy_static! {
     pub static ref RE_ITEM_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
     // Regex that matches sectioning commands
-    pub static ref RE_SECTIONING: Regex = Regex::new(
-        r"(?x)              # Enable extended mode
-        (                   # matches any LaTeX sectioning command before which
-                            # the line should be split
-            \\part\{            # a part,
-            |\\part\*\{
-            |\\chapter\{        # a chapter,
-            |\\chapter\*\{
-            |\\section\{        # a section,
-            |\\section\*\{
-            |\\subsection\{     # a subsection,
-            |\\subsection\*\{
-            |\\subsubsection\{  # a subsubsection,
-            |\\subsubsection\*\{
-        )
-        "
-    )
+    pub static ref RE_SECTIONING: Regex = Regex::new(SECTIONING_OR_GROUP.as_str())
     .unwrap();
     // Regex that matches sectioning commands with non-whitespace characters
     // before it.
@@ -124,4 +128,17 @@ lazy_static! {
         "
     )
     .unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+
+    use crate::regexes::RE_SECTIONING;
+
+    #[test]
+    #[ignore = "Only a visual test to check correct regex construction"]
+    fn test_regex() {
+        println!("{:?}", RE_SECTIONING.as_str());
+        println!("{:?}", RE_SECTIONING.is_match("\\section*{"));
+    }
 }
