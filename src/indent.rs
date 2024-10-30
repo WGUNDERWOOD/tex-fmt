@@ -64,10 +64,13 @@ fn get_diff(line: &str, pattern: &Pattern) -> i8 {
 }
 
 /// Calculate dedentation for the current line
-fn get_back(line: &str, pattern: &Pattern) -> i8 {
+fn get_back(line: &str, pattern: &Pattern, state: &State) -> i8 {
+    // Only need to dedent if indentation is present
+    if state.indent.actual == 0 {
+        return 0;
+    }
     let mut back: i8 = 0;
 
-    // other environments get single indents
     if pattern.contains_env_end && line.contains(ENV_END) {
         // documents get no global indentation
         if line.contains(DOC_END) {
@@ -79,32 +82,33 @@ fn get_back(line: &str, pattern: &Pattern) -> i8 {
                 return 2;
             };
         }
+        // other environments get single indents
+        back = 1;
+    } else if pattern.contains_item && line.contains(ITEM) {
+        // deindent items to make the rest of item environment appear indented
         back += 1;
     };
 
     // Dedent delimiters
-    // Check first whether there are any closing delimiters
-    if CLOSES.iter().any(|c| line.contains(*c)) {
-        let mut cumul: i8 = back;
-        for c in line.chars() {
-            cumul -= i8::from(OPENS.contains(&c));
-            cumul += i8::from(CLOSES.contains(&c));
-            back = max(cumul, back);
-        }
+    let mut cumul: i8 = back;
+    for c in line.chars() {
+        cumul -= i8::from(OPENS.contains(&c));
+        cumul += i8::from(CLOSES.contains(&c));
+        back = max(cumul, back);
     }
-
-    // deindent items to make the rest of item environment appear indented
-    if pattern.contains_item && line.contains(ITEM) {
-        back += 1;
-    };
 
     back
 }
 
 /// Calculate indentation properties of the current line
-fn get_indent(line: &str, prev_indent: &Indent, pattern: &Pattern) -> Indent {
+fn get_indent(
+    line: &str,
+    prev_indent: &Indent,
+    pattern: &Pattern,
+    state: &State,
+) -> Indent {
     let diff = get_diff(line, pattern);
-    let back = get_back(line, pattern);
+    let back = get_back(line, pattern, state);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
@@ -126,7 +130,7 @@ pub fn calculate_indent(
     // (if there is one) to ignore diffs from characters in there.
     let comment_index = find_comment_index(line);
     let line_strip = remove_comment(line, comment_index);
-    let mut indent = get_indent(line_strip, &state.indent, pattern);
+    let mut indent = get_indent(line_strip, &state.indent, pattern, state);
 
     // Record the indent to the logs.
     if args.trace {
