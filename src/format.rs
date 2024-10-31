@@ -4,8 +4,7 @@ use crate::cli::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
-use crate::regexes::RE_SECTIONING;
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
@@ -55,10 +54,10 @@ pub fn format_file(
             ) {
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.
-                if needs_env_new_line(&line, &pattern) {
+                if needs_split(&line, &pattern) {
                     // Split the line into two ...
                     let (this_line, next_line) =
-                        put_env_new_line(&line, &temp_state, file, args, logs);
+                        split_line(&line, &temp_state, file, args, logs);
                     // ... and queue the second part for formatting.
                     queue.push((linum_old, next_line.to_string()));
                     line = this_line.to_string();
@@ -194,8 +193,8 @@ pub struct Pattern {
     pub contains_env_end: bool,
     /// Whether an item pattern is present
     pub contains_item: bool,
-    /// Whether a sectioning pattern is present
-    pub contains_sectioning: bool,
+    /// Whether a splitting pattern is present
+    pub contains_splitting: bool,
 }
 
 impl Pattern {
@@ -205,7 +204,7 @@ impl Pattern {
             contains_env_begin: s.contains(ENV_BEGIN),
             contains_env_end: s.contains(ENV_END),
             contains_item: s.contains(ITEM),
-            contains_sectioning: RE_SECTIONING.is_match(s),
+            contains_splitting: RE_SPLITTING.is_match(s),
         }
     }
 }
