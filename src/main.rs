@@ -29,6 +29,7 @@ mod verbatim;
 mod wrap;
 mod write;
 use crate::cli::*;
+use crate::config::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::read::*;
@@ -47,6 +48,8 @@ const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
     let mut args = Cli::parse();
+    let config = read_config_file(&args);
+    //dbg!(config);
     init_logger(args.log_level());
 
     let mut logs = Vec::<Log>::new();
