@@ -25,17 +25,11 @@ pub fn remove_trailing_spaces(text: &str) -> String {
     RE_TRAIL.replace_all(text, LINE_END).to_string()
 }
 
-/// Check if environment should be split onto a new line
-pub fn needs_env_new_line(line: &str, pattern: &Pattern) -> bool {
+/// Check if line contains content which be split onto a new line
+pub fn needs_split(line: &str, pattern: &Pattern) -> bool {
     // Check if we should format this line and if we've matched an environment.
-    let contains_splittable_env = (pattern.contains_env_begin
-        || pattern.contains_env_end
-        || pattern.contains_item
-        || pattern.contains_sectioning)
-        && (RE_ENV_BEGIN_SHARED_LINE.is_match(line)
-            || RE_ENV_END_SHARED_LINE.is_match(line)
-            || RE_ITEM_SHARED_LINE.is_match(line)
-            || RE_SECTION_SHARED_LINE.is_match(line));
+    let contains_splittable_env =
+        pattern.contains_splitting && RE_SPLITTING_SHARED_LINE.is_match(line);
 
     // If we're not ignoring and we've matched an environment ...
     if contains_splittable_env {
@@ -43,7 +37,7 @@ pub fn needs_env_new_line(line: &str, pattern: &Pattern) -> bool {
         // (which implies the split point must be in text), otherwise
         // compare the index of the comment with the split point.
         find_comment_index(line).map_or(true, |comment_index| {
-            if RE_ENV_ITEM_SEC_SHARED_LINE
+            if RE_SPLITTING_SHARED_LINE_CAPTURE
                 .captures(line)
                 .unwrap() // Matched split point so no panic.
                 .get(2)
@@ -64,19 +58,19 @@ pub fn needs_env_new_line(line: &str, pattern: &Pattern) -> bool {
     }
 }
 
-/// Ensure LaTeX environments begin on new lines.
+/// Ensure lines are split correctly.
 ///
 /// Returns a tuple containing:
 /// 1. a reference to the line that was given, shortened because of the split
 /// 2. a reference to the part of the line that was split
-pub fn put_env_new_line<'a>(
+pub fn split_line<'a>(
     line: &'a str,
     state: &State,
     file: &str,
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> (&'a str, &'a str) {
-    let captures = RE_ENV_ITEM_SEC_SHARED_LINE.captures(line).unwrap();
+    let captures = RE_SPLITTING_SHARED_LINE_CAPTURE.captures(line).unwrap();
 
     let (line, [prev, rest, _]) = captures.extract();
 
