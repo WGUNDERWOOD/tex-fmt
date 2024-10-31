@@ -5,11 +5,12 @@ use crate::config::*;
 use clap::Parser;
 use log::Level::Error;
 use log::LevelFilter;
+use serde::Deserialize;
 
 /// Command line arguments
 #[allow(missing_docs)]
 #[allow(clippy::missing_docs_in_private_items)]
-#[derive(Debug, Parser)]
+#[derive(Clone, Debug, Deserialize, Parser)]
 #[command(version, about)]
 pub struct Cli {
     #[arg(long, short, help = "Check formatting, do not modify files")]
@@ -91,11 +92,9 @@ impl Cli {
             );
             exit_code = 1;
         }
-        let config = get_config(self);
         exit_code
     }
 
-    #[cfg(test)]
     pub const fn new() -> Self {
         Self {
             check: false,
