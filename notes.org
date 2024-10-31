@@ -1,6 +1,11 @@
 #+title: tex-fmt
 * Release process
 ** Update version number in Cargo.toml
+** Update Nix flake and lock
+*** Check for new NixOS version (nixos-XX.XX)
+*** just nix
+** Update Rust version
+*** just upgrade
 ** Push to GitHub and check tests pass
 ** Create a git tag
 *** git tag vX.X.X
