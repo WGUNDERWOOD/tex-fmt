@@ -4,6 +4,7 @@ use crate::cli::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
+use crate::regexes::RE_SECTIONING;
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
 use crate::subs::*;
 use crate::verbatim::*;
@@ -193,6 +194,8 @@ pub struct Pattern {
     pub contains_env_end: bool,
     /// Whether an item pattern is present
     pub contains_item: bool,
+    /// Whether a sectioning pattern is present
+    pub contains_sectioning: bool,
 }
 
 impl Pattern {
@@ -202,6 +205,7 @@ impl Pattern {
             contains_env_begin: s.contains(ENV_BEGIN),
             contains_env_end: s.contains(ENV_END),
             contains_item: s.contains(ITEM),
+            contains_sectioning: RE_SECTIONING.is_match(s),
         }
     }
 }

@@ -30,8 +30,57 @@ const LISTS: [&str; 5] = [
 const VERBATIMS: [&str; 5] =
     ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
 
+/// Regex matches for non-sectioning commands that should be on a new line.
+const REQUIRE_NEW_LINE: [&str; 3] = [
+    r"\\begin\{",
+    r"\\end\{",
+    r"\\item ", // The trailing space should remain here.
+];
+
+/// Regex matches for sectioning commands
+const SECTIONING_COMMANDS: [&str; 10] = [
+    r"\\part\{",
+    r"\\part\*\{",
+    r"\\chapter\{",
+    r"\\chapter\*\{",
+    r"\\section\{",
+    r"\\section\*\{",
+    r"\\subsection\{",
+    r"\\subsection\*\{",
+    r"\\subsubsection\{",
+    r"\\subsubsection\*\{",
+];
+
 // Regexes
 lazy_static! {
+    // A static `String` which is a valid regex to match any one of the
+    // [`SECTIONING_COMMANDS`].
+    pub static ref SECTIONING_OR_GROUP: String = [
+        "(",
+        SECTIONING_COMMANDS.join("|").as_str(),
+        ")"
+    ].concat();
+    // A Vec of string slices that combines sectioning commands with other
+    // commands that need a new line.
+    pub static ref SPLITTING_COMMANDS: Vec<&'static str> = {
+        let mut v = Vec::with_capacity(
+            REQUIRE_NEW_LINE.len() + SECTIONING_COMMANDS.len(),
+        );
+        for str in REQUIRE_NEW_LINE {
+            v.push(str);
+        }
+        for str in SECTIONING_COMMANDS {
+            v.push(str);
+        }
+        v
+    };
+    // A static `String` which is a valid regex to match any one of the
+    // [`SPLITTING_COMMANDS`].
+    pub static ref SPLITTING_OR_GROUP: String = [
+        "(",
+        SPLITTING_COMMANDS.join("|").as_str(),
+        ")"
+    ].concat();
     pub static ref RE_NEWLINES: Regex =
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();
     pub static ref RE_TRAIL: Regex =
@@ -52,22 +101,25 @@ lazy_static! {
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end\{)").unwrap();
     pub static ref RE_ITEM_SHARED_LINE: Regex =
         Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
+    // Regex that matches sectioning commands
+    pub static ref RE_SECTIONING: Regex = Regex::new(
+        SECTIONING_OR_GROUP.as_str()
+    )
+    .unwrap();
+    // Regex that matches sectioning commands with non-whitespace characters
+    // before it.
+    pub static ref RE_SECTION_SHARED_LINE: Regex = Regex::new(
+        [r"(\S.*?)", "(", SECTIONING_OR_GROUP.as_str(), ".*)"]
+        .concat().as_str()
+    )
+    .unwrap();
     // Regex that matches any splitting command with non-whitespace
-    // characters before it and catches the previous text in a group called
+    // characters before it, catches the previous text in a group called
     // "prev" and captures the command itself and the remaining text
     // in a group called "env".
-    pub static ref RE_ENV_ITEM_SHARED_LINE: Regex = Regex::new(
-        r"(?x)          # Enable extended mode
-        (?P<prev>\S.*?) # <prev>: captures any number of characters starting
-                        # with a non-whitespace character until the start
-                        # of the next group;
-        (?P<env>(       # <env>: captures any LaTeX command before which the
-                        # line should be split
-            \\begin\{   # start of environments
-            |\\end\{    # end of environments
-            |\\item )   # list items (note the space before the closing bracket)
-        .*)             # and any characters that follow the command
-        "
+    pub static ref RE_ENV_ITEM_SEC_SHARED_LINE: Regex = Regex::new(
+        [r"(?P<prev>\S.*?)", "(?P<env>", SPLITTING_OR_GROUP.as_str(), ".*)"]
+        .concat().as_str()
     )
     .unwrap();
 }
