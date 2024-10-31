@@ -31,15 +31,13 @@ const VERBATIMS: [&str; 5] =
     ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
 
 /// Regex matches for sectioning commands
-const SPLITTING: [&str; 8] = [
+const SPLITTING: [&str; 6] = [
     r"\\begin\{",
     r"\\end\{",
-    r"\\item ", // Trailing space should remain here
-    r"\\part\*?\{",
+    r"\\item",
+    r"\\(?:sub){0,2}section\*?\{",
     r"\\chapter\*?\{",
-    r"\\section\*?\{",
-    r"\\subsection\*?\{",
-    r"\\subsubsection\*?\{",
+    r"\\part\*?\{",
 ];
 
 // Regexes
