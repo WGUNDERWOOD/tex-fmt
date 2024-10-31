@@ -201,14 +201,15 @@ impl Pattern {
     /// Check if a string contains patterns
     pub fn new(s: &str) -> Self {
         // If splitting does not match, no patterns are present
-        match RE_SPLITTING.is_match(s) {
-            true => Self {
+        if RE_SPLITTING.is_match(s) {
+            Self {
                 contains_env_begin: s.contains(ENV_BEGIN),
                 contains_env_end: s.contains(ENV_END),
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
-            },
-            false => Self {
+            }
+        } else {
+            Self {
                 contains_env_begin: false,
                 contains_env_end: false,
                 contains_item: false,
