@@ -188,6 +188,7 @@ pub fn apply_indent(
     // Otherwise, allocate enough memory to fit line with the added
     // indentation and insert the appropriate string slices
     } else {
+        // TODO can we check if the indent is already correct and do nothing?
         #[allow(clippy::cast_possible_wrap)]
         let n_indent_chars =
             usize::try_from(indent.visual * args.tab as i8).unwrap();

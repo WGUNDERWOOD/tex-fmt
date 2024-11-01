@@ -10,10 +10,10 @@ echo
 for file in ./source/*.tex; do
     f=$(basename "$file" .tex)
     echo "Running latex for $f.tex"
-    (cd ./source && latexmk -pdflua "$f.tex" >/dev/null 2>&1)
-    (cd ./target && latexmk -pdflua "$f.tex" >/dev/null 2>&1)
-    (cd ./source && pdftotext -q "$f.pdf" >/dev/null 2>&1)
-    (cd ./target && pdftotext -q "$f.pdf" >/dev/null 2>&1)
+    (cd ./source && latexmk -pdflua "$f.tex")
+    (cd ./target && latexmk -pdflua "$f.tex")
+    (cd ./source && pdftotext -q "$f.pdf")
+    (cd ./target && pdftotext -q "$f.pdf")
 done
 
 echo
