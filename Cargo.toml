@@ -22,6 +22,7 @@ regex = "1.11.1"
 serde = "1.0.214"
 similar = "2.6.0"
 toml = "0.8.19"
+twelf = { version = "0.15.0", default-features = false, features = ["clap", "toml"] }
 
 [profile.release]
 codegen-units = 1

@@ -5,13 +5,15 @@ use crate::config::*;
 use clap::Parser;
 use log::Level::Error;
 use log::LevelFilter;
-use serde::Deserialize;
+//use serde::Deserialize;
+//use twelf::{config, Layer};
 
 /// Command line arguments
 #[allow(missing_docs)]
 #[allow(clippy::missing_docs_in_private_items)]
-#[derive(Clone, Debug, Deserialize, Parser)]
+#[derive(Clone, Debug, Parser)]
 #[command(version, about)]
+//#[config]
 pub struct Cli {
     #[arg(long, short, help = "Check formatting, do not modify files")]
     pub check: bool,
