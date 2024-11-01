@@ -1,9 +1,10 @@
 use crate::Cli;
 use path_absolutize::*;
-use config::Config;
+//use config::Config;
 use std::fs;
 use std::path::PathBuf;
 use std::env;
+use std::collections::HashMap;
 use toml::Table;
 
 #[derive(Debug)]
@@ -36,25 +37,30 @@ pub fn get_config_path(args: &Cli) -> ConfigPath {
 pub fn read_config_file(args: &Cli) -> Cli {
     let config_path = get_config_path(args);
     let default_config: Cli = Cli::new();
-    let file_config = match config_path {
+    let file_config: Table = match config_path {
         ConfigPath::Named(p) => {
+            dbg!(&p);
             let contents = fs::read_to_string(p).unwrap();
-            contents.parse::<Table>().unwrap()
+            //contents.parse::<Table>().unwrap()
+            dbg!(&contents);
+            toml::from_str(&contents).unwrap()
         },
-            //Config::builder()
-            //.add_source(config::File::with_name(p.to_str().unwrap()))
-            //.build()
-            //.unwrap(),
+        //Config::builder()
+        //.add_source(config::File::with_name(p.to_str().unwrap()))
+        //.build()
+        //.unwrap(),
         _ => todo!()
     };
     dbg!(&file_config);
-    for key in file_config.keys() {
-        dbg!(key);
-    }
+    //for key in file_config.keys() {
+        //dbg!(key);
+    //}
     //dbg!(file_config);
     //config
     args.clone()
 }
+
+//#[serde(default, with = "date_serde")]
 
 //fn get_named_config_file(config: &str) -> ConfigFile {
     //ConfigFile::Named(config.into())

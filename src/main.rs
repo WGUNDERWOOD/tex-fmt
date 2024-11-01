@@ -34,6 +34,7 @@ use crate::format::*;
 use crate::logging::*;
 use crate::read::*;
 use crate::write::*;
+//use twelf::{config, Layer};
 
 #[cfg(test)]
 mod tests;
@@ -47,6 +48,13 @@ const LINE_END: &str = "\n";
 const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
+
+    //let mut args = Cli::with_layers(&[
+                                   //Layer::Toml("tex-fmt.toml".into()),
+                                   //Layer::Env(Some("PREFIX_".to_string())),
+                                   //Layer::Clap(Cli::command().get_matches().clone())
+    //]).unwrap();
+
     let mut args = Cli::parse();
     let config = read_config_file(&args);
     //dbg!(config);
