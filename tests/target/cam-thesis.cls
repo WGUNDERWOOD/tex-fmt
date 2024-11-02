@@ -291,8 +291,6 @@
 %%
 %% Chapter and section numbering
 %%
-% TODO: Check whether numbering up to the fourth level is okay. It is not
-% specified in the guidelines.
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
