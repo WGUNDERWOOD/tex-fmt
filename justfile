@@ -49,6 +49,9 @@ shellcheck:
 nix:
   @nix flake update
 
+todo:
+  @rg -g '!justfile' todo
+
 logo:
   @cd extra && python logo.py
   @cd extra && magick -background none logo.svg -resize 5000x5000 logo.png

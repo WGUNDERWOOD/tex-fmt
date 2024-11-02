@@ -19,6 +19,7 @@ pkgs.mkShell {
     pkgs.gh
     pkgs.hyperfine
     pkgs.poppler_utils
+    pkgs.ripgrep
     pkgs.rustfmt
     pkgs.shellcheck
     pkgs.texlive.combined.scheme-full

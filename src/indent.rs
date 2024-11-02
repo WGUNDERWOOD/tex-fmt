@@ -179,25 +179,28 @@ pub fn apply_indent(
     args: &Cli,
     indent_char: &str,
 ) -> String {
-    // Remove white space from the start of the line
-    let trimmed_line = line.trim_start();
+    let first_non_whitespace = line.chars().position(|c| !c.is_whitespace());
 
-    // If the line is now empty, return a new empty String
-    if trimmed_line.is_empty() {
-        String::new()
+    // If line is blank, return an empty line
+    if first_non_whitespace.is_none() {
+        return String::new();
+    }
+
+    // If line is correctly indented, return it directly
+    #[allow(clippy::cast_possible_wrap)]
+    let n_indent_chars = (indent.visual * args.tab as i8) as usize;
+    if first_non_whitespace == Some(n_indent_chars) {
+        return line.into();
+    }
+
     // Otherwise, allocate enough memory to fit line with the added
     // indentation and insert the appropriate string slices
-    } else {
-        // TODO can we check if the indent is already correct and do nothing?
-        #[allow(clippy::cast_possible_wrap)]
-        let n_indent_chars =
-            usize::try_from(indent.visual * args.tab as i8).unwrap();
-        let mut new_line =
-            String::with_capacity(trimmed_line.len() + n_indent_chars);
-        for idx in 0..n_indent_chars {
-            new_line.insert_str(idx, indent_char);
-        }
-        new_line.insert_str(n_indent_chars, trimmed_line);
-        new_line
+    let trimmed_line = line.trim_start();
+    let mut new_line =
+        String::with_capacity(trimmed_line.len() + n_indent_chars);
+    for idx in 0..n_indent_chars {
+        new_line.insert_str(idx, indent_char);
     }
+    new_line.insert_str(n_indent_chars, trimmed_line);
+    new_line
 }
