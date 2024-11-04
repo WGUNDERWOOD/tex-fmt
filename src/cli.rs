@@ -1,19 +1,26 @@
 //! Utilities for reading the command line arguments
 
-use crate::logging::*;
 use crate::config::*;
+use crate::logging::*;
 use clap::Parser;
 use log::Level::Error;
 use log::LevelFilter;
-//use serde::Deserialize;
+//use serde::{Serialize, Deserialize};
 //use twelf::{config, Layer};
+use clap_serde_derive::{
+    clap::{self, ArgAction},
+    serde::Serialize,
+    ClapSerde,
+};
 
+// https://docs.rs/clap-serde-derive/latest/clap_serde_derive/
 /// Command line arguments
 #[allow(missing_docs)]
 #[allow(clippy::missing_docs_in_private_items)]
 #[derive(Clone, Debug, Parser)]
 #[command(version, about)]
 //#[config]
+#[derive(ClapSerde, Serialize)]
 pub struct Cli {
     #[arg(long, short, help = "Check formatting, do not modify files")]
     pub check: bool,
@@ -38,17 +45,19 @@ pub struct Cli {
     #[arg(
         long,
         help = "Number of spaces to use as tab size",
-        default_value_t = 2
+        //default_value_t = Some(2)
     )]
     pub tab: u8,
     #[arg(long, help = "Use tabs instead of spaces for indentation")]
     pub usetabs: bool,
-    #[arg(long, help = "Line length for wrapping", default_value_t = 80)]
+    #[arg(long, help = "Line length for wrapping",
+          //default_value_t = 80
+          )]
     pub wrap: u8,
     #[clap(skip)]
     pub wrap_min: u8,
     #[arg(long, help = "Path to config file")]
-    pub config: Option<String>,
+    pub config: String,
 }
 
 impl Cli {
@@ -111,7 +120,7 @@ impl Cli {
             usetabs: false,
             wrap: 80,
             wrap_min: 70,
-            config: None,
+            config: String::new(),
         }
     }
 }
