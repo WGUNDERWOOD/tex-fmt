@@ -23,7 +23,7 @@ pub fn process_output(
 ) -> u8 {
     let mut new_exit_code = exit_code;
     if args.print {
-        println!("{}", &new_text);
+        print!("{}", &new_text);
     } else if args.check && text != new_text {
         record_file_log(logs, Error, file, "Incorrect formatting.");
         new_exit_code = 1;
