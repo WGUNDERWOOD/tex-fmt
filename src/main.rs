@@ -53,6 +53,7 @@ fn main() -> ExitCode {
 
     if exit_code == 0 {
         if args.stdin {
+            // TODO combine the read and read_stdin functions to simplify this
             if let Some((file, text)) = read_stdin(&mut logs) {
                 let new_text = format_file(&text, &file, &args, &mut logs);
                 exit_code = process_output(
