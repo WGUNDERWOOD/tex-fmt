@@ -14,6 +14,7 @@
 *** git push --tags
 ** Publish to crates.io with cargo publish
 ** Publish GitHub release with notes
+*** git log --oneline --no-merges vX.X.X main
 *** GitHub binaries published automatically with actions
 ** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
