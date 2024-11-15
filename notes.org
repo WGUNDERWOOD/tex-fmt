@@ -2,19 +2,25 @@
 * Tasks
 ** TODO Skipping a line seems to break linums
 * Release process
+** Update release notes
+*** git log --oneline --no-merges vX.X.X main
+*** Write in NEWS.md
 ** Update version number in Cargo.toml
 ** Update Nix flake and lock
 *** Check for new NixOS version (nixos-XX.XX)
 *** just nix
 ** Update Rust version
 *** just upgrade
+** Run tests
+*** just
+*** just perf
+*** Update performance results in README.md
 ** Push to GitHub and check tests pass
 ** Create a git tag
 *** git tag vX.X.X
 *** git push --tags
 ** Publish to crates.io with cargo publish
 ** Publish GitHub release with notes
-*** git log --oneline --no-merges vX.X.X main
 *** GitHub binaries published automatically with actions
 ** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork

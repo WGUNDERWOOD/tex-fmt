@@ -1,3 +1,13 @@
+# v0.4.7
+
+- Fix bug with `--stdin` adding newlines at EOF
+- Fix logic for ignoring verbatim environments
+- Ensure sectioning commands begin on new lines
+- Various performance improvements
+- Add NEWS.md for release notes
+- Ensure all test files successfully compile to PDFs
+- Better documentation of options in README.md
+
 # v0.4.6
 
 - Added ``--wrap`` flag to choose line length for wrapping
