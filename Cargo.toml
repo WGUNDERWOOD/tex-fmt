@@ -1,5 +1,15 @@
+[workspace]
+members = [
+    "tex-fmt-lib", 
+    ".",
+    "tex-fmt-wasm",
+]
+
 [package]
 name = "tex-fmt"
+edition = "2021"
+
+[workspace.package]
 version = "0.4.7"
 authors = ["William George Underwood"]
 license = "MIT"
@@ -10,14 +20,15 @@ keywords = ["latex", "formatter"]
 categories = ["command-line-utilities", "development-tools"]
 exclude = ["tests/*", "extra/*", "*.nix", ".github/*"]
 
+[[bin]]
+name = "bin"
+path = "src/main.rs"
+
 [dependencies]
-clap = { version = "4.5.21", features = ["derive"] }
-colored = "2.1.0"
-env_logger = "0.11.5"
-lazy_static = "1.5.0"
-log = "0.4.22"
-regex = "1.11.1"
-similar = "2.6.0"
+tex-fmt-lib = { path = "./tex-fmt-lib" }
+
+[workspace.dependencies]
+fs = "0.0.5"
 
 [profile.release]
 codegen-units = 1

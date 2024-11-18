@@ -22,7 +22,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Test
-        run: cargo test
+        run: cargo test --all
   format:
     name: Cargo format (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -56,11 +56,11 @@ jobs:
     name: Nix build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-        nix_path: nixpkgs=channel:nixos-unstable
-    - uses: DeterminateSystems/magic-nix-cache-action@v2
-    - run: nix build
-    - run: nix flake check --all-systems
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v25
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-unstable
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - run: nix build
+      - run: nix flake check --all-systems

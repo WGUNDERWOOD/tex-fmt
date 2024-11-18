@@ -1,4 +1,5 @@
 /debug/
+tex-fmt-lib/tests/target
 /target/
 **/*.rs.bk
 *.pdb
@@ -11,3 +12,4 @@ perf.data*
 *.pdf
 *.png
 cachegrind.out
+tex-fmt-wasm/pkg

@@ -8,7 +8,7 @@ use log::LevelFilter;
 use std::cmp::Reverse;
 use std::io::Write;
 use std::path::Path;
-use std::time::Instant;
+use web_time::Instant;
 
 /// Holds a log entry
 #[derive(Debug)]
@@ -93,9 +93,9 @@ const fn get_log_color(log_level: Level) -> Color {
     }
 }
 
-/// Start the logger
+// Start the logger
 pub fn init_logger(level_filter: LevelFilter) {
-    Builder::new()
+    let _ = Builder::new()
         .filter_level(level_filter)
         .format(|buf, record| {
             writeln!(
@@ -109,7 +109,9 @@ pub fn init_logger(level_filter: LevelFilter) {
                 record.args()
             )
         })
-        .init();
+        // Use try_init to avoid panic when running from web assembly
+        // which may call the main entry file multiple times.
+        .try_init();
 }
 
 /// Display all of the logs collected
