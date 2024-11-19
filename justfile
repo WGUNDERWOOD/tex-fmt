@@ -13,7 +13,7 @@ build:
   @cargo build -r
 
 test:
-  @cargo test
+  @cargo test --all
 
 doc:
   @cargo doc

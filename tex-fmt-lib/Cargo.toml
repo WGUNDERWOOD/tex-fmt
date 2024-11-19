@@ -1,0 +1,29 @@
+[package]
+name = "tex-fmt-lib"
+description = "tex-fmt compiled to web assembly"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+edition.workspace = true
+keywords.workspace = true
+categories.workspace = true
+exclude.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+clap = { version = "4.5.21", features = ["derive"] }
+colored = "2.1.0"
+env_logger = "0.11.5"
+lazy_static = "1.5.0"
+log = "0.4.22"
+regex = "1.11.1"
+similar = "2.6.0"
+wasm-bindgen = "0.2"
+web-time = "1.1.0"
+
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
