@@ -34,7 +34,7 @@ const VERBATIMS: [&str; 5] =
 const SPLITTING: [&str; 6] = [
     r"\\begin\{",
     r"\\end\{",
-    r"\\item",
+    r"\\item(?:$|[^a-zA-Z])",
     r"\\(?:sub){0,2}section\*?\{",
     r"\\chapter\*?\{",
     r"\\part\*?\{",
@@ -70,7 +70,7 @@ lazy_static! {
     .unwrap();
     // Matches splitting commands with non-whitespace characters before it.
     pub static ref RE_SPLITTING_SHARED_LINE: Regex = Regex::new(
-        [r"(\S.*?)", "(", SPLITTING_STRING.as_str(), ".*)"]
+        [r"(:?\S.*?)", "(:?", SPLITTING_STRING.as_str(), ".*)"]
         .concat().as_str()
     )
     .unwrap();
