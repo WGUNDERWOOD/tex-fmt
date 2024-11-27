@@ -19,7 +19,6 @@ pub fn format_file(
     args: &Cli,
     logs: &mut Vec<Log>,
 ) -> String {
-    
     record_file_log(logs, Info, file, "Formatting started.");
 
     // Clean the source file and zip its lines with line numbers

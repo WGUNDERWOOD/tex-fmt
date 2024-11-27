@@ -3,27 +3,26 @@
 
 #![warn(missing_docs)]
 
-use std::fs;
 use clap::Parser;
 use cli::Cli;
+use format::*;
 use logging::*;
 use read::*;
-use format::*;
+use std::fs;
 use write::*;
 
-mod logging;
 mod cli;
-mod read;
-mod regexes;
+mod comments;
 mod format;
 mod ignore;
 mod indent;
-mod comments;
+mod logging;
+mod read;
+mod regexes;
 mod subs;
 mod verbatim;
 mod wrap;
 mod write;
-
 
 #[cfg(test)]
 mod tests;
@@ -38,7 +37,6 @@ const LINE_END: &str = "\r\n";
 
 /// Executes the main program logic and returns an exit code.
 pub fn run(input: Option<&str>, output: &mut Option<String>) -> u8 {
-
     let mut args = Cli::parse();
     init_logger(args.log_level());
 
@@ -51,7 +49,7 @@ pub fn run(input: Option<&str>, output: &mut Option<String>) -> u8 {
     let mut exit_code = args.resolve(&mut logs);
 
     if exit_code == 0 {
-        if let Some(text) = input  {
+        if let Some(text) = input {
             let file = String::from("<STDIN>");
             let new_text = format_file(&text, &file, &args, &mut logs);
             if let Some(ref mut output_text) = output {
@@ -91,4 +89,3 @@ pub fn run(input: Option<&str>, output: &mut Option<String>) -> u8 {
     print_logs(&mut logs);
     exit_code
 }
-

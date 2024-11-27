@@ -36,5 +36,8 @@ impl TexFmtResult {
 pub fn run_tex_fmt(input: &str) -> TexFmtResult {
     let mut output: Option<String> = Some(String::new());
     let code = tex_fmt_lib::run(Some(input), &mut output);
-    TexFmtResult { code: code, output: output }
+    TexFmtResult {
+        code: code,
+        output: output,
+    }
 }
