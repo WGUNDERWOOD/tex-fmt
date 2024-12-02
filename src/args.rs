@@ -32,15 +32,14 @@ impl Default for Args {
 }
 
 fn get_args() -> Args {
-    // TODO implement
-    let matches = get_cli_args();
-    let mut cli_args = from_arg_matches(&matches);
-    let config: Table;
-    if let Some(c) = &cli_args.config {
-        config = read_config(c.to_path_buf());
-        let config_args = from_table(&config);
-        cli_args.merge(config_args.clone());
-    }
-    cli_args.merge(Args::default());
-    cli_args
+    let mut args = get_cli_args();
+    let config_args = get_config_args(args);
+    args.merge(config_args);
+    args.merge(Args::default());
+    args
+}
+
+impl Args {
+    // TODO
+    // fn resolve()
 }

@@ -48,19 +48,16 @@ const LINE_END: &str = "\n";
 const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
-    //let mut args = Cli::with_layers(&[
-    //Layer::Toml("tex-fmt.toml".into()),
-    //Layer::Env(Some("PREFIX_".to_string())),
-    //Layer::Clap(Cli::command().get_matches().clone())
-    //]).unwrap();
 
-    let mut args = Cli::parse();
-    let config = read_config_file(&args);
+    let args = get_args();
+    //let config = read_config_file(&args);
     //dbg!(config);
     init_logger(args.log_level());
 
     let mut logs = Vec::<Log>::new();
-    let mut exit_code = args.resolve(&mut logs);
+    // TODO resolve args
+    //let mut exit_code = args.resolve(&mut logs);
+    let mut exit_code = 0;
 
     if exit_code == 0 {
         if args.stdin {

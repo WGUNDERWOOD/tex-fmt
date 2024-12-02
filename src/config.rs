@@ -1,73 +1,57 @@
-use crate::Cli;
-use path_absolutize::*;
-//use config::Config;
-use std::collections::HashMap;
-use std::env;
-use std::fs;
-use std::path::PathBuf;
-use toml::Table;
-
-#[derive(Debug)]
-pub enum ConfigPath {
-    Named(PathBuf),
-    Dir(PathBuf),
-    //Git(PathBuf),
-    //Home(PathBuf),
-    Default,
-}
-
-pub fn get_config_path(args: &Cli) -> ConfigPath {
-    // Config file named in cli args
-    let config_path: PathBuf = args.config.clone().into();
-    let config_path = config_path
-        .absolutize()
-        .expect("Read the config path")
-        .into();
-    return ConfigPath::Named(config_path);
-    // Config file in current directory
-    let mut dir_config = env::current_dir().unwrap();
-    dir_config.set_file_name("tex-fmt.toml");
-    if dir_config.exists() {
-        return ConfigPath::Dir(dir_config);
-    }
-    // TODO read from git repo
-    // TODO read from user home config directory
-    ConfigPath::Default
-}
-
-pub fn read_config_file(args: &Cli) -> Cli {
-    let config_path = get_config_path(args);
-    let default_config: Cli = Cli::new();
-    let file_config: Table = match config_path {
-        ConfigPath::Named(p) => {
-            dbg!(&p);
-            let contents = fs::read_to_string(p).unwrap();
-            //contents.parse::<Table>().unwrap()
-            dbg!(&contents);
-            toml::from_str(&contents).unwrap()
-        }
-        //Config::builder()
-        //.add_source(config::File::with_name(p.to_str().unwrap()))
-        //.build()
-        //.unwrap(),
-        _ => todo!(),
+fn resolve_config_path(args: Args) -> Option(PathBuf) {
+    // Named path passed as cli arg
+    if let Some(config) = args.config {
+        return config.absolutize()
     };
-    dbg!(&file_config);
-    //for key in file_config.keys() {
-    //dbg!(key);
-    //}
-    //dbg!(file_config);
-    //config
-    args.clone()
+    // Config file in current directory
+    let mut config = env::current_dir().unwrap();
+    config.set_file_name("tex-fmt.toml");
+    if config.exists() {
+        return config.absolutize();
+    };
+    // TODO Read from git repo
+    // TODO Read from user home config directory
+    None
 }
 
-//#[serde(default, with = "date_serde")]
+fn get_config_args(args: Args) -> Option(Args) {
+    let config = resolve_config_path(args);
+    if config.is_none() {
+        return None
+    };
+    let config = fs::read_to_string(config).unwrap();
+    let config = config.parse::<Table>().unwrap();
 
-//fn get_named_config_file(config: &str) -> ConfigFile {
-//ConfigFile::Named(config.into())
-//}
+    let verbosity = match config.map("verbosity").map(|x| x.as_string().unwrap()) {
+        "trace" => Some(LevelFilter::Trace),
+        "verbose" => Some(LevelFilter::Info),
+        "quiet" => Some(LevelFilter::Error),
+        _ => None,
+    };
 
-//fn get_dir_config_file() -> ConfigFile {
-//let dir = env::current_dir().unwrap();
-//ConfigFile::Dir(dir)
-//}
+    let tabchar = match config.map("tabchar").map(|x| x.as_string().unwrap()) {
+        "tab" => Some(TabChar::Tab),
+        "space" => Some(TabChar::Space),
+        _ => None,
+    };
+
+    let args = Args {
+        check: config.get("check").map(|x| x.as_bool().unwrap()),
+        print: config.get("print").map(|x| x.as_bool().unwrap()),
+        wrap: config.get("wrap").map(|x| x.as_bool().unwrap()),
+        verbosity,
+        files: vec![],
+
+        stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
+        tabsize: config.get("tabsize").map(|x| x.as_integer().unwrap()
+                                      .try_into().unwrap()),
+
+        tabchar,
+        wraplen: config.get("wraplen").map(|x| x.as_integer().unwrap()
+                                      .try_into().unwrap()),
+        wrapmin: config.get("wrapmin").map(|x| x.as_integer().unwrap()
+                                      .try_into().unwrap()),
+        config: None,
+    };
+    Some(args)
+}
