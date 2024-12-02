@@ -11,10 +11,10 @@
 #![allow(clippy::struct_excessive_bools)]
 #![allow(clippy::module_name_repetitions)]
 
-use clap::Parser;
 use std::fs;
 use std::process::ExitCode;
 
+mod args;
 mod cli;
 mod comments;
 mod config;
@@ -28,13 +28,11 @@ mod subs;
 mod verbatim;
 mod wrap;
 mod write;
-use crate::cli::*;
-use crate::config::*;
+use crate::args::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::read::*;
 use crate::write::*;
-//use twelf::{config, Layer};
 
 #[cfg(test)]
 mod tests;
@@ -48,16 +46,8 @@ const LINE_END: &str = "\n";
 const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
-    //let mut args = Cli::with_layers(&[
-    //Layer::Toml("tex-fmt.toml".into()),
-    //Layer::Env(Some("PREFIX_".to_string())),
-    //Layer::Clap(Cli::command().get_matches().clone())
-    //]).unwrap();
-
-    let mut args = Cli::parse();
-    let config = read_config_file(&args);
-    //dbg!(config);
-    init_logger(args.log_level());
+    let mut args = get_args();
+    init_logger(args.verbosity);
 
     let mut logs = Vec::<Log>::new();
     let mut exit_code = args.resolve(&mut logs);

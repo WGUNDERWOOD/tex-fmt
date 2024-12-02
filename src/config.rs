@@ -1,73 +1,117 @@
-use crate::Cli;
-use path_absolutize::*;
-//use config::Config;
-use std::collections::HashMap;
-use std::env;
-use std::fs;
+//! Read arguments from a config file
+
+use crate::args::*;
+use dirs::config_dir;
+use log::LevelFilter;
+use std::env::current_dir;
+use std::fs::{metadata, read_to_string};
 use std::path::PathBuf;
 use toml::Table;
 
-#[derive(Debug)]
-pub enum ConfigPath {
-    Named(PathBuf),
-    Dir(PathBuf),
-    //Git(PathBuf),
-    //Home(PathBuf),
-    Default,
-}
+/// Config file name
+const CONFIG: &str = "tex-fmt.toml";
 
-pub fn get_config_path(args: &Cli) -> ConfigPath {
-    // Config file named in cli args
-    let config_path: PathBuf = args.config.clone().into();
-    let config_path = config_path
-        .absolutize()
-        .expect("Read the config path")
-        .into();
-    return ConfigPath::Named(config_path);
-    // Config file in current directory
-    let mut dir_config = env::current_dir().unwrap();
-    dir_config.set_file_name("tex-fmt.toml");
-    if dir_config.exists() {
-        return ConfigPath::Dir(dir_config);
-    }
-    // TODO read from git repo
-    // TODO read from user home config directory
-    ConfigPath::Default
-}
-
-pub fn read_config_file(args: &Cli) -> Cli {
-    let config_path = get_config_path(args);
-    let default_config: Cli = Cli::new();
-    let file_config: Table = match config_path {
-        ConfigPath::Named(p) => {
-            dbg!(&p);
-            let contents = fs::read_to_string(p).unwrap();
-            //contents.parse::<Table>().unwrap()
-            dbg!(&contents);
-            toml::from_str(&contents).unwrap()
-        }
-        //Config::builder()
-        //.add_source(config::File::with_name(p.to_str().unwrap()))
-        //.build()
-        //.unwrap(),
-        _ => todo!(),
+/// Try finding a config file in various sources
+fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
+    // Named path passed as cli arg
+    if args.config.is_some() {
+        return args.config.clone();
     };
-    dbg!(&file_config);
-    //for key in file_config.keys() {
-    //dbg!(key);
-    //}
-    //dbg!(file_config);
-    //config
-    args.clone()
+    // Config file in current directory
+    if let Ok(mut config) = current_dir() {
+        config.push(CONFIG);
+        if config.exists() {
+            return Some(config);
+        };
+    }
+    // Config file at git repository root
+    if let Some(mut config) = find_git_root() {
+        config.push(CONFIG);
+        if config.exists() {
+            return Some(config);
+        };
+    }
+    // Config file in user home config directory
+    if let Some(mut config) = config_dir() {
+        config.push("tex-fmt");
+        config.push(CONFIG);
+        if config.exists() {
+            return Some(config);
+        };
+    }
+    None
 }
 
-//#[serde(default, with = "date_serde")]
+/// Get the git repository root directory
+fn find_git_root() -> Option<PathBuf> {
+    let mut depth = 0;
+    let mut current_dir = current_dir().unwrap();
+    while depth < 100 {
+        depth += 1;
+        if metadata(current_dir.join(".git"))
+            .map(|m| m.is_dir())
+            .unwrap_or(false)
+        {
+            return Some(current_dir);
+        }
+        if !current_dir.pop() {
+            break;
+        }
+    }
+    None
+}
 
-//fn get_named_config_file(config: &str) -> ConfigFile {
-//ConfigFile::Named(config.into())
-//}
+/// Parse arguments from a config file path
+pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
+    let config = resolve_config_path(args);
+    #[allow(clippy::question_mark)]
+    if config.is_none() {
+        return None;
+    };
+    let config_path = config
+        .clone()
+        .unwrap()
+        .into_os_string()
+        .into_string()
+        .unwrap();
+    let config = read_to_string(config.unwrap()).unwrap();
+    let config = config.parse::<Table>().unwrap_or_else(|_| {
+        panic!("Failed to read config file at {config_path}")
+    });
 
-//fn get_dir_config_file() -> ConfigFile {
-//let dir = env::current_dir().unwrap();
-//ConfigFile::Dir(dir)
-//}
+    let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
+        Some("trace") => Some(LevelFilter::Trace),
+        Some("verbose") => Some(LevelFilter::Info),
+        Some("quiet") => Some(LevelFilter::Error),
+        _ => None,
+    };
+
+    let tabchar = match config.get("tabchar").map(|x| x.as_str().unwrap()) {
+        Some("tab") => Some(TabChar::Tab),
+        Some("space") => Some(TabChar::Space),
+        _ => None,
+    };
+
+    let args = OptionArgs {
+        check: config.get("check").map(|x| x.as_bool().unwrap()),
+        print: config.get("print").map(|x| x.as_bool().unwrap()),
+        wrap: config.get("wrap").map(|x| x.as_bool().unwrap()),
+        verbosity,
+        files: vec![],
+
+        stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
+        tabsize: config
+            .get("tabsize")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+
+        tabchar,
+        wraplen: config
+            .get("wraplen")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+        wrapmin: config
+            .get("wrapmin")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+        config: None,
+    };
+    Some(args)
+}
