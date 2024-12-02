@@ -1,9 +1,12 @@
 use crate::args::*;
+use dirs::config_dir;
 use log::LevelFilter;
 use std::env::current_dir;
-use std::fs::read_to_string;
+use std::fs::{metadata, read_to_string};
 use std::path::PathBuf;
 use toml::Table;
+
+const CONFIG: &str = "tex-fmt.toml";
 
 fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     // Named path passed as cli arg
@@ -11,15 +14,45 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
         return args.config.clone();
     };
     // Config file in current directory
-    let mut config = current_dir().unwrap();
-    config.push("tex-fmt.toml");
-    if config.exists() {
-        return Some(config);
-    };
+    if let Ok(mut config) = current_dir() {
+        config.push(CONFIG);
+        if config.exists() {
+            return Some(config);
+        };
+    }
     // Config file at git repository root
-    // TODO
+    if let Some(mut config) = find_git_root() {
+        config.push(CONFIG);
+        if config.exists() {
+            return Some(config);
+        };
+    }
     // Config file in user home config directory
-    // TODO
+    if let Some(mut config) = config_dir() {
+        config.push("tex-fmt");
+        config.push(CONFIG);
+        if config.exists() {
+            return Some(config);
+        };
+    }
+    None
+}
+
+fn find_git_root() -> Option<PathBuf> {
+    let mut depth = 0;
+    let mut current_dir = current_dir().unwrap();
+    while depth < 100 {
+        depth += 1;
+        if metadata(current_dir.join(".git"))
+            .map(|m| m.is_dir())
+            .unwrap_or(false)
+        {
+            return Some(current_dir);
+        }
+        if !current_dir.pop() {
+            break;
+        }
+    }
     None
 }
 
@@ -29,8 +62,16 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     if config.is_none() {
         return None;
     };
+    let config_path = config
+        .clone()
+        .unwrap()
+        .into_os_string()
+        .into_string()
+        .unwrap();
     let config = read_to_string(config.unwrap()).unwrap();
-    let config = config.parse::<Table>().unwrap();
+    let config = config
+        .parse::<Table>()
+        .expect(&format!("Failed to read config file at {config_path}"));
 
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
         Some("trace") => Some(LevelFilter::Trace),
