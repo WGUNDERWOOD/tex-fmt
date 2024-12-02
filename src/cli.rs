@@ -1,3 +1,4 @@
+use crate::args::*;
 use ArgAction::{Append, SetTrue};
 use clap::{Arg, ArgAction, command, ArgMatches, value_parser};
 use std::path::PathBuf;
@@ -28,7 +29,7 @@ fn get_arg_matches() -> ArgMatches {
         .get_matches()
 }
 
-fn bool_to_option(b: bool) -> Option(bool) {
+fn bool_to_option(b: bool) -> Option<bool> {
     if b {
         Some(true)
     } else {
@@ -36,14 +37,14 @@ fn bool_to_option(b: bool) -> Option(bool) {
     }
 }
 
-fn flag_to_option(arg_matches: ArgMatches, arg: &str) -> Option(bool) {
+fn flag_to_option(arg_matches: &ArgMatches, arg: &str) -> Option<bool> {
     bool_to_option(arg_matches.get_flag(arg))
 }
 
 // convert clap argmatches to args
-fn get_cli_args() -> Args {
+pub fn get_cli_args() -> OptionArgs {
     let arg_matches = get_arg_matches();
-    let wrap: Option(bool) = if arg_matches.get_flag("nowrap") {
+    let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
         Some(false)
     } else if arg_matches.get_flag("wrap") {
         Some(true)
@@ -64,14 +65,14 @@ fn get_cli_args() -> Args {
     } else {
         None
     };
-    let args = Args {
-        check: flag_to_option(arg_matches, "check"),
-        print: flag_to_option(arg_matches, "print"),
+    let args = OptionArgs {
+        check: flag_to_option(&arg_matches, "check"),
+        print: flag_to_option(&arg_matches, "print"),
         wrap,
         verbosity,
         files: arg_matches.get_many::<String>("files")
             .unwrap_or_default().map(|v| v.to_owned()).collect::<Vec<String>>(),
-        stdin: flag_to_option(arg_matches, "stdin"),
+        stdin: flag_to_option(&arg_matches, "stdin"),
         tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
         tabchar,
         wraplen: arg_matches.get_one::<u8>("wraplen").copied(),

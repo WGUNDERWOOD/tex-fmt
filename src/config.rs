@@ -1,41 +1,48 @@
-fn resolve_config_path(args: Args) -> Option(PathBuf) {
+use crate::args::*;
+use std::path::PathBuf;
+use std::env::current_dir;
+use std::fs::read_to_string;
+use toml::Table;
+use log::LevelFilter;
+
+fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     // Named path passed as cli arg
-    if let Some(config) = args.config {
-        return config.absolutize()
+    if args.config.is_some() {
+        return args.config.clone()
     };
     // Config file in current directory
-    let mut config = env::current_dir().unwrap();
+    let mut config = current_dir().unwrap();
     config.set_file_name("tex-fmt.toml");
     if config.exists() {
-        return config.absolutize();
+        return Some(config)
     };
     // TODO Read from git repo
     // TODO Read from user home config directory
     None
 }
 
-fn get_config_args(args: Args) -> Option(Args) {
+pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     let config = resolve_config_path(args);
     if config.is_none() {
         return None
     };
-    let config = fs::read_to_string(config).unwrap();
+    let config = read_to_string(config.unwrap()).unwrap();
     let config = config.parse::<Table>().unwrap();
 
-    let verbosity = match config.map("verbosity").map(|x| x.as_string().unwrap()) {
-        "trace" => Some(LevelFilter::Trace),
-        "verbose" => Some(LevelFilter::Info),
-        "quiet" => Some(LevelFilter::Error),
+    let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
+        Some("trace") => Some(LevelFilter::Trace),
+        Some("verbose") => Some(LevelFilter::Info),
+        Some("quiet") => Some(LevelFilter::Error),
         _ => None,
     };
 
-    let tabchar = match config.map("tabchar").map(|x| x.as_string().unwrap()) {
-        "tab" => Some(TabChar::Tab),
-        "space" => Some(TabChar::Space),
+    let tabchar = match config.get("tabchar").map(|x| x.as_str().unwrap()) {
+        Some("tab") => Some(TabChar::Tab),
+        Some("space") => Some(TabChar::Space),
         _ => None,
     };
 
-    let args = Args {
+    let args = OptionArgs {
         check: config.get("check").map(|x| x.as_bool().unwrap()),
         print: config.get("print").map(|x| x.as_bool().unwrap()),
         wrap: config.get("wrap").map(|x| x.as_bool().unwrap()),
