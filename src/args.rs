@@ -1,3 +1,5 @@
+//! Functionality to parse CLI arguments
+
 use crate::cli::*;
 use crate::config::*;
 use merge::Merge;
@@ -20,6 +22,7 @@ pub struct OptionArgs {
     pub config: Option<PathBuf>,
 }
 
+#[derive(Debug)]
 pub struct Args {
     pub check: bool,
     pub print: bool,
@@ -34,15 +37,15 @@ pub struct Args {
     pub config: Option<PathBuf>,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TabChar {
     Tab,
     Space,
 }
 
 impl Default for OptionArgs {
-    fn default() -> OptionArgs {
-        OptionArgs {
+    fn default() -> Self {
+        Self {
             check: Some(false),
             print: Some(false),
             wrap: Some(true),
@@ -75,7 +78,7 @@ pub fn get_args() -> Args {
 
 impl Args {
     fn from(args: OptionArgs) -> Self {
-        Args {
+        Self {
             check: args.check.unwrap(),
             print: args.print.unwrap(),
             wrap: args.wrap.unwrap(),
@@ -88,5 +91,11 @@ impl Args {
             wrapmin: args.wrapmin.unwrap(),
             config: args.config,
         }
+    }
+}
+
+impl Default for Args {
+    fn default() -> Self {
+        Self::from(OptionArgs::default())
     }
 }
