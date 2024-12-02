@@ -22,7 +22,7 @@ fn get_arg_matches() -> ArgMatches {
                 .short('p')
                 .long("print")
                 .action(SetTrue)
-                .help("Print to STDOUT, do not modify files"),
+                .help("Print to stdout, do not modify files"),
         )
         .arg(
             Arg::new("nowrap")
@@ -61,7 +61,7 @@ fn get_arg_matches() -> ArgMatches {
                 .short('s')
                 .long("stdin")
                 .action(SetTrue)
-                .help("Process STDIN as a single file, output to STDOUT"),
+                .help("Process stdin as a single file, output to stdout"),
         )
         .arg(
             Arg::new("tabsize")
@@ -81,7 +81,7 @@ fn get_arg_matches() -> ArgMatches {
                 .short('l')
                 .long("wraplen")
                 .value_parser(value_parser!(u8))
-                .help("Line length for wrapping"),
+                .help("Line length for wrapping [default: 80]"),
         )
         .arg(
             Arg::new("config")

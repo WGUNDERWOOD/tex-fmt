@@ -14,7 +14,7 @@ use std::path::PathBuf;
 pub struct Args {
     /// Check formatting, do not modify files
     pub check: bool,
-    /// Print to STDOUT, do not modify files
+    /// Print to stdout, do not modify files
     pub print: bool,
     /// Wrap long lines
     pub wrap: bool,
@@ -22,7 +22,7 @@ pub struct Args {
     pub verbosity: LevelFilter,
     /// List of files to be formatted
     pub files: Vec<String>,
-    /// Read from STDIN and output to STDOUT
+    /// Read from stdin and output to stdout
     pub stdin: bool,
     /// Number of characters to use as tab size
     pub tabsize: u8,
