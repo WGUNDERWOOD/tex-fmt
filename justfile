@@ -22,7 +22,7 @@ testignored:
   @cargo test -- --ignored
 
 clippy:
-  @cargo clippy -r
+  @cargo clippy -r && cargo shear
 
 format:
   @cargo fmt

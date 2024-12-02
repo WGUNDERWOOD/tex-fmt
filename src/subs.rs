@@ -1,12 +1,13 @@
 //! Utilities for performing text substitutions
 
+use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::regexes::*;
-use crate::Cli;
 use crate::LINE_END;
-use log::Level::Trace;
+use log::Level;
+use log::LevelFilter;
 
 /// Remove multiple line breaks
 pub fn remove_extra_newlines(text: &str) -> String {
@@ -15,8 +16,8 @@ pub fn remove_extra_newlines(text: &str) -> String {
 }
 
 /// Replace tabs with spaces
-pub fn remove_tabs(text: &str, args: &Cli) -> String {
-    let replace = (0..args.tab).map(|_| " ").collect::<String>();
+pub fn remove_tabs(text: &str, args: &Args) -> String {
+    let replace = (0..args.tabsize).map(|_| " ").collect::<String>();
     text.replace('\t', &replace)
 }
 
@@ -67,17 +68,17 @@ pub fn split_line<'a>(
     line: &'a str,
     state: &State,
     file: &str,
-    args: &Cli,
+    args: &Args,
     logs: &mut Vec<Log>,
 ) -> (&'a str, &'a str) {
     let captures = RE_SPLITTING_SHARED_LINE_CAPTURE.captures(line).unwrap();
 
     let (line, [prev, rest, _]) = captures.extract();
 
-    if args.trace {
+    if args.verbosity == LevelFilter::Trace {
         record_line_log(
             logs,
-            Trace,
+            Level::Trace,
             file,
             state.linum_new,
             state.linum_old,

@@ -1,111 +1,147 @@
-//! Utilities for reading the command line arguments
+//! Functionality to parse CLI arguments
 
-use crate::logging::*;
-use clap::Parser;
-use log::Level::Error;
+use crate::args::*;
+use clap::{command, Command, value_parser, Arg, ArgAction};
 use log::LevelFilter;
+use std::borrow::ToOwned;
+use std::path::PathBuf;
+use ArgAction::{Append, SetTrue};
 
-/// Command line arguments
-#[allow(missing_docs)]
-#[allow(clippy::missing_docs_in_private_items)]
-#[derive(Debug, Parser)]
-#[command(version, about)]
-pub struct Cli {
-    #[arg(long, short, help = "Check formatting, do not modify files")]
-    pub check: bool,
-    #[arg(long, short, help = "Print to STDOUT, do not modify files")]
-    pub print: bool,
-    #[arg(long, short, help = "Keep lines, do not wrap")]
-    pub keep: bool,
-    #[arg(long, short, help = "Show info log messages")]
-    pub verbose: bool,
-    #[arg(long, short, help = "Hide warning messages")]
-    pub quiet: bool,
-    #[arg(long, short, help = "Show trace log messages")]
-    pub trace: bool,
-    #[arg(help = "List of files to be formatted")]
-    pub files: Vec<String>,
-    #[arg(
-        long,
-        short,
-        help = "Process STDIN as a single file, output formatted text to STDOUT"
-    )]
-    pub stdin: bool,
-    #[arg(
-        long,
-        help = "Number of spaces to use as tab size",
-        default_value_t = 2
-    )]
-    pub tab: u8,
-    #[arg(long, help = "Use tabs instead of spaces for indentation")]
-    pub usetabs: bool,
-    #[arg(long, help = "Line length for wrapping", default_value_t = 80)]
-    pub wrap: u8,
-    #[clap(skip)]
-    pub wrap_min: u8,
+/// Construct the CLI command
+fn get_cli_command() -> Command {
+    command!()
+        .arg(
+            Arg::new("check")
+                .short('c')
+                .long("check")
+                .action(SetTrue)
+                .help("Check formatting, do not modify files"),
+        )
+        .arg(
+            Arg::new("print")
+                .short('p')
+                .long("print")
+                .action(SetTrue)
+                .help("Print to stdout, do not modify files"),
+        )
+        .arg(
+            Arg::new("nowrap")
+                .short('n')
+                .long("nowrap")
+                .action(SetTrue)
+                .help("Do not wrap long lines"),
+        )
+        .arg(
+            Arg::new("verbose")
+                .short('v')
+                .long("verbose")
+                .action(SetTrue)
+                .help("Show info messages"),
+        )
+        .arg(
+            Arg::new("quiet")
+                .short('q')
+                .long("quiet")
+                .action(SetTrue)
+                .help("Hide warning messages"),
+        )
+        .arg(
+            Arg::new("trace")
+                .long("trace")
+                .action(SetTrue)
+                .help("Show trace messages"),
+        )
+        .arg(
+            Arg::new("files")
+                .action(Append)
+                .help("List of files to be formatted"),
+        )
+        .arg(
+            Arg::new("stdin")
+                .short('s')
+                .long("stdin")
+                .action(SetTrue)
+                .help("Process stdin as a single file, output to stdout"),
+        )
+        .arg(
+            Arg::new("tabsize")
+                .short('t')
+                .long("tabsize")
+                .value_parser(value_parser!(u8))
+                .help("Number of characters to use as tab size [default: 2]"),
+        )
+        .arg(
+            Arg::new("usetabs")
+                .long("usetabs")
+                .action(SetTrue)
+                .help("Use tabs instead of spaces for indentation"),
+        )
+        .arg(
+            Arg::new("wraplen")
+                .short('l')
+                .long("wraplen")
+                .value_parser(value_parser!(u8))
+                .help("Line length for wrapping [default: 80]"),
+        )
+        .arg(
+            Arg::new("config")
+                .long("config")
+                .help("Configuration file path")
+                .value_parser(value_parser!(PathBuf))
+                .help("Path to config file"),
+        )
 }
 
-impl Cli {
-    /// Get the log level
-    pub const fn log_level(&self) -> LevelFilter {
-        if self.trace {
-            LevelFilter::Trace
-        } else if self.verbose {
-            LevelFilter::Info
-        } else if self.quiet {
-            LevelFilter::Error
+/// Parse CLI arguments into `OptionArgs` struct
+pub fn get_cli_args() -> OptionArgs {
+    let arg_matches = get_cli_command().get_matches();
+    let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
+        Some(false)
+    } else {
+        None
+    };
+    let verbosity = if arg_matches.get_flag("trace") {
+        Some(LevelFilter::Trace)
+    } else if arg_matches.get_flag("verbose") {
+        Some(LevelFilter::Info)
+    } else if arg_matches.get_flag("quiet") {
+        Some(LevelFilter::Error)
+    } else {
+        None
+    };
+    let tabchar = if arg_matches.get_flag("usetabs") {
+        Some(TabChar::Tab)
+    } else {
+        None
+    };
+    let args = OptionArgs {
+        check: if arg_matches.get_flag("check") {
+            Some(true)
         } else {
-            LevelFilter::Warn
-        }
-    }
-
-    /// Ensure the provided arguments are consistent
-    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
-        let mut exit_code = 0;
-        self.verbose |= self.trace;
-        self.print |= self.stdin;
-        self.wrap_min = if self.wrap >= 50 {
-            self.wrap - 10
+            None
+        },
+        print: if arg_matches.get_flag("print") {
+            Some(true)
         } else {
-            self.wrap
-        };
-
-        if !self.stdin && self.files.is_empty() {
-            record_file_log(
-                logs,
-                Error,
-                "",
-                "No files specified. Provide filenames or pass --stdin.",
-            );
-            exit_code = 1;
-        }
-        if self.stdin && !self.files.is_empty() {
-            record_file_log(
-                logs,
-                Error,
-                "",
-                "Do not provide file name(s) when using --stdin.",
-            );
-            exit_code = 1;
-        }
-        exit_code
-    }
-
-    #[cfg(test)]
-    pub const fn new() -> Self {
-        Self {
-            check: false,
-            print: false,
-            keep: false,
-            verbose: false,
-            stdin: false,
-            quiet: false,
-            trace: false,
-            files: Vec::<String>::new(),
-            tab: 2,
-            usetabs: false,
-            wrap: 80,
-            wrap_min: 70,
-        }
-    }
+            None
+        },
+        wrap,
+        verbosity,
+        files: arg_matches
+            .get_many::<String>("files")
+            .unwrap_or_default()
+            .map(ToOwned::to_owned)
+            .collect::<Vec<String>>(),
+        stdin: if arg_matches.get_flag("stdin") {
+            Some(true)
+        } else {
+            None
+        },
+        tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
+        tabchar,
+        wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
+        wrapmin: None,
+        config: arg_matches.get_one::<PathBuf>("config").cloned(),
+    };
+    args
 }

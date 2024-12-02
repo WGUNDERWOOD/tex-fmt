@@ -1,10 +1,11 @@
 //! Utilities for wrapping long lines
 
-use crate::cli::*;
+use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
-use log::Level::{Trace, Warn};
+use log::Level;
+use log::LevelFilter;
 
 /// String slice to start wrapped text lines
 pub const TEXT_LINE_START: &str = "";
@@ -12,15 +13,15 @@ pub const TEXT_LINE_START: &str = "";
 pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
-pub fn needs_wrap(line: &str, indent_length: usize, args: &Cli) -> bool {
-    !args.keep && (line.chars().count() + indent_length > args.wrap.into())
+pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
+    args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
 /// Find the best place to break a long line
 fn find_wrap_point(
     line: &str,
     indent_length: usize,
-    args: &Cli,
+    args: &Args,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
@@ -28,7 +29,7 @@ fn find_wrap_point(
 
     let mut line_width = 0;
 
-    let wrap_boundary = usize::from(args.wrap_min) - indent_length;
+    let wrap_boundary = usize::from(args.wrapmin) - indent_length;
 
     // Return *byte* index rather than *char* index.
     for (i, c) in line.char_indices() {
@@ -54,13 +55,13 @@ pub fn apply_wrap<'a>(
     indent_length: usize,
     state: &State,
     file: &str,
-    args: &Cli,
+    args: &Args,
     logs: &mut Vec<Log>,
 ) -> Option<[&'a str; 3]> {
-    if args.trace {
+    if args.verbosity == LevelFilter::Trace {
         record_line_log(
             logs,
-            Trace,
+            Level::Trace,
             file,
             state.linum_new,
             state.linum_old,
@@ -72,11 +73,11 @@ pub fn apply_wrap<'a>(
     let comment_index = find_comment_index(line);
 
     match wrap_point {
-        Some(p) if p <= args.wrap.into() => {}
+        Some(p) if p <= args.wraplen.into() => {}
         _ => {
             record_line_log(
                 logs,
-                Warn,
+                Level::Warn,
                 file,
                 state.linum_new,
                 state.linum_old,
