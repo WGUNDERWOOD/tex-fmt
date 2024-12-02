@@ -46,16 +46,12 @@ const LINE_END: &str = "\n";
 const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
-
-    let args = get_args();
-    //let config = read_config_file(&args);
+    let mut args = get_args();
     dbg!(&args);
     init_logger(args.verbosity);
 
     let mut logs = Vec::<Log>::new();
-    // TODO resolve args
-    //let mut exit_code = args.resolve(&mut logs);
-    let mut exit_code = 0;
+    let mut exit_code = args.resolve(&mut logs);
 
     if exit_code == 0 {
         if args.stdin {

@@ -1,10 +1,10 @@
 //! Utilities for performing text substitutions
 
+use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::regexes::*;
-use crate::args::*;
 use crate::LINE_END;
 use log::Level;
 use log::LevelFilter;
