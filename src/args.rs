@@ -2,8 +2,11 @@
 
 use crate::cli::*;
 use crate::config::*;
-use merge::Merge;
+use crate::logging::*;
+use crate::Log;
+use log::Level;
 use log::LevelFilter;
+use merge::Merge;
 use std::path::PathBuf;
 
 #[derive(Clone, Debug, Merge)]
@@ -71,11 +74,6 @@ pub fn get_args() -> Args {
     Args::from(args)
 }
 
-//impl OptionArgs {
-    // TODO
-    // fn resolve()
-//}
-
 impl Args {
     fn from(args: OptionArgs) -> Self {
         Self {
@@ -91,6 +89,36 @@ impl Args {
             wrapmin: args.wrapmin.unwrap(),
             config: args.config,
         }
+    }
+
+    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
+        let mut exit_code = 0;
+        self.print |= self.stdin;
+        self.wrapmin = if self.wraplen >= 50 {
+            self.wraplen - 10
+        } else {
+            self.wraplen
+        };
+
+        if !self.stdin && self.files.is_empty() {
+            record_file_log(
+                logs,
+                Level::Error,
+                "",
+                "No files specified. Provide filenames or pass --stdin.",
+            );
+            exit_code = 1;
+        }
+        if self.stdin && !self.files.is_empty() {
+            record_file_log(
+                logs,
+                Level::Error,
+                "",
+                "Do not provide file name(s) when using --stdin.",
+            );
+            exit_code = 1;
+        }
+        exit_code
     }
 }
 

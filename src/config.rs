@@ -1,20 +1,20 @@
 use crate::args::*;
-use std::path::PathBuf;
+use log::LevelFilter;
 use std::env::current_dir;
 use std::fs::read_to_string;
+use std::path::PathBuf;
 use toml::Table;
-use log::LevelFilter;
 
 fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     // Named path passed as cli arg
     if args.config.is_some() {
-        return args.config.clone()
+        return args.config.clone();
     };
     // Config file in current directory
     let mut config = current_dir().unwrap();
     config.set_file_name("tex-fmt.toml");
     if config.exists() {
-        return Some(config)
+        return Some(config);
     };
     // TODO Read from git repo
     // TODO Read from user home config directory
@@ -25,7 +25,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     let config = resolve_config_path(args);
     #[allow(clippy::question_mark)]
     if config.is_none() {
-        return None
+        return None;
     };
     let config = read_to_string(config.unwrap()).unwrap();
     let config = config.parse::<Table>().unwrap();
@@ -51,14 +51,17 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
         files: vec![],
 
         stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
-        tabsize: config.get("tabsize").map(|x| x.as_integer().unwrap()
-                                      .try_into().unwrap()),
+        tabsize: config
+            .get("tabsize")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
 
         tabchar,
-        wraplen: config.get("wraplen").map(|x| x.as_integer().unwrap()
-                                      .try_into().unwrap()),
-        wrapmin: config.get("wrapmin").map(|x| x.as_integer().unwrap()
-                                      .try_into().unwrap()),
+        wraplen: config
+            .get("wraplen")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+        wrapmin: config
+            .get("wrapmin")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
         config: None,
     };
     Some(args)

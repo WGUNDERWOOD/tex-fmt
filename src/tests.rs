@@ -1,7 +1,7 @@
+use crate::args::*;
 use crate::format_file;
 use crate::fs;
 use crate::logging::*;
-use crate::args::*;
 use colored::Colorize;
 use similar::{ChangeTag, TextDiff};
 
