@@ -1,126 +1,80 @@
-//! Utilities for reading the command line arguments
+use ArgAction::{Append, SetTrue};
+use clap::{command, value_parser};
 
-use crate::config::*;
-use crate::logging::*;
-use clap::Parser;
-use log::Level::Error;
-use log::LevelFilter;
-//use serde::{Serialize, Deserialize};
-//use twelf::{config, Layer};
-use clap_serde_derive::{
-    clap::{self, ArgAction},
-    serde::Serialize,
-    ClapSerde,
-};
-
-// https://docs.rs/clap-serde-derive/latest/clap_serde_derive/
-/// Command line arguments
-#[allow(missing_docs)]
-#[allow(clippy::missing_docs_in_private_items)]
-#[derive(Clone, Debug, Parser)]
-#[command(version, about)]
-//#[config]
-#[derive(ClapSerde, Serialize)]
-pub struct Cli {
-    #[arg(long, short, help = "Check formatting, do not modify files")]
-    pub check: bool,
-    #[arg(long, short, help = "Print to STDOUT, do not modify files")]
-    pub print: bool,
-    #[arg(long, short, help = "Keep lines, do not wrap")]
-    pub keep: bool,
-    #[arg(long, short, help = "Show info log messages")]
-    pub verbose: bool,
-    #[arg(long, short, help = "Hide warning messages")]
-    pub quiet: bool,
-    #[arg(long, short, help = "Show trace log messages")]
-    pub trace: bool,
-    #[arg(help = "List of files to be formatted")]
-    pub files: Vec<String>,
-    #[arg(
-        long,
-        short,
-        help = "Process STDIN as a single file, output formatted text to STDOUT"
-    )]
-    pub stdin: bool,
-    #[arg(
-        long,
-        help = "Number of spaces to use as tab size",
-        //default_value_t = Some(2)
-    )]
-    pub tab: u8,
-    #[arg(long, help = "Use tabs instead of spaces for indentation")]
-    pub usetabs: bool,
-    #[arg(long, help = "Line length for wrapping",
-          //default_value_t = 80
-          )]
-    pub wrap: u8,
-    #[clap(skip)]
-    pub wrap_min: u8,
-    #[arg(long, help = "Path to config file")]
-    pub config: String,
+// read from cli to clap argmatches
+fn get_arg_matches() -> ArgMatches {
+    command!()
+        // TODO help items
+        .arg(Arg::new("check").short('c').long("check").action(SetTrue))
+        .arg(Arg::new("print").short('p').long("print").action(SetTrue))
+        .arg(Arg::new("wrap").short('w').long("wrap").action(SetTrue))
+        .arg(Arg::new("nowrap").long("nowrap").action(SetTrue))
+        .arg(Arg::new("verbose").short('v').long("verbose").action(SetTrue))
+        .arg(Arg::new("quiet").short('q').long("quiet").action(SetTrue))
+        .arg(Arg::new("trace").short('t').long("trace").action(SetTrue))
+        .arg(Arg::new("files").action(Append))
+        .arg(Arg::new("stdin").short('s').long("stdin").action(SetTrue))
+        .arg(Arg::new("tabsize").short('t').long("tabsize")
+             .value_parser(value_parser!(u8)).help("Tab size"))
+        .arg(Arg::new("usetabs").long("usetabs").action(SetTrue))
+        .arg(Arg::new("wraplen").long("wraplen")
+             .value_parser(value_parser!(u8)).help("Wrap length"))
+        .arg(Arg::new("wrapmin").long("wrapmin")
+             .value_parser(value_parser!(u8)).help("Minimum wrap length"))
+        .arg(Arg::new("config").long("config").help("Configuration file path")
+            .value_parser(value_parser!(PathBuf)))
+        .get_matches()
 }
 
-impl Cli {
-    /// Get the log level
-    pub const fn log_level(&self) -> LevelFilter {
-        if self.trace {
-            LevelFilter::Trace
-        } else if self.verbose {
-            LevelFilter::Info
-        } else if self.quiet {
-            LevelFilter::Error
-        } else {
-            LevelFilter::Warn
-        }
+fn bool_to_option(b: bool) -> Option(bool) {
+    if b {
+        Some(true)
+    } else {
+        None
     }
+}
 
-    /// Ensure the provided arguments are consistent
-    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
-        let mut exit_code = 0;
-        self.verbose |= self.trace;
-        self.print |= self.stdin;
-        self.wrap_min = if self.wrap >= 50 {
-            self.wrap - 10
-        } else {
-            self.wrap
-        };
+fn flag_to_option(arg_matches: ArgMatches, arg: &str) -> Option(bool) {
+    bool_to_option(arg_matches.get_flag(arg))
+}
 
-        if !self.stdin && self.files.is_empty() {
-            record_file_log(
-                logs,
-                Error,
-                "",
-                "No files specified. Provide filenames or pass --stdin.",
-            );
-            exit_code = 1;
-        }
-        if self.stdin && !self.files.is_empty() {
-            record_file_log(
-                logs,
-                Error,
-                "",
-                "Do not provide file name(s) when using --stdin.",
-            );
-            exit_code = 1;
-        }
-        exit_code
+// convert clap argmatches to args
+fn get_cli_args() -> Args {
+    let arg_matches = get_arg_matches();
+    let wrap: Option(bool) = if arg_matches.get_flag("nowrap") {
+        Some(false)
+    } else if arg_matches.get_flag("wrap") {
+        Some(true)
+    } else {
+        None
     }
-
-    pub const fn new() -> Self {
-        Self {
-            check: false,
-            print: false,
-            keep: false,
-            verbose: false,
-            stdin: false,
-            quiet: false,
-            trace: false,
-            files: Vec::<String>::new(),
-            tab: 2,
-            usetabs: false,
-            wrap: 80,
-            wrap_min: 70,
-            config: String::new(),
-        }
+    let verbosity = if arg_matches.get_flag("trace") {
+        Some(LevelFilter::Trace)
+    } else if arg_matches.get_flag("verbose") {
+        Some(LevelFilter::Info)
+    } else if arg_matches.get_flag("quiet") {
+        Some(LevelFilter::Error)
+    } else {
+        None
     }
+    let tabchar = if arg_matches.get_flag("usetabs") {
+        Some(TabChar::Tab)
+    } else {
+        None
+    }
+    let args = Args {
+        check: flag_to_option(arg_matches, "check"),
+        print: flag_to_option(arg_matches, "print"),
+        wrap,
+        verbosity,
+        files: arg_matches.get_many::<String>("files")
+            .unwrap_or_default().map(|v| v.to_owned()).collect::<Vec<String>>(),
+        stdin: flag_to_option(arg_matches, "stdin"),
+        tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
+        tabchar,
+        wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
+        wrapmin: arg_matches.get_one::<u8>("wrapmin").copied(),
+        config: arg_matches.get_one::<PathBuf>("config").cloned(),
+    };
+    args
 }
