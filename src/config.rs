@@ -12,12 +12,14 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     };
     // Config file in current directory
     let mut config = current_dir().unwrap();
-    config.set_file_name("tex-fmt.toml");
+    config.push("tex-fmt.toml");
     if config.exists() {
         return Some(config);
     };
-    // TODO Read from git repo
-    // TODO Read from user home config directory
+    // Config file at git repository root
+    // TODO
+    // Config file in user home config directory
+    // TODO
     None
 }
 

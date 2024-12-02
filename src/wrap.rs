@@ -73,7 +73,7 @@ pub fn apply_wrap<'a>(
     let comment_index = find_comment_index(line);
 
     match wrap_point {
-        Some(p) if p <= args.wrap.into() => {}
+        Some(p) if p <= args.wraplen.into() => {}
         _ => {
             record_line_log(
                 logs,
