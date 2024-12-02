@@ -1,15 +1,17 @@
 //! Functionality to parse CLI arguments
 
 use crate::args::*;
-use clap::{command, value_parser, Arg, ArgAction, Command};
+use clap::{command, value_parser, Arg, ArgAction, ArgMatches, Command, ValueHint};
+use clap_complete::{generate, Generator, Shell};
 use log::LevelFilter;
 use std::borrow::ToOwned;
 use std::path::PathBuf;
+use std::io;
 use ArgAction::{Append, SetTrue};
 
 /// Construct the CLI command
 fn get_cli_command() -> Command {
-    command!()
+    let command = command!()
         .arg(
             Arg::new("check")
                 .short('c')
@@ -88,13 +90,23 @@ fn get_cli_command() -> Command {
                 .long("config")
                 .help("Configuration file path")
                 .value_parser(value_parser!(PathBuf))
+                .value_hint(ValueHint::FilePath)
                 .help("Path to config file"),
-        )
+        );
+
+    Command::new("completion")
+        .arg(
+            Arg::new("generator")
+            .long("generate")
+            .value_parser(value_parser!(Shell)),
+            )
+        .subcommand(command)
 }
 
 /// Parse CLI arguments into `OptionArgs` struct
 pub fn get_cli_args() -> OptionArgs {
     let arg_matches = get_cli_command().get_matches();
+    get_completions(&arg_matches);
     let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
         Some(false)
     } else {
@@ -144,4 +156,17 @@ pub fn get_cli_args() -> OptionArgs {
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
     };
     args
+}
+
+fn print_completions<G: Generator>(gen: G, command: &mut Command) {
+    generate(gen, command, command.get_name().to_string(), &mut io::stdout());
+}
+
+fn get_completions(arg_matches: &ArgMatches) {
+
+    if let Some(generator) = arg_matches.get_one::<Shell>("generator") {
+        let mut command = get_cli_command();
+        eprintln!("Generating completion file for {generator}...");
+        print_completions(*generator, &mut command);
+    }
 }
