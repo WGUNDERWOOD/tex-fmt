@@ -1,7 +1,7 @@
 //! Functionality to parse CLI arguments
 
 use crate::args::*;
-use clap::{command, Command, value_parser, Arg, ArgAction};
+use clap::{command, value_parser, Arg, ArgAction, Command};
 use log::LevelFilter;
 use std::borrow::ToOwned;
 use std::path::PathBuf;
