@@ -38,7 +38,7 @@
 # v0.4.3
 
 - Switch output text coloring to the `colored` crate.
-- Add `--stdin` flag to read input from STDIN (and output to STDOUT).
+- Add `--stdin` flag to read input from stdin (and output to stdout).
 
 # v0.4.2
 
