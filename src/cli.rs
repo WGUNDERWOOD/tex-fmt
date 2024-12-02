@@ -1,5 +1,7 @@
 use ArgAction::{Append, SetTrue};
-use clap::{command, value_parser};
+use clap::{Arg, ArgAction, command, ArgMatches, value_parser};
+use std::path::PathBuf;
+use log::LevelFilter;
 
 // read from cli to clap argmatches
 fn get_arg_matches() -> ArgMatches {
@@ -47,7 +49,7 @@ fn get_cli_args() -> Args {
         Some(true)
     } else {
         None
-    }
+    };
     let verbosity = if arg_matches.get_flag("trace") {
         Some(LevelFilter::Trace)
     } else if arg_matches.get_flag("verbose") {
@@ -56,12 +58,12 @@ fn get_cli_args() -> Args {
         Some(LevelFilter::Error)
     } else {
         None
-    }
+    };
     let tabchar = if arg_matches.get_flag("usetabs") {
         Some(TabChar::Tab)
     } else {
         None
-    }
+    };
     let args = Args {
         check: flag_to_option(arg_matches, "check"),
         print: flag_to_option(arg_matches, "print"),

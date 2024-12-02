@@ -11,7 +11,7 @@ categories = ["command-line-utilities", "development-tools"]
 exclude = ["tests/*", "extra/*", "*.nix", ".github/*"]
 
 [dependencies]
-clap = { version = "4.5.20", features = ["derive"] }
+clap = { version = "4.5.20", features = ["cargo"] }
 clap-serde-derive = "0.2.1"
 colored = "2.1.0"
 config = "0.14.1"
