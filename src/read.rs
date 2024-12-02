@@ -26,7 +26,7 @@ pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
     None
 }
 
-/// Attempt to read from STDIN, return filename `<STDIN>` and text
+/// Attempt to read from stdin, return filename `<stdin>` and text
 pub fn read_stdin(logs: &mut Vec<Log>) -> Option<(String, String)> {
     let mut text = String::new();
     match std::io::stdin().read_to_string(&mut text) {
@@ -34,17 +34,17 @@ pub fn read_stdin(logs: &mut Vec<Log>) -> Option<(String, String)> {
             record_file_log(
                 logs,
                 Trace,
-                "<STDIN>",
+                "<stdin>",
                 &format!("Read {bytes} bytes."),
             );
-            Some((String::from("<STDIN>"), text))
+            Some((String::from("<stdin>"), text))
         }
         Err(e) => {
             record_file_log(
                 logs,
                 Error,
-                "<STDIN>",
-                &format!("Could not read from STDIN: {e}"),
+                "<stdin>",
+                &format!("Could not read from stdin: {e}"),
             );
             None
         }

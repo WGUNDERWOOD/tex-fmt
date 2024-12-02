@@ -12,8 +12,9 @@ pkgs.mkShell {
     pkgs.alejandra
     pkgs.bacon
     pkgs.cacert
-    pkgs.cargo-flamegraph
     pkgs.cargo-edit
+    pkgs.cargo-flamegraph
+    pkgs.cargo-shear
     pkgs.clippy
     pkgs.diff-so-fancy
     pkgs.gh
