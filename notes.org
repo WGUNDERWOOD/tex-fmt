@@ -39,26 +39,3 @@
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes
-* Configuration files
-** Configuration file precedence
-*** Config file passed with --config
-*** Config file in directory where tex-fmt is executed
-*** If in git repo, parent directories from execution dir to project root
-*** ~/.config/tex-fmt/ or equivalent
-*** Default tex-fmt settings
-** Finally CLI arguments overwrite any selected config file
-** Implementation
-*** User supplies cli arguments
-**** Let cli_args = clap_parse()
-**** This should automatically check for errors
-**** Use options for non-supplied arguments
-*** If --config is passed
-**** Assert supplied path exists
-**** Let config_args = read_from_cli(config_file)
-*** Else
-**** Let config_args = read_from_cli() from other sources
-*** Resolve merges
-**** Let args = cli_args
-**** Replace Nones in args with Somes in config_args
-**** Replace Nones in args with default values
-*** Return args for final validation
