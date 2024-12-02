@@ -47,7 +47,6 @@ const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
     let mut args = get_args();
-    dbg!(&args);
     init_logger(args.verbosity);
 
     let mut logs = Vec::<Log>::new();

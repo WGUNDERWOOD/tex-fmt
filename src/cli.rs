@@ -76,7 +76,7 @@ fn get_arg_matches() -> ArgMatches {
         )
         .arg(
             Arg::new("wraplen")
-                .short('t')
+                .short('l')
                 .long("wraplen")
                 .value_parser(value_parser!(u8))
                 .help("Line length for wrapping"),
@@ -108,8 +108,6 @@ pub fn get_cli_args() -> OptionArgs {
     let arg_matches = get_arg_matches();
     let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
         Some(false)
-    } else if arg_matches.get_flag("wrap") {
-        Some(true)
     } else {
         None
     };
@@ -141,7 +139,7 @@ pub fn get_cli_args() -> OptionArgs {
         tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
         tabchar,
         wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
-        wrapmin: arg_matches.get_one::<u8>("wrapmin").copied(),
+        wrapmin: None,
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
     };
     args
