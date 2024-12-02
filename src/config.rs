@@ -23,6 +23,7 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
 
 pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     let config = resolve_config_path(args);
+    #[allow(clippy::question_mark)]
     if config.is_none() {
         return None
     };

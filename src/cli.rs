@@ -3,6 +3,7 @@ use ArgAction::{Append, SetTrue};
 use clap::{Arg, ArgAction, command, ArgMatches, value_parser};
 use std::path::PathBuf;
 use log::LevelFilter;
+use std::borrow::ToOwned;
 
 // read from cli to clap argmatches
 fn get_arg_matches() -> ArgMatches {
@@ -14,7 +15,7 @@ fn get_arg_matches() -> ArgMatches {
         .arg(Arg::new("nowrap").long("nowrap").action(SetTrue))
         .arg(Arg::new("verbose").short('v').long("verbose").action(SetTrue))
         .arg(Arg::new("quiet").short('q').long("quiet").action(SetTrue))
-        .arg(Arg::new("trace").short('t').long("trace").action(SetTrue))
+        .arg(Arg::new("trace").long("trace").action(SetTrue))
         .arg(Arg::new("files").action(Append))
         .arg(Arg::new("stdin").short('s').long("stdin").action(SetTrue))
         .arg(Arg::new("tabsize").short('t').long("tabsize")
@@ -29,7 +30,7 @@ fn get_arg_matches() -> ArgMatches {
         .get_matches()
 }
 
-fn bool_to_option(b: bool) -> Option<bool> {
+const fn bool_to_option(b: bool) -> Option<bool> {
     if b {
         Some(true)
     } else {
@@ -71,7 +72,7 @@ pub fn get_cli_args() -> OptionArgs {
         wrap,
         verbosity,
         files: arg_matches.get_many::<String>("files")
-            .unwrap_or_default().map(|v| v.to_owned()).collect::<Vec<String>>(),
+            .unwrap_or_default().map(ToOwned::to_owned).collect::<Vec<String>>(),
         stdin: flag_to_option(&arg_matches, "stdin"),
         tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
         tabchar,

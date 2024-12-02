@@ -14,7 +14,7 @@ pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
-    args.wrap && (line.chars().count() + indent_length > args.wrap.into())
+    args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
 /// Find the best place to break a long line
