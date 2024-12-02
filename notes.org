@@ -41,8 +41,16 @@
 ** Finally CLI arguments overwrite any selected config file
 ** Implementation
 *** User supplies cli arguments
+**** Let cli_args = clap_parse()
+**** This should automatically check for errors
+**** Use options for non-supplied arguments
 *** If --config is passed
-**** Let config = read_from_cli(), panic if this does not exist
+**** Assert supplied path exists
+**** Let config_args = read_from_cli(config_file)
 *** Else
-**** Try to get config from the other sources, falling back on default values
-*** Then merge in the other cli args
+**** Let config_args = read_from_cli() from other sources
+*** Resolve merges
+**** Let args = cli_args
+**** Replace Nones in args with Somes in config_args
+**** Replace Nones in args with default values
+*** Return args for final validation
