@@ -11,10 +11,10 @@
 #![allow(clippy::struct_excessive_bools)]
 #![allow(clippy::module_name_repetitions)]
 
-use clap::Parser;
 use std::fs;
 use std::process::ExitCode;
 
+mod args;
 mod cli;
 mod comments;
 mod config;
@@ -28,13 +28,11 @@ mod subs;
 mod verbatim;
 mod wrap;
 mod write;
-use crate::cli::*;
-use crate::config::*;
+use crate::args::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::read::*;
 use crate::write::*;
-//use twelf::{config, Layer};
 
 #[cfg(test)]
 mod tests;
@@ -52,7 +50,7 @@ fn main() -> ExitCode {
     let args = get_args();
     //let config = read_config_file(&args);
     //dbg!(config);
-    init_logger(args.log_level());
+    init_logger(args.verbosity);
 
     let mut logs = Vec::<Log>::new();
     // TODO resolve args
