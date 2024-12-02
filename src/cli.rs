@@ -1,14 +1,14 @@
 //! Functionality to parse CLI arguments
 
 use crate::args::*;
-use clap::{command, value_parser, Arg, ArgAction, ArgMatches};
+use clap::{command, Command, value_parser, Arg, ArgAction};
 use log::LevelFilter;
 use std::borrow::ToOwned;
 use std::path::PathBuf;
 use ArgAction::{Append, SetTrue};
 
-/// Read arguments passed on CLI
-fn get_arg_matches() -> ArgMatches {
+/// Construct the CLI command
+fn get_cli_command() -> Command {
     command!()
         .arg(
             Arg::new("check")
@@ -90,12 +90,11 @@ fn get_arg_matches() -> ArgMatches {
                 .value_parser(value_parser!(PathBuf))
                 .help("Path to config file"),
         )
-        .get_matches()
 }
 
 /// Parse CLI arguments into `OptionArgs` struct
 pub fn get_cli_args() -> OptionArgs {
-    let arg_matches = get_arg_matches();
+    let arg_matches = get_cli_command().get_matches();
     let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
         Some(false)
     } else {
