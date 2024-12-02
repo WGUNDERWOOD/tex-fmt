@@ -13,13 +13,13 @@ build:
   @cargo build -r
 
 test:
-  @cargo test
+  @cargo test -p tex-fmt-lib
 
 doc:
   @cargo doc
 
 testignored:
-  @cargo test -- --ignored
+  @cargo test -p tex-fmt-lib -- --ignored
 
 clippy:
   @cargo clippy -r && cargo shear
