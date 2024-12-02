@@ -160,7 +160,7 @@ tex-fmt --stdin              # read from stdin and print to stdout
 tex-fmt --help               # view help information
 ```
 
-## Configuration
+### Configuration
 
 Options can also be read from a configuration file, which
 will be read from the following locations, in order of decreasing priority.
