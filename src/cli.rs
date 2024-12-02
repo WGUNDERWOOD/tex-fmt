@@ -1,3 +1,5 @@
+//! Functionality to parse CLI arguments
+
 use crate::args::*;
 use clap::{command, value_parser, Arg, ArgAction, ArgMatches};
 use log::LevelFilter;
@@ -5,7 +7,7 @@ use std::borrow::ToOwned;
 use std::path::PathBuf;
 use ArgAction::{Append, SetTrue};
 
-// read from cli to clap argmatches
+/// Read arguments passed on CLI
 fn get_arg_matches() -> ArgMatches {
     command!()
         .arg(
@@ -66,7 +68,7 @@ fn get_arg_matches() -> ArgMatches {
                 .short('t')
                 .long("tabsize")
                 .value_parser(value_parser!(u8))
-                .help("Number of characters to use as tab size [default 2]"),
+                .help("Number of characters to use as tab size [default: 2]"),
         )
         .arg(
             Arg::new("usetabs")
@@ -91,19 +93,7 @@ fn get_arg_matches() -> ArgMatches {
         .get_matches()
 }
 
-const fn bool_to_option(b: bool) -> Option<bool> {
-    if b {
-        Some(true)
-    } else {
-        None
-    }
-}
-
-fn flag_to_option(arg_matches: &ArgMatches, arg: &str) -> Option<bool> {
-    bool_to_option(arg_matches.get_flag(arg))
-}
-
-// convert clap argmatches to args
+/// Parse CLI arguments into `OptionArgs` struct
 pub fn get_cli_args() -> OptionArgs {
     let arg_matches = get_arg_matches();
     let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
@@ -126,8 +116,16 @@ pub fn get_cli_args() -> OptionArgs {
         None
     };
     let args = OptionArgs {
-        check: flag_to_option(&arg_matches, "check"),
-        print: flag_to_option(&arg_matches, "print"),
+        check: if arg_matches.get_flag("check") {
+            Some(true)
+        } else {
+            None
+        },
+        print: if arg_matches.get_flag("print") {
+            Some(true)
+        } else {
+            None
+        },
         wrap,
         verbosity,
         files: arg_matches
@@ -135,7 +133,11 @@ pub fn get_cli_args() -> OptionArgs {
             .unwrap_or_default()
             .map(ToOwned::to_owned)
             .collect::<Vec<String>>(),
-        stdin: flag_to_option(&arg_matches, "stdin"),
+        stdin: if arg_matches.get_flag("stdin") {
+            Some(true)
+        } else {
+            None
+        },
         tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
         tabchar,
         wraplen: arg_matches.get_one::<u8>("wraplen").copied(),

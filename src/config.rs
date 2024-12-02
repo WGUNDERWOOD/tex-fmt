@@ -1,3 +1,5 @@
+//! Read arguments from a config file
+
 use crate::args::*;
 use dirs::config_dir;
 use log::LevelFilter;
@@ -6,8 +8,10 @@ use std::fs::{metadata, read_to_string};
 use std::path::PathBuf;
 use toml::Table;
 
+/// Config file name
 const CONFIG: &str = "tex-fmt.toml";
 
+/// Try finding a config file in various sources
 fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     // Named path passed as cli arg
     if args.config.is_some() {
@@ -38,6 +42,7 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     None
 }
 
+/// Get the git repository root directory
 fn find_git_root() -> Option<PathBuf> {
     let mut depth = 0;
     let mut current_dir = current_dir().unwrap();
@@ -56,6 +61,7 @@ fn find_git_root() -> Option<PathBuf> {
     None
 }
 
+/// Parse arguments from a config file path
 pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     let config = resolve_config_path(args);
     #[allow(clippy::question_mark)]
@@ -69,9 +75,9 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
         .into_string()
         .unwrap();
     let config = read_to_string(config.unwrap()).unwrap();
-    let config = config
-        .parse::<Table>()
-        .expect(&format!("Failed to read config file at {config_path}"));
+    let config = config.parse::<Table>().unwrap_or_else(|_| {
+        panic!("Failed to read config file at {config_path}")
+    });
 
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
         Some("trace") => Some(LevelFilter::Trace),

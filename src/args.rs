@@ -1,4 +1,4 @@
-//! Functionality to parse CLI arguments
+//! Main arguments
 
 use crate::cli::*;
 use crate::config::*;
@@ -9,7 +9,36 @@ use log::LevelFilter;
 use merge::Merge;
 use std::path::PathBuf;
 
+/// Arguments passed to tex-fmt
+#[derive(Debug)]
+pub struct Args {
+    /// Check formatting, do not modify files
+    pub check: bool,
+    /// Print to STDOUT, do not modify files
+    pub print: bool,
+    /// Wrap long lines
+    pub wrap: bool,
+    /// Verbosity level for log messages
+    pub verbosity: LevelFilter,
+    /// List of files to be formatted
+    pub files: Vec<String>,
+    /// Read from STDIN and output to STDOUT
+    pub stdin: bool,
+    /// Number of characters to use as tab size
+    pub tabsize: u8,
+    /// Characters to use for indentation
+    pub tabchar: TabChar,
+    /// Maximum allowed line length
+    pub wraplen: u8,
+    /// Wrap lines longer than this
+    pub wrapmin: u8,
+    /// Path to config file
+    pub config: Option<PathBuf>,
+}
+
+/// Arguments using Options to track CLI/config file/default values
 #[derive(Clone, Debug, Merge)]
+#[allow(clippy::missing_docs_in_private_items)]
 pub struct OptionArgs {
     pub check: Option<bool>,
     pub print: Option<bool>,
@@ -25,22 +54,9 @@ pub struct OptionArgs {
     pub config: Option<PathBuf>,
 }
 
-#[derive(Debug)]
-pub struct Args {
-    pub check: bool,
-    pub print: bool,
-    pub wrap: bool,
-    pub verbosity: LevelFilter,
-    pub files: Vec<String>,
-    pub stdin: bool,
-    pub tabsize: u8,
-    pub tabchar: TabChar,
-    pub wraplen: u8,
-    pub wrapmin: u8,
-    pub config: Option<PathBuf>,
-}
-
+/// Character to use for indentation
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[allow(clippy::missing_docs_in_private_items)]
 pub enum TabChar {
     Tab,
     Space,
@@ -64,6 +80,7 @@ impl Default for OptionArgs {
     }
 }
 
+/// Get all arguments from CLI, config file, and defaults, and merge them
 pub fn get_args() -> Args {
     let mut args = get_cli_args();
     let config_args = get_config_args(&args);
@@ -75,6 +92,7 @@ pub fn get_args() -> Args {
 }
 
 impl Args {
+    /// Construct concrete arguments from optional arguments
     fn from(args: OptionArgs) -> Self {
         Self {
             check: args.check.unwrap(),
@@ -91,6 +109,7 @@ impl Args {
         }
     }
 
+    /// Resolve conflicting arguments
     pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
         let mut exit_code = 0;
         self.print |= self.stdin;
