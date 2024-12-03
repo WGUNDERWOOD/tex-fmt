@@ -41,6 +41,7 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
             [CompletionResult]::new('-s', '-s', [CompletionResultType]::ParameterName, 'Process stdin as a single file, output to stdout')
             [CompletionResult]::new('--stdin', '--stdin', [CompletionResultType]::ParameterName, 'Process stdin as a single file, output to stdout')
             [CompletionResult]::new('--usetabs', '--usetabs', [CompletionResultType]::ParameterName, 'Use tabs instead of spaces for indentation')
+            [CompletionResult]::new('--man', '--man', [CompletionResultType]::ParameterName, 'Generate man page')
             [CompletionResult]::new('-h', '-h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', '--help', [CompletionResultType]::ParameterName, 'Print help')
             break

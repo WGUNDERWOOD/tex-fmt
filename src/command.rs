@@ -91,4 +91,10 @@ fn get_cli_command() -> Command {
                 .value_name("shell")
                 .help("Generate shell completion script")
         )
+        .arg(
+            Arg::new("man")
+                .long("man")
+                .action(SetTrue)
+                .help("Generate man page"),
+        )
 }

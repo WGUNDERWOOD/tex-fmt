@@ -3,6 +3,15 @@
 ** TODO Skipping a line seems to break linums
 ** TODO Indent does not return to zero message
 *** Should show last zero-indented line
+** TODO Man page include in nix
+** TODO Shell completion include in nix
+* Options and documentation
+** GitHub README
+** Args struct
+** OptionArgs struct
+** CLI command
+** CLI args parser function
+** Config args parser function
 * Release process
 ** Update release notes
 *** git log --oneline --no-merges vX.X.X main

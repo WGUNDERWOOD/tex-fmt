@@ -210,6 +210,13 @@ Shell completion scripts can be generated at run-time using the
 https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion)
 directory for more details.
 
+### Man page
+
+A man page can be generated at run-time using the
+`--man` flag. See the
+[man](https://github.com/WGUNDERWOOD/tex-fmt/tree/main/man)
+directory for more details.
+
 ## Performance
 
 When formatting all of the test cases,
@@ -281,3 +288,4 @@ The following command-line options are offered by tex-fmt.
 | `--help`       | `-h`  |         | Print help |
 | `--version`    | `-V`  |         | Print version |
 | `--completion` |       |         | Generate a shell completion script |
+| `--man`        |       |         | Generate a man page |
