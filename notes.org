@@ -1,10 +1,8 @@
 #+title: tex-fmt
 * Tasks
 ** TODO Skipping a line seems to break linums
-** TODO Indent does not return to zero message
-*** Should show last zero-indented line
-** TODO Man page include in nix
-** TODO Shell completion include in nix
+** TODO Man page include in nix and GitHub release
+** TODO Shell completion include in nix and GitHub release
 * Options and documentation
 ** GitHub README
 ** Args struct

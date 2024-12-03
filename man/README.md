@@ -1,7 +1,7 @@
 # Man page generation for tex-fmt
 
 A man page can be generated at run-time using the
-`--man` flag, by running
+`--man` flag, as follows.
 
 ```shell
 mkdir -p man/man1
