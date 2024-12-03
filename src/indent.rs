@@ -154,6 +154,11 @@ pub fn calculate_indent(
     // not forgotten for the next iterations.
     state.indent = indent.clone();
 
+    // Update the last zero-indented line for use in error messages.
+    if indent.visual == 0 && state.linum_new > state.linum_last_zero_indent {
+        state.linum_last_zero_indent = state.linum_new;
+    }
+
     // However, we can't negatively indent a line.
     // So we log the negative indent and reset the values to 0.
     if (indent.visual < 0) || (indent.actual < 0) {
