@@ -1,7 +1,7 @@
 # Shell completion for tex-fmt
 
 Shell completion scripts can be generated at run-time using the
-`--completion <SHELL>` flag, as detailed below. Completion scripts
+`--completion <shell>` flag, as detailed below. Completion scripts
 generated at compile-time are also available for download in
 [this directory](
 https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion/),

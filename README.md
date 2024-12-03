@@ -205,7 +205,7 @@ and `minted` are automatically skipped.
 ### Shell completion
 
 Shell completion scripts can be generated at run-time using the
-`--completion <SHELL>` flag. See the
+`--completion <shell>` flag. See the
 [completion](
 https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion)
 directory for more details.
@@ -232,7 +232,6 @@ Alternatively, you can
 
 - Semantic parsing of LaTeX code not conducted
 - No linting or correction of syntax errors
-- Customization via configuration files not supported
 - Compliance with existing formatting guidelines not guaranteed
 - No spelling or grammar checking
 
@@ -266,18 +265,19 @@ Visual Studio plugin, uses latexindent as the backend
 
 The following command-line options are offered by tex-fmt.
 
-| Option      | Alias | Default | Description |
-| ----------- | ----- | ------- | --- |
-| `--check`   | `-c`  |         | Check formatting, do not modify files |
-| `--print`   | `-p`  |         | Print to stdout, do not modify files |
-| `--nowrap`  | `-n`  |         | Do not wrap long lines |
-| `--verbose` | `-v`  |         | Show info messages |
-| `--quiet`   | `-q`  |         | Hide warning messages |
-| `--trace`   |       |         | Show trace messages |
-| `--stdin`   | `-s`  |         | Process stdin as a single file, output to stdout |
-| `--tabsize` | `-t`  | `2`     | Number of characters to use as tab size |
-| `--usetabs` |       |         | Use tabs instead of spaces for indentation |
-| `--wraplen` | `-l`  | `80`    | Line length for wrapping |
-| `--config`  |       |         | Path to config file |
-| `--help`    | `-h`  |         | Print help |
-| `--version` | `-V`  |         | Print version |
+| Option         | Alias | Default | Description |
+| -------------- | ----- | ------- | --- |
+| `--check`      | `-c`  |         | Check formatting, do not modify files |
+| `--print`      | `-p`  |         | Print to stdout, do not modify files |
+| `--nowrap`     | `-n`  |         | Do not wrap long lines |
+| `--verbose`    | `-v`  |         | Show info messages |
+| `--quiet`      | `-q`  |         | Hide warning messages |
+| `--trace`      |       |         | Show trace messages |
+| `--stdin`      | `-s`  |         | Process stdin as a single file, output to stdout |
+| `--tabsize`    | `-t`  | `2`     | Number of characters to use as tab size |
+| `--usetabs`    |       |         | Use tabs instead of spaces for indentation |
+| `--wraplen`    | `-l`  | `80`    | Line length for wrapping |
+| `--config`     |       |         | Path to config file |
+| `--help`       | `-h`  |         | Print help |
+| `--version`    | `-V`  |         | Print version |
+| `--completion` |       |         | Generate a shell completion script |
