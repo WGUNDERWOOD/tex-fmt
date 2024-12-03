@@ -5,6 +5,8 @@ use std::path::PathBuf;
 /// Construct the CLI command
 fn get_cli_command() -> Command {
     Command::new("tex-fmt")
+        .author("William George Underwood, wg.underwood13@gmail.com")
+        .about("An extremely fast LaTeX formatter written in Rust")
         .arg(
             Arg::new("check")
                 .short('c')
