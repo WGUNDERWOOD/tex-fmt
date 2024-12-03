@@ -205,10 +205,10 @@ and `minted` are automatically skipped.
 ### Shell completion
 
 Shell completion scripts can be generated at run-time using the
-`--completion <SHELL>` flag. See
-[completion/README.md](
-https://github.com/WGUNDERWOOD/tex-fmt/blob/main/completion/README.md)
-for more details.
+`--completion <SHELL>` flag. See the
+[completion](
+https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion)
+directory for more details.
 
 ## Performance
 
