@@ -10,11 +10,11 @@ include!("src/command.rs");
 fn main() -> Result<(), Error> {
     let outdir = match var_os("CARGO_MANIFEST_DIR") {
         None => return Ok(()),
-        Some(outdir) => Path::new(&outdir).join("completions/"),
+        Some(outdir) => Path::new(&outdir).join("completion/"),
     };
 
     if !outdir.exists() {
-        //println!("cargo:warning=creating completions directory");
+        //println!("cargo:warning=creating completion directory");
         create_dir(&outdir).unwrap();
     }
 

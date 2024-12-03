@@ -92,12 +92,3 @@ fn get_cli_command() -> Command {
                 .help("Generate shell completion script")
         )
 }
-
-//#[derive(ArgEnum, Copy, Clone)]
-//pub enum Shell {
-//    Bash,
-//    Zsh,
-//    Fish,
-//    PowerShell,
-//    Elvish,
-//}

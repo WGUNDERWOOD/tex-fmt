@@ -202,6 +202,14 @@ To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
 Verbatim environments including `verbatim`, `Verbatim`, `lstlisting`
 and `minted` are automatically skipped.
 
+### Shell completion
+
+Shell completion scripts can be generated at run-time using the
+`--completion <SHELL>` flag. See
+[completion/README.md](
+https://github.com/WGUNDERWOOD/tex-fmt/blob/main/completion/README.md)
+for more details.
+
 ## Performance
 
 When formatting all of the test cases,
