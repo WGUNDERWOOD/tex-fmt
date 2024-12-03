@@ -88,7 +88,7 @@ fn get_cli_command() -> Command {
             Arg::new("completion")
                 .long("completion")
                 .value_parser(value_parser!(Shell))
-                .value_name("SHELL")
+                .value_name("shell")
                 .help("Generate shell completion script")
         )
 }

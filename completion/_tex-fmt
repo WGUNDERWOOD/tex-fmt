@@ -20,7 +20,7 @@ _tex-fmt() {
 '-l+[Line length for wrapping \[default\: 80\]]: :_default' \
 '--wraplen=[Line length for wrapping \[default\: 80\]]: :_default' \
 '--config=[Path to configuration file]: :_files' \
-'--completion=[Generate shell completion script]:SHELL:(bash elvish fish powershell zsh)' \
+'--completion=[Generate shell completion script]:shell:(bash elvish fish powershell zsh)' \
 '-c[Check formatting, do not modify files]' \
 '--check[Check formatting, do not modify files]' \
 '-p[Print to stdout, do not modify files]' \
