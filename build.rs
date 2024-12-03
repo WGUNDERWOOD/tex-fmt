@@ -8,22 +8,41 @@ use std::path::Path;
 include!("src/command.rs");
 
 fn main() -> Result<(), Error> {
+    build_completion()?;
+    build_man()?;
+    Ok(())
+}
+
+fn build_completion() -> Result<(), Error> {
     let outdir = match var_os("CARGO_MANIFEST_DIR") {
         None => return Ok(()),
         Some(outdir) => Path::new(&outdir).join("completion/"),
     };
 
     if !outdir.exists() {
-        //println!("cargo:warning=creating completion directory");
         create_dir(&outdir).unwrap();
     }
 
-    //println!("cargo:warning=generating completion scripts in {outdir:?}");
-    let mut cmd = get_cli_command();
+    let mut command = get_cli_command();
     for &shell in Shell::value_variants() {
-        generate_to(shell, &mut cmd, "tex-fmt", &outdir)?;
-        //println!("cargo:warning=generated completion script for {shell}");
+        generate_to(shell, &mut command, "tex-fmt", &outdir)?;
+    }
+    Ok(())
+}
+fn build_man() -> Result<(), Error> {
+    let outdir = match var_os("CARGO_MANIFEST_DIR") {
+        None => return Ok(()),
+        Some(outdir) => Path::new(&outdir).join("man/"),
+    };
+
+    if !outdir.exists() {
+        create_dir(&outdir).unwrap();
     }
 
+    let command = get_cli_command();
+    let man = clap_mangen::Man::new(command);
+    let mut buffer: Vec<u8> = Default::default();
+    man.render(&mut buffer)?;
+    std::fs::write(outdir.join("tex-fmt.1"), buffer)?;
     Ok(())
 }
