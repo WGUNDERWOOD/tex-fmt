@@ -122,7 +122,11 @@ pub fn format_file(
     }
 
     if !indents_return_to_zero(&state) {
-        record_file_log(logs, Warn, file, "Indent does not return to zero.");
+        let msg = format!(
+            "Indent does not return to zero. Last non-indented line is line {}",
+            state.linum_last_zero_indent
+        );
+        record_file_log(logs, Warn, file, &msg);
     }
 
     new_text = remove_trailing_spaces(&new_text);
@@ -173,6 +177,8 @@ pub struct State {
     pub indent: Indent,
     /// Verbatim status of the current line
     pub verbatim: Verbatim,
+    /// Line number in the new file of the last non-indented line
+    pub linum_last_zero_indent: usize,
 }
 
 impl State {
@@ -184,6 +190,7 @@ impl State {
             ignore: Ignore::new(),
             indent: Indent::new(),
             verbatim: Verbatim::new(),
+            linum_last_zero_indent: 1,
         }
     }
 }
