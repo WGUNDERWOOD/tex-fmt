@@ -38,6 +38,7 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand -s 'Process stdin as a single file, output to stdout'
             cand --stdin 'Process stdin as a single file, output to stdout'
             cand --usetabs 'Use tabs instead of spaces for indentation'
+            cand --man 'Generate man page'
             cand -h 'Print help'
             cand --help 'Print help'
         }

@@ -9,41 +9,41 @@ but they may not be up-to-date with your tex-fmt installation.
 
 For **bash**:
 
-```
-$ dir="$XDG_CONFIG_HOME/bash_completion"
-$ mkdir -p "$dir"
-$ tex-fmt --completion bash > "$dir/tex-fmt.bash"
+```shell
+dir="$XDG_CONFIG_HOME/bash_completion"
+mkdir -p "$dir"
+tex-fmt --completion bash > "$dir/tex-fmt.bash"
 ```
 
 For **fish**:
 
-```
-$ dir="$XDG_CONFIG_HOME/fish/completions"
-$ mkdir -p "$dir"
-$ tex-fmt --completion fish > "$dir/tex-fmt.fish"
+```shell
+dir="$XDG_CONFIG_HOME/fish/completions"
+mkdir -p "$dir"
+tex-fmt --completion fish > "$dir/tex-fmt.fish"
 ```
 
 For **zsh**:
 
-```
-$ dir="$HOME/.zsh-complete"
-$ mkdir -p "$dir"
-$ tex-fmt --completion zsh > "$dir/_tex-fmt"
+```shell
+dir="$HOME/.zsh-complete"
+mkdir -p "$dir"
+tex-fmt --completion zsh > "$dir/_tex-fmt"
 ```
 
 For **elvish**:
 
-```
-$ dir="$HOME/.elvish/lib"
-$ mkdir -p "$dir"
-$ tex-fmt --completion elvish > "$dir/tex-fmt.elv"
-$ use tex-fmt
+```shell
+dir="$HOME/.elvish/lib"
+mkdir -p "$dir"
+tex-fmt --completion elvish > "$dir/tex-fmt.elv"
+use tex-fmt
 ```
 
 For **PowerShell**, create the completions:
 
-```
-$ tex-fmt --completion powershell > _tex-fmt.ps1
+```shell
+tex-fmt --completion powershell > _tex-fmt.ps1
 ```
 
 Then add `. _tex-fmt.ps1` to your PowerShell profile.

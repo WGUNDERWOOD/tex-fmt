@@ -8,6 +8,9 @@ use std::path::Path;
 include!("src/command.rs");
 
 fn main() -> Result<(), Error> {
+    println!("cargo::rerun-if-changed=src/");
+    println!("cargo::rerun-if-changed=build.rs");
+    println!("cargo::rerun-if-changed=Cargo.toml");
     build_completion()?;
     build_man()?;
     Ok(())

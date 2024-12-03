@@ -1,0 +1,58 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH tex-fmt 1  "tex-fmt " 
+.SH NAME
+tex\-fmt
+.SH SYNOPSIS
+\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-\-config\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIfiles\fR] 
+.SH DESCRIPTION
+.SH OPTIONS
+.TP
+\fB\-c\fR, \fB\-\-check\fR
+Check formatting, do not modify files
+.TP
+\fB\-p\fR, \fB\-\-print\fR
+Print to stdout, do not modify files
+.TP
+\fB\-n\fR, \fB\-\-nowrap\fR
+Do not wrap long lines
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Show info messages
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Hide warning messages
+.TP
+\fB\-\-trace\fR
+Show trace messages
+.TP
+\fB\-s\fR, \fB\-\-stdin\fR
+Process stdin as a single file, output to stdout
+.TP
+\fB\-t\fR, \fB\-\-tabsize\fR
+Number of characters to use as tab size [default: 2]
+.TP
+\fB\-\-usetabs\fR
+Use tabs instead of spaces for indentation
+.TP
+\fB\-l\fR, \fB\-\-wraplen\fR
+Line length for wrapping [default: 80]
+.TP
+\fB\-\-config\fR
+Path to configuration file
+.TP
+\fB\-\-completion\fR=\fIshell\fR
+Generate shell completion script
+.br
+
+.br
+[\fIpossible values: \fRbash, elvish, fish, powershell, zsh]
+.TP
+\fB\-\-man\fR
+Generate man page
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIfiles\fR]
+List of files to be formatted

@@ -2,6 +2,7 @@
 
 use crate::args::*;
 use clap_complete::{generate, Shell};
+use clap_mangen::Man;
 use log::LevelFilter;
 use std::io;
 
@@ -16,6 +17,13 @@ pub fn get_cli_args() -> OptionArgs {
     // Generate completions and exit
     if let Some(shell) = arg_matches.get_one::<Shell>("completion") {
         generate(*shell, &mut command, "tex-fmt", &mut io::stdout());
+        std::process::exit(0);
+    }
+
+    // Generate man page and exit
+    if arg_matches.get_flag("man") {
+        let man = Man::new(command);
+        man.render(&mut io::stdout()).unwrap();
         std::process::exit(0);
     }
 
