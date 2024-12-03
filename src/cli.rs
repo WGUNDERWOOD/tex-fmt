@@ -1,15 +1,24 @@
 //! Functionality to parse CLI arguments
 
 use crate::args::*;
+use clap_complete::{generate, Shell};
 use log::LevelFilter;
+use std::io;
 
 // Get the clap CLI command from a separate file
 include!("command.rs");
 
 /// Parse CLI arguments into `OptionArgs` struct
 pub fn get_cli_args() -> OptionArgs {
-    let arg_matches = get_cli_command().get_matches();
-    get_completions(&arg_matches);
+    let mut command = get_cli_command();
+    let arg_matches = command.clone().get_matches();
+
+    // Generate completions and exit
+    if let Some(shell) = arg_matches.get_one::<Shell>("completion") {
+        generate(*shell, &mut command, "tex-fmt", &mut io::stdout());
+        std::process::exit(0);
+    }
+
     let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
         Some(false)
     } else {
@@ -59,17 +68,4 @@ pub fn get_cli_args() -> OptionArgs {
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
     };
     args
-}
-
-fn print_completions<G: Generator>(gen: G, command: &mut Command) {
-    generate(gen, command, command.get_name().to_string(), &mut io::stdout());
-}
-
-fn get_completions(arg_matches: &ArgMatches) {
-
-    if let Some(generator) = arg_matches.get_one::<Shell>("generator") {
-        let mut command = get_cli_command();
-        eprintln!("Generating completion file for {generator}...");
-        print_completions(*generator, &mut command);
-    }
 }

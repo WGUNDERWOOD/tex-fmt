@@ -1,9 +1,9 @@
-use std::io::Error;
+use clap::ValueEnum;
+use clap_complete::{generate_to, Shell};
 use std::env::var_os;
 use std::fs::create_dir;
+use std::io::Error;
 use std::path::Path;
-use clap::{ValueEnum};
-use clap_complete::{generate_to, Shell};
 
 include!("src/command.rs");
 

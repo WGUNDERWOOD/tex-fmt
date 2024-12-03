@@ -81,9 +81,23 @@ fn get_cli_command() -> Command {
         .arg(
             Arg::new("config")
                 .long("config")
-                .help("Configuration file path")
                 .value_parser(value_parser!(PathBuf))
-                .help("Path to config file"),
+                .help("Path to configuration file")
+        )
+        .arg(
+            Arg::new("completion")
+                .long("completion")
+                .value_parser(value_parser!(Shell))
+                .value_name("SHELL")
+                .help("Generate shell completion script")
         )
 }
 
+//#[derive(ArgEnum, Copy, Clone)]
+//pub enum Shell {
+//    Bash,
+//    Zsh,
+//    Fish,
+//    PowerShell,
+//    Elvish,
+//}
