@@ -4,8 +4,8 @@ Shell completion scripts can be generated at run-time using the
 `--completion <SHELL>` flag, as detailed below. Completion scripts
 generated at compile-time are also available for download in
 [this directory](
-https://github.com/WGUNDERWOOD/tex-fmt/blob/main/completion/),
-but they may not be up to date with your tex-fmt installation.
+https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion/),
+but they may not be up-to-date with your tex-fmt installation.
 
 For **bash**:
 
@@ -46,6 +46,6 @@ For **PowerShell**, create the completions:
 $ tex-fmt --completion powershell > _tex-fmt.ps1
 ```
 
-And then add `. _tex-fmt.ps1` to your PowerShell profile
-(note the leading period). If the `_tex-fmt.ps1` file is not on your `PATH`, do
+Then add `. _tex-fmt.ps1` to your PowerShell profile.
+If the `_tex-fmt.ps1` file is not on your `PATH`, do
 `. /path/to/_tex-fmt.ps1` instead.
