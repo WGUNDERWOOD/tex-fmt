@@ -1,6 +1,6 @@
 //! Utilities for writing formatted files
 
-use crate::cli::*;
+use crate::args::*;
 use crate::fs;
 use crate::logging::*;
 use log::Level::Error;
@@ -14,7 +14,7 @@ fn write_file(file: &str, text: &str) {
 
 /// Handle the newly formatted file
 pub fn process_output(
-    args: &Cli,
+    args: &Args,
     file: &str,
     text: &str,
     new_text: &str,
@@ -23,7 +23,7 @@ pub fn process_output(
 ) -> u8 {
     let mut new_exit_code = exit_code;
     if args.print {
-        println!("{}", &new_text);
+        print!("{}", &new_text);
     } else if args.check && text != new_text {
         record_file_log(logs, Error, file, "Incorrect formatting.");
         new_exit_code = 1;

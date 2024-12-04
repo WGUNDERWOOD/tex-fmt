@@ -11,12 +11,13 @@
 #![allow(clippy::struct_excessive_bools)]
 #![allow(clippy::module_name_repetitions)]
 
-use clap::Parser;
 use std::fs;
 use std::process::ExitCode;
 
+mod args;
 mod cli;
 mod comments;
+mod config;
 mod format;
 mod ignore;
 mod indent;
@@ -27,7 +28,7 @@ mod subs;
 mod verbatim;
 mod wrap;
 mod write;
-use crate::cli::*;
+use crate::args::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::read::*;
@@ -45,14 +46,15 @@ const LINE_END: &str = "\n";
 const LINE_END: &str = "\r\n";
 
 fn main() -> ExitCode {
-    let mut args = Cli::parse();
-    init_logger(args.log_level());
+    let mut args = get_args();
+    init_logger(args.verbosity);
 
     let mut logs = Vec::<Log>::new();
     let mut exit_code = args.resolve(&mut logs);
 
     if exit_code == 0 {
         if args.stdin {
+            // TODO combine the read and read_stdin functions to simplify this
             if let Some((file, text)) = read_stdin(&mut logs) {
                 let new_text = format_file(&text, &file, &args, &mut logs);
                 exit_code = process_output(

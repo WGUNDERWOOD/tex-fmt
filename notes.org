@@ -1,6 +1,30 @@
 #+title: tex-fmt
+* Tasks
+** TODO Skipping a line seems to break linums
+** TODO Man page include in nix and GitHub release
+** TODO Shell completion include in nix and GitHub release
+** TODO Config file include in nix package
+* Options and documentation
+** GitHub README
+** Args struct
+** OptionArgs struct
+** CLI command
+** CLI args parser function
+** Config args parser function
 * Release process
+** Update release notes
+*** git log --oneline --no-merges vX.X.X..main
+*** Write in NEWS.md
 ** Update version number in Cargo.toml
+** Update Nix flake and lock
+*** Check for new NixOS version (nixos-XX.XX)
+*** just nix
+** Update Rust version
+*** just upgrade
+** Run tests
+*** just
+*** just perf
+*** Update performance results in README.md
 ** Push to GitHub and check tests pass
 ** Create a git tag
 *** git tag vX.X.X
@@ -13,13 +37,13 @@
 *** git fetch upstream
 *** git rebase upstream/master
 *** git push --force-with-lease origin master
+*** git branch -d update-tex-fmt
 *** git switch --create update-tex-fmt upstream/master
 *** nvim pkgs/by-name/te/tex-fmt/package.nix
 *** Update version and invalidate src.hash and cargoHash
 *** nix-build -A tex-fmt
-*** Fix hashes and repeat until successful build
-*** git switch --create update-tex-fmt upstream/master
+*** Fix both hashes, get a successful build
 *** git commit -m "tex-fmt: X.X.X -> Y.Y.Y"
 *** git push --set-upstream origin HEAD
-*** Click the link to create a pull request
+*** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes

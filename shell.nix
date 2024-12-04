@@ -12,13 +12,15 @@ pkgs.mkShell {
     pkgs.alejandra
     pkgs.bacon
     pkgs.cacert
-    pkgs.cargo-flamegraph
     pkgs.cargo-edit
+    pkgs.cargo-flamegraph
+    pkgs.cargo-shear
     pkgs.clippy
     pkgs.diff-so-fancy
     pkgs.gh
     pkgs.hyperfine
     pkgs.poppler_utils
+    pkgs.ripgrep
     pkgs.rustfmt
     pkgs.shellcheck
     pkgs.texlive.combined.scheme-full

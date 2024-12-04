@@ -160,7 +160,7 @@ pub fn print_logs(logs: &mut Vec<Log>) {
             "{} {}: {}{}{} {}",
             "tex-fmt".magenta().bold(),
             match log.file.as_str() {
-                "<STDIN>" | "" => "<STDIN>".blue().bold(),
+                "<stdin>" | "" => "<stdin>".blue().bold(),
                 _ => Path::new(&log.file)
                     .file_name()
                     .unwrap()
