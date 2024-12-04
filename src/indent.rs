@@ -1,19 +1,18 @@
 //! Utilities for indenting source lines
 
+use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
-use crate::ignore::*;
 use crate::logging::*;
-use crate::parse::*;
 use crate::regexes::*;
-use crate::verbatim::*;
 use core::cmp::max;
-use log::Level::{Trace, Warn};
+use log::Level;
+use log::LevelFilter;
 
 /// Opening delimiters
-const OPENS: [char; 3] = ['(', '[', '{'];
+const OPENS: [char; 3] = ['{', '(', '['];
 /// Closing delimiters
-const CLOSES: [char; 3] = [')', ']', '}'];
+const CLOSES: [char; 3] = ['}', ')', ']'];
 
 /// Information on the indentation state of a line
 #[derive(Debug, Clone)]
@@ -35,56 +34,45 @@ impl Indent {
 }
 
 /// Calculate total indentation change due to the current line
-fn get_diff(line: &str, contains_env_end: bool) -> i8 {
+fn get_diff(line: &str, pattern: &Pattern) -> i8 {
     // list environments get double indents
     let mut diff: i8 = 0;
 
     // other environments get single indents
-    if line.contains(ENV_BEGIN) {
+    if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
         // documents get no global indentation
         if line.contains(DOC_BEGIN) {
             return 0;
         };
         diff += 1;
-        diff += i8::try_from(
-            LISTS_BEGIN.iter().filter(|&r| line.contains(r)).count(),
-        )
-        .unwrap();
-    } else if contains_env_end {
+        diff += i8::from(LISTS_BEGIN.iter().any(|r| line.contains(r)));
+    } else if pattern.contains_env_end && line.contains(ENV_END) {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
         };
         diff -= 1;
-        diff -= i8::try_from(
-            LISTS_END.iter().filter(|&r| line.contains(r)).count(),
-        )
-        .unwrap();
+        diff -= i8::from(LISTS_END.iter().any(|r| line.contains(r)));
     };
 
     // indent for delimiters
-    diff += i8::try_from(line.chars().filter(|x| OPENS.contains(x)).count())
-        .unwrap();
-    diff -= i8::try_from(line.chars().filter(|x| CLOSES.contains(x)).count())
-        .unwrap();
+    diff += line
+        .chars()
+        .map(|x| i8::from(OPENS.contains(&x)) - i8::from(CLOSES.contains(&x)))
+        .sum::<i8>();
 
     diff
 }
 
 /// Calculate dedentation for the current line
-fn get_back(line: &str, contains_env_end: bool) -> i8 {
-    let mut back: i8 = 0;
-    let mut cumul: i8 = 0;
-
-    // delimiters
-    for c in line.chars() {
-        cumul -= i8::from(OPENS.contains(&c));
-        cumul += i8::from(CLOSES.contains(&c));
-        back = max(cumul, back);
+fn get_back(line: &str, pattern: &Pattern, state: &State) -> i8 {
+    // Only need to dedent if indentation is present
+    if state.indent.actual == 0 {
+        return 0;
     }
+    let mut back: i8 = 0;
 
-    // other environments get single indents
-    if contains_env_end {
+    if pattern.contains_env_end && line.contains(ENV_END) {
         // documents get no global indentation
         if line.contains(DOC_END) {
             return 0;
@@ -95,92 +83,130 @@ fn get_back(line: &str, contains_env_end: bool) -> i8 {
                 return 2;
             };
         }
+        // other environments get single indents
+        back = 1;
+    } else if pattern.contains_item && line.contains(ITEM) {
+        // deindent items to make the rest of item environment appear indented
         back += 1;
     };
 
-    // deindent items to make the rest of item environment appear indented
-    if line.contains(ITEM) {
-        back += 1;
-    };
+    // Dedent delimiters
+    let mut cumul: i8 = back;
+    for c in line.chars() {
+        cumul -= i8::from(OPENS.contains(&c));
+        cumul += i8::from(CLOSES.contains(&c));
+        back = max(cumul, back);
+    }
 
     back
 }
 
-/// Check if a line contains an environment end
-fn check_contains_env_end(line: &str) -> bool {
-    line.contains(ENV_END)
-}
-
 /// Calculate indentation properties of the current line
-fn get_indent(line: &str, prev_indent: &Indent) -> Indent {
-    let contains_env_end = check_contains_env_end(line);
-    let diff = get_diff(line, contains_env_end);
-    let back = get_back(line, contains_env_end);
+fn get_indent(
+    line: &str,
+    prev_indent: &Indent,
+    pattern: &Pattern,
+    state: &State,
+) -> Indent {
+    let diff = get_diff(line, pattern);
+    let back = get_back(line, pattern, state);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
 }
 
-/// Apply the correct indentation to a line
-pub fn apply_indent(
+/// Calculates the indent for `line` based on its contents.
+/// This functions saves the calculated [Indent], which might be
+/// negative, to the given [State], and then ensures that the returned
+/// [Indent] is non-negative.
+pub fn calculate_indent(
     line: &str,
-    linum_old: usize,
-    state: &State,
+    state: &mut State,
     logs: &mut Vec<Log>,
     file: &str,
-    args: &Cli,
-) -> (String, State) {
-    let mut new_line = line.to_string();
-    let mut new_state = state.clone();
-    new_state.linum_old = linum_old;
+    args: &Args,
+    pattern: &Pattern,
+) -> Indent {
+    // Calculate the new indent by first removing the comment from the line
+    // (if there is one) to ignore diffs from characters in there.
+    let comment_index = find_comment_index(line);
+    let line_strip = remove_comment(line, comment_index);
+    let mut indent = get_indent(line_strip, &state.indent, pattern, state);
 
-    new_state.ignore = get_ignore(line, &new_state, logs, file, true);
-    new_state.verbatim = get_verbatim(line, &new_state, logs, file, true);
-
-    if !new_state.verbatim.visual && !new_state.ignore.visual {
-        // calculate indent
-        let comment_index = find_comment_index(line);
-        let line_strip = &remove_comment(line, comment_index);
-        let mut indent = get_indent(line_strip, &state.indent);
-        new_state.indent = indent.clone();
-        if args.trace {
-            record_line_log(
-                logs,
-                Trace,
-                file,
-                state.linum_new,
-                new_state.linum_old,
-                line,
-                &format!(
-                    "Indent: actual = {}, visual = {}:",
-                    indent.actual, indent.visual
-                ),
-            );
-        }
-
-        if (indent.visual < 0) || (indent.actual < 0) {
-            record_line_log(
-                logs,
-                Warn,
-                file,
-                new_state.linum_new,
-                new_state.linum_old,
-                line,
-                "Indent is negative.",
-            );
-            indent.actual = indent.actual.max(0);
-            indent.visual = indent.visual.max(0);
-        }
-
-        // apply indent
-        new_line = line.trim_start().to_string();
-        if !new_line.is_empty() {
-            let n_spaces = indent.visual * args.tab;
-            for _ in 0..n_spaces {
-                new_line.insert(0, ' ');
-            }
-        }
+    // Record the indent to the logs.
+    if args.verbosity == LevelFilter::Trace {
+        record_line_log(
+            logs,
+            Level::Trace,
+            file,
+            state.linum_new,
+            state.linum_old,
+            line,
+            &format!(
+                "Indent: actual = {}, visual = {}:",
+                indent.actual, indent.visual
+            ),
+        );
     }
 
-    (new_line, new_state)
+    // Save the indent to the state. Note, this indent might be negative;
+    // it is saved without correction so that this is
+    // not forgotten for the next iterations.
+    state.indent = indent.clone();
+
+    // Update the last zero-indented line for use in error messages.
+    if indent.visual == 0 && state.linum_new > state.linum_last_zero_indent {
+        state.linum_last_zero_indent = state.linum_new;
+    }
+
+    // However, we can't negatively indent a line.
+    // So we log the negative indent and reset the values to 0.
+    if (indent.visual < 0) || (indent.actual < 0) {
+        record_line_log(
+            logs,
+            Level::Warn,
+            file,
+            state.linum_new,
+            state.linum_old,
+            line,
+            "Indent is negative.",
+        );
+        indent.actual = indent.actual.max(0);
+        indent.visual = indent.visual.max(0);
+    }
+
+    indent
+}
+
+/// Apply the given indentation to a line
+pub fn apply_indent(
+    line: &str,
+    indent: &Indent,
+    args: &Args,
+    indent_char: &str,
+) -> String {
+    let first_non_whitespace = line.chars().position(|c| !c.is_whitespace());
+
+    // If line is blank, return an empty line
+    if first_non_whitespace.is_none() {
+        return String::new();
+    }
+
+    // If line is correctly indented, return it directly
+    #[allow(clippy::cast_possible_wrap)]
+    let n_indent_chars = (indent.visual * args.tabsize as i8) as usize;
+    if first_non_whitespace == Some(n_indent_chars) {
+        return line.into();
+    }
+
+    // Otherwise, allocate enough memory to fit line with the added
+    // indentation and insert the appropriate string slices
+    let trimmed_line = line.trim_start();
+    let mut new_line =
+        String::with_capacity(trimmed_line.len() + n_indent_chars);
+    for idx in 0..n_indent_chars {
+        new_line.insert_str(idx, indent_char);
+    }
+    new_line.insert_str(n_indent_chars, trimmed_line);
+    new_line
 }

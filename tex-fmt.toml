@@ -1,0 +1,8 @@
+check = false
+print = false
+wrap = true
+tabsize = 2
+wraplen = 80
+tabchar = "space"
+verbosity = "warn"
+stdin = false

@@ -22,7 +22,7 @@ testignored:
   @cargo test -- --ignored
 
 clippy:
-  @cargo clippy -r
+  @cargo clippy -r && cargo shear
 
 format:
   @cargo fmt
@@ -45,6 +45,12 @@ upgrade:
 
 shellcheck:
   @shellcheck extra/*.sh
+
+nix:
+  @nix flake update
+
+todo:
+  @rg -g '!justfile' todo
 
 logo:
   @cd extra && python logo.py

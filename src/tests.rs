@@ -1,12 +1,12 @@
+use crate::args::*;
 use crate::format_file;
 use crate::fs;
 use crate::logging::*;
-use crate::Cli;
 use colored::Colorize;
 use similar::{ChangeTag, TextDiff};
 
 fn test_file(source_file: &str, target_file: &str) -> bool {
-    let args = Cli::new();
+    let args = Args::default();
     let mut logs = Vec::<Log>::new();
     let source_text = fs::read_to_string(source_file).unwrap();
     let target_text = fs::read_to_string(target_file).unwrap();
@@ -25,13 +25,17 @@ fn test_file(source_file: &str, target_file: &str) -> bool {
             match change.tag() {
                 ChangeTag::Delete => print!(
                     "{} {}",
-                    format!("@ {}:", change.old_index().unwrap()).blue().bold(),
-                    format!("- {}", change).red().bold(),
+                    format!("@ {:>3}:", change.old_index().unwrap())
+                        .blue()
+                        .bold(),
+                    format!("- {change}").red().bold(),
                 ),
                 ChangeTag::Insert => print!(
                     "{} {}",
-                    format!("@ {}:", change.new_index().unwrap()).blue().bold(),
-                    format!("+ {}", change).green().bold(),
+                    format!("@ {:>3}:", change.new_index().unwrap())
+                        .blue()
+                        .bold(),
+                    format!("+ {change}").green().bold(),
                 ),
                 ChangeTag::Equal => {}
             };
@@ -51,16 +55,14 @@ fn read_files_from_dir(dir: &str) -> Vec<String> {
 #[test]
 fn test_source() {
     let source_files = read_files_from_dir("./tests/source/");
-    let mut fail = false;
     for file in source_files {
         if !test_file(
             &format!("tests/source/{file}"),
             &format!("tests/target/{file}"),
         ) {
-            fail = true;
+            panic!("Failed in {file}");
         }
     }
-    assert!(!fail, "Some tests failed");
 }
 
 #[test]
@@ -87,7 +89,7 @@ fn test_short() {
         //"comments.tex",
         //"cv.tex",
         //"document.tex",
-        "environment_lines.tex",
+        // "environment_lines.tex",
         //"heavy_wrap.tex",
         //"higher_categories_thesis.bib",
         //"higher_categories_thesis.tex",
@@ -100,7 +102,8 @@ fn test_short() {
         //"puthesis.cls",
         //"quiver.sty",
         //"readme.tex",
-        //"short_document.tex",
+        //"sections.tex",
+        "short_document.tex",
         //"tikz_network.sty",
         //"unicode.tex",
         //"verbatim.tex",

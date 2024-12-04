@@ -27,10 +27,28 @@ const LISTS: [&str; 5] = [
 ];
 
 /// Names of LaTeX verbatim environments
-const VERBATIMS: [&str; 4] = ["verbatim", "Verbatim", "lstlisting", "minted"];
+const VERBATIMS: [&str; 5] =
+    ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
+
+/// Regex matches for sectioning commands
+const SPLITTING: [&str; 6] = [
+    r"\\begin\{",
+    r"\\end\{",
+    r"\\item(?:$|[^a-zA-Z])",
+    r"\\(?:sub){0,2}section\*?\{",
+    r"\\chapter\*?\{",
+    r"\\part\*?\{",
+];
 
 // Regexes
 lazy_static! {
+    // A static `String` which is a valid regex to match any one of the
+    // [`SPLITTING_COMMANDS`].
+    pub static ref SPLITTING_STRING: String = [
+        "(",
+        SPLITTING.join("|").as_str(),
+        ")"
+    ].concat();
     pub static ref RE_NEWLINES: Regex =
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();
     pub static ref RE_TRAIL: Regex =
@@ -45,10 +63,24 @@ lazy_static! {
         LISTS.iter().map(|l| format!("\\begin{{{l}}}")).collect();
     pub static ref LISTS_END: Vec<String> =
         LISTS.iter().map(|l| format!("\\end{{{l}}}")).collect();
-    pub static ref RE_ENV_BEGIN_SHARED_LINE: Regex =
-        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\begin\{)").unwrap();
-    pub static ref RE_ENV_END_SHARED_LINE: Regex =
-        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\end\{)").unwrap();
-    pub static ref RE_ITEM_SHARED_LINE: Regex =
-        Regex::new(r"(?P<prev>\S.*?)(?P<env>\\item)").unwrap();
+    // Regex that matches splitting commands
+    pub static ref RE_SPLITTING: Regex = Regex::new(
+        SPLITTING_STRING.as_str()
+    )
+    .unwrap();
+    // Matches splitting commands with non-whitespace characters before it.
+    pub static ref RE_SPLITTING_SHARED_LINE: Regex = Regex::new(
+        [r"(:?\S.*?)", "(:?", SPLITTING_STRING.as_str(), ".*)"]
+        .concat().as_str()
+    )
+    .unwrap();
+    // Matches any splitting command with non-whitespace
+    // characters before it, catches the previous text in a group called
+    // "prev" and captures the command itself and the remaining text
+    // in a group called "env".
+    pub static ref RE_SPLITTING_SHARED_LINE_CAPTURE: Regex = Regex::new(
+        [r"(?P<prev>\S.*?)", "(?P<env>", SPLITTING_STRING.as_str(), ".*)"]
+        .concat().as_str()
+    )
+    .unwrap();
 }

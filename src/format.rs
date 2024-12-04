@@ -1,9 +1,10 @@
 //! Core methodology for formatting a file
 
+use crate::args::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
-use crate::parse::*;
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
@@ -14,57 +15,106 @@ use texlab::parser::parse_latex;
 use texlab::syntax::latex::SyntaxNode;
 
 pub fn format_file(
-    text: &str,
+    old_text: &str,
     file: &str,
-    args: &Cli,
+    args: &Args,
     logs: &mut Vec<Log>,
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");
-    let mut old_text = remove_extra_newlines(text);
-    old_text = remove_tabs(&old_text, args);
-    old_text = remove_trailing_spaces(&old_text);
 
+    // Clean the source file and zip its lines with line numbers
+    let old_text = clean_text(old_text, args);
+    let mut old_lines = zip(1.., old_text.lines());
+
+    // Initialise
     let mut state = State::new();
-    let old_lines = old_text.lines();
-    let mut old_lines = zip(1.., old_lines);
     let mut queue: Vec<(usize, String)> = vec![];
-    let mut new_text = String::with_capacity(text.len());
+    let mut new_text = String::with_capacity(2 * old_text.len());
+
+    // Select the character used for indentation.
+    let indent_char = match args.tabchar {
+        TabChar::Tab => "\t",
+        TabChar::Space => " ",
+    };
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
-            let temp_state: State;
-            (line, temp_state) =
-                apply_indent(&line, linum_old, &state, logs, file, args);
-            if needs_env_new_line(&line, &temp_state) {
-                let env_lines =
-                    put_env_new_line(&line, &temp_state, file, args, logs);
-                if env_lines.is_some() {
-                    queue.push((linum_old, env_lines.clone().unwrap().1));
-                    queue.push((linum_old, env_lines.clone().unwrap().0));
-                } else {
-                    state = temp_state;
-                    new_text.push_str(&line);
-                    new_text.push_str(LINE_END);
-                    state.linum_new += 1;
-                };
-            } else if needs_wrap(&line, &temp_state, args) {
-                let wrapped_lines =
-                    apply_wrap(&line, &temp_state, file, args, logs);
-                if wrapped_lines.is_some() {
-                    queue.push((linum_old, wrapped_lines.clone().unwrap().1));
-                    queue.push((linum_old, wrapped_lines.clone().unwrap().0));
-                } else {
-                    state = temp_state;
-                    new_text.push_str(&line);
-                    new_text.push_str(LINE_END);
-                    state.linum_new += 1;
-                };
-            } else {
-                state = temp_state;
-                new_text.push_str(&line);
-                new_text.push_str(LINE_END);
-                state.linum_new += 1;
+            // Read the patterns present on this line.
+            let pattern = Pattern::new(&line);
+
+            // Temporary state for working on this line.
+            let mut temp_state = state.clone();
+
+            // Update the state with the line number from the queue.
+            temp_state.linum_old = linum_old;
+
+            // If the line should not be ignored ...
+            if !set_ignore_and_report(
+                &line,
+                &mut temp_state,
+                logs,
+                file,
+                &pattern,
+            ) {
+                // Check if the line should be split because of a pattern
+                // that should begin on a new line.
+                if needs_split(&line, &pattern) {
+                    // Split the line into two ...
+                    let (this_line, next_line) =
+                        split_line(&line, &temp_state, file, args, logs);
+                    // ... and queue the second part for formatting.
+                    queue.push((linum_old, next_line.to_string()));
+                    line = this_line.to_string();
+                }
+
+                // Calculate the indent based on the current state
+                // and the patterns in the line.
+                let indent = calculate_indent(
+                    &line,
+                    &mut temp_state,
+                    logs,
+                    file,
+                    args,
+                    &pattern,
+                );
+
+                #[allow(clippy::cast_possible_wrap)]
+                let indent_length =
+                    usize::try_from(indent.visual * args.tabsize as i8)
+                        .expect("Visual indent is non-negative.");
+
+                // Wrap the line before applying the indent, and loop back
+                // if the line needed wrapping.
+                if needs_wrap(line.trim_start(), indent_length, args) {
+                    let wrapped_lines = apply_wrap(
+                        line.trim_start(),
+                        indent_length,
+                        &temp_state,
+                        file,
+                        args,
+                        logs,
+                    );
+                    if let Some([this_line, next_line_start, next_line]) =
+                        wrapped_lines
+                    {
+                        queue.push((
+                            linum_old,
+                            [next_line_start, next_line].concat(),
+                        ));
+                        queue.push((linum_old, this_line.to_string()));
+                        continue;
+                    }
+                }
+
+                // Lastly, apply the indent if the line didn't need wrapping.
+                line = apply_indent(&line, &indent, args, indent_char);
             }
+
+            // Add line to new text
+            state = temp_state;
+            new_text.push_str(&line);
+            new_text.push_str(LINE_END);
+            state.linum_new += 1;
         } else if let Some((linum_old, line)) = old_lines.next() {
             queue.push((linum_old, line.to_string()));
         } else {
@@ -72,8 +122,12 @@ pub fn format_file(
         }
     }
 
-    if !indents_return_to_zero(&new_text) {
-        record_file_log(logs, Warn, file, "Indent does not return to zero.");
+    if !indents_return_to_zero(&state) {
+        let msg = format!(
+            "Indent does not return to zero. Last non-indented line is line {}",
+            state.linum_last_zero_indent
+        );
+        record_file_log(logs, Warn, file, &msg);
     }
 
     new_text = remove_trailing_spaces(&new_text);
@@ -86,6 +140,36 @@ pub fn format_file(
 
     let new_text = tree.to_string();
     new_text
+}
+
+/// Sets the `ignore` and `verbatim` flags in the given [State] based on
+/// `line` and returns whether `line` should be ignored by formatting.
+fn set_ignore_and_report(
+    line: &str,
+    temp_state: &mut State,
+    logs: &mut Vec<Log>,
+    file: &str,
+    pattern: &Pattern,
+) -> bool {
+    temp_state.ignore = get_ignore(line, temp_state, logs, file, true);
+    temp_state.verbatim =
+        get_verbatim(line, temp_state, logs, file, true, pattern);
+
+    temp_state.verbatim.visual || temp_state.ignore.visual
+}
+
+/// Cleans the given text by removing extra line breaks and trailing spaces,
+/// and also tabs if they shouldn't be used.
+fn clean_text(text: &str, args: &Args) -> String {
+    let mut text = remove_extra_newlines(text);
+
+    if args.tabchar != TabChar::Tab {
+        text = remove_tabs(&text, args);
+    }
+
+    text = remove_trailing_spaces(&text);
+
+    text
 }
 
 /// Information on the current state during formatting
@@ -101,6 +185,8 @@ pub struct State {
     pub indent: Indent,
     /// Verbatim status of the current line
     pub verbatim: Verbatim,
+    /// Line number in the new file of the last non-indented line
+    pub linum_last_zero_indent: usize,
 }
 
 impl State {
@@ -112,11 +198,46 @@ impl State {
             ignore: Ignore::new(),
             indent: Indent::new(),
             verbatim: Verbatim::new(),
+            linum_last_zero_indent: 1,
+        }
+    }
+}
+
+/// Record whether a line contains certain patterns to avoid recomputing
+pub struct Pattern {
+    /// Whether a begin environment pattern is present
+    pub contains_env_begin: bool,
+    /// Whether an end environment pattern is present
+    pub contains_env_end: bool,
+    /// Whether an item pattern is present
+    pub contains_item: bool,
+    /// Whether a splitting pattern is present
+    pub contains_splitting: bool,
+}
+
+impl Pattern {
+    /// Check if a string contains patterns
+    pub fn new(s: &str) -> Self {
+        // If splitting does not match, no patterns are present
+        if RE_SPLITTING.is_match(s) {
+            Self {
+                contains_env_begin: s.contains(ENV_BEGIN),
+                contains_env_end: s.contains(ENV_END),
+                contains_item: s.contains(ITEM),
+                contains_splitting: true,
+            }
+        } else {
+            Self {
+                contains_env_begin: false,
+                contains_env_end: false,
+                contains_item: false,
+                contains_splitting: false,
+            }
         }
     }
 }
 
 /// Ensure that the indentation returns to zero at the end of the file
-fn indents_return_to_zero(text: &str) -> bool {
-    !text.lines().last().unwrap_or_default().starts_with(' ')
+const fn indents_return_to_zero(state: &State) -> bool {
+    state.indent.actual == 0
 }
