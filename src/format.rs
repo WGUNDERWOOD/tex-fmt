@@ -134,7 +134,7 @@ pub fn format_file(
     record_file_log(logs, Info, file, "Formatting complete.");
 
     // https://docs.rs/rowan/latest/rowan/api/struct.SyntaxNode.html
-    let tree = SyntaxNode::new_root(parse_latex(&text));
+    let tree = SyntaxNode::new_root(parse_latex(&old_text));
     dbg!(&tree);
     dbg!(&tree.kind());
 

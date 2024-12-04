@@ -121,19 +121,3 @@ fn test_short() {
     }
     assert!(!fail, "Some tests failed");
 }
-
-#[test]
-#[ignore]
-fn test_short() {
-    let file = "readme.tex";
-    let mut fail = false;
-    if !test_file(
-            &format!("tests/source/{}", file),
-            &format!("tests/target/{}", file),
-        ) {
-        fail = true
-    }
-    if fail {
-        panic!("Test failed")
-    }
-}
