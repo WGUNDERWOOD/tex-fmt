@@ -63,26 +63,28 @@ fn find_git_root() -> Option<PathBuf> {
 
 /// Parse arguments from a config file path
 pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
-    let config = resolve_config_path(args);
+    let config_path = resolve_config_path(args);
     #[allow(clippy::question_mark)]
-    if config.is_none() {
+    if config_path.is_none() {
         return None;
     };
-    let config_path = config
+    let config_string = config_path
         .clone()
         .unwrap()
         .into_os_string()
         .into_string()
         .unwrap();
-    let config = read_to_string(config.unwrap()).unwrap();
+    let config = read_to_string(config_path.clone().unwrap()).unwrap();
     let config = config.parse::<Table>().unwrap_or_else(|_| {
-        panic!("Failed to read config file at {config_path}")
+        panic!("Failed to read config file at {config_string}")
     });
 
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
-        Some("trace") => Some(LevelFilter::Trace),
-        Some("verbose") => Some(LevelFilter::Info),
+        Some("error") => Some(LevelFilter::Error),
         Some("quiet") => Some(LevelFilter::Error),
+        Some("warn") => Some(LevelFilter::Warn),
+        Some("verbose") => Some(LevelFilter::Info),
+        Some("trace") => Some(LevelFilter::Trace),
         _ => None,
     };
 
@@ -111,7 +113,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
         wrapmin: config
             .get("wrapmin")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
-        config: None,
+        config: config_path,
     };
     Some(args)
 }
