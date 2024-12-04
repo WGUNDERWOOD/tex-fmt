@@ -13,7 +13,7 @@
 ** Config args parser function
 * Release process
 ** Update release notes
-*** git log --oneline --no-merges vX.X.X main
+*** git log --oneline --no-merges vX.X.X..main
 *** Write in NEWS.md
 ** Update version number in Cargo.toml
 ** Update Nix flake and lock
