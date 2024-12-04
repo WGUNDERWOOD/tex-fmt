@@ -3,6 +3,7 @@
 ** TODO Skipping a line seems to break linums
 ** TODO Man page include in nix and GitHub release
 ** TODO Shell completion include in nix and GitHub release
+** TODO Config file include in nix package
 * Options and documentation
 ** GitHub README
 ** Args struct
