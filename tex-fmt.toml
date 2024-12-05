@@ -1,3 +1,4 @@
+# tex-fmt.toml
 check = false
 print = false
 wrap = true
