@@ -268,6 +268,9 @@ Vim plugin, does not apply indentation
 - [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend
 
+- [LLF](https://repo.or.cz/llf.git).
+Lua script, many configuration options
+
 ## Options
 
 The following command-line options are offered by tex-fmt.
