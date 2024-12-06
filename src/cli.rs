@@ -74,6 +74,11 @@ pub fn get_cli_args() -> OptionArgs {
         wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
         wrapmin: None,
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
+        arguments: if arg_matches.get_flag("args") {
+            Some(true)
+        } else {
+            None
+        },
     };
     args
 }

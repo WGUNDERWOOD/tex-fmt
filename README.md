@@ -296,3 +296,4 @@ The following command-line options are offered by tex-fmt.
 | `--version`    | `-V`  |         | Print version |
 | `--completion` |       |         | Generate a shell completion script |
 | `--man`        |       |         | Generate a man page |
+| `--args`       |       |         | View arguments passed to tex-fmt |

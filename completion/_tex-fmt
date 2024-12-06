@@ -36,6 +36,7 @@ _tex-fmt() {
 '--stdin[Process stdin as a single file, output to stdout]' \
 '--usetabs[Use tabs instead of spaces for indentation]' \
 '--man[Generate man page]' \
+'--args[Print arguments passed to tex-fmt and exit]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '::files -- List of files to be formatted:_default' \
