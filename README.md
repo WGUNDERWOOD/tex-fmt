@@ -181,7 +181,7 @@ is available at
 
 Note for contributors: this repository's configuration file will be
 automatically applied if tex-fmt is run from within the repository.
-Change working directory or use `--config <config>` to avoid this.
+Use `--noconfig` or `--config <config>` to avoid this.
 
 ### Disabling the formatter
 
@@ -297,3 +297,4 @@ The following command-line options are offered by tex-fmt.
 | `--completion` |       |         | Generate a shell completion script |
 | `--man`        |       |         | Generate a man page |
 | `--args`       |       |         | View arguments passed to tex-fmt |
+| `--noconfig`   |       |         | Do not read any config file |

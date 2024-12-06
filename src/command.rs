@@ -106,4 +106,10 @@ fn get_cli_command() -> Command {
                 .action(SetTrue)
                 .help("Print arguments passed to tex-fmt and exit"),
         )
+        .arg(
+            Arg::new("noconfig")
+                .long("noconfig")
+                .action(SetTrue)
+                .help("Do not read any config file"),
+        )
 }

@@ -43,6 +43,7 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
             [CompletionResult]::new('--usetabs', '--usetabs', [CompletionResultType]::ParameterName, 'Use tabs instead of spaces for indentation')
             [CompletionResult]::new('--man', '--man', [CompletionResultType]::ParameterName, 'Generate man page')
             [CompletionResult]::new('--args', '--args', [CompletionResultType]::ParameterName, 'Print arguments passed to tex-fmt and exit')
+            [CompletionResult]::new('--noconfig', '--noconfig', [CompletionResultType]::ParameterName, 'Do not read any config file')
             [CompletionResult]::new('-h', '-h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', '--help', [CompletionResultType]::ParameterName, 'Print help')
             break

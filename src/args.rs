@@ -38,6 +38,8 @@ pub struct Args {
     pub config: Option<PathBuf>,
     /// Print arguments and exit
     pub arguments: bool,
+    /// Do not read any config file
+    pub noconfig: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -57,6 +59,7 @@ pub struct OptionArgs {
     pub wrapmin: Option<u8>,
     pub config: Option<PathBuf>,
     pub arguments: Option<bool>,
+    pub noconfig: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -91,6 +94,7 @@ impl Default for OptionArgs {
             wrapmin: Some(70),
             config: None,
             arguments: Some(false),
+            noconfig: Some(false),
         }
     }
 }
@@ -122,6 +126,7 @@ impl Args {
             wrapmin: args.wrapmin.unwrap(),
             config: args.config,
             arguments: args.arguments.unwrap(),
+            noconfig: args.noconfig.unwrap(),
         }
     }
 
@@ -225,7 +230,7 @@ impl fmt::Display for Args {
             None => display_arg_line(f, "config", "None")?,
             Some(c) => display_arg_line(f, "config", &c.display().to_string())?,
         }
-        // Note we do not print the `arguments` field as it's not useful
+        // Do not print `arguments` or `noconfig` fields
         Ok(())
     }
 }
