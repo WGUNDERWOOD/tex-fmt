@@ -3,6 +3,7 @@ use ArgAction::{Append, SetTrue};
 use std::path::PathBuf;
 
 /// Construct the CLI command
+#[allow(clippy::too_many_lines)]
 fn get_cli_command() -> Command {
     Command::new("tex-fmt")
         .author("William George Underwood, wg.underwood13@gmail.com")
@@ -98,5 +99,11 @@ fn get_cli_command() -> Command {
                 .long("man")
                 .action(SetTrue)
                 .help("Generate man page"),
+        )
+        .arg(
+            Arg::new("args")
+                .long("args")
+                .action(SetTrue)
+                .help("Print arguments passed to tex-fmt and exit"),
         )
 }

@@ -80,8 +80,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     });
 
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
-        Some("error") => Some(LevelFilter::Error),
-        Some("quiet") => Some(LevelFilter::Error),
+        Some("error" | "quiet") => Some(LevelFilter::Error),
         Some("warn") => Some(LevelFilter::Warn),
         Some("verbose") => Some(LevelFilter::Info),
         Some("trace") => Some(LevelFilter::Trace),
@@ -114,6 +113,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
             .get("wrapmin")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
         config: config_path,
+        arguments: config.get("arguments").map(|x| x.as_bool().unwrap()),
     };
     Some(args)
 }

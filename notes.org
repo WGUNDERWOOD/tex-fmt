@@ -1,17 +1,18 @@
 #+title: tex-fmt
 * Tasks
+** TODO Improve build times
 ** TODO Include man page and shell completion in Nix package
 ** TODO Add to Nix home-manager with empty config file
-** TODO Add flag to print arguments and exit
-** TODO Note in README about tex-fmt.toml in git root for development
-** TODO Improve build times
+** TODO Remove duplicate files from arguments
+** TODO Add option for no config file
 * Options and documentation
-** GitHub README
 ** Args struct
 ** OptionArgs struct
 ** CLI command
 ** CLI args parser function
 ** Config args parser function
+** Implement Display for Args
+** GitHub README
 * Release process
 ** Update release notes
 *** git log --oneline --no-merges vX.X.X..main
