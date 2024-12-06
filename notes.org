@@ -1,6 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO Improve build times
 ** TODO Include man page and shell completion in Nix package
 ** TODO Add to Nix home-manager with empty config file
 * Options and documentation

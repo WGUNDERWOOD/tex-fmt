@@ -8,7 +8,7 @@ edition = "2021"
 description = "LaTeX formatter written in Rust"
 keywords = ["latex", "formatter"]
 categories = ["command-line-utilities", "development-tools"]
-exclude = ["tests/*", "extra/*", "*.nix", ".github/*", "completion/*"]
+exclude = ["tests/*", "extra/*", "*.nix", ".github/*", "completion/*", "man/*"]
 
 [dependencies]
 clap = { version = "4.5.21", features = ["cargo"] }
@@ -31,4 +31,3 @@ clap_mangen = "0.2.24"
 
 [profile.release]
 codegen-units = 1
-lto = true
