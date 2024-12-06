@@ -13,6 +13,10 @@ const CONFIG: &str = "tex-fmt.toml";
 
 /// Try finding a config file in various sources
 fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
+    // Do not read config file
+    if args.noconfig == Some(true) {
+        return None;
+    };
     // Named path passed as cli arg
     if args.config.is_some() {
         return args.config.clone();
@@ -80,8 +84,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     });
 
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
-        Some("error") => Some(LevelFilter::Error),
-        Some("quiet") => Some(LevelFilter::Error),
+        Some("error" | "quiet") => Some(LevelFilter::Error),
         Some("warn") => Some(LevelFilter::Warn),
         Some("verbose") => Some(LevelFilter::Info),
         Some("trace") => Some(LevelFilter::Trace),
@@ -114,6 +117,8 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
             .get("wrapmin")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
         config: config_path,
+        arguments: None,
+        noconfig: None,
     };
     Some(args)
 }

@@ -4,9 +4,11 @@ use crate::cli::*;
 use crate::config::*;
 use crate::logging::*;
 use crate::Log;
+use colored::Colorize;
 use log::Level;
 use log::LevelFilter;
 use merge::Merge;
+use std::fmt;
 use std::path::PathBuf;
 
 /// Arguments passed to tex-fmt
@@ -34,6 +36,10 @@ pub struct Args {
     pub wrapmin: u8,
     /// Path to config file
     pub config: Option<PathBuf>,
+    /// Print arguments and exit
+    pub arguments: bool,
+    /// Do not read any config file
+    pub noconfig: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -52,6 +58,8 @@ pub struct OptionArgs {
     pub wraplen: Option<u8>,
     pub wrapmin: Option<u8>,
     pub config: Option<PathBuf>,
+    pub arguments: Option<bool>,
+    pub noconfig: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -60,6 +68,15 @@ pub struct OptionArgs {
 pub enum TabChar {
     Tab,
     Space,
+}
+
+impl fmt::Display for TabChar {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::Tab => write!(f, "tab"),
+            Self::Space => write!(f, "space"),
+        }
+    }
 }
 
 impl Default for OptionArgs {
@@ -76,6 +93,8 @@ impl Default for OptionArgs {
             wraplen: Some(80),
             wrapmin: Some(70),
             config: None,
+            arguments: Some(false),
+            noconfig: Some(false),
         }
     }
 }
@@ -106,19 +125,26 @@ impl Args {
             wraplen: args.wraplen.unwrap(),
             wrapmin: args.wrapmin.unwrap(),
             config: args.config,
+            arguments: args.arguments.unwrap(),
+            noconfig: args.noconfig.unwrap(),
         }
     }
 
     /// Resolve conflicting arguments
     pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
         let mut exit_code = 0;
+
+        // stdin implies print
         self.print |= self.stdin;
+
+        // Set wrapmin
         self.wrapmin = if self.wraplen >= 50 {
             self.wraplen - 10
         } else {
             self.wraplen
         };
 
+        // Check files are passed if no --stdin
         if !self.stdin && self.files.is_empty() {
             record_file_log(
                 logs,
@@ -128,6 +154,8 @@ impl Args {
             );
             exit_code = 1;
         }
+
+        // Check no files are passed if --stdin
         if self.stdin && !self.files.is_empty() {
             record_file_log(
                 logs,
@@ -137,6 +165,15 @@ impl Args {
             );
             exit_code = 1;
         }
+
+        // Remove duplicate files
+        self.files.dedup();
+
+        // Print arguments and exit
+        if self.arguments {
+            println!("{self}");
+            std::process::exit(0);
+        }
         exit_code
     }
 }
@@ -144,5 +181,56 @@ impl Args {
 impl Default for Args {
     fn default() -> Self {
         Self::from(OptionArgs::default())
+    }
+}
+
+/// Print a field from `Args`
+fn display_arg_line(
+    f: &mut fmt::Formatter,
+    name: &str,
+    value: &str,
+) -> fmt::Result {
+    let width = 20;
+    let name_fmt = format!("{}{}", name.bold(), ":");
+    write!(f, "\n  {name_fmt:<width$} {value}")?;
+    Ok(())
+}
+
+impl fmt::Display for Args {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", "tex-fmt".magenta().bold())?;
+        display_arg_line(f, "check", &self.check.to_string())?;
+        display_arg_line(f, "print", &self.print.to_string())?;
+        display_arg_line(f, "wrap", &self.wrap.to_string())?;
+        display_arg_line(
+            f,
+            "verbosity",
+            &self.verbosity.to_string().to_lowercase(),
+        )?;
+
+        if !self.files.is_empty() {
+            display_arg_line(f, "files", &self.files[0])?;
+            for file in &self.files[1..] {
+                write!(
+                    f,
+                    "\n  {:<width$} {}",
+                    "".bold().to_string(),
+                    file,
+                    width = 20
+                )?;
+            }
+        }
+
+        display_arg_line(f, "stdin", &self.stdin.to_string())?;
+        display_arg_line(f, "tabsize", &self.tabsize.to_string())?;
+        display_arg_line(f, "tabchar", &self.tabchar.to_string())?;
+        display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
+        display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
+        match &self.config {
+            None => display_arg_line(f, "config", "None")?,
+            Some(c) => display_arg_line(f, "config", &c.display().to_string())?,
+        }
+        // Do not print `arguments` or `noconfig` fields
+        Ok(())
     }
 }
