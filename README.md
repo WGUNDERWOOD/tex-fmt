@@ -179,6 +179,10 @@ specified in configuration files. An example configuration file
 is available at
 [tex-fmt.toml](https://github.com/WGUNDERWOOD/tex-fmt/blob/main/tex-fmt.toml).
 
+Note for contributors: this repository's configuration file will be
+automatically applied if tex-fmt is run from within the repository.
+Use `--noconfig` or `--config <config>` to avoid this.
+
 ### Disabling the formatter
 
 Ending a source line with `% tex-fmt: skip` disables formatting for that line.
@@ -268,6 +272,9 @@ Vim plugin, does not apply indentation
 - [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend
 
+- [LLF](https://repo.or.cz/llf.git).
+Lua script, many configuration options
+
 ## Options
 
 The following command-line options are offered by tex-fmt.
@@ -289,3 +296,5 @@ The following command-line options are offered by tex-fmt.
 | `--version`    | `-V`  |         | Print version |
 | `--completion` |       |         | Generate a shell completion script |
 | `--man`        |       |         | Generate a man page |
+| `--args`       |       |         | View arguments passed to tex-fmt |
+| `--noconfig`   |       |         | Do not read any config file |

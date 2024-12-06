@@ -19,7 +19,7 @@ _tex-fmt() {
 
     case "${cmd}" in
         tex__fmt)
-            opts="-c -p -n -v -q -s -t -l -h --check --print --nowrap --verbose --quiet --trace --stdin --tabsize --usetabs --wraplen --config --completion --man --help [files]..."
+            opts="-c -p -n -v -q -s -t -l -h --check --print --nowrap --verbose --quiet --trace --stdin --tabsize --usetabs --wraplen --config --completion --man --args --noconfig --help [files]..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
