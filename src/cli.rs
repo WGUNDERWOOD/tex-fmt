@@ -1,111 +1,89 @@
-//! Utilities for reading the command line arguments
+//! Functionality to parse CLI arguments
 
-use crate::logging::*;
-use clap::Parser;
-use log::Level::Error;
+use crate::args::*;
+use clap_complete::{generate, Shell};
+use clap_mangen::Man;
 use log::LevelFilter;
+use std::io;
 
-/// Command line arguments
-#[allow(missing_docs)]
-#[allow(clippy::missing_docs_in_private_items)]
-#[derive(Debug, Parser)]
-#[command(version, about)]
-pub struct Cli {
-    #[arg(long, short, help = "Check formatting, do not modify files")]
-    pub check: bool,
-    #[arg(long, short, help = "Print to STDOUT, do not modify files")]
-    pub print: bool,
-    #[arg(long, short, help = "Keep lines, do not wrap")]
-    pub keep: bool,
-    #[arg(long, short, help = "Show info log messages")]
-    pub verbose: bool,
-    #[arg(long, short, help = "Hide warning messages")]
-    pub quiet: bool,
-    #[arg(long, short, help = "Show trace log messages")]
-    pub trace: bool,
-    #[arg(help = "List of files to be formatted")]
-    pub files: Vec<String>,
-    #[arg(
-        long,
-        short,
-        help = "Process STDIN as a single file, output formatted text to STDOUT"
-    )]
-    pub stdin: bool,
-    #[arg(
-        long,
-        help = "Number of spaces to use as tab size",
-        default_value_t = 2
-    )]
-    pub tab: u8,
-    #[arg(long, help = "Use tabs instead of spaces for indentation")]
-    pub usetabs: bool,
-    #[arg(long, help = "Line length for wrapping", default_value_t = 80)]
-    pub wrap: u8,
-    #[clap(skip)]
-    pub wrap_min: u8,
-}
+// Get the clap CLI command from a separate file
+include!("command.rs");
 
-impl Cli {
-    /// Get the log level
-    pub const fn log_level(&self) -> LevelFilter {
-        if self.trace {
-            LevelFilter::Trace
-        } else if self.verbose {
-            LevelFilter::Info
-        } else if self.quiet {
-            LevelFilter::Error
+/// Parse CLI arguments into `OptionArgs` struct
+pub fn get_cli_args() -> OptionArgs {
+    let mut command = get_cli_command();
+    let arg_matches = command.clone().get_matches();
+
+    // Generate completions and exit
+    if let Some(shell) = arg_matches.get_one::<Shell>("completion") {
+        generate(*shell, &mut command, "tex-fmt", &mut io::stdout());
+        std::process::exit(0);
+    }
+
+    // Generate man page and exit
+    if arg_matches.get_flag("man") {
+        let man = Man::new(command);
+        man.render(&mut io::stdout()).unwrap();
+        std::process::exit(0);
+    }
+
+    let wrap: Option<bool> = if arg_matches.get_flag("nowrap") {
+        Some(false)
+    } else {
+        None
+    };
+    let verbosity = if arg_matches.get_flag("trace") {
+        Some(LevelFilter::Trace)
+    } else if arg_matches.get_flag("verbose") {
+        Some(LevelFilter::Info)
+    } else if arg_matches.get_flag("quiet") {
+        Some(LevelFilter::Error)
+    } else {
+        None
+    };
+    let tabchar = if arg_matches.get_flag("usetabs") {
+        Some(TabChar::Tab)
+    } else {
+        None
+    };
+    let args = OptionArgs {
+        check: if arg_matches.get_flag("check") {
+            Some(true)
         } else {
-            LevelFilter::Warn
-        }
-    }
-
-    /// Ensure the provided arguments are consistent
-    pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
-        let mut exit_code = 0;
-        self.verbose |= self.trace;
-        self.print |= self.stdin;
-        self.wrap_min = if self.wrap >= 50 {
-            self.wrap - 10
+            None
+        },
+        print: if arg_matches.get_flag("print") {
+            Some(true)
         } else {
-            self.wrap
-        };
-
-        if !self.stdin && self.files.is_empty() {
-            record_file_log(
-                logs,
-                Error,
-                "",
-                "No files specified. Provide filenames or pass --stdin.",
-            );
-            exit_code = 1;
-        }
-        if self.stdin && !self.files.is_empty() {
-            record_file_log(
-                logs,
-                Error,
-                "",
-                "Do not provide file name(s) when using --stdin.",
-            );
-            exit_code = 1;
-        }
-        exit_code
-    }
-
-    #[cfg(test)]
-    pub const fn new() -> Self {
-        Self {
-            check: false,
-            print: false,
-            keep: false,
-            verbose: false,
-            stdin: false,
-            quiet: false,
-            trace: false,
-            files: Vec::<String>::new(),
-            tab: 2,
-            usetabs: false,
-            wrap: 80,
-            wrap_min: 70,
-        }
-    }
+            None
+        },
+        wrap,
+        verbosity,
+        files: arg_matches
+            .get_many::<String>("files")
+            .unwrap_or_default()
+            .map(ToOwned::to_owned)
+            .collect::<Vec<String>>(),
+        stdin: if arg_matches.get_flag("stdin") {
+            Some(true)
+        } else {
+            None
+        },
+        tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
+        tabchar,
+        wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
+        wrapmin: None,
+        config: arg_matches.get_one::<PathBuf>("config").cloned(),
+        arguments: if arg_matches.get_flag("args") {
+            Some(true)
+        } else {
+            None
+        },
+        noconfig: if arg_matches.get_flag("noconfig") {
+            Some(true)
+        } else {
+            None
+        },
+    };
+    args
 }

@@ -1,6 +1,6 @@
 //! Core methodology for formatting a file
 
-use crate::cli::*;
+use crate::args::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
@@ -16,7 +16,7 @@ use std::iter::zip;
 pub fn format_file(
     old_text: &str,
     file: &str,
-    args: &Cli,
+    args: &Args,
     logs: &mut Vec<Log>,
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");
@@ -31,7 +31,10 @@ pub fn format_file(
     let mut new_text = String::with_capacity(2 * old_text.len());
 
     // Select the character used for indentation.
-    let indent_char = if args.usetabs { "\t" } else { " " };
+    let indent_char = match args.tabchar {
+        TabChar::Tab => "\t",
+        TabChar::Space => " ",
+    };
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
@@ -76,7 +79,7 @@ pub fn format_file(
 
                 #[allow(clippy::cast_possible_wrap)]
                 let indent_length =
-                    usize::try_from(indent.visual * args.tab as i8)
+                    usize::try_from(indent.visual * args.tabsize as i8)
                         .expect("Visual indent is non-negative.");
 
                 // Wrap the line before applying the indent, and loop back
@@ -119,7 +122,11 @@ pub fn format_file(
     }
 
     if !indents_return_to_zero(&state) {
-        record_file_log(logs, Warn, file, "Indent does not return to zero.");
+        let msg = format!(
+            "Indent does not return to zero. Last non-indented line is line {}",
+            state.linum_last_zero_indent
+        );
+        record_file_log(logs, Warn, file, &msg);
     }
 
     new_text = remove_trailing_spaces(&new_text);
@@ -145,10 +152,10 @@ fn set_ignore_and_report(
 
 /// Cleans the given text by removing extra line breaks and trailing spaces,
 /// and also tabs if they shouldn't be used.
-fn clean_text(text: &str, args: &Cli) -> String {
+fn clean_text(text: &str, args: &Args) -> String {
     let mut text = remove_extra_newlines(text);
 
-    if !args.usetabs {
+    if args.tabchar != TabChar::Tab {
         text = remove_tabs(&text, args);
     }
 
@@ -170,6 +177,8 @@ pub struct State {
     pub indent: Indent,
     /// Verbatim status of the current line
     pub verbatim: Verbatim,
+    /// Line number in the new file of the last non-indented line
+    pub linum_last_zero_indent: usize,
 }
 
 impl State {
@@ -181,6 +190,7 @@ impl State {
             ignore: Ignore::new(),
             indent: Indent::new(),
             verbatim: Verbatim::new(),
+            linum_last_zero_indent: 1,
         }
     }
 }

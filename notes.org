@@ -1,11 +1,20 @@
 #+title: tex-fmt
 * Tasks
-** TODO Skipping a line seems to break linums
-** TODO Indent does not return to zero message
-*** Should show last zero-indented line
+** TODO Improve build times
+** TODO Include man page and shell completion in Nix package
+** TODO Add to Nix home-manager with empty config file
+* Options and documentation
+** Args struct
+** OptionArgs struct
+** CLI command
+** CLI args parser function
+** Config args parser function
+** Implement Display for Args
+** Args resolver
+** GitHub README
 * Release process
 ** Update release notes
-*** git log --oneline --no-merges vX.X.X main
+*** git log --oneline --no-merges vX.X.X..main
 *** Write in NEWS.md
 ** Update version number in Cargo.toml
 ** Update Nix flake and lock

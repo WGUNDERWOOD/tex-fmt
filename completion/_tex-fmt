@@ -1,0 +1,57 @@
+#compdef tex-fmt
+
+autoload -U is-at-least
+
+_tex-fmt() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-t+[Number of characters to use as tab size \[default\: 2\]]: :_default' \
+'--tabsize=[Number of characters to use as tab size \[default\: 2\]]: :_default' \
+'-l+[Line length for wrapping \[default\: 80\]]: :_default' \
+'--wraplen=[Line length for wrapping \[default\: 80\]]: :_default' \
+'--config=[Path to configuration file]: :_files' \
+'--completion=[Generate shell completion script]:shell:(bash elvish fish powershell zsh)' \
+'-c[Check formatting, do not modify files]' \
+'--check[Check formatting, do not modify files]' \
+'-p[Print to stdout, do not modify files]' \
+'--print[Print to stdout, do not modify files]' \
+'-n[Do not wrap long lines]' \
+'--nowrap[Do not wrap long lines]' \
+'-v[Show info messages]' \
+'--verbose[Show info messages]' \
+'-q[Hide warning messages]' \
+'--quiet[Hide warning messages]' \
+'--trace[Show trace messages]' \
+'-s[Process stdin as a single file, output to stdout]' \
+'--stdin[Process stdin as a single file, output to stdout]' \
+'--usetabs[Use tabs instead of spaces for indentation]' \
+'--man[Generate man page]' \
+'--args[Print arguments passed to tex-fmt and exit]' \
+'--noconfig[Do not read any config file]' \
+'-h[Print help]' \
+'--help[Print help]' \
+'::files -- List of files to be formatted:_default' \
+&& ret=0
+}
+
+(( $+functions[_tex-fmt_commands] )) ||
+_tex-fmt_commands() {
+    local commands; commands=()
+    _describe -t commands 'tex-fmt commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_tex-fmt" ]; then
+    _tex-fmt "$@"
+else
+    compdef _tex-fmt tex-fmt
+fi

@@ -1,12 +1,13 @@
 //! Utilities for indenting source lines
 
-use crate::cli::*;
+use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
 use crate::regexes::*;
 use core::cmp::max;
-use log::Level::{Trace, Warn};
+use log::Level;
+use log::LevelFilter;
 
 /// Opening delimiters
 const OPENS: [char; 3] = ['{', '(', '['];
@@ -123,7 +124,7 @@ pub fn calculate_indent(
     state: &mut State,
     logs: &mut Vec<Log>,
     file: &str,
-    args: &Cli,
+    args: &Args,
     pattern: &Pattern,
 ) -> Indent {
     // Calculate the new indent by first removing the comment from the line
@@ -133,10 +134,10 @@ pub fn calculate_indent(
     let mut indent = get_indent(line_strip, &state.indent, pattern, state);
 
     // Record the indent to the logs.
-    if args.trace {
+    if args.verbosity == LevelFilter::Trace {
         record_line_log(
             logs,
-            Trace,
+            Level::Trace,
             file,
             state.linum_new,
             state.linum_old,
@@ -153,12 +154,17 @@ pub fn calculate_indent(
     // not forgotten for the next iterations.
     state.indent = indent.clone();
 
+    // Update the last zero-indented line for use in error messages.
+    if indent.visual == 0 && state.linum_new > state.linum_last_zero_indent {
+        state.linum_last_zero_indent = state.linum_new;
+    }
+
     // However, we can't negatively indent a line.
     // So we log the negative indent and reset the values to 0.
     if (indent.visual < 0) || (indent.actual < 0) {
         record_line_log(
             logs,
-            Warn,
+            Level::Warn,
             file,
             state.linum_new,
             state.linum_old,
@@ -176,7 +182,7 @@ pub fn calculate_indent(
 pub fn apply_indent(
     line: &str,
     indent: &Indent,
-    args: &Cli,
+    args: &Args,
     indent_char: &str,
 ) -> String {
     let first_non_whitespace = line.chars().position(|c| !c.is_whitespace());
@@ -188,7 +194,7 @@ pub fn apply_indent(
 
     // If line is correctly indented, return it directly
     #[allow(clippy::cast_possible_wrap)]
-    let n_indent_chars = (indent.visual * args.tab as i8) as usize;
+    let n_indent_chars = (indent.visual * args.tabsize as i8) as usize;
     if first_non_whitespace == Some(n_indent_chars) {
         return line.into();
     }

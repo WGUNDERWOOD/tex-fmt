@@ -144,14 +144,44 @@ extension. You will need to first install tex-fmt
 through one of the above methods.
 
 ## Usage
+
+The most commonly used options are given below.
+For a full list, see the
+[options](
+https://github.com/WGUNDERWOOD/tex-fmt?tab=readme-ov-file#options)
+section below.
+
 ``` shell
 tex-fmt file.tex             # format file.tex and overwrite
 tex-fmt --check file.tex     # check if file.tex is correctly formatted
-tex-fmt --print file.tex     # format file.tex and print to STDOUT
-tex-fmt --keep file.tex      # do not wrap long lines
-tex-fmt --stdin              # read from STDIN and print to STDOUT
+tex-fmt --print file.tex     # format file.tex and print to stdout
+tex-fmt --nowrap file.tex    # do not wrap long lines
+tex-fmt --stdin              # read from stdin and print to stdout
 tex-fmt --help               # view help information
 ```
+
+### Configuration
+
+Options can also be read from a configuration file, which
+will be read from the following locations, in order of decreasing priority.
+
+- A named config file passed as `tex-fmt --config <config>`
+- A file named `tex-fmt.toml` in the current working directory
+- A file named `tex-fmt.toml` in the root directory of the current git repository
+- A file named `tex-fmt.toml` in a subdirectory titled `tex-fmt/`
+  in the user's configuration directory
+    - Linux: `~/.config/tex-fmt/tex-fmt.toml`
+    - macOS: `/Users/<user>/Library/Application Support/tex-fmt/tex-fmt.toml`
+    - Windows: `C:\Users\<user>\AppData\Roaming\tex-fmt\tex-fmt.toml`
+
+Arguments passed on the command line will always override those
+specified in configuration files. An example configuration file
+is available at
+[tex-fmt.toml](https://github.com/WGUNDERWOOD/tex-fmt/blob/main/tex-fmt.toml).
+
+Note for contributors: this repository's configuration file will be
+automatically applied if tex-fmt is run from within the repository.
+Use `--noconfig` or `--config <config>` to avoid this.
 
 ### Disabling the formatter
 
@@ -176,6 +206,21 @@ To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
 Verbatim environments including `verbatim`, `Verbatim`, `lstlisting`
 and `minted` are automatically skipped.
 
+### Shell completion
+
+Shell completion scripts can be generated at run-time using the
+`--completion <shell>` flag. See the
+[completion](
+https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion)
+directory for more details.
+
+### Man page
+
+A man page can be generated at run-time using the
+`--man` flag. See the
+[man](https://github.com/WGUNDERWOOD/tex-fmt/tree/main/man)
+directory for more details.
+
 ## Performance
 
 When formatting all of the test cases,
@@ -198,7 +243,6 @@ Alternatively, you can
 
 - Semantic parsing of LaTeX code not conducted
 - No linting or correction of syntax errors
-- Customization via configuration files not supported
 - Compliance with existing formatting guidelines not guaranteed
 - No spelling or grammar checking
 
@@ -228,21 +272,29 @@ Vim plugin, does not apply indentation
 - [latex-formatter](https://github.com/nfode/latex-formatter).
 Visual Studio plugin, uses latexindent as the backend
 
+- [LLF](https://repo.or.cz/llf.git).
+Lua script, many configuration options
+
 ## Options
 
 The following command-line options are offered by tex-fmt.
 
-| Option      | Alias | Default | Description |
-| ----------- | ----- | ------- | --- |
-| `--check`   | `-c`  |         | Check formatting, do not modify files. |
-| `--print`   | `-p`  |         | Print to STDOUT, do not modify files. |
-| `--keep`    | `-k`  |         | Keep lines, do not wrap. |
-| `--verbose` | `-v`  |         | Show info log messages. |
-| `--quiet`   | `-q`  |         | Hide warning messages. |
-| `--trace`   | `-t`  |         | Show trace log messages. |
-| `--stdin`   | `-s`  |         | Process STDIN as a single file, output formatted text to STDOUT. |
-| `--tab`     |       | `2`     | Number of spaces to use as tab size. |
-| `--usetabs` |       |         | Use tabs instead of spaces for indentation. |
-| `--wrap`    |       | `80`    | Line length for wrapping. |
-| `--help`    | `-h`  |         | Print help. |
-| `--version` | `-V`  |         | Print version. |
+| Option         | Alias | Default | Description |
+| -------------- | ----- | ------- | --- |
+| `--check`      | `-c`  |         | Check formatting, do not modify files |
+| `--print`      | `-p`  |         | Print to stdout, do not modify files |
+| `--nowrap`     | `-n`  |         | Do not wrap long lines |
+| `--verbose`    | `-v`  |         | Show info messages |
+| `--quiet`      | `-q`  |         | Hide warning messages |
+| `--trace`      |       |         | Show trace messages |
+| `--stdin`      | `-s`  |         | Process stdin as a single file, output to stdout |
+| `--tabsize`    | `-t`  | `2`     | Number of characters to use as tab size |
+| `--usetabs`    |       |         | Use tabs instead of spaces for indentation |
+| `--wraplen`    | `-l`  | `80`    | Line length for wrapping |
+| `--config`     |       |         | Path to config file |
+| `--help`       | `-h`  |         | Print help |
+| `--version`    | `-V`  |         | Print version |
+| `--completion` |       |         | Generate a shell completion script |
+| `--man`        |       |         | Generate a man page |
+| `--args`       |       |         | View arguments passed to tex-fmt |
+| `--noconfig`   |       |         | Do not read any config file |

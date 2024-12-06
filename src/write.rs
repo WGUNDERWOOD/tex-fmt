@@ -1,6 +1,6 @@
 //! Utilities for writing formatted files
 
-use crate::cli::*;
+use crate::args::*;
 use crate::fs;
 use crate::logging::*;
 use log::Level::Error;
@@ -14,7 +14,7 @@ fn write_file(file: &str, text: &str) {
 
 /// Handle the newly formatted file
 pub fn process_output(
-    args: &Cli,
+    args: &Args,
     file: &str,
     text: &str,
     new_text: &str,

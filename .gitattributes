@@ -1,2 +1,3 @@
 tests/** linguist-vendored
-extra/** linguist-vendored
+completion/** linguist-vendored
+man/** linguist-vendored
