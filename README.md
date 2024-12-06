@@ -178,6 +178,7 @@ Arguments passed on the command line will always override those
 specified in configuration files. An example configuration file
 is available at
 [tex-fmt.toml](https://github.com/WGUNDERWOOD/tex-fmt/blob/main/tex-fmt.toml).
+To ignore all config files, use the `--noconfig` flag.
 
 Note for contributors: this repository's configuration file will be
 automatically applied if tex-fmt is run from within the repository.
