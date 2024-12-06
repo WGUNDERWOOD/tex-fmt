@@ -31,8 +31,6 @@ mod write;
 use crate::args::*;
 use crate::format::*;
 use crate::logging::*;
-use crate::read::*;
-use crate::write::*;
 
 #[cfg(test)]
 mod tests;
@@ -53,28 +51,7 @@ fn main() -> ExitCode {
     let mut exit_code = args.resolve(&mut logs);
 
     if exit_code == 0 {
-        if args.stdin {
-            // TODO combine the read and read_stdin functions to simplify this
-            if let Some((file, text)) = read_stdin(&mut logs) {
-                let new_text = format_file(&text, &file, &args, &mut logs);
-                exit_code = process_output(
-                    &args, &file, &text, &new_text, exit_code, &mut logs,
-                );
-            } else {
-                exit_code = 1;
-            }
-        } else {
-            for file in &args.files {
-                if let Some((file, text)) = read(file, &mut logs) {
-                    let new_text = format_file(&text, &file, &args, &mut logs);
-                    exit_code = process_output(
-                        &args, &file, &text, &new_text, exit_code, &mut logs,
-                    );
-                } else {
-                    exit_code = 1;
-                };
-            }
-        }
+        exit_code = run(&args, &mut logs);
     }
 
     print_logs(&mut logs);
