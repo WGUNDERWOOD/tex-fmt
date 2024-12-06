@@ -128,13 +128,18 @@ impl Args {
     /// Resolve conflicting arguments
     pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
         let mut exit_code = 0;
+
+        // stdin implies print
         self.print |= self.stdin;
+
+        // Set wrapmin
         self.wrapmin = if self.wraplen >= 50 {
             self.wraplen - 10
         } else {
             self.wraplen
         };
 
+        // Check files are passed if no --stdin
         if !self.stdin && self.files.is_empty() {
             record_file_log(
                 logs,
@@ -144,6 +149,8 @@ impl Args {
             );
             exit_code = 1;
         }
+
+        // Check no files are passed if --stdin
         if self.stdin && !self.files.is_empty() {
             record_file_log(
                 logs,
@@ -153,6 +160,11 @@ impl Args {
             );
             exit_code = 1;
         }
+
+        // Remove duplicate files
+        self.files.dedup();
+
+        // Print arguments and exit
         if self.arguments {
             println!("{self}");
             std::process::exit(0);
