@@ -179,6 +179,10 @@ specified in configuration files. An example configuration file
 is available at
 [tex-fmt.toml](https://github.com/WGUNDERWOOD/tex-fmt/blob/main/tex-fmt.toml).
 
+Note for contributors: this repository's configuration file will be
+automatically applied if tex-fmt is run from within the repository.
+Change working directory or use `--config <config>` to avoid this.
+
 ### Disabling the formatter
 
 Ending a source line with `% tex-fmt: skip` disables formatting for that line.
