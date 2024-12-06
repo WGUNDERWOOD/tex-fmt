@@ -4,10 +4,12 @@ use crate::args::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
+use crate::read::*;
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
+use crate::write::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
@@ -232,4 +234,27 @@ impl Pattern {
 /// Ensure that the indentation returns to zero at the end of the file
 const fn indents_return_to_zero(state: &State) -> bool {
     state.indent.actual == 0
+}
+
+/// Run tex-fmt with the provided arguments
+pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
+    let mut exit_code = 0;
+    if args.stdin {
+        if let Some((file, text)) = read_stdin(logs) {
+            let new_text = format_file(&text, &file, args, logs);
+            exit_code = process_output(args, &file, &text, &new_text, logs);
+        } else {
+            exit_code = 1;
+        }
+    } else {
+        for file in &args.files {
+            if let Some((file, text)) = read(file, logs) {
+                let new_text = format_file(&text, &file, args, logs);
+                exit_code = process_output(args, &file, &text, &new_text, logs);
+            } else {
+                exit_code = 1;
+            }
+        }
+    }
+    exit_code
 }
