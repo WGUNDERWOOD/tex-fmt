@@ -79,6 +79,11 @@ pub fn get_cli_args() -> OptionArgs {
         } else {
             None
         },
+        noconfig: if arg_matches.get_flag("noconfig") {
+            Some(true)
+        } else {
+            None
+        },
     };
     args
 }

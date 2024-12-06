@@ -40,6 +40,7 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand --usetabs 'Use tabs instead of spaces for indentation'
             cand --man 'Generate man page'
             cand --args 'Print arguments passed to tex-fmt and exit'
+            cand --noconfig 'Do not read any config file'
             cand -h 'Print help'
             cand --help 'Print help'
         }

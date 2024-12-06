@@ -4,7 +4,7 @@
 .SH NAME
 tex\-fmt \- An extremely fast LaTeX formatter written in Rust
 .SH SYNOPSIS
-\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-\-config\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIfiles\fR] 
+\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-\-config\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-\-noconfig\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIfiles\fR] 
 .SH DESCRIPTION
 An extremely fast LaTeX formatter written in Rust
 .SH OPTIONS
@@ -54,6 +54,9 @@ Generate man page
 .TP
 \fB\-\-args\fR
 Print arguments passed to tex\-fmt and exit
+.TP
+\fB\-\-noconfig\fR
+Do not read any config file
 .TP
 \fB\-h\fR, \fB\-\-help\fR
 Print help

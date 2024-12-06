@@ -13,6 +13,10 @@ const CONFIG: &str = "tex-fmt.toml";
 
 /// Try finding a config file in various sources
 fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
+    // Do not read config file
+    if args.noconfig == Some(true) {
+        return None;
+    };
     // Named path passed as cli arg
     if args.config.is_some() {
         return args.config.clone();
@@ -113,7 +117,8 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
             .get("wrapmin")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
         config: config_path,
-        arguments: config.get("arguments").map(|x| x.as_bool().unwrap()),
+        arguments: None,
+        noconfig: None,
     };
     Some(args)
 }

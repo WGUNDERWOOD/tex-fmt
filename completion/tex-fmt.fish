@@ -12,4 +12,5 @@ complete -c tex-fmt -s s -l stdin -d 'Process stdin as a single file, output to 
 complete -c tex-fmt -l usetabs -d 'Use tabs instead of spaces for indentation'
 complete -c tex-fmt -l man -d 'Generate man page'
 complete -c tex-fmt -l args -d 'Print arguments passed to tex-fmt and exit'
+complete -c tex-fmt -l noconfig -d 'Do not read any config file'
 complete -c tex-fmt -s h -l help -d 'Print help'

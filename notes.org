@@ -3,7 +3,6 @@
 ** TODO Improve build times
 ** TODO Include man page and shell completion in Nix package
 ** TODO Add to Nix home-manager with empty config file
-** TODO Add option for no config file
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
@@ -11,6 +10,7 @@
 ** CLI args parser function
 ** Config args parser function
 ** Implement Display for Args
+** Args resolver
 ** GitHub README
 * Release process
 ** Update release notes
