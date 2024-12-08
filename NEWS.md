@@ -9,7 +9,7 @@ Version v0.5.0 is a major release, including breaking changes and substantial ne
 - See below for information on the new `--config`, `--noconfig`, `--man`, `--completion`, and `--args` flags.
 
 ## Configuration file support
-Configuring tex-fmt can now be achieved using a configuration file as well as CLI arguments. The configuration file can be read from a user-specified path with `--config`, from the current working directory, from the root of the current git repository, or from the user's configuration directory, in order of decreasing priority. Arguments passed on the command line will always override those specified in configuration files. Configuration files can be disabled by passing `--noconfig`.
+Configuring tex-fmt can now be achieved using a configuration file as well as CLI arguments. The configuration file can be read from a user-specified path with `--config <config>`, from the current working directory, from the root of the current git repository, or from the user's configuration directory, in order of decreasing priority. Arguments passed on the command line will always override those specified in configuration files. Configuration files can be disabled by passing `--noconfig`.
 
 ## Man pages
 Man pages can be generated using the `--man` flag. Pre-built man pages are also available for download from the GitHub repository.
@@ -18,7 +18,7 @@ Man pages can be generated using the `--man` flag. Pre-built man pages are also 
 Completion files for popular shells, including bash, fish, zsh, elvish and PowerShell, can be generated using the `--completion <shell>` flag. Pre-built completion scripts are also available for download from the GitHub repository.
 
 ## Minor changes
-- All arguments passed to tex-fmt can be inspected by passing `--args`
+- Arguments passed to tex-fmt can be inspected by passing `--args`
 - Fixed bug with `\itemsep` matching the `\item` pattern
 - Added last non-indented line number to "Indent did not return to zero" error messages
 - Removed LTO optimization to improve compile time with minimal effect on run time

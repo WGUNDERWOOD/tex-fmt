@@ -12,25 +12,26 @@
 ** Args resolver
 ** GitHub README
 * Release process
-** DONE Update release notes
-*** DONE git log --oneline --no-merges vX.X.X..main
-*** DONE Write in NEWS.md
-** DONE Update version number in Cargo.toml
-** DONE Update Nix flake and lock
-*** DONE Check for new NixOS version (nixos-XX.XX) for flake.nix
-*** DONE just nix
-** DONE Update Rust version
-*** DONE just upgrade
-** DONE Run tests
-*** DONE just
-*** DONE just perf
-*** DONE Update performance results in README.md
-** DONE Push to GitHub and check tests pass
-** DONE Create a git tag
-*** DONE git tag vX.X.X
-*** DONE git push --tags
-** DONE Publish to crates.io with cargo publish
-** Publish GitHub release with notes
+** Update release notes
+*** git log --oneline --no-merges vX.X.X..main
+*** Write in NEWS.md
+** Update version number in Cargo.toml
+** Update Nix flake and lock
+*** Check for new NixOS version (nixos-XX.XX) for flake.nix
+*** just nix
+** Update Rust version
+*** just upgrade
+** Run tests
+*** just
+*** just perf
+*** Update performance results in README.md
+** Push to GitHub and check tests pass
+** Create a git tag
+*** git tag vX.X.X
+*** git push --tags
+** Publish to crates.io with cargo publish
+*** Pass --allow-dirty if notes.org has changed
+** Publish GitHub release with notes from NEWS.md
 *** GitHub binaries published automatically with actions
 ** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
@@ -47,3 +48,5 @@
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes
+** Tidy repository
+*** Commit any new changes to NEWS.md or notes.org

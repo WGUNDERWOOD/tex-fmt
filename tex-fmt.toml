@@ -2,8 +2,8 @@
 check = false
 print = false
 wrap = true
-tabsize = 2
 wraplen = 80
+tabsize = 2
 tabchar = "space"
-verbosity = "warn"
 stdin = false
+verbosity = "warn"
