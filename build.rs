@@ -11,8 +11,11 @@ fn main() -> Result<(), Error> {
     println!("cargo::rerun-if-changed=src/");
     println!("cargo::rerun-if-changed=build.rs");
     println!("cargo::rerun-if-changed=Cargo.toml");
-    build_completion()?;
-    build_man()?;
+    if std::env::var("CARGO_FEATURE_SHELLINSTALL").is_ok() {
+        println!("cargo::warning=shellinstall");
+        build_completion()?;
+        build_man()?;
+    }
     Ok(())
 }
 

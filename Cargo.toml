@@ -24,6 +24,9 @@ regex = "1.11.1"
 similar = "2.6.0"
 toml = "0.8.19"
 
+[features]
+shellinstall = []
+
 [build-dependencies]
 clap = { version = "4.5.23", features = ["cargo"] }
 clap_complete = "4.5.38"
