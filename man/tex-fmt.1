@@ -1,12 +1,12 @@
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
-.TH tex-fmt 1  "tex-fmt " 
+.TH tex-fmt 1  "tex-fmt 0.4.7" 
 .SH NAME
-tex\-fmt \- An extremely fast LaTeX formatter written in Rust
+tex\-fmt \- LaTeX formatter written in Rust
 .SH SYNOPSIS
-\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-\-config\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-\-noconfig\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIfiles\fR] 
+\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-\-config\fR] [\fB\-\-noconfig\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIfiles\fR] 
 .SH DESCRIPTION
-An extremely fast LaTeX formatter written in Rust
+LaTeX formatter written in Rust
 .SH OPTIONS
 .TP
 \fB\-c\fR, \fB\-\-check\fR
@@ -18,6 +18,24 @@ Print to stdout, do not modify files
 \fB\-n\fR, \fB\-\-nowrap\fR
 Do not wrap long lines
 .TP
+\fB\-l\fR, \fB\-\-wraplen\fR [default: 80]
+Line length for wrapping
+.TP
+\fB\-t\fR, \fB\-\-tabsize\fR [default: 2]
+Number of characters to use as tab size
+.TP
+\fB\-\-usetabs\fR
+Use tabs instead of spaces for indentation
+.TP
+\fB\-s\fR, \fB\-\-stdin\fR
+Process stdin as a single file, output to stdout
+.TP
+\fB\-\-config\fR
+Path to configuration file
+.TP
+\fB\-\-noconfig\fR
+Do not read any config file
+.TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Show info messages
 .TP
@@ -26,21 +44,6 @@ Hide warning messages
 .TP
 \fB\-\-trace\fR
 Show trace messages
-.TP
-\fB\-s\fR, \fB\-\-stdin\fR
-Process stdin as a single file, output to stdout
-.TP
-\fB\-t\fR, \fB\-\-tabsize\fR
-Number of characters to use as tab size [default: 2]
-.TP
-\fB\-\-usetabs\fR
-Use tabs instead of spaces for indentation
-.TP
-\fB\-l\fR, \fB\-\-wraplen\fR
-Line length for wrapping [default: 80]
-.TP
-\fB\-\-config\fR
-Path to configuration file
 .TP
 \fB\-\-completion\fR=\fIshell\fR
 Generate shell completion script
@@ -55,13 +58,15 @@ Generate man page
 \fB\-\-args\fR
 Print arguments passed to tex\-fmt and exit
 .TP
-\fB\-\-noconfig\fR
-Do not read any config file
-.TP
 \fB\-h\fR, \fB\-\-help\fR
 Print help
 .TP
+\fB\-V\fR, \fB\-\-version\fR
+Print version
+.TP
 [\fIfiles\fR]
 List of files to be formatted
+.SH VERSION
+v0.4.7
 .SH AUTHORS
 William George Underwood, wg.underwood13@gmail.com

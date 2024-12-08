@@ -101,24 +101,22 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
         check: config.get("check").map(|x| x.as_bool().unwrap()),
         print: config.get("print").map(|x| x.as_bool().unwrap()),
         wrap: config.get("wrap").map(|x| x.as_bool().unwrap()),
-        verbosity,
-        files: vec![],
-
-        stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
-        tabsize: config
-            .get("tabsize")
-            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
-
-        tabchar,
         wraplen: config
             .get("wraplen")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
         wrapmin: config
             .get("wrapmin")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+        tabsize: config
+            .get("tabsize")
+            .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+        tabchar,
+        stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
         config: config_path,
-        arguments: None,
         noconfig: None,
+        verbosity,
+        arguments: None,
+        files: vec![],
     };
     Some(args)
 }
