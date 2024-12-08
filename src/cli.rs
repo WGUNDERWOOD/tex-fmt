@@ -1,6 +1,7 @@
 //! Functionality to parse CLI arguments
 
 use crate::args::*;
+use clap::ArgMatches;
 use clap_complete::{generate, Shell};
 use clap_mangen::Man;
 use log::LevelFilter;
@@ -8,6 +9,15 @@ use std::io;
 
 // Get the clap CLI command from a separate file
 include!("command.rs");
+
+/// Read `ArgMatches` flag into `Option<bool>`
+fn get_flag(arg_matches: &ArgMatches, flag: &str) -> Option<bool> {
+    if arg_matches.get_flag(flag) {
+        Some(true)
+    } else {
+        None
+    }
+}
 
 /// Parse CLI arguments into `OptionArgs` struct
 pub fn get_cli_args() -> OptionArgs {
@@ -32,6 +42,11 @@ pub fn get_cli_args() -> OptionArgs {
     } else {
         None
     };
+    let tabchar = if arg_matches.get_flag("usetabs") {
+        Some(TabChar::Tab)
+    } else {
+        None
+    };
     let verbosity = if arg_matches.get_flag("trace") {
         Some(LevelFilter::Trace)
     } else if arg_matches.get_flag("verbose") {
@@ -41,49 +56,24 @@ pub fn get_cli_args() -> OptionArgs {
     } else {
         None
     };
-    let tabchar = if arg_matches.get_flag("usetabs") {
-        Some(TabChar::Tab)
-    } else {
-        None
-    };
     let args = OptionArgs {
-        check: if arg_matches.get_flag("check") {
-            Some(true)
-        } else {
-            None
-        },
-        print: if arg_matches.get_flag("print") {
-            Some(true)
-        } else {
-            None
-        },
+        check: get_flag(&arg_matches, "check"),
+        print: get_flag(&arg_matches, "print"),
         wrap,
+        wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
+        wrapmin: None,
+        tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
+        tabchar,
+        stdin: get_flag(&arg_matches, "stdin"),
+        config: arg_matches.get_one::<PathBuf>("config").cloned(),
+        noconfig: get_flag(&arg_matches, "noconfig"),
         verbosity,
+        arguments: get_flag(&arg_matches, "args"),
         files: arg_matches
             .get_many::<String>("files")
             .unwrap_or_default()
             .map(ToOwned::to_owned)
             .collect::<Vec<String>>(),
-        stdin: if arg_matches.get_flag("stdin") {
-            Some(true)
-        } else {
-            None
-        },
-        tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
-        tabchar,
-        wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
-        wrapmin: None,
-        config: arg_matches.get_one::<PathBuf>("config").cloned(),
-        arguments: if arg_matches.get_flag("args") {
-            Some(true)
-        } else {
-            None
-        },
-        noconfig: if arg_matches.get_flag("noconfig") {
-            Some(true)
-        } else {
-            None
-        },
     };
     args
 }

@@ -15,10 +15,10 @@ _tex-fmt() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" : \
-'-t+[Number of characters to use as tab size \[default\: 2\]]: :_default' \
-'--tabsize=[Number of characters to use as tab size \[default\: 2\]]: :_default' \
-'-l+[Line length for wrapping \[default\: 80\]]: :_default' \
-'--wraplen=[Line length for wrapping \[default\: 80\]]: :_default' \
+'-l+[Line length for wrapping]: :_default' \
+'--wraplen=[Line length for wrapping]: :_default' \
+'-t+[Number of characters to use as tab size]: :_default' \
+'--tabsize=[Number of characters to use as tab size]: :_default' \
 '--config=[Path to configuration file]: :_files' \
 '--completion=[Generate shell completion script]:shell:(bash elvish fish powershell zsh)' \
 '-c[Check formatting, do not modify files]' \
@@ -27,19 +27,21 @@ _tex-fmt() {
 '--print[Print to stdout, do not modify files]' \
 '-n[Do not wrap long lines]' \
 '--nowrap[Do not wrap long lines]' \
+'--usetabs[Use tabs instead of spaces for indentation]' \
+'-s[Process stdin as a single file, output to stdout]' \
+'--stdin[Process stdin as a single file, output to stdout]' \
+'--noconfig[Do not read any config file]' \
 '-v[Show info messages]' \
 '--verbose[Show info messages]' \
 '-q[Hide warning messages]' \
 '--quiet[Hide warning messages]' \
 '--trace[Show trace messages]' \
-'-s[Process stdin as a single file, output to stdout]' \
-'--stdin[Process stdin as a single file, output to stdout]' \
-'--usetabs[Use tabs instead of spaces for indentation]' \
 '--man[Generate man page]' \
 '--args[Print arguments passed to tex-fmt and exit]' \
-'--noconfig[Do not read any config file]' \
 '-h[Print help]' \
 '--help[Print help]' \
+'-V[Print version]' \
+'--version[Print version]' \
 '::files -- List of files to be formatted:_default' \
 && ret=0
 }

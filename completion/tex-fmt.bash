@@ -19,25 +19,25 @@ _tex-fmt() {
 
     case "${cmd}" in
         tex__fmt)
-            opts="-c -p -n -v -q -s -t -l -h --check --print --nowrap --verbose --quiet --trace --stdin --tabsize --usetabs --wraplen --config --completion --man --args --noconfig --help [files]..."
+            opts="-c -p -n -l -t -s -v -q -h -V --check --print --nowrap --wraplen --tabsize --usetabs --stdin --config --noconfig --verbose --quiet --trace --completion --man --args --help --version [files]..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi
             case "${prev}" in
-                --tabsize)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
-                -t)
-                    COMPREPLY=($(compgen -f "${cur}"))
-                    return 0
-                    ;;
                 --wraplen)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
                 -l)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --tabsize)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -t)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
