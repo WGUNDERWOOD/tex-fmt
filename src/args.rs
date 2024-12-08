@@ -32,8 +32,6 @@ pub struct Args {
     pub stdin: bool,
     /// Path to config file
     pub config: Option<PathBuf>,
-    /// Do not read any config file
-    pub noconfig: bool,
     /// Verbosity level for log messages
     pub verbosity: LevelFilter,
     /// Print arguments and exit
@@ -123,7 +121,6 @@ impl Args {
             tabchar: args.tabchar.unwrap(),
             stdin: args.stdin.unwrap(),
             config: args.config,
-            noconfig: args.noconfig.unwrap(),
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,

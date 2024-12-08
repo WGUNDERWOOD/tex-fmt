@@ -9,6 +9,7 @@ fn get_cli_command() -> Command {
         .author("William George Underwood, wg.underwood13@gmail.com")
         .about(clap::crate_description!())
         .version(clap::crate_version!())
+        .before_help(format!("tex-fmt {}", clap::crate_version!()))
         .arg(
             Arg::new("check")
                 .short('c')
