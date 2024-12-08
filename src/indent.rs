@@ -193,7 +193,7 @@ pub fn apply_indent(
     }
 
     // If line is correctly indented, return it directly
-    #[allow(clippy::cast_possible_wrap)]
+    #[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)]
     let n_indent_chars = (indent.visual * args.tabsize as i8) as usize;
     if first_non_whitespace == Some(n_indent_chars) {
         return line.into();
