@@ -1,4 +1,4 @@
-default: test doc clippy format shellcheck
+default: test doc clippy format shellcheck shellinstall
 
 all: default prof perf binary logo latex
 
@@ -17,6 +17,9 @@ test:
 
 doc:
   @cargo doc
+
+shellinstall:
+  @cargo build --features shellinstall
 
 testignored:
   @cargo test -- --ignored
