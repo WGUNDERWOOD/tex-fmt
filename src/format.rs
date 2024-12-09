@@ -12,6 +12,7 @@ use crate::wrap::*;
 use crate::write::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
+use std::collections::VecDeque;
 use std::iter::zip;
 
 /// Central function to format a file
@@ -29,7 +30,7 @@ pub fn format_file(
 
     // Initialise
     let mut state = State::new();
-    let mut queue: Vec<(usize, String)> = vec![];
+    let mut queue: VecDeque<(usize, String)> = vec![].into();
     let mut new_text = String::with_capacity(2 * old_text.len());
 
     // Select the character used for indentation.
@@ -39,7 +40,7 @@ pub fn format_file(
     };
 
     loop {
-        if let Some((linum_old, mut line)) = queue.pop() {
+        if let Some((linum_old, mut line)) = queue.pop_front() {
             // Read the patterns present on this line.
             let pattern = Pattern::new(&line);
 
@@ -63,8 +64,8 @@ pub fn format_file(
                     // Split the line into two ...
                     let (this_line, next_line) =
                         split_line(&line, &temp_state, file, args, logs);
-                    // ... and queue the second part for formatting.
-                    queue.push((linum_old, next_line.to_string()));
+                    // ... and add the second part to the front of the queue for formatting.
+                    queue.push_front((linum_old, next_line.to_string()));
                     line = this_line.to_string();
                 }
 
@@ -98,11 +99,11 @@ pub fn format_file(
                     if let Some([this_line, next_line_start, next_line]) =
                         wrapped_lines
                     {
-                        queue.push((
+                        queue.push_front((
                             linum_old,
                             [next_line_start, next_line].concat(),
                         ));
-                        queue.push((linum_old, this_line.to_string()));
+                        queue.push_front((linum_old, this_line.to_string()));
                         continue;
                     }
                 }
@@ -117,7 +118,7 @@ pub fn format_file(
             new_text.push_str(LINE_END);
             state.linum_new += 1;
         } else if let Some((linum_old, line)) = old_lines.next() {
-            queue.push((linum_old, line.to_string()));
+            queue.push_back((linum_old, line.to_string()));
         } else {
             break;
         }
