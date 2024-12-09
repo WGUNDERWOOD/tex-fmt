@@ -15,6 +15,11 @@ use log::Level::{Info, Warn};
 use std::collections::VecDeque;
 use std::iter::zip;
 
+/// The default number of lines to have in the formatting queue.
+///
+/// Two lines are required for re-wrapping so that the line following the current one can always be accessed.
+const DEFAULT_QUEUE_LENGTH: usize = 2;
+
 /// Central function to format a file
 pub fn format_file(
     old_text: &str,
@@ -40,6 +45,13 @@ pub fn format_file(
     };
 
     'main: loop {
+        // Add more lines to the queue if there aren't two
+        for _ in 0..DEFAULT_QUEUE_LENGTH.saturating_sub(queue.len()) {
+            if let Some((linum_old, line)) = old_lines.next() {
+                queue.push_back((linum_old, line.to_string()));
+            }
+        }
+
         if let Some((linum_old, mut line)) = queue.pop_front() {
             // Read the patterns present on this line.
             let pattern = Pattern::new(&line);
@@ -117,9 +129,9 @@ pub fn format_file(
             new_text.push_str(&line);
             new_text.push_str(LINE_END);
             state.linum_new += 1;
-        } else if let Some((linum_old, line)) = old_lines.next() {
-            queue.push_back((linum_old, line.to_string()));
         } else {
+            // If there are not lines in `queue`, then `old_lines` has been entirely consumed and it's safe to break the
+            // main loop.
             break 'main;
         }
     }
