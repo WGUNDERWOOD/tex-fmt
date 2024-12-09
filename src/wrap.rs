@@ -17,12 +17,13 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
-/// Find the best place to break a long line
-fn find_wrap_point(
+/// Returns a list of possible break points in the given line, taking into account the length of indentation that will
+/// be added to the line. Returns `None` is no wrap points are found, so it should never return an empty list.
+fn find_wrap_points(
     line: &str,
     indent_length: usize,
     args: &Args,
-) -> Option<usize> {
+) -> Option<Vec<usize>> {
     let mut wrap_points: Vec<usize> = Vec::new();
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
@@ -47,7 +48,11 @@ fn find_wrap_point(
         prev_char = Some(c);
     }
 
-    wrap_points.last().copied()
+    if wrap_points.is_empty() {
+        return None;
+    }
+
+    Some(wrap_points)
 }
 
 /// Wrap a long line into a short prefix and a suffix
@@ -70,7 +75,9 @@ pub fn apply_wrap<'a>(
             "Wrapping long line.",
         );
     }
-    let wrap_point = find_wrap_point(line, indent_length, args);
+    // The `unwrap()` doesn't panic because find_wrap_points() returns None if there are no wrap points
+    let wrap_point = find_wrap_points(line, indent_length, args)
+        .map(|list| list.last().copied().unwrap());
     let comment_index = find_comment_index(line);
 
     match wrap_point {
