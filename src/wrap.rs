@@ -120,9 +120,15 @@ pub fn can_rewrap(
     indent_length: usize,
     args: &Args,
 ) -> Option<usize> {
-    // Return early if wrapping is not enabled or if there is no next line to
-    // re-wrap from
-    if !args.wrap || next_line.is_none() {
+    // Perform some early return checks
+    if !args.wrap || current_line.is_empty() || next_line.is_none() {
+        return None;
+    }
+
+    // Doesn't panic because None causes early return
+    let next_line: &str = next_line.unwrap().trim_start();
+
+    if next_line.is_empty() {
         return None;
     }
 
@@ -131,9 +137,6 @@ pub fn can_rewrap(
 
     // Sanity check that the current line is short enough
     debug_assert!(current_line_length <= args.wraplen.into());
-
-    // Doesn't panic because None causes early return
-    let next_line: &str = next_line.unwrap().trim_start();
 
     // Previous line ensures `next_line` is trimmed. 0 is passed for
     // `indent_length` because we mostly care about the wrap points at the start
