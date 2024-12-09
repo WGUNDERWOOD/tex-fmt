@@ -39,7 +39,7 @@ pub fn format_file(
         TabChar::Space => " ",
     };
 
-    loop {
+    'main: loop {
         if let Some((linum_old, mut line)) = queue.pop_front() {
             // Read the patterns present on this line.
             let pattern = Pattern::new(&line);
@@ -104,7 +104,7 @@ pub fn format_file(
                             [next_line_start, next_line].concat(),
                         ));
                         queue.push_front((linum_old, this_line.to_string()));
-                        continue;
+                        continue 'main;
                     }
                 }
 
@@ -120,7 +120,7 @@ pub fn format_file(
         } else if let Some((linum_old, line)) = old_lines.next() {
             queue.push_back((linum_old, line.to_string()));
         } else {
-            break;
+            break 'main;
         }
     }
 
