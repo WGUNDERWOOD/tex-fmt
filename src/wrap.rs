@@ -17,8 +17,9 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
-/// Returns a list of possible break points in the given line, taking into account the length of indentation that will
-/// be added to the line. Returns `None` is no wrap points are found, so it should never return an empty list.
+/// Returns a list of possible break points in the given line, taking into
+/// account the length of indentation that will be added to the line. Returns
+/// `None` is no wrap points are found, so it should never return an empty list.
 fn find_wrap_points(
     line: &str,
     indent_length: usize,
@@ -75,7 +76,8 @@ pub fn apply_wrap<'a>(
             "Wrapping long line.",
         );
     }
-    // The `unwrap()` doesn't panic because find_wrap_points() returns None if there are no wrap points
+    // The `unwrap()` doesn't panic because find_wrap_points() returns None if
+    // there are no wrap points
     let wrap_point = find_wrap_points(line, indent_length, args)
         .map(|list| list.last().copied().unwrap());
     let comment_index = find_comment_index(line);
