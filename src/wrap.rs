@@ -23,7 +23,7 @@ fn find_wrap_point(
     indent_length: usize,
     args: &Args,
 ) -> Option<usize> {
-    let mut wrap_point: Option<usize> = None;
+    let mut wrap_points: Vec<usize> = Vec::new();
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
 
@@ -34,19 +34,20 @@ fn find_wrap_point(
     // Return *byte* index rather than *char* index.
     for (i, c) in line.char_indices() {
         line_width += 1;
-        if line_width > wrap_boundary && wrap_point.is_some() {
+        if line_width > wrap_boundary && !wrap_points.is_empty() {
             break;
         }
         if c == ' ' && prev_char != Some('\\') {
             if after_char {
-                wrap_point = Some(i);
+                wrap_points.push(i);
             }
         } else if c != '%' {
             after_char = true;
         }
         prev_char = Some(c);
     }
-    wrap_point
+
+    wrap_points.last().copied()
 }
 
 /// Wrap a long line into a short prefix and a suffix
