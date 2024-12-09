@@ -81,6 +81,20 @@ fn test_target() {
 }
 
 #[test]
+#[ignore = "large test files ignored by default."]
+fn test_large_source() {
+    let source_files = read_files_from_dir("./tests/large/source/");
+    for file in source_files {
+        if !test_file(
+            &format!("tests/large/source/{file}"),
+            &format!("tests/large/target/{file}"),
+        ) {
+            panic!("Failed in {file}");
+        }
+    }
+}
+
+#[test]
 #[ignore]
 fn test_short() {
     let files = vec![
