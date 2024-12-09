@@ -110,3 +110,50 @@ pub fn apply_wrap<'a>(
         [this_line, next_line_start, next_line]
     })
 }
+
+/// Decides whether two contiguous lines can be re-wrapped. This assumes that
+/// `current_line` has already been checked to not be longer than
+/// `args.wraplen`.
+pub fn can_rewrap(
+    current_line: &str,
+    next_line: Option<&str>,
+    indent_length: usize,
+    args: &Args,
+) -> Option<usize> {
+    // Return early if wrapping is not enabled or if there is no next line to
+    // re-wrap from
+    if !args.wrap || next_line.is_none() {
+        return None;
+    }
+
+    // Compute once because `.count()` is O(n)
+    let current_line_length = current_line.chars().count() + indent_length;
+
+    // Sanity check that the current line is short enough
+    debug_assert!(current_line_length <= args.wraplen.into());
+
+    // Doesn't panic because None causes early return
+    let next_line: &str = next_line.unwrap().trim_start();
+
+    // Previous line ensures `next_line` is trimmed. 0 is passed for
+    // `indent_length` because we mostly care about the wrap points at the start
+    // of the line
+    let Some(potential_rewrap_points) = find_wrap_points(next_line, 0, args)
+    else {
+        // Early return if the next line does not contain any wrap points
+        return None;
+    };
+
+    let mut rewrap_point = None;
+
+    for candidate_rewrap_point in potential_rewrap_points {
+        let candidate_length = current_line_length
+            + next_line[0..candidate_rewrap_point].chars().count();
+
+        if candidate_length + indent_length <= args.wrapmin.into() {
+            rewrap_point = Some(candidate_rewrap_point);
+        }
+    }
+
+    rewrap_point
+}

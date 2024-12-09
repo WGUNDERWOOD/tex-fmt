@@ -118,6 +118,12 @@ pub fn format_file(
                         queue.push_front((linum_old, this_line.to_string()));
                         continue 'main;
                     }
+                } else if let Some(rewrap_point) = can_rewrap(
+                    line.trim_start(),
+                    queue.front().map(|(_, next_line)| next_line.as_str()),
+                    indent_length,
+                    args,
+                ) {
                 }
 
                 // Lastly, apply the indent if the line didn't need wrapping.
