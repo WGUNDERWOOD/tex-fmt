@@ -127,14 +127,17 @@ pub fn format_file(
                     // Remove the next line from the queue and replace it after
                     // removing the re-wrapped text.
                     let (linum_old, next_line) = queue.pop_front().unwrap(); // Doesn't panic because we can re-wrap.
-                    queue.push_front((
-                        linum_old,
-                        next_line[rewrap_point + 1..].to_owned(),
-                    ));
 
                     // Append the re-wrapped words to the current line
                     line = [line.as_str(), " ", &next_line[0..rewrap_point]]
                         .concat();
+
+                    // Select the line left after re-wrapping
+                    let next_line = next_line[rewrap_point..].trim_start();
+                    // Add to the queue if there text left in the next line
+                    if !next_line.is_empty() {
+                        queue.push_front((linum_old, next_line.to_owned()));
+                    }
                 }
 
                 // Lastly, apply the indent if the line didn't need wrapping.

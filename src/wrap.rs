@@ -33,10 +33,13 @@ fn find_wrap_points(
 
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
 
+    let mut reached_boundary = false;
+
     // Return *byte* index rather than *char* index.
     for (i, c) in line.char_indices() {
         line_width += 1;
         if line_width > wrap_boundary && !wrap_points.is_empty() {
+            reached_boundary = true;
             break;
         }
         if c == ' ' && prev_char != Some('\\') {
@@ -47,6 +50,9 @@ fn find_wrap_points(
             after_char = true;
         }
         prev_char = Some(c);
+    }
+    if !reached_boundary {
+        wrap_points.push(line_width);
     }
 
     if wrap_points.is_empty() {
