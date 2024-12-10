@@ -4,6 +4,7 @@ use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
+use crate::regexes::RE_SPLITTING;
 use log::Level;
 use log::LevelFilter;
 
@@ -126,15 +127,25 @@ pub fn can_rewrap(
     indent_length: usize,
     args: &Args,
 ) -> Option<usize> {
-    // Perform some early return checks
-    if !args.wrap || current_line.is_empty() || next_line.is_none() {
+    // Early return checks
+    if
+    // If we don't wrap, are on an empty line, or there is no next line,
+    !args.wrap || current_line.is_empty() || next_line.is_none()
+    // or if the current line starts with a splitting command
+    || RE_SPLITTING.is_match(current_line)
+    {
         return None;
     }
 
     // Doesn't panic because None causes early return
     let next_line: &str = next_line.unwrap().trim_start();
 
-    if next_line.is_empty() {
+    if next_line.is_empty()
+    // Re-wrapping comes after splitting, so if `next_line` contains a splitting
+    // command, then it's at the start, and it shouldn't be rewrapped to the
+    // previous line
+    || RE_SPLITTING.is_match(next_line)
+    {
         return None;
     }
 
