@@ -125,14 +125,12 @@ fn test_short() {
         //"wgu-cv.cls",
         //"wrap.tex",
     ];
-    let mut fail = false;
     for file in files {
         if !test_file(
             &format!("tests/source/{file}"),
             &format!("tests/target/{file}"),
         ) {
-            fail = true;
+            panic!("Failed in {file}");
         }
     }
-    assert!(!fail, "Some tests failed");
 }
