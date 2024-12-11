@@ -134,10 +134,18 @@ pub fn format_file(
 
                     // Select the line left after re-wrapping
                     let next_line = next_line[rewrap_point..].trim_start();
+
                     // Add to the queue if there text left in the next line
                     if !next_line.is_empty() {
                         queue.push_front((linum_old, next_line.to_owned()));
                     }
+
+                    // Push the current line in the queue for further potential
+                    // re-wrapping
+                    queue.push_front((linum_old, line));
+
+                    // Continue the loop to avoid writing the current line for now
+                    continue;
                 }
 
                 // Lastly, apply the indent if the line didn't need wrapping.
