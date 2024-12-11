@@ -30,4 +30,13 @@ This is a line with some space.
   not re-wrap.
 \end{definition}
 
+Environments with items should re-wrap onto lines with items, but not re-wrap
+lines from lines containing items.
+\begin{itemize}
+  \item This is a short line which can take
+more words, and they should be moved there, and the line should also be
+correctly indented.
+  \item However, this line should not be re-wrapped onto the previous one.
+\end{itemize}
+
 \end{document}
