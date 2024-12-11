@@ -131,8 +131,10 @@ pub fn can_rewrap(
     if
     // If we don't wrap, are on an empty line, or there is no next line,
     !args.wrap || current_line.is_empty() || next_line.is_none()
-    // or if the current line starts with a splitting command
+    // or if the current line starts with a splitting command,
     || RE_SPLITTING.is_match(current_line)
+    // or if the current line contains a comment,
+    || find_comment_index(current_line).is_some()
     {
         return None;
     }
@@ -158,20 +160,30 @@ pub fn can_rewrap(
     // Previous line ensures `next_line` is trimmed. 0 is passed for
     // `indent_length` because we mostly care about the wrap points at the start
     // of the line
-    let Some(potential_rewrap_points) = find_wrap_points(next_line, 0, args)
+    let Some(candidate_rewrap_points) = find_wrap_points(next_line, 0, args)
     else {
         // Early return if the next line does not contain any wrap points
         return None;
     };
 
-    let mut rewrap_point = None;
+    // Get an optional comment index from the next line
+    let maybe_comment_index = find_comment_index(next_line);
 
-    for candidate_rewrap_point in potential_rewrap_points {
-        let candidate_length = current_line_length
-            + next_line[0..candidate_rewrap_point].chars().count();
+    let mut rewrap_point = None;
+    for candidate_point in candidate_rewrap_points {
+        // If the next line contains a comment, stop considering re-wrap points
+        // later than the comment index.
+        if let Some(comment_index) = maybe_comment_index {
+            if candidate_point >= comment_index {
+                break;
+            }
+        }
+
+        let candidate_length =
+            current_line_length + next_line[0..candidate_point].chars().count();
 
         if candidate_length + indent_length <= args.wrapmin.into() {
-            rewrap_point = Some(candidate_rewrap_point);
+            rewrap_point = Some(candidate_point);
         }
     }
 
