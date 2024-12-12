@@ -123,17 +123,18 @@ pub fn apply_wrap<'a>(
 /// `args.wraplen`.
 pub fn can_rewrap(
     current_line: &str,
+    current_pattern: &Pattern,
     next_line: Option<&str>,
     indent_length: usize,
     args: &Args,
 ) -> Option<usize> {
     // Early return checks
     if
-    // If we don't wrap, are on an empty line, or there is no next line,
+    // we don't wrap, are on an empty line, or there is no next line,
     !args.wrap || current_line.is_empty() || next_line.is_none()
-    // or if the current line starts with a splitting command,
-    || RE_SPLITTING.is_match(current_line)
-    // or if the current line contains a comment,
+    // or the current line starts with a splitting command,
+    || (current_pattern.contains_splitting && !current_pattern.contains_item)
+    // or the current line contains a comment,
     || find_comment_index(current_line).is_some()
     {
         return None;

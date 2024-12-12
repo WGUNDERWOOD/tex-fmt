@@ -120,6 +120,7 @@ pub fn format_file(
                     }
                 } else if let Some(rewrap_point) = can_rewrap(
                     line.trim_start(),
+                    &pattern,
                     queue.front().map(|(_, next_line)| next_line.as_str()),
                     indent_length,
                     args,
