@@ -129,12 +129,19 @@ pub fn format_file(
                     // removing the re-wrapped text.
                     let (linum_old, next_line) = queue.pop_front().unwrap(); // Doesn't panic because we can re-wrap.
 
+                    let trimmed_next_line = next_line.trim_start();
+
                     // Append the re-wrapped words to the current line
-                    line = [line.as_str(), " ", &next_line[0..rewrap_point]]
-                        .concat();
+                    line = [
+                        line.as_str(),
+                        " ",
+                        &trimmed_next_line[0..rewrap_point],
+                    ]
+                    .concat();
 
                     // Select the line left after re-wrapping
-                    let next_line = next_line[rewrap_point..].trim_start();
+                    let next_line =
+                        trimmed_next_line[rewrap_point..].trim_start();
 
                     // Add to the queue if there text left in the next line
                     if !next_line.is_empty() {
