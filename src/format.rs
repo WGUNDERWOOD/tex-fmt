@@ -307,3 +307,18 @@ pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
     }
     exit_code
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Pattern;
+
+    #[test]
+    fn new_pattern() {
+        let pattern =
+            Pattern::new("\\begin{enumerate} \\end{enumerate} \\item ");
+        assert!(pattern.contains_env_begin);
+        assert!(pattern.contains_env_end);
+        assert!(pattern.contains_item);
+        assert!(pattern.contains_splitting);
+    }
+}
