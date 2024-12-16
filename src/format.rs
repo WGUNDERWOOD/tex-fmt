@@ -247,6 +247,7 @@ impl State {
 }
 
 /// Record whether a line contains certain patterns to avoid recomputing
+#[derive(Default)]
 pub struct Pattern {
     /// Whether a begin environment pattern is present
     pub contains_env_begin: bool,
@@ -261,22 +262,17 @@ pub struct Pattern {
 impl Pattern {
     /// Check if a string contains patterns
     pub fn new(s: &str) -> Self {
+        let mut pattern = Self::default();
+
         // If splitting does not match, no patterns are present
         if RE_SPLITTING.is_match(s) {
-            Self {
-                contains_env_begin: s.contains(ENV_BEGIN),
-                contains_env_end: s.contains(ENV_END),
-                contains_item: s.contains(ITEM),
-                contains_splitting: true,
-            }
-        } else {
-            Self {
-                contains_env_begin: false,
-                contains_env_end: false,
-                contains_item: false,
-                contains_splitting: false,
-            }
+            pattern.contains_env_begin = s.contains(ENV_BEGIN);
+            pattern.contains_env_end = s.contains(ENV_END);
+            pattern.contains_item = s.contains(ITEM);
+            pattern.contains_splitting = true;
         }
+
+        pattern
     }
 }
 
