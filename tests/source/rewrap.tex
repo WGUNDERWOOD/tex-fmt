@@ -1,0 +1,42 @@
+\documentclass{article}
+
+\begin{document}
+
+% Text that should not re-wrap
+
+This is a normal line that is just long enough to reach the minimum length
+and it should not be re-wrapped to maintain consistency.
+
+This paragraph was originally written as a long one.
+% However, this sentence was commented out.
+So now, it should not be re-wrapped.
+
+% Text that should re-wrap
+
+This is a line that is not so long
+and continues afterwards, so it should be re-wrapped.
+
+This is an even shorter line
+that should be re-wrapped onto one line.
+
+This is
+a few short lines
+that should wrap
+into one.
+
+This is a line with some space.
+\begin{definition}
+  And the \textbackslash{}begin command, or the line after it, should
+  not re-wrap.
+\end{definition}
+
+Environments with items should re-wrap onto lines with items, but not re-wrap
+lines from lines containing items.
+\begin{itemize}
+  \item This is a short line which can take
+more words, and they should be moved there, and the line should also be
+    correctly indented.
+  \item However, this line should not be re-wrapped onto the previous one.
+\end{itemize}
+
+\end{document}

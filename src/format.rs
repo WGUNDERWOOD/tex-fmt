@@ -4,15 +4,21 @@ use crate::args::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
+use crate::pattern::Pattern;
 use crate::read::*;
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
 use crate::write::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
+use std::collections::VecDeque;
 use std::iter::zip;
+
+/// The default number of lines to have in the formatting queue.
+///
+/// Two lines are required for re-wrapping so that the line following the current one can always be accessed.
+const DEFAULT_QUEUE_LENGTH: usize = 2;
 
 /// Central function to format a file
 pub fn format_file(
@@ -29,7 +35,7 @@ pub fn format_file(
 
     // Initialise
     let mut state = State::new();
-    let mut queue: Vec<(usize, String)> = vec![];
+    let mut queue: VecDeque<(usize, String)> = vec![].into();
     let mut new_text = String::with_capacity(2 * old_text.len());
 
     // Select the character used for indentation.
@@ -38,8 +44,15 @@ pub fn format_file(
         TabChar::Space => " ",
     };
 
-    loop {
-        if let Some((linum_old, mut line)) = queue.pop() {
+    'main: loop {
+        // Add more lines to the queue if there aren't two
+        for _ in 0..DEFAULT_QUEUE_LENGTH.saturating_sub(queue.len()) {
+            if let Some((linum_old, line)) = old_lines.next() {
+                queue.push_back((linum_old, line.to_string()));
+            }
+        }
+
+        if let Some((linum_old, mut line)) = queue.pop_front() {
             // Read the patterns present on this line.
             let pattern = Pattern::new(&line);
 
@@ -63,8 +76,8 @@ pub fn format_file(
                     // Split the line into two ...
                     let (this_line, next_line) =
                         split_line(&line, &temp_state, file, args, logs);
-                    // ... and queue the second part for formatting.
-                    queue.push((linum_old, next_line.to_string()));
+                    // ... and add the second part to the front of the queue for formatting.
+                    queue.push_front((linum_old, next_line.to_string()));
                     line = this_line.to_string();
                 }
 
@@ -98,13 +111,49 @@ pub fn format_file(
                     if let Some([this_line, next_line_start, next_line]) =
                         wrapped_lines
                     {
-                        queue.push((
+                        queue.push_front((
                             linum_old,
                             [next_line_start, next_line].concat(),
                         ));
-                        queue.push((linum_old, this_line.to_string()));
-                        continue;
+                        queue.push_front((linum_old, this_line.to_string()));
+                        continue 'main;
                     }
+                } else if let Some(rewrap_point) = can_rewrap(
+                    line.trim_start(),
+                    &pattern,
+                    queue.front().map(|(_, next_line)| next_line.as_str()),
+                    indent_length,
+                    args,
+                ) {
+                    // Remove the next line from the queue and replace it after
+                    // removing the re-wrapped text.
+                    let (linum_old, next_line) = queue.pop_front().unwrap(); // Doesn't panic because we can re-wrap.
+
+                    let trimmed_next_line = next_line.trim_start();
+
+                    // Append the re-wrapped words to the current line
+                    line = [
+                        line.as_str(),
+                        " ",
+                        &trimmed_next_line[0..rewrap_point],
+                    ]
+                    .concat();
+
+                    // Select the line left after re-wrapping
+                    let next_line =
+                        trimmed_next_line[rewrap_point..].trim_start();
+
+                    // Add to the queue if there text left in the next line
+                    if !next_line.is_empty() {
+                        queue.push_front((linum_old, next_line.to_owned()));
+                    }
+
+                    // Push the current line in the queue for further potential
+                    // re-wrapping
+                    queue.push_front((linum_old, line));
+
+                    // Continue the loop to avoid writing the current line for now
+                    continue;
                 }
 
                 // Lastly, apply the indent if the line didn't need wrapping.
@@ -116,10 +165,10 @@ pub fn format_file(
             new_text.push_str(&line);
             new_text.push_str(LINE_END);
             state.linum_new += 1;
-        } else if let Some((linum_old, line)) = old_lines.next() {
-            queue.push((linum_old, line.to_string()));
         } else {
-            break;
+            // If there are not lines in `queue`, then `old_lines` has been entirely consumed and it's safe to break the
+            // main loop.
+            break 'main;
         }
     }
 
@@ -193,40 +242,6 @@ impl State {
             indent: Indent::new(),
             verbatim: Verbatim::new(),
             linum_last_zero_indent: 1,
-        }
-    }
-}
-
-/// Record whether a line contains certain patterns to avoid recomputing
-pub struct Pattern {
-    /// Whether a begin environment pattern is present
-    pub contains_env_begin: bool,
-    /// Whether an end environment pattern is present
-    pub contains_env_end: bool,
-    /// Whether an item pattern is present
-    pub contains_item: bool,
-    /// Whether a splitting pattern is present
-    pub contains_splitting: bool,
-}
-
-impl Pattern {
-    /// Check if a string contains patterns
-    pub fn new(s: &str) -> Self {
-        // If splitting does not match, no patterns are present
-        if RE_SPLITTING.is_match(s) {
-            Self {
-                contains_env_begin: s.contains(ENV_BEGIN),
-                contains_env_end: s.contains(ENV_END),
-                contains_item: s.contains(ITEM),
-                contains_splitting: true,
-            }
-        } else {
-            Self {
-                contains_env_begin: false,
-                contains_env_end: false,
-                contains_item: false,
-                contains_splitting: false,
-            }
         }
     }
 }

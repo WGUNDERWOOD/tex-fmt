@@ -81,6 +81,20 @@ fn test_target() {
 }
 
 #[test]
+#[ignore = "large test files ignored by default."]
+fn test_large_source() {
+    let source_files = read_files_from_dir("./tests/large/source/");
+    for file in source_files {
+        if !test_file(
+            &format!("tests/large/source/{file}"),
+            &format!("tests/large/target/{file}"),
+        ) {
+            panic!("Failed in {file}");
+        }
+    }
+}
+
+#[test]
 #[ignore]
 fn test_short() {
     let files = vec![
@@ -102,22 +116,21 @@ fn test_short() {
         //"puthesis.cls",
         //"quiver.sty",
         //"readme.tex",
+        "rewrap.tex",
         //"sections.tex",
-        "short_document.tex",
+        // "short_document.tex",
         //"tikz_network.sty",
         //"unicode.tex",
         //"verbatim.tex",
         //"wgu-cv.cls",
         //"wrap.tex",
     ];
-    let mut fail = false;
     for file in files {
         if !test_file(
             &format!("tests/source/{file}"),
             &format!("tests/target/{file}"),
         ) {
-            fail = true;
+            panic!("Failed in {file}");
         }
     }
-    assert!(!fail, "Some tests failed");
 }
