@@ -22,6 +22,7 @@ mod format;
 mod ignore;
 mod indent;
 mod logging;
+mod pattern;
 mod read;
 mod regexes;
 mod subs;

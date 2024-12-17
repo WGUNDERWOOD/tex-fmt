@@ -4,6 +4,7 @@ use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
+use crate::pattern::Pattern;
 use crate::regexes::*;
 use core::cmp::max;
 use log::Level;
