@@ -32,6 +32,8 @@ pub struct Args {
     pub stdin: bool,
     /// Path to config file
     pub config: Option<PathBuf>,
+    /// Extra list environments
+    pub lists: Vec<String>,
     /// Verbosity level for log messages
     pub verbosity: LevelFilter,
     /// Print arguments and exit
@@ -54,6 +56,8 @@ pub struct OptionArgs {
     pub stdin: Option<bool>,
     pub config: Option<PathBuf>,
     pub noconfig: Option<bool>,
+    #[merge(strategy = merge::vec::append)]
+    pub lists: Vec<String>,
     pub verbosity: Option<LevelFilter>,
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
@@ -90,6 +94,16 @@ impl Default for OptionArgs {
             stdin: Some(false),
             config: None,
             noconfig: Some(false),
+            lists: vec![
+                "itemize",
+                "enumerate",
+                "description",
+                "inlineroman",
+                "inventory",
+            ]
+            .into_iter()
+            .map(std::borrow::ToOwned::to_owned)
+            .collect(),
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
@@ -121,6 +135,7 @@ impl Args {
             tabchar: args.tabchar.unwrap(),
             stdin: args.stdin.unwrap(),
             config: args.config,
+            lists: args.lists,
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
@@ -162,6 +177,9 @@ impl Args {
             );
             exit_code = 1;
         }
+
+        // Remove duplicate list environments
+        self.lists.dedup();
 
         // Remove duplicate files
         self.files.dedup();
@@ -213,6 +231,19 @@ impl fmt::Display for Args {
             "verbosity",
             &self.verbosity.to_string().to_lowercase(),
         )?;
+
+        if !self.lists.is_empty() {
+            display_arg_line(f, "lists", &self.lists[0])?;
+            for file in &self.lists[1..] {
+                write!(
+                    f,
+                    "\n  {:<width$} {}",
+                    "".bold().to_string(),
+                    file,
+                    width = 20
+                )?;
+            }
+        }
 
         if !self.files.is_empty() {
             display_arg_line(f, "files", &self.files[0])?;

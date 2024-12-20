@@ -67,6 +67,7 @@ pub fn get_cli_args() -> OptionArgs {
         stdin: get_flag(&arg_matches, "stdin"),
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
         noconfig: get_flag(&arg_matches, "noconfig"),
+        lists: vec![],
         verbosity,
         arguments: get_flag(&arg_matches, "args"),
         files: arg_matches
