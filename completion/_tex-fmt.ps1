@@ -21,10 +21,10 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
 
     $completions = @(switch ($command) {
         'tex-fmt' {
-            [CompletionResult]::new('-l', '-l', [CompletionResultType]::ParameterName, 'Line length for wrapping')
-            [CompletionResult]::new('--wraplen', '--wraplen', [CompletionResultType]::ParameterName, 'Line length for wrapping')
-            [CompletionResult]::new('-t', '-t', [CompletionResultType]::ParameterName, 'Number of characters to use as tab size')
-            [CompletionResult]::new('--tabsize', '--tabsize', [CompletionResultType]::ParameterName, 'Number of characters to use as tab size')
+            [CompletionResult]::new('-l', '-l', [CompletionResultType]::ParameterName, 'Line length for wrapping [default: 80]')
+            [CompletionResult]::new('--wraplen', '--wraplen', [CompletionResultType]::ParameterName, 'Line length for wrapping [default: 80]')
+            [CompletionResult]::new('-t', '-t', [CompletionResultType]::ParameterName, 'Number of characters to use as tab size [default: 2]')
+            [CompletionResult]::new('--tabsize', '--tabsize', [CompletionResultType]::ParameterName, 'Number of characters to use as tab size [default: 2]')
             [CompletionResult]::new('--config', '--config', [CompletionResultType]::ParameterName, 'Path to configuration file')
             [CompletionResult]::new('--completion', '--completion', [CompletionResultType]::ParameterName, 'Generate shell completion script')
             [CompletionResult]::new('-c', '-c', [CompletionResultType]::ParameterName, 'Check formatting, do not modify files')

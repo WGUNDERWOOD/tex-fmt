@@ -36,16 +36,14 @@ fn get_cli_command() -> Command {
                 .short('l')
                 .long("wraplen")
                 .value_parser(value_parser!(u8))
-                .default_value("80")
-                .help("Line length for wrapping"),
+                .help("Line length for wrapping [default: 80]"),
         )
         .arg(
             Arg::new("tabsize")
                 .short('t')
                 .long("tabsize")
                 .value_parser(value_parser!(u8))
-                .default_value("2")
-                .help("Number of characters to use as tab size"),
+                .help("Number of characters to use as tab size [default: 2]"),
         )
         .arg(
             Arg::new("usetabs")

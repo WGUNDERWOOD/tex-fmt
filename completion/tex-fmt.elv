@@ -18,10 +18,10 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
     }
     var completions = [
         &'tex-fmt'= {
-            cand -l 'Line length for wrapping'
-            cand --wraplen 'Line length for wrapping'
-            cand -t 'Number of characters to use as tab size'
-            cand --tabsize 'Number of characters to use as tab size'
+            cand -l 'Line length for wrapping [default: 80]'
+            cand --wraplen 'Line length for wrapping [default: 80]'
+            cand -t 'Number of characters to use as tab size [default: 2]'
+            cand --tabsize 'Number of characters to use as tab size [default: 2]'
             cand --config 'Path to configuration file'
             cand --completion 'Generate shell completion script'
             cand -c 'Check formatting, do not modify files'

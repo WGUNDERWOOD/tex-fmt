@@ -15,10 +15,10 @@ _tex-fmt() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" : \
-'-l+[Line length for wrapping]: :_default' \
-'--wraplen=[Line length for wrapping]: :_default' \
-'-t+[Number of characters to use as tab size]: :_default' \
-'--tabsize=[Number of characters to use as tab size]: :_default' \
+'-l+[Line length for wrapping \[default\: 80\]]: :_default' \
+'--wraplen=[Line length for wrapping \[default\: 80\]]: :_default' \
+'-t+[Number of characters to use as tab size \[default\: 2\]]: :_default' \
+'--tabsize=[Number of characters to use as tab size \[default\: 2\]]: :_default' \
 '--config=[Path to configuration file]: :_files' \
 '--completion=[Generate shell completion script]:shell:(bash elvish fish powershell zsh)' \
 '-c[Check formatting, do not modify files]' \
