@@ -114,6 +114,13 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
         stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
         config: config_path,
         noconfig: None,
+        lists: config
+            .get("lists")
+            .and_then(|v| v.as_array())
+            .unwrap()
+            .iter()
+            .filter_map(|v| v.as_str().map(String::from))
+            .collect(),
         verbosity,
         arguments: None,
         files: vec![],
