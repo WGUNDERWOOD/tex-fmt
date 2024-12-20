@@ -38,6 +38,15 @@ pub fn format_file(
         TabChar::Space => " ",
     };
 
+    // Get any extra environments to be indented as lists
+    let lists_begin: Vec<String> = args
+        .lists
+        .iter()
+        .map(|l| format!("\\begin{{{l}}}"))
+        .collect();
+    let lists_end: Vec<String> =
+        args.lists.iter().map(|l| format!("\\end{{{l}}}")).collect();
+
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
             // Read the patterns present on this line.
@@ -77,6 +86,8 @@ pub fn format_file(
                     file,
                     args,
                     &pattern,
+                    &lists_begin,
+                    &lists_end,
                 );
 
                 #[allow(clippy::cast_possible_wrap)]

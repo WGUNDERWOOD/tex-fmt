@@ -1,16 +1,16 @@
 #+title: tex-fmt
 * Tasks
 ** TODO Add to Nix home-manager with empty config file
-** TODO Advertise v0.5.0
+** TODO Indicate which args are CLI and which are config
 * Options and documentation
-** Args struct
-** OptionArgs struct
-** Implement Display for Args
-** CLI command
-** CLI args parser function
-** Config args parser function
-** Args resolver
-** GitHub README
+** DONE Args struct
+** DONE OptionArgs struct
+** DONE Implement Default, Display, from for Args
+** DONE CLI command
+** DONE CLI args parser function
+** DONE Config args parser function
+** DONE Args resolver
+** TODO GitHub README
 * Release process
 ** Update release notes
 *** git log --oneline --no-merges vX.X.X..main

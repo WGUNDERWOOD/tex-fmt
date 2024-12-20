@@ -291,6 +291,7 @@ The following command-line options are offered by tex-fmt.
 | `--stdin`      | `-s`  |         | Process stdin as a single file, output to stdout |
 | `--config`     |       |         | Path to config file |
 | `--noconfig`   |       |         | Do not read any config file |
+| `--lists`      |       |         | Extra list environments to be formatted as `itemize` |
 | `--verbose`    | `-v`  |         | Show info messages |
 | `--quiet`      | `-q`  |         | Hide warning messages |
 | `--trace`      |       |         | Show trace messages |
