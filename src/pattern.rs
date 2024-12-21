@@ -1,3 +1,5 @@
+//! Detecting patterns within lines
+
 use crate::regexes::*;
 
 /// Record whether a line contains certain patterns to avoid recomputing
