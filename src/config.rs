@@ -86,7 +86,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
         Some("error" | "quiet") => Some(LevelFilter::Error),
         Some("warn") => Some(LevelFilter::Warn),
-        Some("verbose") => Some(LevelFilter::Info),
+        Some("info" | "verbose") => Some(LevelFilter::Info),
         Some("trace") => Some(LevelFilter::Trace),
         _ => None,
     };
