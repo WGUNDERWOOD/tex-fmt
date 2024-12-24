@@ -129,7 +129,7 @@ pub fn calculate_indent(
 ) -> Indent {
     // Calculate the new indent by first removing the comment from the line
     // (if there is one) to ignore diffs from characters in there.
-    let comment_index = find_comment_index(line);
+    let comment_index = find_comment_index(line, pattern);
     let line_strip = remove_comment(line, comment_index);
     let mut indent = get_indent(line_strip, &state.indent, pattern, state);
 
