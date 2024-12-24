@@ -37,7 +37,7 @@ pub fn needs_split(line: &str, pattern: &Pattern) -> bool {
         // ... return `true` if the comment index is `None`
         // (which implies the split point must be in text), otherwise
         // compare the index of the comment with the split point.
-        find_comment_index(line).map_or(true, |comment_index| {
+        find_comment_index(line, pattern).map_or(true, |comment_index| {
             if RE_SPLITTING_SHARED_LINE_CAPTURE
                 .captures(line)
                 .unwrap() // Matched split point so no panic.

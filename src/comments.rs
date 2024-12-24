@@ -1,9 +1,11 @@
 //! Utilities for finding, extracting and removing LaTeX comments
 
+use crate::format::*;
+
 /// Find the location where a comment begins in a line
-pub fn find_comment_index(line: &str) -> Option<usize> {
+pub fn find_comment_index(line: &str, pattern: &Pattern) -> Option<usize> {
     // often there is no '%' so check this first
-    if line.contains('%') {
+    if pattern.contains_comment {
         let mut prev_c = ' ';
         for (i, c) in line.char_indices() {
             if c == '%' && prev_c != '\\' {

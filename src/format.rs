@@ -94,6 +94,7 @@ pub fn format_file(
                         file,
                         args,
                         logs,
+                        &pattern,
                     );
                     if let Some([this_line, next_line_start, next_line]) =
                         wrapped_lines
@@ -207,18 +208,21 @@ pub struct Pattern {
     pub contains_item: bool,
     /// Whether a splitting pattern is present
     pub contains_splitting: bool,
+    /// Whether a comment is present
+    pub contains_comment: bool,
 }
 
 impl Pattern {
     /// Check if a string contains patterns
     pub fn new(s: &str) -> Self {
-        // If splitting does not match, no patterns are present
+        // If splitting does not match, most patterns are not present
         if RE_SPLITTING.is_match(s) {
             Self {
                 contains_env_begin: s.contains(ENV_BEGIN),
                 contains_env_end: s.contains(ENV_END),
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
+                contains_comment: s.contains('%'),
             }
         } else {
             Self {
@@ -226,6 +230,7 @@ impl Pattern {
                 contains_env_end: false,
                 contains_item: false,
                 contains_splitting: false,
+                contains_comment: s.contains('%'),
             }
         }
     }
