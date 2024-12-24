@@ -1,6 +1,7 @@
 //! Core methodology for formatting a file
 
 use crate::args::*;
+use crate::comments::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
@@ -67,6 +68,9 @@ pub fn format_file(
                     queue.push((linum_old, next_line.to_string()));
                     line = this_line.to_string();
                 }
+
+                // Ensure comments begin with spaces
+                line = comment_spacing(&line);
 
                 // Calculate the indent based on the current state
                 // and the patterns in the line.

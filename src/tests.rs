@@ -84,17 +84,17 @@ fn test_target() {
 #[ignore]
 fn test_short() {
     let files = vec![
-        //"brackets.tex",
+        "brackets.tex",
         //"cam-thesis.cls",
-        //"comments.tex",
+        "comments.tex",
         //"cv.tex",
         //"document.tex",
-        // "environment_lines.tex",
-        //"heavy_wrap.tex",
+        "environment_lines.tex",
+        "heavy_wrap.tex",
         //"higher_categories_thesis.bib",
         //"higher_categories_thesis.tex",
-        //"ignore.tex",
-        //"lists.tex",
+        "ignore.tex",
+        "lists.tex",
         //"masters_dissertation.tex",
         //"ociamthesis.cls",
         //"phd_dissertation.tex",
@@ -102,13 +102,13 @@ fn test_short() {
         //"puthesis.cls",
         //"quiver.sty",
         //"readme.tex",
-        //"sections.tex",
+        "sections.tex",
         "short_document.tex",
         //"tikz_network.sty",
-        //"unicode.tex",
-        //"verbatim.tex",
+        "unicode.tex",
+        "verbatim.tex",
         //"wgu-cv.cls",
-        //"wrap.tex",
+        "wrap.tex",
     ];
     let mut fail = false;
     for file in files {
