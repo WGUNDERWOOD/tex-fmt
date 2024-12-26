@@ -7,4 +7,4 @@ tabsize = 2
 tabchar = "space"
 stdin = false
 verbosity = "warn"
-lists = ["theorem", "align"]
+lists = []
