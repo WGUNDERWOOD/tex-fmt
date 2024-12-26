@@ -3,14 +3,14 @@
 ** TODO Add to Nix home-manager with empty config file
 ** TODO Indicate which args are CLI and which are config
 * Options and documentation
-** DONE Args struct
-** DONE OptionArgs struct
-** DONE Implement Default, Display, from for Args
-** DONE CLI command
-** DONE CLI args parser function
-** DONE Config args parser function
-** DONE Args resolver
-** TODO GitHub README
+** Args struct
+** OptionArgs struct
+** Implement Default, Display, from for Args
+** CLI command
+** CLI args parser function
+** Config args parser function
+** Args resolver
+** GitHub README
 * Release process
 ** Update release notes
 *** git log --oneline --no-merges vX.X.X..main
