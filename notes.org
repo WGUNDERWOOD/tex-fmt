@@ -12,19 +12,19 @@
 ** Args resolver
 ** GitHub README
 * Release process
-** DONE Update release notes
-*** DONE git log --oneline --no-merges vX.X.X..main
-*** DONE Write in NEWS.md
-** DONE Update version number in Cargo.toml
-** DONE Update Nix flake and lock
-*** DONE Check for new NixOS version (nixos-XX.XX) for flake.nix
-*** DONE just nix
-** DONE Update Rust version
-*** DONE just upgrade
-** DONE Run tests
-*** DONE just
-*** DONE just perf
-*** DONE Update performance results in README.md
+** Update release notes
+*** git log --oneline --no-merges vX.X.X..main
+*** Write in NEWS.md
+** Update version number in Cargo.toml
+** Update Nix flake and lock
+*** Check for new NixOS version (nixos-XX.XX) for flake.nix
+*** just nix
+** Update Rust version
+*** just upgrade
+** Run tests
+*** just
+*** just perf
+*** Update performance results in README.md
 ** Push to GitHub and check tests pass
 ** Create a git tag
 *** git tag vX.X.X
@@ -37,6 +37,7 @@
 *** Check out master branch of nixpkgs fork
 *** git fetch upstream
 *** git rebase upstream/master
+*** git fetch
 *** git push --force-with-lease origin master
 *** git branch -d update-tex-fmt
 *** git switch --create update-tex-fmt upstream/master
@@ -44,6 +45,7 @@
 *** Update version and invalidate src.hash and cargoHash
 *** nix-build -A tex-fmt
 *** Fix both hashes, get a successful build
+*** git add pkgs/by-name/te/tex-fmt/package.nix
 *** git commit -m "tex-fmt: X.X.X -> Y.Y.Y"
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
