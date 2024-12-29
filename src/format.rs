@@ -144,6 +144,7 @@ pub fn format_file(
     }
 
     new_text = remove_trailing_spaces(&new_text);
+    new_text = remove_trailing_blank_lines(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
     new_text
 }
