@@ -2,6 +2,7 @@
 * Tasks
 ** TODO Add to Nix home-manager with empty config file
 ** TODO Indicate which args are CLI and which are config
+** TODO Add link to treefmt-nix in README
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
