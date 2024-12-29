@@ -26,6 +26,13 @@ pub fn remove_trailing_spaces(text: &str) -> String {
     RE_TRAIL.replace_all(text, LINE_END).to_string()
 }
 
+/// Remove trailing blank lines from file
+pub fn remove_trailing_blank_lines(text: &str) -> String {
+    let mut new_text = text.trim_end().to_string();
+    new_text.push_str(LINE_END);
+    new_text
+}
+
 /// Check if line contains content which be split onto a new line
 pub fn needs_split(line: &str, pattern: &Pattern) -> bool {
     // Check if we should format this line and if we've matched an environment.
