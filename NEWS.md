@@ -1,3 +1,9 @@
+# v0.5.1
+
+- Custom list environments can be passed using the `lists` option in the config file.
+- Allow `verbosity = "info"` in the config file.
+- Fixed a bug with configuration values being incorrectly reset.
+
 # v0.5.0
 
 Version v0.5.0 is a major release, including breaking changes and substantial new features.
