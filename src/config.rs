@@ -117,7 +117,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
         lists: config
             .get("lists")
             .and_then(|v| v.as_array())
-            .unwrap()
+            .unwrap_or(&vec![])
             .iter()
             .filter_map(|v| v.as_str().map(String::from))
             .collect(),
