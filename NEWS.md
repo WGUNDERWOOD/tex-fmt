@@ -1,6 +1,6 @@
 # v0.5.2
 
-- Fix critical bug with config files missing the lists field.
+- Fix critical bug with config files missing the `lists` field.
 - Trim trailing newlines.
 
 # v0.5.1
