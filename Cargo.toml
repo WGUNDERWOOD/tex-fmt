@@ -24,6 +24,7 @@ regex = "1.11.1"
 similar = "2.6.0"
 toml = "0.8.19"
 wasm-bindgen = "0.2.95"
+web-time = "1.1.0"
 
 [features]
 shellinstall = []
@@ -39,8 +40,7 @@ codegen-units = 1
 [lib]
 name = "tex_fmt"
 path = "src/lib.rs"
-# TODO This breaks regular compile but need for wasm
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "tex-fmt"

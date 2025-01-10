@@ -8,7 +8,7 @@ use log::LevelFilter;
 use std::cmp::Reverse;
 use std::io::Write;
 use std::path::Path;
-use std::time::Instant;
+use web_time::Instant;
 
 /// Holds a log entry
 #[derive(Debug)]
