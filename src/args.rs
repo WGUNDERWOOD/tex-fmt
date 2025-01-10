@@ -17,6 +17,8 @@ pub struct Args {
     pub check: bool,
     /// Print to stdout, do not modify files
     pub print: bool,
+    /// Return non-0 exit code when modifying files
+    pub fail_on_change: bool,
     /// Wrap long lines
     pub wrap: bool,
     /// Maximum allowed line length
@@ -47,6 +49,7 @@ pub struct Args {
 pub struct OptionArgs {
     pub check: Option<bool>,
     pub print: Option<bool>,
+    pub fail_on_change: Option<bool>,
     pub wrap: Option<bool>,
     pub wraplen: Option<u8>,
     pub wrapmin: Option<u8>,
@@ -85,6 +88,7 @@ impl Default for OptionArgs {
         Self {
             check: Some(false),
             print: Some(false),
+            fail_on_change: Some(false),
             wrap: Some(true),
             wraplen: Some(80),
             wrapmin: Some(70),
@@ -128,6 +132,7 @@ impl Args {
         Self {
             check: args.check.unwrap(),
             print: args.print.unwrap(),
+            fail_on_change: args.fail_on_change.unwrap(),
             wrap: args.wrap.unwrap(),
             wraplen: args.wraplen.unwrap(),
             wrapmin: args.wrapmin.unwrap(),
@@ -216,6 +221,7 @@ impl fmt::Display for Args {
         write!(f, "{}", "tex-fmt".magenta().bold())?;
         display_arg_line(f, "check", &self.check.to_string())?;
         display_arg_line(f, "print", &self.print.to_string())?;
+        display_arg_line(f, "fail-on-change", &self.print.to_string())?;
         display_arg_line(f, "wrap", &self.wrap.to_string())?;
         display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
