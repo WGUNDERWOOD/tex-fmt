@@ -1,4 +1,4 @@
-default: test doc clippy format shellcheck shellinstall
+default: test doc clippy format shellcheck shellinstall wasm
 
 all: default prof binary logo perf latex
 
@@ -36,7 +36,8 @@ latex:
 
 wasm:
   @mkdir -p pkg
-  @wasm-bindgen --out-dir pkg target/wasm32-unknown-unknown/debug/tex-fmt.wasm
+  @cargo build  --lib --target wasm32-unknown-unknown
+  @wasm-bindgen --target web --out-dir pkg target/wasm32-unknown-unknown/debug/tex_fmt.wasm
 
 perf:
   @cd extra && bash perf.sh

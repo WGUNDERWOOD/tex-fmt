@@ -12,6 +12,7 @@ pub mod read;
 pub mod regexes;
 pub mod subs;
 pub mod verbatim;
+pub mod wasm;
 pub mod wrap;
 pub mod write;
 
