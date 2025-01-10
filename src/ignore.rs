@@ -23,6 +23,12 @@ impl Ignore {
     }
 }
 
+impl Default for Ignore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Determine whether a line should be ignored
 pub fn get_ignore(
     line: &str,
