@@ -59,6 +59,7 @@ pub fn get_cli_args() -> OptionArgs {
     let args = OptionArgs {
         check: get_flag(&arg_matches, "check"),
         print: get_flag(&arg_matches, "print"),
+        fail_on_change: get_flag(&arg_matches,"fail-on-change"),
         wrap,
         wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
         wrapmin: None,
