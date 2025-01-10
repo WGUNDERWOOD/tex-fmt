@@ -1,27 +1,22 @@
 use wasm_bindgen::prelude::*;
 
 use crate::args::*;
-use crate::logging::*;
 use crate::format::*;
+use crate::logging::*;
 
 #[wasm_bindgen]
 pub fn main(text: &str) {
-    let mut args = Args::default();
-    args.stdin = true;
+    let mut args = Args {
+        stdin: true,
+        ..Default::default()
+    };
     init_logger(args.verbosity);
     let mut logs = Vec::<Log>::new();
     args.resolve(&mut logs);
     let file = "input";
-
-    alert(&format!("Before"));
-
-    // TODO Need web time here?
     record_file_log(&mut logs, log::Level::Error, "", "");
-
-    alert(&format!("After"));
-    //let new_text = format_file(text, &file, &args, &mut logs);
-    //alert(&format!("{}", new_text));
-    //new_text
+    let new_text = format_file(text, file, &args, &mut logs);
+    alert(&new_text);
 }
 
 #[wasm_bindgen]
