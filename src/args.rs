@@ -3,7 +3,6 @@
 use crate::cli::*;
 use crate::config::*;
 use crate::logging::*;
-use crate::Log;
 use colored::Colorize;
 use log::Level;
 use log::LevelFilter;

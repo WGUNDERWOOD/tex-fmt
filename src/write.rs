@@ -1,9 +1,9 @@
 //! Utilities for writing formatted files
 
 use crate::args::*;
-use crate::fs;
 use crate::logging::*;
 use log::Level::Error;
+use std::fs;
 use std::path;
 
 /// Write a formatted file to disk
