@@ -19,11 +19,13 @@ pkgs.mkShell {
     pkgs.diff-so-fancy
     pkgs.gh
     pkgs.hyperfine
+    pkgs.lld
     pkgs.poppler_utils
     pkgs.ripgrep
     pkgs.rustfmt
     pkgs.shellcheck
     pkgs.texlive.combined.scheme-full
+    pkgs.wasm-bindgen-cli
     python
   ];
 }
