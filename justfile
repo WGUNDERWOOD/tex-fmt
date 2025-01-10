@@ -1,6 +1,6 @@
 default: test doc clippy format shellcheck shellinstall
 
-all: default prof perf binary logo latex
+all: default prof binary logo perf latex
 
 alias b := build
 alias d := doc
@@ -19,7 +19,7 @@ doc:
   @cargo doc
 
 shellinstall:
-  @cargo build --features shellinstall
+  @cargo build -r --features shellinstall
 
 testignored:
   @cargo test -- --ignored
@@ -33,6 +33,10 @@ format:
 
 latex:
   @cd extra && bash latex.sh
+
+wasm:
+  @mkdir -p pkg
+  @wasm-bindgen --out-dir pkg target/wasm32-unknown-unknown/debug/tex-fmt.wasm
 
 perf:
   @cd extra && bash perf.sh
