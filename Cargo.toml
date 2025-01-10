@@ -34,3 +34,11 @@ clap_mangen = "0.2.24"
 
 [profile.release]
 codegen-units = 1
+
+[lib]
+name = "tex_fmt"
+path = "src/lib.rs"
+
+[[bin]]
+name = "tex-fmt"
+path = "src/main.rs"
