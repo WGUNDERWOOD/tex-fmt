@@ -1,19 +1,18 @@
 use js_sys::{Object, Reflect};
-use log::LevelFilter;
+use std::path::PathBuf;
 use wasm_bindgen::prelude::*;
 
 use crate::args::*;
+use crate::config::*;
 use crate::format::*;
 use crate::logging::*;
 
 #[wasm_bindgen]
-pub fn main(text: &str) -> JsValue {
-    // Set up arguments
-    let mut args = Args {
-        stdin: true,
-        verbosity: LevelFilter::Warn,
-        ..Default::default()
-    };
+pub fn main(text: &str, config: &str) -> JsValue {
+    // TODO handle empty config?
+    let config = Some((PathBuf::new(), "".to_string(), config.to_string()));
+    let config_args: OptionArgs = get_config_args(config).unwrap();
+    let mut args = Args::from(config_args);
 
     // Run tex-fmt
     let mut logs = Vec::<Log>::new();

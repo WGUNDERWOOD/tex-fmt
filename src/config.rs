@@ -65,22 +65,34 @@ fn find_git_root() -> Option<PathBuf> {
     None
 }
 
-/// Parse arguments from a config file path
-pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
+/// Read content from a config file path
+pub fn get_config(args: &OptionArgs) -> Option<(PathBuf, String, String)> {
     let config_path = resolve_config_path(args);
     #[allow(clippy::question_mark)]
     if config_path.is_none() {
         return None;
     };
-    let config_string = config_path
+    let config_path_string = config_path
         .clone()
         .unwrap()
         .into_os_string()
         .into_string()
         .unwrap();
     let config = read_to_string(config_path.clone().unwrap()).unwrap();
+    Some((config_path.unwrap(), config_path_string, config))
+}
+
+/// Parse arguments from a config file path
+pub fn get_config_args(
+    config: Option<(PathBuf, String, String)>,
+) -> Option<OptionArgs> {
+    #[allow(clippy::question_mark)]
+    if config.is_none() {
+        return None;
+    }
+    let (config_path, config_path_string, config) = config.unwrap();
     let config = config.parse::<Table>().unwrap_or_else(|_| {
-        panic!("Failed to read config file at {config_string}")
+        panic!("Failed to read config file at {config_path_string}")
     });
 
     let verbosity = match config.get("verbosity").map(|x| x.as_str().unwrap()) {
@@ -112,7 +124,7 @@ pub fn get_config_args(args: &OptionArgs) -> Option<OptionArgs> {
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
         tabchar,
         stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
-        config: config_path,
+        config: Some(config_path),
         noconfig: None,
         lists: config
             .get("lists")
