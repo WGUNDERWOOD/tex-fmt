@@ -11,6 +11,7 @@ pkgs.mkShell {
   in [
     pkgs.alejandra
     pkgs.bacon
+    pkgs.binaryen
     pkgs.cacert
     pkgs.cargo-edit
     pkgs.cargo-flamegraph
