@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> tex-fmt </title>
+</head>
+
+<body>
+  <h1> tex-fmt </h1>
+
+  <!-- Buttons -->
+  <div>
+    <button id="submitButton">Submit</button>
+    <button id="copyButton">Copy output</button>
+  </div>
+
+  <!-- Input and output areas -->
+  <textarea id="textInput" rows="50" cols="80" placeholder="Input">
+  </textarea>
+  <textarea id="textOutput" rows="50" cols="80" placeholder="Output" readonly>
+  </textarea>
+
+  <!-- Main script -->
+  <script type="module">
+
+    // Import wasm
+    import init, { main } from '../pkg/tex_fmt.js';
+
+    // Initialize wasm
+    (async () => {
+      try {
+        await init();
+        console.log('WASM initialized successfully.');
+      } catch (error) {
+        console.error('Error initializing WASM :', error);
+        alert('Failed to initialize WASM. Check console for details.');
+      }
+    })();
+
+    // Submit button logic
+    document.getElementById('submitButton').addEventListener(
+      'click', async () => {
+        const inputText = document.getElementById('textInput').value;
+        const outputBox = document.getElementById('textOutput');
+        try {
+          const result = await main(inputText);
+          outputBox.value = result;
+        } catch (error) {
+          console.error('Error calling WebAssembly function:', error);
+          alert('An error occurred. Check the console for details.');
+        }
+      }
+    );
+
+  // Copy output text to clipboard
+  document.getElementById('copyButton').addEventListener(
+    'click', () => {
+      const outputBox = document.getElementById('textOutput');
+      outputBox.select();
+      outputBox.setSelectionRange(0, 99999);
+      try {
+        document.execCommand('copy');
+        alert('Output copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy text: ', err);
+      }
+    }
+  );
+  </script>
+
+</body>
+</html>
