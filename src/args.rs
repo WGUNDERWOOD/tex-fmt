@@ -113,7 +113,8 @@ impl Default for OptionArgs {
 /// Get all arguments from CLI, config file, and defaults, and merge them
 pub fn get_args() -> Args {
     let mut args = get_cli_args();
-    let config_args = get_config_args(&args);
+    let config = get_config(&args);
+    let config_args = get_config_args(config);
     if let Some(c) = config_args {
         args.merge(c);
     }
@@ -123,7 +124,7 @@ pub fn get_args() -> Args {
 
 impl Args {
     /// Construct concrete arguments from optional arguments
-    fn from(args: OptionArgs) -> Self {
+    pub fn from(args: OptionArgs) -> Self {
         Self {
             check: args.check.unwrap(),
             print: args.print.unwrap(),
