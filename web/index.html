@@ -16,12 +16,18 @@
     <button id="copyButton">Copy output</button>
   </div>
 
-  <!-- Input and output areas -->
+  <!-- Input and output -->
   <div>
     <textarea id="textInput" rows="40" cols="80"
       placeholder="Input text"></textarea>
     <textarea id="textOutput" rows="40" cols="80"
       placeholder="Output text" readonly></textarea>
+  </div>
+
+  <!-- Config -->
+  <div>
+    <textarea id="textConfig" rows="40" cols="80"
+      placeholder="Config (optional)"># tabsize = 2</textarea>
   </div>
 
   <!-- Logs -->
@@ -57,7 +63,8 @@
         const outputBox = document.getElementById('textOutput');
         const logBox = document.getElementById('textLog');
         try {
-          const result = await main(inputText);
+          const configText = document.getElementById('textConfig').value;
+          const result = await main(inputText, configText);
           outputBox.value = result.output;
           logBox.value = result.logs;
         } catch (error) {

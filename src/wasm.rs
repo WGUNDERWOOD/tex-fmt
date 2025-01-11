@@ -1,4 +1,5 @@
 use js_sys::{Object, Reflect};
+use merge::Merge;
 use std::path::PathBuf;
 use wasm_bindgen::prelude::*;
 
@@ -9,10 +10,13 @@ use crate::logging::*;
 
 #[wasm_bindgen]
 pub fn main(text: &str, config: &str) -> JsValue {
-    // TODO handle empty config?
+
+    // Get args
     let config = Some((PathBuf::new(), "".to_string(), config.to_string()));
-    let config_args: OptionArgs = get_config_args(config).unwrap();
-    let mut args = Args::from(config_args);
+    let mut args: OptionArgs = get_config_args(config).unwrap();
+    args.merge(OptionArgs::default());
+    let mut args = Args::from(args);
+    args.stdin = true;
 
     // Run tex-fmt
     let mut logs = Vec::<Log>::new();
