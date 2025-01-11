@@ -3,7 +3,6 @@
 **/*.rs.bk
 *.pdb
 /result
-*.html
 *.log
 flamegraph.svg
 perf.data*
