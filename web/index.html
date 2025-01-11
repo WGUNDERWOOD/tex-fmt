@@ -17,10 +17,21 @@
   </div>
 
   <!-- Input and output areas -->
-  <textarea id="textInput" rows="50" cols="80" placeholder="Input">
-  </textarea>
-  <textarea id="textOutput" rows="50" cols="80" placeholder="Output" readonly>
-  </textarea>
+  <div>
+    <textarea id="textInput" rows="40" cols="80"
+      placeholder="Input text"></textarea>
+    <textarea id="textOutput" rows="40" cols="80"
+      placeholder="Output text" readonly></textarea>
+  </div>
+
+  <!-- Logs -->
+  <div>
+    Logs
+  </div>
+  <div>
+    <textarea id="textLog" rows="20" cols="160"
+      placeholder="Logs" readonly></textarea>
+  </div>
 
   <!-- Main script -->
   <script type="module">
@@ -44,9 +55,11 @@
       'click', async () => {
         const inputText = document.getElementById('textInput').value;
         const outputBox = document.getElementById('textOutput');
+        const logBox = document.getElementById('textLog');
         try {
           const result = await main(inputText);
-          outputBox.value = result;
+          outputBox.value = result.output;
+          logBox.value = result.logs;
         } catch (error) {
           console.error('Error calling WebAssembly function:', error);
           alert('An error occurred. Check the console for details.');
@@ -62,7 +75,7 @@
       outputBox.setSelectionRange(0, 99999);
       try {
         document.execCommand('copy');
-        alert('Output copied to clipboard');
+        alert('Copied to clipboard:\n\n' + outputBox.value);
       } catch (err) {
         console.error('Failed to copy text: ', err);
       }
