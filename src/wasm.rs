@@ -10,7 +10,6 @@ use crate::logging::*;
 
 #[wasm_bindgen]
 pub fn main(text: &str, config: &str) -> JsValue {
-
     // Get args
     let config = Some((PathBuf::new(), "".to_string(), config.to_string()));
     let mut args: OptionArgs = get_config_args(config).unwrap();
