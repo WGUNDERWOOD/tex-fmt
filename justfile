@@ -35,9 +35,10 @@ latex:
   @cd extra && bash latex.sh
 
 wasm:
-  @mkdir -p pkg
+  @mkdir -p web/pkg
   @cargo build  --lib --target wasm32-unknown-unknown
-  @wasm-bindgen --target web --out-dir pkg target/wasm32-unknown-unknown/debug/tex_fmt.wasm
+  @wasm-bindgen --target web --out-dir web/pkg \
+      target/wasm32-unknown-unknown/debug/tex_fmt.wasm
 
 perf:
   @cd extra && bash perf.sh
