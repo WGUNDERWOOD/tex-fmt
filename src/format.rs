@@ -210,6 +210,12 @@ impl State {
     }
 }
 
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Record whether a line contains certain patterns to avoid recomputing
 pub struct Pattern {
     /// Whether a begin environment pattern is present

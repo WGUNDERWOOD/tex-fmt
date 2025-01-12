@@ -33,6 +33,12 @@ impl Indent {
     }
 }
 
+impl Default for Indent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Calculate total indentation change due to the current line
 fn get_diff(
     line: &str,

@@ -1,9 +1,9 @@
 use crate::args::*;
-use crate::format_file;
-use crate::fs;
+use crate::format::format_file;
 use crate::logging::*;
 use colored::Colorize;
 use similar::{ChangeTag, TextDiff};
+use std::fs;
 
 fn test_file(source_file: &str, target_file: &str) -> bool {
     let args = Args::default();

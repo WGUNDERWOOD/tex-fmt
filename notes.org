@@ -3,6 +3,7 @@
 ** TODO Add to Nix home-manager with empty config file
 ** TODO Indicate which args are CLI and which are config
 ** TODO Add link to treefmt-nix in README
+** TODO Update wasm-bindgen to 0.2.99 when released in nixpkgs
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
