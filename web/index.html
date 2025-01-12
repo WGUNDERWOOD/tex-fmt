@@ -58,6 +58,7 @@
       padding-bottom: 3px;
       padding-left: 14px;
       padding-right: 14px;
+      cursor: pointer;
     }
     .textRow {
       display: flex;
@@ -96,6 +97,11 @@
       margin-top: 0px;
       margin-bottom: 0px;
     }
+    .copyMessage {
+      color: var(--col-light);
+      margin-left: 12px;
+      font-size: 18px;
+    }
     @media (max-width: 800px) {
       .logo {
         display: none;
@@ -115,6 +121,7 @@
       <div>
         <button id="formatButton">Format</button>
         <button id="copyButton">Copy output to clipboard</button>
+        <span class=copyMessage id="copyMessage"></span>
       </div>
     </div>
 
