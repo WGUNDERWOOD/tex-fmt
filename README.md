@@ -286,23 +286,24 @@ Lua script, many configuration options
 
 The following command-line options are offered by tex-fmt.
 
-| Option         | Alias | Default | Description |
-| -------------- | ----- | ------- | --- |
-| `--check`      | `-c`  |         | Check formatting, do not modify files |
-| `--print`      | `-p`  |         | Print to stdout, do not modify files |
-| `--nowrap`     | `-n`  |         | Do not wrap long lines |
-| `--wraplen`    | `-l`  | `80`    | Line length for wrapping |
-| `--tabsize`    | `-t`  | `2`     | Number of characters to use as tab size |
-| `--usetabs`    |       |         | Use tabs instead of spaces for indentation |
-| `--stdin`      | `-s`  |         | Process stdin as a single file, output to stdout |
-| `--config`     |       |         | Path to config file |
-| `--noconfig`   |       |         | Do not read any config file |
-| `--lists`      |       |         | Extra list environments to be formatted as `itemize` |
-| `--verbose`    | `-v`  |         | Show info messages |
-| `--quiet`      | `-q`  |         | Hide warning messages |
-| `--trace`      |       |         | Show trace messages |
-| `--completion` |       |         | Generate a shell completion script |
-| `--man`        |       |         | Generate a man page |
-| `--args`       |       |         | View arguments passed to tex-fmt |
-| `--help`       | `-h`  |         | Print help |
-| `--version`    | `-V`  |         | Print version |
+| Option             | Alias | Default | Description |
+| ------------------ | ----- | ------- | --- |
+| `--check`          | `-c`  |         | Check formatting, do not modify files |
+| `--print`          | `-p`  |         | Print to stdout, do not modify files |
+| `--fail-on-change` | `-f`  |         | Fail if files are modified |
+| `--nowrap`         | `-n`  |         | Do not wrap long lines |
+| `--wraplen`        | `-l`  | `80`    | Line length for wrapping |
+| `--tabsize`        | `-t`  | `2`     | Number of characters to use as tab size |
+| `--usetabs`        |       |         | Use tabs instead of spaces for indentation |
+| `--stdin`          | `-s`  |         | Process stdin as a single file, output to stdout |
+| `--config`         |       |         | Path to config file |
+| `--noconfig`       |       |         | Do not read any config file |
+| `--lists`          |       |         | Extra list environments to be formatted as `itemize` |
+| `--verbose`        | `-v`  |         | Show info messages |
+| `--quiet`          | `-q`  |         | Hide warning messages |
+| `--trace`          |       |         | Show trace messages |
+| `--completion`     |       |         | Generate a shell completion script |
+| `--man`            |       |         | Generate a man page |
+| `--args`           |       |         | View arguments passed to tex-fmt |
+| `--help`           | `-h`  |         | Print help |
+| `--version`        | `-V`  |         | Print version |
