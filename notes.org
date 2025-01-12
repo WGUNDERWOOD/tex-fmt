@@ -18,6 +18,7 @@
 *** git log --oneline --no-merges vX.X.X..main
 *** Write in NEWS.md
 ** Update version number in Cargo.toml
+** Update version number for pre-commit
 ** Update Nix flake and lock
 *** Check for new NixOS version (nixos-XX.XX) for flake.nix
 *** just nix
