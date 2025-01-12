@@ -112,6 +112,9 @@ pub fn get_config_args(
     let args = OptionArgs {
         check: config.get("check").map(|x| x.as_bool().unwrap()),
         print: config.get("print").map(|x| x.as_bool().unwrap()),
+        fail_on_change: config
+            .get("fail-on-change")
+            .map(|x| x.as_bool().unwrap()),
         wrap: config.get("wrap").map(|x| x.as_bool().unwrap()),
         wraplen: config
             .get("wraplen")
