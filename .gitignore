@@ -10,3 +10,4 @@ perf.data*
 *.pdf
 *.png
 cachegrind.out
+/web/pkg
