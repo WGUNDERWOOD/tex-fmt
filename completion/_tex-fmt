@@ -25,6 +25,8 @@ _tex-fmt() {
 '--check[Check formatting, do not modify files]' \
 '-p[Print to stdout, do not modify files]' \
 '--print[Print to stdout, do not modify files]' \
+'-f[Format files and return non-zero exit code when modifying files]' \
+'--fail-on-change[Format files and return non-zero exit code when modifying files]' \
 '-n[Do not wrap long lines]' \
 '--nowrap[Do not wrap long lines]' \
 '--usetabs[Use tabs instead of spaces for indentation]' \
