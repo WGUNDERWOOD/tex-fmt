@@ -228,6 +228,31 @@ A man page can be generated at run-time using the
 [man](https://github.com/WGUNDERWOOD/tex-fmt/tree/main/man)
 directory for more details.
 
+### Pre-commit hook
+
+You can format your LaTeX files before every commit using
+[pre-commit](http://pre-commit.com) with the following `.pre-commit-config.yaml`
+in your repository root:
+
+```yaml
+repos:
+  - repo: https://github.com/WGUNDERWOOD/tex-fmt
+    rev: v0.5.3
+    hooks:
+      - id: tex-fmt
+```
+
+If you don't only want to prevent committing on unformatted
+documents but don't want them automatically formatted, add:
+
+```yaml
+      - id: tex-fmt
+        args: [--check]
+```
+
+For more on how to use pre-commit check out their
+[quick start guide](https://pre-commit.com/#quick-start)!
+
 ## Performance
 
 When formatting all of the test cases,
