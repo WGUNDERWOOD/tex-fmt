@@ -52,6 +52,26 @@ jobs:
       - run: cargo install cross
       - name: Build
         run: cross build --target ${{ matrix.target }}
+  wasm:
+    name: Cargo wasm build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: jetli/wasm-bindgen-action@v0.2.0
+      - name: Build wasm
+        run: cargo build -r --lib --target wasm32-unknown-unknown
+      - name: Bind wasm
+        run: |
+          wasm-bindgen --target web --out-dir web/pkg \
+            target/wasm32-unknown-unknown/release/tex_fmt.wasm
+      - name: Optimize wasm
+        uses: NiklasEi/wasm-opt-action@v2
+        with:
+          options: -Oz
+          file: web/pkg/tex_fmt_bg.wasm
+          output: web/pkg/tex_fmt_bg.wasm
   nix:
     name: Nix build
     runs-on: ubuntu-latest
