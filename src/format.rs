@@ -273,7 +273,7 @@ pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
         for file in &args.files {
             if let Some((file, text)) = read(file, logs) {
                 let new_text = format_file(&text, &file, args, logs);
-                exit_code = process_output(args, &file, &text, &new_text, logs);
+                exit_code |= process_output(args, &file, &text, &new_text, logs);
             } else {
                 exit_code = 1;
             }

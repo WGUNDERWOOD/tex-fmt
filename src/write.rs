@@ -2,7 +2,7 @@
 
 use crate::args::*;
 use crate::logging::*;
-use log::Level::Error;
+use log::Level::{Error, Info};
 use std::fs;
 use std::path;
 
@@ -27,6 +27,10 @@ pub fn process_output(
         return 1;
     } else if text != new_text {
         write_file(file, new_text);
+        if args.fail_on_change {
+            record_file_log(logs, Info, file, "Fixed incorrect formatting.");
+            return 1;
+        }
     }
     0
 }

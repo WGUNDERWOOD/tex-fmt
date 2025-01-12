@@ -25,6 +25,13 @@ fn get_cli_command() -> Command {
                 .help("Print to stdout, do not modify files"),
         )
         .arg(
+            Arg::new("fail-on-change")
+                .short('f')
+                .long("fail-on-change")
+                .action(SetTrue)
+                .help("Format files and return non-zero exit code when modifying files")
+        )
+        .arg(
             Arg::new("nowrap")
                 .short('n')
                 .long("nowrap")
