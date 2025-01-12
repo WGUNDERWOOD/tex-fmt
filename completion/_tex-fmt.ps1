@@ -31,6 +31,8 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
             [CompletionResult]::new('--check', '--check', [CompletionResultType]::ParameterName, 'Check formatting, do not modify files')
             [CompletionResult]::new('-p', '-p', [CompletionResultType]::ParameterName, 'Print to stdout, do not modify files')
             [CompletionResult]::new('--print', '--print', [CompletionResultType]::ParameterName, 'Print to stdout, do not modify files')
+            [CompletionResult]::new('-f', '-f', [CompletionResultType]::ParameterName, 'Format files and return non-zero exit code when modifying files')
+            [CompletionResult]::new('--fail-on-change', '--fail-on-change', [CompletionResultType]::ParameterName, 'Format files and return non-zero exit code when modifying files')
             [CompletionResult]::new('-n', '-n', [CompletionResultType]::ParameterName, 'Do not wrap long lines')
             [CompletionResult]::new('--nowrap', '--nowrap', [CompletionResultType]::ParameterName, 'Do not wrap long lines')
             [CompletionResult]::new('--usetabs', '--usetabs', [CompletionResultType]::ParameterName, 'Use tabs instead of spaces for indentation')

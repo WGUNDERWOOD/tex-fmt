@@ -4,7 +4,7 @@
 .SH NAME
 tex\-fmt \- LaTeX formatter written in Rust
 .SH SYNOPSIS
-\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-\-config\fR] [\fB\-\-noconfig\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIfiles\fR] 
+\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-f\fR|\fB\-\-fail\-on\-change\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-\-config\fR] [\fB\-\-noconfig\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIfiles\fR] 
 .SH DESCRIPTION
 LaTeX formatter written in Rust
 .SH OPTIONS
@@ -14,6 +14,9 @@ Check formatting, do not modify files
 .TP
 \fB\-p\fR, \fB\-\-print\fR
 Print to stdout, do not modify files
+.TP
+\fB\-f\fR, \fB\-\-fail\-on\-change\fR
+Format files and return non\-zero exit code when modifying files
 .TP
 \fB\-n\fR, \fB\-\-nowrap\fR
 Do not wrap long lines

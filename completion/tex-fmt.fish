@@ -8,6 +8,7 @@ powershell\t''
 zsh\t''"
 complete -c tex-fmt -s c -l check -d 'Check formatting, do not modify files'
 complete -c tex-fmt -s p -l print -d 'Print to stdout, do not modify files'
+complete -c tex-fmt -s f -l fail-on-change -d 'Format files and return non-zero exit code when modifying files'
 complete -c tex-fmt -s n -l nowrap -d 'Do not wrap long lines'
 complete -c tex-fmt -l usetabs -d 'Use tabs instead of spaces for indentation'
 complete -c tex-fmt -s s -l stdin -d 'Process stdin as a single file, output to stdout'

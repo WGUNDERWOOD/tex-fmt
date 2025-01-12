@@ -28,6 +28,8 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand --check 'Check formatting, do not modify files'
             cand -p 'Print to stdout, do not modify files'
             cand --print 'Print to stdout, do not modify files'
+            cand -f 'Format files and return non-zero exit code when modifying files'
+            cand --fail-on-change 'Format files and return non-zero exit code when modifying files'
             cand -n 'Do not wrap long lines'
             cand --nowrap 'Do not wrap long lines'
             cand --usetabs 'Use tabs instead of spaces for indentation'
