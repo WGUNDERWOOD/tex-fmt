@@ -4,58 +4,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> tex-fmt </title>
+  <title> tex-fmt | LaTeX formatter </title>
 
   <style>
     :root {
       --col-dark: #191924;
-      --col-mid: #292934;
+      --col-dim: #292934;
+      --col-mid: #9999a4;
       --col-light: #faf7e5;
       --col-orange: #e5652e;
       --col-yellow: #eed858;
     }
     * {
-      margin: 12px;
       font-family: 'Noto', sans-serif;
     }
     body {
       background-color: var(--col-dark);
     }
     h1 {
+      margin-left: 14px;
+      margin-top: 12px;
+      margin-bottom: 2px;
       color: var(--col-light);
       font-size: 48px;
       font-family: 'Bungee', sans-serif;
     }
     h2 {
+      margin-left: 16px;
+      margin-top: 4px;
+      margin-bottom: 12px;
       color: var(--col-yellow);
       font-size: 24px;
     }
     h3 {
+      margin-left: 2px;
+      margin-top: 14px;
+      margin-bottom: 10px;
       color: var(--col-light);
       font-size: 18px;
-    }
-    textarea {
-      color: var(--col-light);
-      background-color: var(--col-mid);
-      border: 2px solid var(--col-orange);
-      border-radius: 4px;
-      font-size: 16px;
-      font-family: 'Source Code Pro', sans-serif;
-      resize: none;
-      padding-left: 5px;
-      padding-right: 5px;
-      padding-top: 2px;
-      padding-bottom: 2px;
     }
     button {
+      margin-left: 12px;
+      margin-top: 14px;
+      margin-bottom: 6px;
       color: var(--col-light);
-      background-color: var(--col-mid);
+      background-color: var(--col-dim);
+      border: 2px solid var(--col-orange);
       border-radius: 10px;
       font-size: 18px;
-      padding-top: 8px;
-      padding-bottom: 8px;
+      padding-top: 3px;
+      padding-bottom: 3px;
       padding-left: 14px;
       padding-right: 14px;
+    }
+    .textRow {
+      display: flex;
+      width: 100%;
+    }
+    .textCol {
+      margin-left: 12px;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      margin-top: 0px;
+    }
+    .textBox {
+      color: var(--col-light);
+      background-color: var(--col-dim);
+      border: 2px solid var(--col-mid);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'Source Code Pro', sans-serif;
+      resize: none;
+      width: 100%;
+      box-sizing: border-box;
+      max-width: 700px;
     }
   </style>
 
@@ -63,7 +85,7 @@
 
 <body>
   <h1> tex-fmt </h1>
-  <h2> An extremely fast LaTex formatter </h2>
+  <h2> An extremely fast LaTeX formatter </h2>
 
   <!-- Buttons -->
   <div>
@@ -72,31 +94,31 @@
   </div>
 
   <!-- Input and output -->
-  <div style="display: flex; gap: 20px;">
+  <div class="textRow" >
 
-    <div style="flex: 1; display: flex; flex-direction: column; max-width: 700px;">
+    <div class="textCol" >
       <h3> Input </h3>
-      <textarea id="inputText" rows="30" cols="80"></textarea>
+      <textarea id="inputText" rows="30" cols="80" class=textBox></textarea>
     </div>
 
-    <div style="flex: 1; display: flex; flex-direction: column; max-width: 700px;">
+    <div class="textCol" >
       <h3> Output </h3>
-      <textarea id="outputText" rows="30" cols="80" readonly></textarea>
+      <textarea id="outputText" rows="30" cols="80" class=textBox readonly></textarea>
     </div>
 
   </div>
 
   <!-- Config and logs -->
-  <div style="display: flex; gap: 20px;">
+  <div class="textRow" >
 
-    <div style="flex: 1; display: flex; flex-direction: column; max-width: 700px;">
+    <div class="textCol" >
       <h3> Config </h3>
-      <textarea id="configText" rows="20" cols="80"></textarea>
+      <textarea id="configText" rows="20" cols="80" class=textBox></textarea>
     </div>
 
-    <div style="flex: 1; display: flex; flex-direction: column; max-width: 700px;">
+    <div class="textCol" >
       <h3> Logs </h3>
-      <textarea id="logText" rows="20" cols="80" readonly></textarea>
+      <textarea id="logText" rows="20" cols="80" class=textBox readonly></textarea>
     </div>
 
   </div>
