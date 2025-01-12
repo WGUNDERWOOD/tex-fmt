@@ -230,9 +230,9 @@ directory for more details.
 
 ### Pre-commit hook
 
-You can format your LaTeX files before every commit using
-[pre-commit](http://pre-commit.com) with the following `.pre-commit-config.yaml`
-in your repository root:
+tex-fmt can be run before every git commit using
+[pre-commit](http://pre-commit.com) with the following
+`.pre-commit-config.yaml` in your repository root:
 
 ```yaml
 repos:
@@ -242,16 +242,12 @@ repos:
       - id: tex-fmt
 ```
 
-If you don't only want to prevent committing on unformatted
-documents but don't want them automatically formatted, add:
+To prevent the pre-commit hook from modifying your files, add:
 
 ```yaml
       - id: tex-fmt
         args: [--check]
 ```
-
-For more on how to use pre-commit check out their
-[quick start guide](https://pre-commit.com/#quick-start)!
 
 ## Performance
 
