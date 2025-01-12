@@ -13,7 +13,7 @@
 
   <!-- Buttons -->
   <div>
-    <button id="submitButton">Format</button>
+    <button id="formatButton">Format</button>
     <button id="copyButton">Copy output to clipboard</button>
   </div>
 
@@ -22,12 +22,12 @@
 
     <div style="flex: 1; display: flex; flex-direction: column; max-width: 600px;">
       <h3> Input </h3>
-      <textarea id="textInput" rows="30" cols="80"></textarea>
+      <textarea id="inputText" rows="30" cols="80"></textarea>
     </div>
 
     <div style="flex: 1; display: flex; flex-direction: column; max-width: 600px;">
       <h3> Output </h3>
-      <textarea id="textOutput" rows="30" cols="80" readonly></textarea>
+      <textarea id="outputText" rows="30" cols="80" readonly></textarea>
     </div>
 
   </div>
@@ -37,12 +37,12 @@
 
     <div style="flex: 1; display: flex; flex-direction: column; max-width: 600px;">
       <h3> Config (optional) </h3>
-      <textarea id="textConfig" rows="20" cols="80"></textarea>
+      <textarea id="configText" rows="20" cols="80"></textarea>
     </div>
 
     <div style="flex: 1; display: flex; flex-direction: column; max-width: 600px;">
       <h3> Logs </h3>
-      <textarea id="textLog" rows="20" cols="80" readonly></textarea>
+      <textarea id="logText" rows="20" cols="80" readonly></textarea>
     </div>
 
   </div>
