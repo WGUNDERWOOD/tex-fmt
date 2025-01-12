@@ -94,8 +94,6 @@ jobs:
         with:
           name: pkg
           path: web/pkg
-      - name: Display structure of downloaded files
-        run: ls -R -I target
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
