@@ -35,6 +35,7 @@ fn build_completion() -> Result<(), Error> {
     }
     Ok(())
 }
+
 fn build_man() -> Result<(), Error> {
     let outdir = match var_os("CARGO_MANIFEST_DIR") {
         None => return Ok(()),

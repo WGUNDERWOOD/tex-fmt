@@ -13,16 +13,16 @@ import init, { main } from './pkg/tex_fmt.js';
 })();
 
 // Submit button logic
-document.getElementById('submitButton').addEventListener(
+document.getElementById('formatButton').addEventListener(
   'click', async () => {
-    const inputText = document.getElementById('textInput').value;
-    const outputBox = document.getElementById('textOutput');
-    const logBox = document.getElementById('textLog');
+    const inputText = document.getElementById('inputText').value;
+    const outputText = document.getElementById('outputText');
+    const logText = document.getElementById('logText');
     try {
-      const configText = document.getElementById('textConfig').value;
+      const configText = document.getElementById('configText').value;
       const result = await main(inputText, configText);
-      outputBox.value = result.output;
-      logBox.value = result.logs;
+      outputText.value = result.output;
+      logText.value = result.logs;
     } catch (error) {
       console.error('Error calling WebAssembly function:', error);
       alert('An error occurred. Check the console for details.');
@@ -33,12 +33,12 @@ document.getElementById('submitButton').addEventListener(
 // Copy output text to clipboard
 document.getElementById('copyButton').addEventListener(
   'click', () => {
-    const outputBox = document.getElementById('textOutput');
-    outputBox.select();
-    outputBox.setSelectionRange(0, 99999);
+    const outputText = document.getElementById('outputText');
+    outputText.select();
+    outputText.setSelectionRange(0, 99999);
     try {
       document.execCommand('copy');
-      alert('Copied to clipboard:\n\n' + outputBox.value);
+      alert('Copied to clipboard:\n\n' + outputText.value);
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
