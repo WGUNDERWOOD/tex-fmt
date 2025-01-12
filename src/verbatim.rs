@@ -24,6 +24,12 @@ impl Verbatim {
     }
 }
 
+impl Default for Verbatim {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Determine whether a line is in a verbatim environment
 pub fn get_verbatim(
     line: &str,

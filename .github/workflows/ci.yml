@@ -52,6 +52,49 @@ jobs:
       - run: cargo install cross
       - name: Build
         run: cross build --target ${{ matrix.target }}
+  wasm:
+    name: Cargo wasm build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: jetli/wasm-bindgen-action@v0.2.0
+        with:
+          version: '0.2.95'
+      - name: Build wasm
+        run: cargo build -r --lib --target wasm32-unknown-unknown
+      - name: Bind wasm
+        run: |
+          wasm-bindgen --target web --out-dir web/pkg \
+            target/wasm32-unknown-unknown/release/tex_fmt.wasm
+      - name: Optimize wasm
+        uses: NiklasEi/wasm-opt-action@v2
+        with:
+          options: -Oz
+          file: web/pkg/tex_fmt_bg.wasm
+          output: web/pkg/tex_fmt_bg.wasm
+      - name: Upload wasm
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v3
+        with:
+          path: "web/pkg"
+  pages:
+    if: github.ref == 'refs/heads/main'
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: wasm
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download WASM and JS artifacts
+        uses: actions/download-artifact@v3
+      - run: mkdir -p web/pkg && mv pkg/* web/pkg/ && rmdir pkg
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: web
   nix:
     name: Nix build
     runs-on: ubuntu-latest
