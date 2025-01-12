@@ -1,5 +1,5 @@
 - id: tex-fmt
-  name: Format latex files
+  name: Format LaTeX files
   language: rust
   entry: tex-fmt
   args: [--fail-on-change]
