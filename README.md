@@ -14,6 +14,8 @@ https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
 
 An extremely fast LaTeX formatter written in Rust.
+Try it out now in your
+[browser](https://wgunderwood.github.io/tex-fmt/)!
 
 <table width="100%">
 <tr>
@@ -112,6 +114,9 @@ environment.systemPackages = [
   pkgs.tex-fmt
 ];
 ```
+
+It is also included in
+[treefmt-nix](https://github.com/numtide/treefmt-nix/tree/main).
 
 ### Arch Linux
 
