@@ -227,7 +227,7 @@ A man page can be generated at run-time using the
 [man](https://github.com/WGUNDERWOOD/tex-fmt/tree/main/man)
 directory for more details.
 
-### Run before every commit
+### Pre-commit hook
 
 You can format your LaTeX files before every commit using
 [pre-commit](http://pre-commit.com) with the following `.pre-commit-config.yaml`
