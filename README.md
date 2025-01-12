@@ -241,6 +241,14 @@ repos:
       - id: tex-fmt
 ```
 
+If you don't only want to prevent committing on unformatted
+documents but don't want them automatically formatted, add:
+
+```yaml
+      - id: tex-fmt
+        args: [--check]
+```
+
 For more on how to use pre-commit check out their
 [quick start guide](https://pre-commit.com/#quick-start)!
 

@@ -1,6 +1,7 @@
 - id: tex-fmt
   name: Format latex files
   language: rust
-  entry: tex-fmt --fail-on-change
+  entry: tex-fmt
+  args: [--fail-on-change]
   files: \.(tex|bib|cls|sty)$
   stages: [pre-commit, pre-merge-commit, pre-push, manual]
