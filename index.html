@@ -46,7 +46,7 @@
     button {
       margin-left: 12px;
       margin-top: 14px;
-      margin-bottom: 6px;
+      margin-bottom: 14px;
       color: var(--col-light);
       background-color: var(--col-dim);
       border: 2px solid var(--col-orange);
@@ -79,18 +79,48 @@
       box-sizing: border-box;
       max-width: 700px;
     }
+    .header {
+      display: flex;
+      width: 100%;
+      max-width: 1440px;
+    }
+    .headerText {
+      width: 100%;
+    }
+    .logo {
+      display: block;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    @media (max-width: 800px) {
+      .logo {
+        display: none;
+      }
+    }
   </style>
 
 </head>
 
 <body>
-  <h1> tex-fmt </h1>
-  <h2> An extremely fast LaTeX formatter </h2>
+  <div class=header>
 
-  <!-- Buttons -->
-  <div>
-    <button id="formatButton">Format</button>
-    <button id="copyButton">Copy output to clipboard</button>
+    <!-- Header text -->
+    <div class=headerText>
+      <h1> tex-fmt </h1>
+      <h2> An extremely fast LaTeX formatter </h2>
+      <div>
+        <button id="formatButton">Format</button>
+        <button id="copyButton">Copy output to clipboard</button>
+      </div>
+    </div>
+
+    <!-- Logo -->
+    <img class=logo
+      src="https://github.com/WGUNDERWOOD/tex-fmt/raw/main/extra/logo.svg"
+      alt="tex-fmt" align="right" width=180 />
+
   </div>
 
   <!-- Input and output -->
