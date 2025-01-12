@@ -15,6 +15,8 @@ import init, { main } from './pkg/tex_fmt.js';
 // Submit button logic
 document.getElementById('formatButton').addEventListener(
   'click', async () => {
+    const copyMessage = document.getElementById('copyMessage');
+    copyMessage.innerText = ""
     const inputText = document.getElementById('inputText').value;
     const outputText = document.getElementById('outputText');
     const logText = document.getElementById('logText');
@@ -38,7 +40,9 @@ document.getElementById('copyButton').addEventListener(
     outputText.setSelectionRange(0, 99999);
     try {
       document.execCommand('copy');
-      alert('Copied to clipboard:\n\n' + outputText.value);
+      const copyMessage = document.getElementById('copyMessage');
+      copyMessage.innerText = "Copied!"
+      outputText.blur();
     } catch (err) {
       console.error('Failed to copy text: ', err);
     }
