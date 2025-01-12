@@ -80,7 +80,8 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
-          path: "web/pkg"
+          name: pkg
+          path: web/pkg/
   pages:
     if: github.ref == 'refs/heads/main'
     name: Deploy to GitHub Pages
@@ -91,8 +92,10 @@ jobs:
       - name: Download WASM and JS artifacts
         uses: actions/download-artifact@v4
         with:
-          path: "web/pkg"
-      - run: mkdir -p web/pkg && mv pkg/* web/pkg/ && rmdir pkg
+          name: pkg
+          path: web/
+      - name: Display structure of downloaded files
+        run: ls -R -I target
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
