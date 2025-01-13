@@ -8,6 +8,7 @@
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
+** OptionArgs new function
 ** Implement Default, Display, from for Args
 ** CLI command
 ** CLI args parser function
