@@ -64,7 +64,8 @@ fn test_source() {
             let in_file = test_dir.path().join("source").join(file.clone());
             let out_file = test_dir.path().join("target").join(file.clone());
             dbg!(&in_file);
-            if !test_file(in_file.to_str().unwrap(), out_file.to_str().unwrap()) {
+            if !test_file(in_file.to_str().unwrap(), out_file.to_str().unwrap())
+            {
                 panic!("Failed in {file}");
             }
         }
@@ -81,7 +82,8 @@ fn test_target() {
         for file in target_files {
             let in_file = test_dir.path().join("target").join(file.clone());
             dbg!(&in_file);
-            if !test_file(in_file.to_str().unwrap(), in_file.to_str().unwrap()) {
+            if !test_file(in_file.to_str().unwrap(), in_file.to_str().unwrap())
+            {
                 panic!("Failed in {file}");
             }
         }
@@ -91,12 +93,8 @@ fn test_target() {
 #[test]
 #[ignore]
 fn test_short() {
-    let source_files = vec![
-        "wrap/source/wrap.tex",
-    ];
-    let target_files = vec![
-        "wrap/target/wrap.tex",
-    ];
+    let source_files = vec!["wrap/source/wrap.tex"];
+    let target_files = vec!["wrap/target/wrap.tex"];
     let mut fail = false;
     for i in 0..source_files.len() {
         let source_file = source_files[i];
