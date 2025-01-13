@@ -41,8 +41,9 @@
 ** Submit to CTAN
 *** Update version in ctan/tex-fmt.pkg
 *** rm -rf ctan/tex-fmt/
-*** gh release download vX.X.X -D ctan/tex-fmt
+*** gh release download vX.X.X -D ctan/tex-fmt/bin
 *** just ctan
+*** Validate with cd ctan && ctan-o-mat tex-fmt.pkg
 *** Submit with cd ctan && ctan-o-mat --submit tex-fmt.pkg
 ** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
