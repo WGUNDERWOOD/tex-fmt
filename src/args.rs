@@ -114,6 +114,37 @@ impl Default for OptionArgs {
     }
 }
 
+impl OptionArgs {
+    pub fn new() -> Self {
+        Self {
+            check: None,
+            print: None,
+            fail_on_change: None,
+            wrap: None,
+            wraplen: None,
+            wrapmin: None,
+            tabsize: None,
+            tabchar: None,
+            stdin: None,
+            config: None,
+            noconfig: None,
+            lists: vec![
+                "itemize",
+                "enumerate",
+                "description",
+                "inlineroman",
+                "inventory",
+            ]
+            .into_iter()
+            .map(std::borrow::ToOwned::to_owned)
+            .collect(),
+            verbosity: None,
+            arguments: None,
+            files: vec![],
+        }
+    }
+}
+
 /// Get all arguments from CLI, config file, and defaults, and merge them
 pub fn get_args() -> Args {
     let mut args = get_cli_args();
