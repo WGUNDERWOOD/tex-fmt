@@ -56,6 +56,12 @@ upgrade:
 shellcheck:
   @shellcheck extra/*.sh
 
+ctan:
+  @cp ctan/README.md ctan/tex-fmt
+  @pandoc -o ctan/tex-fmt/tex-fmt.pdf ctan/README.md
+  @cd ctan && tar -czf tex-fmt.tar.gz tex-fmt
+  @cd ctan && ctan-o-mat tex-fmt.pkg
+
 nix:
   @nix flake update
 
