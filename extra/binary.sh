@@ -3,10 +3,11 @@ echo "Testing binary"
 DIR="$(mktemp -d)"
 cp -r ../tests/* "$DIR"
 cargo build --release
+BIN=$(realpath "../target/release/tex-fmt")
 
 # run tex-fmt
 for TESTDIR in "$DIR"/*; do
-    ../target/release/tex-fmt -q "$TESTDIR/source"/*
+    (cd "$TESTDIR" && "$BIN" -q "$TESTDIR/source"/*)
 done
 
 # check tex-fmt agrees with target files
