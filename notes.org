@@ -39,14 +39,11 @@
 ** Publish GitHub release with notes from NEWS.md
 *** GitHub binaries published automatically with actions
 ** Submit to CTAN
-*** cd ctan
-*** Update version in tex-fmt.pkg
-*** rm -rf tex-fmt
-*** gh release download vX.X.X -D tex-fmt
-*** cp README.md tex-fmt
-*** pandoc -o tex-fmt/tex-fmt.pdf README.md
-*** tar -czf tex-fmt.tar.gz tex-fmt
-*** Validate with ctan-o-mat tex-fmt.pkg
+*** Update version in ctan/tex-fmt.pkg
+*** rm -rf ctan/tex-fmt/
+*** gh release download vX.X.X -D ctan/tex-fmt
+*** just ctan
+*** Submit with cd ctan && ctan-o-mat --submit tex-fmt.pkg
 ** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
 *** git fetch upstream
