@@ -1,6 +1,6 @@
 default: test doc clippy format shellcheck shellinstall wasm
 
-all: default prof binary logo perf latex
+all: default prof binary logo ctan perf latex
 
 alias b := build
 alias d := doc
@@ -57,10 +57,10 @@ shellcheck:
   @shellcheck extra/*.sh
 
 ctan:
-  @cp ctan/README.md ctan/tex-fmt
+  @cp ctan/README.md LICENSE NEWS.md Cargo.toml ctan/tex-fmt
+  @cp -r src/ ctan/tex-fmt
   @pandoc -o ctan/tex-fmt/tex-fmt.pdf ctan/README.md
   @cd ctan && tar -czf tex-fmt.tar.gz tex-fmt
-  @cd ctan && ctan-o-mat tex-fmt.pkg
 
 nix:
   @nix flake update
