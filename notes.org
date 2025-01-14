@@ -5,6 +5,11 @@
 ** TODO Indicate which args are CLI and which are config
 ** TODO Add to Nix home-manager with empty config file
 ** TODO Update wasm-bindgen to 0.2.99 when released in nixpkgs
+** TODO Publish HTML docs
+** TODO CTAN submission
+*** TODO Avoid making directories when building archive
+*** TODO Add PDF documentation and source
+*** TODO Discuss package name
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
