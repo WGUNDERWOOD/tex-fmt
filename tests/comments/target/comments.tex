@@ -22,7 +22,11 @@ This is a percent sign \% and not a comment
 Some lines might have both \% percents % and comments \end{align}
 
 Links can contain raw percent signs
-\href{https://github.com/WGUNDERWOOD/tex-fmt/example%20file.pdf}{URL with \%}.
-\url{https://github.com/WGUNDERWOOD/tex-fmt/example%20file.pdf}.
+\url{url_with_comment_%_is_fine}
+\href{href_with_comment_%_is_fine}
+Url % in a comment \url{url}
+Url % in a comment \url{url_with_comment_%}
+Comment after a \url{url} % comment
+Comment after a \url{url_with_comment_%} % comment
 
 \end{document}

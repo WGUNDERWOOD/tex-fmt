@@ -14,6 +14,8 @@ pub fn find_comment_index(line: &str, pattern: &Pattern) -> Option<usize> {
             prev_c = c;
         }
     }
+
+    // \href{...} can contain percent signs without escaping
     None
 }
 

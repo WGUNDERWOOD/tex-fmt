@@ -85,8 +85,6 @@ fn test_source() {
             } else {
                 None
             };
-            dbg!(&in_file);
-            dbg!(&config_file);
             if !test_file(
                 in_file.to_str().unwrap(),
                 out_file.to_str().unwrap(),
