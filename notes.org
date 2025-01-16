@@ -1,15 +1,19 @@
 #+title: tex-fmt
 * Tasks
-** TODO Improve build times
-** TODO Include man page and shell completion in Nix package
+** TODO Work on browser version
+** TODO Actions yaml long lines
+** TODO Indicate which args are CLI and which are config
 ** TODO Add to Nix home-manager with empty config file
+** TODO Update wasm-bindgen to 0.2.99 when released in nixpkgs
+** TODO Publish lib HTML docs
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
+** OptionArgs new function
+** Implement Default, Display, from for Args
 ** CLI command
 ** CLI args parser function
 ** Config args parser function
-** Implement Display for Args
 ** Args resolver
 ** GitHub README
 * Release process
@@ -17,8 +21,9 @@
 *** git log --oneline --no-merges vX.X.X..main
 *** Write in NEWS.md
 ** Update version number in Cargo.toml
+** Update version number for pre-commit
 ** Update Nix flake and lock
-*** Check for new NixOS version (nixos-XX.XX)
+*** Check for new NixOS version (nixos-XX.XX) for flake.nix
 *** just nix
 ** Update Rust version
 *** just upgrade
@@ -31,12 +36,14 @@
 *** git tag vX.X.X
 *** git push --tags
 ** Publish to crates.io with cargo publish
-** Publish GitHub release with notes
+*** Pass --allow-dirty if notes.org has changed
+** Publish GitHub release with notes from NEWS.md
 *** GitHub binaries published automatically with actions
 ** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
 *** git fetch upstream
 *** git rebase upstream/master
+*** git fetch
 *** git push --force-with-lease origin master
 *** git branch -d update-tex-fmt
 *** git switch --create update-tex-fmt upstream/master
@@ -44,7 +51,10 @@
 *** Update version and invalidate src.hash and cargoHash
 *** nix-build -A tex-fmt
 *** Fix both hashes, get a successful build
+*** git add pkgs/by-name/te/tex-fmt/package.nix
 *** git commit -m "tex-fmt: X.X.X -> Y.Y.Y"
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes
+** Tidy repository
+*** Commit any new changes to NEWS.md or notes.org

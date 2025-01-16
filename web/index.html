@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> tex-fmt | LaTeX formatter </title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans&family=Source+Code+Pro&display=swap');
+    :root {
+      --col-dark: #191924;
+      --col-dim: #292934;
+      --col-mid: #9999a4;
+      --col-light: #faf7e5;
+      --col-orange: #e5652e;
+      --col-yellow: #eed858;
+    }
+    * {
+      font-family: 'Noto', sans-serif;
+    }
+    body {
+      background-color: var(--col-dark);
+    }
+    h1 {
+      margin-left: 14px;
+      margin-top: 12px;
+      margin-bottom: 2px;
+      color: var(--col-light);
+      font-size: 48px;
+      font-family: 'Bungee', sans-serif;
+    }
+    h2 {
+      margin-left: 16px;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      color: var(--col-yellow);
+      font-size: 24px;
+    }
+    h3 {
+      margin-left: 2px;
+      margin-top: 14px;
+      margin-bottom: 10px;
+      color: var(--col-light);
+      font-size: 18px;
+    }
+    button {
+      margin-left: 12px;
+      margin-top: 14px;
+      margin-bottom: 14px;
+      color: var(--col-light);
+      background-color: var(--col-dim);
+      border: 2px solid var(--col-orange);
+      border-radius: 10px;
+      font-size: 18px;
+      padding-top: 3px;
+      padding-bottom: 3px;
+      padding-left: 14px;
+      padding-right: 14px;
+      cursor: pointer;
+    }
+    .textRow {
+      display: flex;
+      width: 100%;
+    }
+    .textCol {
+      margin-left: 12px;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      margin-top: 0px;
+    }
+    .textBox {
+      color: var(--col-light);
+      background-color: var(--col-dim);
+      border: 2px solid var(--col-mid);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'Source Code Pro', sans-serif;
+      resize: none;
+      width: 100%;
+      box-sizing: border-box;
+      max-width: 700px;
+    }
+    .header {
+      display: flex;
+      width: 100%;
+      max-width: 1440px;
+    }
+    .headerText {
+      width: 100%;
+    }
+    .logo {
+      display: block;
+      margin-left: 0px;
+      margin-right: 0px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    .copyMessage {
+      color: var(--col-light);
+      margin-left: 12px;
+      font-size: 18px;
+    }
+    @media (max-width: 800px) {
+      .logo {
+        display: none;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class=header>
+
+    <!-- Header text -->
+    <div class=headerText>
+      <h1> tex-fmt </h1>
+      <h2> An extremely fast LaTeX formatter </h2>
+      <div>
+        <button id="formatButton">Format</button>
+        <button id="copyButton">Copy output to clipboard</button>
+        <span class=copyMessage id="copyMessage"></span>
+      </div>
+    </div>
+
+    <!-- Logo -->
+    <img class=logo
+      src="https://github.com/WGUNDERWOOD/tex-fmt/raw/main/extra/logo.svg"
+      alt="tex-fmt" align="right" width=180 />
+
+  </div>
+
+  <!-- Input and output -->
+  <div class="textRow" >
+
+    <div class="textCol" >
+      <h3> Input </h3>
+      <textarea id="inputText" rows="30" cols="80" class=textBox></textarea>
+    </div>
+
+    <div class="textCol" >
+      <h3> Output </h3>
+      <textarea id="outputText" rows="30" cols="80" class=textBox readonly></textarea>
+    </div>
+
+  </div>
+
+  <!-- Config and logs -->
+  <div class="textRow" >
+
+    <div class="textCol" >
+      <h3> Config </h3>
+      <textarea id="configText" rows="20" cols="80" class=textBox></textarea>
+    </div>
+
+    <div class="textCol" >
+      <h3> Logs </h3>
+      <textarea id="logText" rows="20" cols="80" class=textBox readonly></textarea>
+    </div>
+
+  </div>
+
+  <!-- Import script -->
+  <script type="module" src="./index.js"></script>
+
+  <!-- goatcounter -->
+  <script data-goatcounter="https://wgunderwood.goatcounter.com/count"
+    async src="//gc.zgo.at/count.js"></script>
+
+</body>
+</html>

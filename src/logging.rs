@@ -1,5 +1,6 @@
 //! Utilities for logging
 
+use crate::args::Args;
 use colored::{Color, Colorize};
 use env_logger::Builder;
 use log::Level;
@@ -8,7 +9,7 @@ use log::LevelFilter;
 use std::cmp::Reverse;
 use std::io::Write;
 use std::path::Path;
-use std::time::Instant;
+use web_time::Instant;
 
 /// Holds a log entry
 #[derive(Debug)]
@@ -112,8 +113,8 @@ pub fn init_logger(level_filter: LevelFilter) {
         .init();
 }
 
-/// Display all of the logs collected
-pub fn print_logs(logs: &mut Vec<Log>) {
+/// Sort and remove duplicates
+fn preprocess_logs(logs: &mut Vec<Log>) {
     logs.sort_by_key(|l| {
         (
             l.level,
@@ -141,23 +142,53 @@ pub fn print_logs(logs: &mut Vec<Log>) {
         )
     });
     logs.sort_by_key(|l| l.time);
+}
 
+/// Format a log entry
+fn format_log(log: &Log) -> String {
+    let linum_new = log
+        .linum_new
+        .map_or_else(String::new, |i| format!("Line {i} "));
+
+    let linum_old = log
+        .linum_old
+        .map_or_else(String::new, |i| format!("({i}). "));
+
+    let line = log
+        .line
+        .as_ref()
+        .map_or_else(String::new, |l| l.trim_start().to_string());
+
+    let log_string = format!(
+        "{}{}{} {}",
+        linum_new.white().bold(),
+        linum_old.white().bold(),
+        log.message.yellow().bold(),
+        line,
+    );
+    log_string
+}
+
+/// Format all of the logs collected
+pub fn format_logs(logs: &mut Vec<Log>, args: &Args) -> String {
+    preprocess_logs(logs);
+    let mut logs_string = "".to_string();
     for log in logs {
-        let linum_new = log
-            .linum_new
-            .map_or_else(String::new, |i| format!("Line {i} "));
+        if log.level <= args.verbosity {
+            let log_string = format_log(log);
+            logs_string.push_str(&log_string);
+            logs_string.push('\n');
+        }
+    }
+    logs_string
+}
 
-        let linum_old = log
-            .linum_old
-            .map_or_else(String::new, |i| format!("({i}). "));
-
-        let line = log
-            .line
-            .as_ref()
-            .map_or_else(String::new, |l| l.trim_start().to_string());
-
+/// Print all of the logs collected
+pub fn print_logs(logs: &mut Vec<Log>) {
+    preprocess_logs(logs);
+    for log in logs {
         let log_string = format!(
-            "{} {}: {}{}{} {}",
+            "{} {}: {}",
             "tex-fmt".magenta().bold(),
             match log.file.as_str() {
                 "<stdin>" | "" => "<stdin>".blue().bold(),
@@ -169,10 +200,7 @@ pub fn print_logs(logs: &mut Vec<Log>) {
                     .blue()
                     .bold(),
             },
-            linum_new.white().bold(),
-            linum_old.white().bold(),
-            log.message.yellow().bold(),
-            line,
+            format_log(log),
         );
 
         match log.level {

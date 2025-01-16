@@ -3,13 +3,18 @@ echo "Testing binary"
 DIR="$(mktemp -d)"
 cp -r ../tests/* "$DIR"
 cargo build --release
+BIN=$(realpath "../target/release/tex-fmt")
 
 # run tex-fmt
-../target/release/tex-fmt "$DIR/source"/* "$DIR/target"/*
+for TESTDIR in "$DIR"/*; do
+    (cd "$TESTDIR" && "$BIN" -q "$TESTDIR/source"/*)
+done
 
-# tex-fmt agrees with target files
-for file in ../tests/source/*; do
-    f=$(basename "$file")
-    diff ../"tests/target/$f" "$DIR/source/$f" | diff-so-fancy
-    diff ../"tests/target/$f" "$DIR/target/$f" | diff-so-fancy
+# check tex-fmt agrees with target files
+for TESTDIR in "$DIR"/*; do
+    for file in "$TESTDIR/source"/*; do
+        f=$(basename "$file")
+        diff "$TESTDIR/target/$f" "$TESTDIR/source/$f" | diff-so-fancy
+        diff "$TESTDIR/target/$f" "$TESTDIR/target/$f" | diff-so-fancy
+    done
 done

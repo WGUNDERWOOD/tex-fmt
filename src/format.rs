@@ -4,10 +4,12 @@ use crate::args::*;
 use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
+use crate::read::*;
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
+use crate::write::*;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
@@ -35,6 +37,15 @@ pub fn format_file(
         TabChar::Tab => "\t",
         TabChar::Space => " ",
     };
+
+    // Get any extra environments to be indented as lists
+    let lists_begin: Vec<String> = args
+        .lists
+        .iter()
+        .map(|l| format!("\\begin{{{l}}}"))
+        .collect();
+    let lists_end: Vec<String> =
+        args.lists.iter().map(|l| format!("\\end{{{l}}}")).collect();
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
@@ -75,6 +86,8 @@ pub fn format_file(
                     file,
                     args,
                     &pattern,
+                    &lists_begin,
+                    &lists_end,
                 );
 
                 #[allow(clippy::cast_possible_wrap)]
@@ -92,6 +105,7 @@ pub fn format_file(
                         file,
                         args,
                         logs,
+                        &pattern,
                     );
                     if let Some([this_line, next_line_start, next_line]) =
                         wrapped_lines
@@ -130,6 +144,7 @@ pub fn format_file(
     }
 
     new_text = remove_trailing_spaces(&new_text);
+    new_text = remove_trailing_blank_lines(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
     new_text
 }
@@ -195,6 +210,12 @@ impl State {
     }
 }
 
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Record whether a line contains certain patterns to avoid recomputing
 pub struct Pattern {
     /// Whether a begin environment pattern is present
@@ -205,18 +226,21 @@ pub struct Pattern {
     pub contains_item: bool,
     /// Whether a splitting pattern is present
     pub contains_splitting: bool,
+    /// Whether a comment is present
+    pub contains_comment: bool,
 }
 
 impl Pattern {
     /// Check if a string contains patterns
     pub fn new(s: &str) -> Self {
-        // If splitting does not match, no patterns are present
+        // If splitting does not match, most patterns are not present
         if RE_SPLITTING.is_match(s) {
             Self {
                 contains_env_begin: s.contains(ENV_BEGIN),
                 contains_env_end: s.contains(ENV_END),
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
+                contains_comment: s.contains('%'),
             }
         } else {
             Self {
@@ -224,6 +248,7 @@ impl Pattern {
                 contains_env_end: false,
                 contains_item: false,
                 contains_splitting: false,
+                contains_comment: s.contains('%'),
             }
         }
     }
@@ -232,4 +257,28 @@ impl Pattern {
 /// Ensure that the indentation returns to zero at the end of the file
 const fn indents_return_to_zero(state: &State) -> bool {
     state.indent.actual == 0
+}
+
+/// Run tex-fmt with the provided arguments
+pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
+    let mut exit_code = 0;
+    if args.stdin {
+        if let Some((file, text)) = read_stdin(logs) {
+            let new_text = format_file(&text, &file, args, logs);
+            exit_code = process_output(args, &file, &text, &new_text, logs);
+        } else {
+            exit_code = 1;
+        }
+    } else {
+        for file in &args.files {
+            if let Some((file, text)) = read(file, logs) {
+                let new_text = format_file(&text, &file, args, logs);
+                exit_code |=
+                    process_output(args, &file, &text, &new_text, logs);
+            } else {
+                exit_code = 1;
+            }
+        }
+    }
+    exit_code
 }

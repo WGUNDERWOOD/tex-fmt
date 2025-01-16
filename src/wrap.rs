@@ -57,6 +57,7 @@ pub fn apply_wrap<'a>(
     file: &str,
     args: &Args,
     logs: &mut Vec<Log>,
+    pattern: &Pattern,
 ) -> Option<[&'a str; 3]> {
     if args.verbosity == LevelFilter::Trace {
         record_line_log(
@@ -70,7 +71,7 @@ pub fn apply_wrap<'a>(
         );
     }
     let wrap_point = find_wrap_point(line, indent_length, args);
-    let comment_index = find_comment_index(line);
+    let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
         Some(p) if p <= args.wraplen.into() => {}

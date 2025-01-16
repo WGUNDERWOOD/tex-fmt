@@ -17,15 +17,6 @@ pub const ENV_END: &str = "\\end{";
 /// Acceptable LaTeX file extensions
 pub const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 
-/// Names of LaTeX list environments
-const LISTS: [&str; 5] = [
-    "itemize",
-    "enumerate",
-    "description",
-    "inlineroman",
-    "inventory",
-];
-
 /// Names of LaTeX verbatim environments
 const VERBATIMS: [&str; 5] =
     ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
@@ -59,10 +50,6 @@ lazy_static! {
         .collect();
     pub static ref VERBATIMS_END: Vec<String> =
         VERBATIMS.iter().map(|l| format!("\\end{{{l}}}")).collect();
-    pub static ref LISTS_BEGIN: Vec<String> =
-        LISTS.iter().map(|l| format!("\\begin{{{l}}}")).collect();
-    pub static ref LISTS_END: Vec<String> =
-        LISTS.iter().map(|l| format!("\\end{{{l}}}")).collect();
     // Regex that matches splitting commands
     pub static ref RE_SPLITTING: Regex = Regex::new(
         SPLITTING_STRING.as_str()

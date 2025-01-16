@@ -14,6 +14,8 @@ https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
 
 An extremely fast LaTeX formatter written in Rust.
+Try it out now in your
+[browser](https://wgunderwood.github.io/tex-fmt/)!
 
 <table width="100%">
 <tr>
@@ -113,6 +115,9 @@ environment.systemPackages = [
 ];
 ```
 
+It is also included in
+[treefmt-nix](https://github.com/numtide/treefmt-nix/tree/main).
+
 ### Arch Linux
 
 Install from the
@@ -152,12 +157,13 @@ https://github.com/WGUNDERWOOD/tex-fmt?tab=readme-ov-file#options)
 section below.
 
 ``` shell
-tex-fmt file.tex             # format file.tex and overwrite
-tex-fmt --check file.tex     # check if file.tex is correctly formatted
-tex-fmt --print file.tex     # format file.tex and print to stdout
-tex-fmt --nowrap file.tex    # do not wrap long lines
-tex-fmt --stdin              # read from stdin and print to stdout
-tex-fmt --help               # view help information
+tex-fmt file.tex                  # format file.tex and overwrite
+tex-fmt --check file.tex          # check if file.tex is correctly formatted
+tex-fmt --print file.tex          # format file.tex and print to stdout
+tex-fmt --fail-on-change file.tex # format file.tex and return exit-code 1 if overwritten
+tex-fmt --nowrap file.tex         # do not wrap long lines
+tex-fmt --stdin                   # read from stdin and print to stdout
+tex-fmt --help                    # view help information
 ```
 
 ### Configuration
@@ -178,6 +184,7 @@ Arguments passed on the command line will always override those
 specified in configuration files. An example configuration file
 is available at
 [tex-fmt.toml](https://github.com/WGUNDERWOOD/tex-fmt/blob/main/tex-fmt.toml).
+To ignore all config files, use the `--noconfig` flag.
 
 Note for contributors: this repository's configuration file will be
 automatically applied if tex-fmt is run from within the repository.
@@ -220,6 +227,27 @@ A man page can be generated at run-time using the
 `--man` flag. See the
 [man](https://github.com/WGUNDERWOOD/tex-fmt/tree/main/man)
 directory for more details.
+
+### Pre-commit hook
+
+tex-fmt can be run before every git commit using
+[pre-commit](http://pre-commit.com) with the following
+`.pre-commit-config.yaml` in your repository root:
+
+```yaml
+repos:
+  - repo: https://github.com/WGUNDERWOOD/tex-fmt
+    rev: v0.5.3
+    hooks:
+      - id: tex-fmt
+```
+
+To prevent the pre-commit hook from modifying your files, add:
+
+```yaml
+      - id: tex-fmt
+        args: [--check]
+```
 
 ## Performance
 
@@ -279,22 +307,24 @@ Lua script, many configuration options
 
 The following command-line options are offered by tex-fmt.
 
-| Option         | Alias | Default | Description |
-| -------------- | ----- | ------- | --- |
-| `--check`      | `-c`  |         | Check formatting, do not modify files |
-| `--print`      | `-p`  |         | Print to stdout, do not modify files |
-| `--nowrap`     | `-n`  |         | Do not wrap long lines |
-| `--verbose`    | `-v`  |         | Show info messages |
-| `--quiet`      | `-q`  |         | Hide warning messages |
-| `--trace`      |       |         | Show trace messages |
-| `--stdin`      | `-s`  |         | Process stdin as a single file, output to stdout |
-| `--tabsize`    | `-t`  | `2`     | Number of characters to use as tab size |
-| `--usetabs`    |       |         | Use tabs instead of spaces for indentation |
-| `--wraplen`    | `-l`  | `80`    | Line length for wrapping |
-| `--config`     |       |         | Path to config file |
-| `--help`       | `-h`  |         | Print help |
-| `--version`    | `-V`  |         | Print version |
-| `--completion` |       |         | Generate a shell completion script |
-| `--man`        |       |         | Generate a man page |
-| `--args`       |       |         | View arguments passed to tex-fmt |
-| `--noconfig`   |       |         | Do not read any config file |
+| Option             | Alias | Default | Description |
+| ------------------ | ----- | ------- | --- |
+| `--check`          | `-c`  |         | Check formatting, do not modify files |
+| `--print`          | `-p`  |         | Print to stdout, do not modify files |
+| `--fail-on-change` | `-f`  |         | Fail if files are modified |
+| `--nowrap`         | `-n`  |         | Do not wrap long lines |
+| `--wraplen`        | `-l`  | `80`    | Line length for wrapping |
+| `--tabsize`        | `-t`  | `2`     | Number of characters to use as tab size |
+| `--usetabs`        |       |         | Use tabs instead of spaces for indentation |
+| `--stdin`          | `-s`  |         | Process stdin as a single file, output to stdout |
+| `--config`         |       |         | Path to config file |
+| `--noconfig`       |       |         | Do not read any config file |
+| `--lists`          |       |         | Extra list environments to be formatted as `itemize` |
+| `--verbose`        | `-v`  |         | Show info messages |
+| `--quiet`          | `-q`  |         | Hide warning messages |
+| `--trace`          |       |         | Show trace messages |
+| `--completion`     |       |         | Generate a shell completion script |
+| `--man`            |       |         | Generate a man page |
+| `--args`           |       |         | View arguments passed to tex-fmt |
+| `--help`           | `-h`  |         | Print help |
+| `--version`        | `-V`  |         | Print version |
