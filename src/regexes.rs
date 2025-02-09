@@ -16,19 +16,22 @@ pub const ENV_BEGIN: &str = "\\begin{";
 pub const ENV_END: &str = "\\end{";
 /// Acceptable LaTeX file extensions
 pub const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
+///Match a LaTeX \verb|...|
+pub const VERB: &str = "\\verb|";
 
 /// Names of LaTeX verbatim environments
 const VERBATIMS: [&str; 5] =
     ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
 
 /// Regex matches for sectioning commands
-const SPLITTING: [&str; 6] = [
+const SPLITTING: [&str; 7] = [
     r"\\begin\{",
     r"\\end\{",
     r"\\item(?:$|[^a-zA-Z])",
     r"\\(?:sub){0,2}section\*?\{",
     r"\\chapter\*?\{",
     r"\\part\*?\{",
+    r"\\verb\|.*?\|",
 ];
 
 // Regexes
@@ -59,6 +62,11 @@ lazy_static! {
     pub static ref RE_SPLITTING_SHARED_LINE: Regex = Regex::new(
         [r"(:?\S.*?)", "(:?", SPLITTING_STRING.as_str(), ".*)"]
         .concat().as_str()
+    )
+    .unwrap();
+    // Regex that matches and captures the content inside \verb|...|
+    pub static ref RE_VERB: Regex = Regex::new(
+        r"\\verb\|(?P<content>.*?)\|"
     )
     .unwrap();
     // Matches any splitting command with non-whitespace

@@ -68,6 +68,8 @@ fn get_verbatim_diff(line: &str, pattern: &Pattern) -> i8 {
         && VERBATIMS_END.iter().any(|r| line.contains(r))
     {
         -1
+    } else if pattern.contains_verbatim {
+        1
     } else {
         0
     }
