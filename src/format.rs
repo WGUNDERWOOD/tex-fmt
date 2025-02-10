@@ -5,7 +5,7 @@ use crate::ignore::*;
 use crate::indent::*;
 use crate::logging::*;
 use crate::read::*;
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERB};
 use crate::subs::*;
 use crate::verbatim::*;
 use crate::wrap::*;
@@ -228,6 +228,8 @@ pub struct Pattern {
     pub contains_splitting: bool,
     /// Whether a comment is present
     pub contains_comment: bool,
+    /// Whether a verbatim pattern is present
+    pub contains_verbatim: bool,
 }
 
 impl Pattern {
@@ -241,6 +243,7 @@ impl Pattern {
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
                 contains_comment: s.contains('%'),
+                contains_verbatim: s.contains(VERB),
             }
         } else {
             Self {
@@ -249,6 +252,7 @@ impl Pattern {
                 contains_item: false,
                 contains_splitting: false,
                 contains_comment: s.contains('%'),
+                contains_verbatim: false,
             }
         }
     }
