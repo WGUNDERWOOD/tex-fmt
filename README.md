@@ -152,10 +152,16 @@ Binaries for various platforms are available on the GitHub
 [releases](https://github.com/WGUNDERWOOD/tex-fmt/releases) page.
 
 ### Visual Studio Code
+
 Integration with VS Code is provided by the
 [LaTeX Workshop](https://github.com/James-Yu/LaTeX-Workshop)
 extension. You will need to first install tex-fmt
 through one of the above methods.
+
+### Neovim
+
+A package for Neovim is provided by
+[mason.nvim](https://github.com/williamboman/mason.nvim).
 
 ## Usage
 
