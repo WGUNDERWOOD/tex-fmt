@@ -128,6 +128,15 @@ For example, using the [yay](https://github.com/Jguer/yay) AUR helper:
 yay -S tex-fmt
 ```
 
+### Debian
+
+Install from the [Debian archive](https://www.debian.org/distrib/packages)
+(trixie and later):
+
+``` shell
+apt install tex-fmt
+```
+
 ### Homebrew
 
 Install using
