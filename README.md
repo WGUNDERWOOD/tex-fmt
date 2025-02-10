@@ -294,6 +294,9 @@ Alternatively, you can
 - [latexindent](https://github.com/cmhughes/latexindent.pl).
 Perl script, many configuration options, slow on large files
 
+- [bibtex-tidy](https://github.com/FlamingTempura/bibtex-tidy).
+JavaScript program, specifically for BibTeX files
+
 - [LaTeXTidy](http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy).
 Perl script, download links seem to be broken
 
