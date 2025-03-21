@@ -163,6 +163,10 @@ through one of the above methods.
 A package for Neovim is provided by
 [mason.nvim](https://github.com/williamboman/mason.nvim).
 
+### GitHub Action
+
+The [tex-fmt-action](https://github.com/grayespinoza/tex-fmt-action) can install and run tex-fmt.
+
 ## Usage
 
 The most commonly used options are given below.
