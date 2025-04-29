@@ -2,7 +2,6 @@
 * Tasks
 ** TODO Actions yaml long lines
 ** TODO Indicate which args are CLI and which are config
-** TODO Update wasm-bindgen to 0.2.99 when released in nixpkgs
 ** TODO Publish lib HTML docs
 * Options and documentation
 ** Args struct
@@ -15,29 +14,28 @@
 ** Args resolver
 ** GitHub README
 * Release process
-** Update release notes
+** DONE Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
-*** Write in NEWS.md
-** Update version number in Cargo.toml
-** Update version number for pre-commit
-** Update Nix flake and lock
-*** Check for new NixOS version (nixos-XX.XX) for flake.nix
+** DONE Update version number in Cargo.toml
+** DONE Update version number for pre-commit in README
+** DONE Update Nix flake and lock
 *** just nix
-** Update Rust version
+*** nix develop
+** DONE Update Rust version
 *** just upgrade
-** Run tests
+** DONE Run tests
 *** just
 *** just perf
 *** Update performance results in README.md
-** Push to GitHub and check tests pass
-** Create a git tag
-*** git tag vX.X.X
+** TODO Push to GitHub and check tests pass
+** TODO Create a git tag
+*** git tag vY.Y.Y
 *** git push --tags
-** Publish to crates.io with cargo publish
+** TODO Publish to crates.io with cargo publish
 *** Pass --allow-dirty if notes.org has changed
-** Publish GitHub release with notes from NEWS.md
+** TODO Publish GitHub release with notes from NEWS.md
 *** GitHub binaries published automatically with actions
-** Publish in nixpkgs
+** TODO Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
 *** git fetch upstream
 *** git rebase upstream/master
@@ -54,5 +52,5 @@
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes
-** Tidy repository
+** TODO Tidy repository
 *** Commit any new changes to NEWS.md or notes.org
