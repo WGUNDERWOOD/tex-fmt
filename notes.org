@@ -1,6 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO Actions yaml long lines
 ** TODO Indicate which args are CLI and which are config
 ** TODO Publish lib HTML docs
 * Options and documentation
@@ -14,28 +13,29 @@
 ** Args resolver
 ** GitHub README
 * Release process
-** DONE Update release notes in NEWS.md
+** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
-** DONE Update version number in Cargo.toml
-** DONE Update version number for pre-commit in README
-** DONE Update Nix flake and lock
+** Update version number in Cargo.toml
+** Update version number for pre-commit in README
+** Update Nix flake and lock
 *** just nix
 *** nix develop
-** DONE Update Rust version
+** Update Rust version
 *** just upgrade
-** DONE Run tests
+** Run tests
 *** just
 *** just perf
 *** Update performance results in README.md
-** TODO Push to GitHub and check action tests pass
-** TODO Create a git tag
+** Push to GitHub and check action tests pass
+** Create a git tag
 *** git tag vY.Y.Y
 *** git push --tags
-** TODO Publish to crates.io with cargo publish
+*** Can delete remote tags with git push --delete origin vY.Y.Y
+** Publish to crates.io with cargo publish
 *** Pass --allow-dirty if notes.org has changed
-** TODO Publish GitHub release with notes from NEWS.md
+** Publish GitHub release with notes from NEWS.md
 *** GitHub binaries published automatically with actions
-** TODO Publish in nixpkgs
+** Publish in nixpkgs
 *** Check out master branch of nixpkgs fork
 *** git fetch upstream
 *** git rebase upstream/master
@@ -52,5 +52,5 @@
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes
-** TODO Tidy repository
+** Tidy repository
 *** Commit any new changes to NEWS.md or notes.org
