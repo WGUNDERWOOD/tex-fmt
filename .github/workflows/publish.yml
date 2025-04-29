@@ -57,7 +57,7 @@ jobs:
       - name: Build
         run: |
           ${{ matrix.program }} build --target ${{ matrix.target }} \
-            --all-features --release --locked
+            --release --locked
       - name: Compress (windows)
         if: ${{ contains(matrix.os, 'windows') }}
         run: |
