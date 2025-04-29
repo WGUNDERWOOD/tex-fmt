@@ -1,3 +1,11 @@
+# v0.5.3
+
+- Add `--fail-on-change` flag.
+- Deploy web app for using tex-fmt in a browser.
+- Simplify testing structure.
+- Switch nix flake input to nixpkgs-unstable.
+- Update README with GitHub Action, mason.nvim, Debian, bibtex-tidy, pre-commit.
+
 # v0.5.2
 
 - Fix critical bug with config files missing the `lists` field.
