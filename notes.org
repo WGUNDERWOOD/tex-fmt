@@ -1,9 +1,7 @@
 #+title: tex-fmt
 * Tasks
-** TODO Work on browser version
 ** TODO Actions yaml long lines
 ** TODO Indicate which args are CLI and which are config
-** TODO Add to Nix home-manager with empty config file
 ** TODO Update wasm-bindgen to 0.2.99 when released in nixpkgs
 ** TODO Publish lib HTML docs
 * Options and documentation
