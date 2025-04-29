@@ -56,8 +56,7 @@ jobs:
         run: cargo install cross
       - name: Build
         run: |
-          ${{ matrix.program }} build --target ${{ matrix.target }} \
-            --release --locked
+          ${{ matrix.program }} build --target ${{ matrix.target }} --release --locked
       - name: Compress (windows)
         if: ${{ contains(matrix.os, 'windows') }}
         run: |
@@ -87,9 +86,7 @@ jobs:
       - uses: actions/download-artifact@v4
       - name: Publish binaries
         run: |
-          gh release upload \
-            ${{ github.ref_name }} $(find . -iname tex-fmt*.zip)
-          gh release upload \
-            ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
+          gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.zip)
+          gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
