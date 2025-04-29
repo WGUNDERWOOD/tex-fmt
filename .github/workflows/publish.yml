@@ -56,7 +56,7 @@ jobs:
         run: cargo install cross
       - name: Build
         run: |
-          ${{ matrix.program }} build --target ${{ matrix.target }} --release --locked
+          ${{ matrix.program }} build --target ${{ matrix.target }} --all-features --release --locked
       - name: Compress (windows)
         if: ${{ contains(matrix.os, 'windows') }}
         run: |
