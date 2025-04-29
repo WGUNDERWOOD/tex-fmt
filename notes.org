@@ -27,7 +27,7 @@
 *** just
 *** just perf
 *** Update performance results in README.md
-** TODO Push to GitHub and check tests pass
+** TODO Push to GitHub and check action tests pass
 ** TODO Create a git tag
 *** git tag vY.Y.Y
 *** git push --tags
