@@ -68,7 +68,6 @@ pub struct OptionArgs {
 
 /// Character to use for indentation
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(clippy::missing_docs_in_private_items)]
 pub enum TabChar {
     Tab,
     Space,

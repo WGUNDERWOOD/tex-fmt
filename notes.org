@@ -1,7 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO Add simple cli binary tests
-** TODO Publish lib HTML docs
 * Release process
 ** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
