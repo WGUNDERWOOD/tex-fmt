@@ -10,6 +10,8 @@ use merge::Merge;
 use std::fmt;
 use std::path::PathBuf;
 
+const DISPLAY_HEADER_WIDTH: usize = 24;
+
 /// Arguments passed to tex-fmt
 #[derive(Debug)]
 pub struct Args {
@@ -248,9 +250,26 @@ fn display_arg_line(
     name: &str,
     value: &str,
 ) -> fmt::Result {
-    let width = 20;
+    let width = DISPLAY_HEADER_WIDTH;
     let name_fmt = format!("{}{}", name.bold(), ":");
     write!(f, "\n  {name_fmt:<width$} {value}")?;
+    Ok(())
+}
+
+/// Display an argument field which is a list of strings
+fn display_args_list(v: &[String], name: &str, f: &mut fmt::Formatter) -> fmt::Result {
+    if !v.is_empty() {
+        display_arg_line(f, name, &v[0])?;
+        for x in &v[1..] {
+            write!(
+                f,
+                "\n  {:<width$} {}",
+                "".bold().to_string(),
+                x,
+                width = DISPLAY_HEADER_WIDTH
+            )?;
+        }
+    }
     Ok(())
 }
 
@@ -275,46 +294,9 @@ impl fmt::Display for Args {
             "verbosity",
             &self.verbosity.to_string().to_lowercase(),
         )?;
-
-        // TODO Write a function for this
-        if !self.lists.is_empty() {
-            display_arg_line(f, "lists", &self.lists[0])?;
-            for file in &self.lists[1..] {
-                write!(
-                    f,
-                    "\n  {:<width$} {}",
-                    "".bold().to_string(),
-                    file,
-                    width = 20
-                )?;
-            }
-        }
-
-        if !self.no_indent_envs.is_empty() {
-            display_arg_line(f, "no-indent-envs", &self.no_indent_envs[0])?;
-            for file in &self.no_indent_envs[1..] {
-                write!(
-                    f,
-                    "\n  {:<width$} {}",
-                    "".bold().to_string(),
-                    file,
-                    width = 20
-                )?;
-            }
-        }
-
-        if !self.files.is_empty() {
-            display_arg_line(f, "files", &self.files[0])?;
-            for file in &self.files[1..] {
-                write!(
-                    f,
-                    "\n  {:<width$} {}",
-                    "".bold().to_string(),
-                    file,
-                    width = 20
-                )?;
-            }
-        }
+        display_args_list(&self.lists, "lists", f)?;
+        display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
+        display_args_list(&self.files, "files", f)?;
 
         // Do not print `arguments` or `noconfig` fields
         Ok(())
