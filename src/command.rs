@@ -29,7 +29,7 @@ fn get_cli_command() -> Command {
                 .short('f')
                 .long("fail-on-change")
                 .action(SetTrue)
-                .help("Format files and return non-zero exit code when modifying files")
+                .help("Format files and return non-zero exit code if files are modified")
         )
         .arg(
             Arg::new("nowrap")
@@ -42,6 +42,7 @@ fn get_cli_command() -> Command {
             Arg::new("wraplen")
                 .short('l')
                 .long("wraplen")
+                .value_name("N")
                 .value_parser(value_parser!(u8))
                 .help("Line length for wrapping [default: 80]"),
         )
@@ -49,6 +50,7 @@ fn get_cli_command() -> Command {
             Arg::new("tabsize")
                 .short('t')
                 .long("tabsize")
+                .value_name("N")
                 .value_parser(value_parser!(u8))
                 .help("Number of characters to use as tab size [default: 2]"),
         )
@@ -68,8 +70,9 @@ fn get_cli_command() -> Command {
         .arg(
             Arg::new("config")
                 .long("config")
+                .value_name("PATH")
                 .value_parser(value_parser!(PathBuf))
-                .help("Path to configuration file")
+                .help("Path to config file")
         )
         .arg(
             Arg::new("noconfig")
@@ -100,8 +103,8 @@ fn get_cli_command() -> Command {
         .arg(
             Arg::new("completion")
                 .long("completion")
+                .value_name("SHELL")
                 .value_parser(value_parser!(Shell))
-                .value_name("shell")
                 .help("Generate shell completion script")
         )
         .arg(
