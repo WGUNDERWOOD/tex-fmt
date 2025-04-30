@@ -38,7 +38,7 @@ pub fn format_file(
         TabChar::Space => " ",
     };
 
-    // Get any extra environments to be indented as lists
+    // Get environments to be indented as lists
     let lists_begin: Vec<String> = args
         .lists
         .iter()
@@ -46,6 +46,18 @@ pub fn format_file(
         .collect();
     let lists_end: Vec<String> =
         args.lists.iter().map(|l| format!("\\end{{{l}}}")).collect();
+
+    // Get environments to be indented as lists
+    let no_indent_envs_begin: Vec<String> = args
+        .no_indent_envs
+        .iter()
+        .map(|l| format!("\\begin{{{l}}}"))
+        .collect();
+    let no_indent_envs_end: Vec<String> = args
+        .no_indent_envs
+        .iter()
+        .map(|l| format!("\\end{{{l}}}"))
+        .collect();
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
@@ -88,6 +100,8 @@ pub fn format_file(
                     &pattern,
                     &lists_begin,
                     &lists_end,
+                    &no_indent_envs_begin,
+                    &no_indent_envs_end,
                 );
 
                 #[allow(clippy::cast_possible_wrap)]
