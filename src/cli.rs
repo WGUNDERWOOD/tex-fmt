@@ -20,9 +20,12 @@ fn get_flag(arg_matches: &ArgMatches, flag: &str) -> Option<bool> {
 }
 
 /// Parse CLI arguments into `OptionArgs` struct
-pub fn get_cli_args() -> OptionArgs {
+pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
     let mut command = get_cli_command();
-    let arg_matches = command.clone().get_matches();
+    let arg_matches = match matches {
+        Some(m) => m,
+        None => command.clone().get_matches(),
+    };
 
     // Generate completions and exit
     if let Some(shell) = arg_matches.get_one::<Shell>("completion") {
