@@ -70,7 +70,7 @@ E = m c^2
 
 - ⚡&nbsp; Extremely fast run-time performance
 - 🔧&nbsp; Minimal configuration required
-- 📟&nbsp; Command-line interface
+- 📟&nbsp; Command line interface
 - 📜&nbsp; Handles LaTeX file types `.tex`, `.bib`, `.cls`, and `.sty`
 - 🦀&nbsp; Written entirely in safe Rust
 
@@ -176,13 +176,13 @@ https://github.com/WGUNDERWOOD/tex-fmt?tab=readme-ov-file#options)
 section below.
 
 ``` shell
-tex-fmt file.tex                  # format file.tex and overwrite
-tex-fmt --check file.tex          # check if file.tex is correctly formatted
-tex-fmt --print file.tex          # format file.tex and print to stdout
-tex-fmt --fail-on-change file.tex # format file.tex and return exit-code 1 if overwritten
-tex-fmt --nowrap file.tex         # do not wrap long lines
-tex-fmt --stdin                   # read from stdin and print to stdout
-tex-fmt --help                    # view help information
+tex-fmt file.tex                   # format file.tex and overwrite
+tex-fmt --check file.tex           # check if file.tex is correctly formatted
+tex-fmt --print file.tex           # format file.tex and print to stdout
+tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1 if overwritten
+tex-fmt --nowrap file.tex          # do not wrap long lines
+tex-fmt --stdin                    # read from stdin and print to stdout
+tex-fmt --help                     # view help information
 ```
 
 ### Configuration
@@ -190,7 +190,7 @@ tex-fmt --help                    # view help information
 Options can also be read from a configuration file, which
 will be read from the following locations, in order of decreasing priority.
 
-- A named config file passed as `tex-fmt --config <config>`
+- A named config file passed as `tex-fmt --config <PATH>`
 - A file named `tex-fmt.toml` in the current working directory
 - A file named `tex-fmt.toml` in the root directory of the current git repository
 - A file named `tex-fmt.toml` in a subdirectory titled `tex-fmt/`
@@ -207,7 +207,7 @@ To ignore all config files, use the `--noconfig` flag.
 
 Note for contributors: this repository's configuration file will be
 automatically applied if tex-fmt is run from within the repository.
-Use `--noconfig` or `--config <config>` to avoid this.
+Use `--noconfig` or `--config <PATH>` to avoid this.
 
 ### Disabling the formatter
 
@@ -235,7 +235,7 @@ and `minted` are automatically skipped.
 ### Shell completion
 
 Shell completion scripts can be generated at run-time using the
-`--completion <shell>` flag. See the
+`--completion <SHELL>` flag. See the
 [completion](
 https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion)
 directory for more details.
@@ -327,26 +327,46 @@ Lua script, many configuration options
 
 ## Options
 
-The following command-line options are offered by tex-fmt.
+### Command line options
 
-| Option             | Alias | Default | Description |
-| ------------------ | ----- | ------- | --- |
-| `--check`          | `-c`  |         | Check formatting, do not modify files |
-| `--print`          | `-p`  |         | Print to stdout, do not modify files |
-| `--fail-on-change` | `-f`  |         | Fail if files are modified |
-| `--nowrap`         | `-n`  |         | Do not wrap long lines |
-| `--wraplen`        | `-l`  | `80`    | Line length for wrapping |
-| `--tabsize`        | `-t`  | `2`     | Number of characters to use as tab size |
-| `--usetabs`        |       |         | Use tabs instead of spaces for indentation |
-| `--stdin`          | `-s`  |         | Process stdin as a single file, output to stdout |
-| `--config`         |       |         | Path to config file |
-| `--noconfig`       |       |         | Do not read any config file |
-| `--lists`          |       |         | Extra list environments to be formatted as `itemize` |
-| `--verbose`        | `-v`  |         | Show info messages |
-| `--quiet`          | `-q`  |         | Hide warning messages |
-| `--trace`          |       |         | Show trace messages |
-| `--completion`     |       |         | Generate a shell completion script |
-| `--man`            |       |         | Generate a man page |
-| `--args`           |       |         | View arguments passed to tex-fmt |
-| `--help`           | `-h`  |         | Print help |
-| `--version`        | `-V`  |         | Print version |
+The following arguments can be passed on the command line.
+
+| Option                 | Alias | Default | Description |
+| ---------------------- | ----- | ------- | --- |
+| `--check`              | `-c`  |         | Check formatting, do not modify files |
+| `--print`              | `-p`  |         | Print to stdout, do not modify files |
+| `--fail-on-change`     | `-f`  |         | Fail if files are modified |
+| `--nowrap`             | `-n`  |         | Do not wrap long lines |
+| `--wraplen <N>`        | `-l`  | `80`    | Line length for wrapping |
+| `--tabsize <N>`        | `-t`  | `2`     | Number of characters to use as tab size |
+| `--usetabs`            |       |         | Use tabs instead of spaces for indentation |
+| `--stdin`              | `-s`  |         | Process stdin as a single file, output to stdout |
+| `--config <PATH>`      |       |         | Path to config file |
+| `--noconfig`           |       |         | Do not read any config file |
+| `--verbose`            | `-v`  |         | Show info messages |
+| `--quiet`              | `-q`  |         | Hide warning messages |
+| `--trace`              |       |         | Show trace messages |
+| `--completion <SHELL>` |       |         | Generate a shell completion script |
+| `--man`                |       |         | Generate a man page |
+| `--args`               |       |         | View arguments passed to tex-fmt |
+| `--help`               | `-h`  |         | Print help |
+| `--version`            | `-V`  |         | Print version |
+
+### Configuration file options
+
+The following arguments can be provided in `tex-fmt.toml`.
+The first example in each row is the default value.
+
+| Option           | Type     | Examples              | Description |
+| ---------------- | -------- | --------------------- | --- |
+| `check`          | bool     | `false`               | Check formatting, do not modify files |
+| `print`          | bool     | `false`               | Print to stdout, do not modify files |
+| `fail-on-change` | bool     | `false`               | Fail if files are modified |
+| `wrap`           | bool     | `true`                | Wrap long lines |
+| `wraplen`        | int      | `80`, `100`           | Line length for wrapping |
+| `wrapmin`        | int      | `70`, `90`            | Target minimum length for line wrapping |
+| `tabsize`        | int      | `2`, `4`              | Number of characters to use as tab size |
+| `tabchar`        | str      | `"space"`, `"tab"`    | Character to use for indentation |
+| `stdin`          | bool     | `false`               | Process stdin as a single file, output to stdout |
+| `lists`          | arr[str] | `[]`, `["myitemize"]` | Extra list environments to be formatted as `itemize` |
+| `verbosity`      | str      | `"warn"`, `"error"`   | Verbosity level for terminal logging |

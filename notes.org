@@ -1,9 +1,7 @@
 #+title: tex-fmt
 * Tasks
-** TODO Indicate which args are CLI and which are config
-** TODO Document config file
-** TODO Publish lib HTML docs
 ** TODO Add simple cli binary tests
+** TODO Publish lib HTML docs
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
@@ -96,3 +94,6 @@
 *** config.rs
 **** Update get_config_args()
 ** Update README
+*** CLI options
+*** Config options
+*** Usage section if commonly used option

@@ -34,7 +34,7 @@ Configuring tex-fmt can now be achieved using a configuration file as well as CL
 Man pages can be generated using the `--man` flag. Pre-built man pages are also available for download from the GitHub repository.
 
 ## Shell completion
-Completion files for popular shells, including bash, fish, zsh, elvish and PowerShell, can be generated using the `--completion <shell>` flag. Pre-built completion scripts are also available for download from the GitHub repository.
+Completion files for popular shells, including bash, fish, zsh, elvish and PowerShell, can be generated using the `--completion <SHELL>` flag. Pre-built completion scripts are also available for download from the GitHub repository.
 
 ## Minor changes
 - Arguments passed to tex-fmt can be inspected by passing `--args`
