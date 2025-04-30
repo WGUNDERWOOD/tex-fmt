@@ -116,6 +116,7 @@ fn get_back(
 }
 
 /// Calculate indentation properties of the current line
+#[allow(clippy::too_many_arguments)]
 fn get_indent(
     line: &str,
     prev_indent: &Indent,
@@ -126,7 +127,14 @@ fn get_indent(
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
 ) -> Indent {
-    let diff = get_diff(line, pattern, lists_begin, lists_end, no_indent_envs_begin, no_indent_envs_end);
+    let diff = get_diff(
+        line,
+        pattern,
+        lists_begin,
+        lists_end,
+        no_indent_envs_begin,
+        no_indent_envs_end,
+    );
     let back = get_back(line, pattern, state, lists_end, no_indent_envs_end);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
