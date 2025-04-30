@@ -35,6 +35,8 @@ pub struct Args {
     pub config: Option<PathBuf>,
     /// Extra list environments
     pub lists: Vec<String>,
+    /// Environments which are not indented
+    pub no_indent_envs: Vec<String>,
     /// Verbosity level for log messages
     pub verbosity: LevelFilter,
     /// Print arguments and exit
@@ -60,6 +62,8 @@ pub struct OptionArgs {
     pub noconfig: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub lists: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub no_indent_envs: Vec<String>,
     pub verbosity: Option<LevelFilter>,
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
@@ -84,6 +88,22 @@ impl fmt::Display for TabChar {
 
 impl Default for OptionArgs {
     fn default() -> Self {
+        let lists = vec![
+                "itemize",
+                "enumerate",
+                "description",
+                "inlineroman",
+                "inventory",
+            ]
+            .into_iter()
+            .map(std::borrow::ToOwned::to_owned)
+            .collect();
+        let no_indent_envs = vec![
+                "document",
+            ]
+            .into_iter()
+            .map(std::borrow::ToOwned::to_owned)
+            .collect();
         Self {
             check: Some(false),
             print: Some(false),
@@ -96,16 +116,8 @@ impl Default for OptionArgs {
             stdin: Some(false),
             config: None,
             noconfig: Some(false),
-            lists: vec![
-                "itemize",
-                "enumerate",
-                "description",
-                "inlineroman",
-                "inventory",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect(),
+            lists,
+            no_indent_envs,
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
@@ -127,16 +139,8 @@ impl OptionArgs {
             stdin: None,
             config: None,
             noconfig: None,
-            lists: vec![
-                "itemize",
-                "enumerate",
-                "description",
-                "inlineroman",
-                "inventory",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect(),
+            lists: vec![],
+            no_indent_envs: vec![],
             verbosity: None,
             arguments: None,
             files: vec![],
@@ -171,6 +175,7 @@ impl Args {
             stdin: args.stdin.unwrap(),
             config: args.config,
             lists: args.lists,
+            no_indent_envs: args.no_indent_envs,
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
@@ -215,6 +220,9 @@ impl Args {
 
         // Remove duplicate list environments
         self.lists.dedup();
+
+        // Remove duplicate no indent environments
+        self.no_indent_envs.dedup();
 
         // Remove duplicate files
         self.files.dedup();
@@ -268,9 +276,23 @@ impl fmt::Display for Args {
             &self.verbosity.to_string().to_lowercase(),
         )?;
 
+        // TODO Write a function for this
         if !self.lists.is_empty() {
             display_arg_line(f, "lists", &self.lists[0])?;
             for file in &self.lists[1..] {
+                write!(
+                    f,
+                    "\n  {:<width$} {}",
+                    "".bold().to_string(),
+                    file,
+                    width = 20
+                )?;
+            }
+        }
+
+        if !self.no_indent_envs.is_empty() {
+            display_arg_line(f, "no-indent-envs", &self.no_indent_envs[0])?;
+            for file in &self.no_indent_envs[1..] {
                 write!(
                     f,
                     "\n  {:<width$} {}",
