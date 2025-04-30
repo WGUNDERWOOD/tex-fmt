@@ -82,6 +82,7 @@
 *** config.rs
 **** Update get_config_args()
 ** Implement behaviour
+** Add tests
 ** Update README
 *** CLI options
 *** Config options

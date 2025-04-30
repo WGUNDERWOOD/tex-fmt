@@ -91,18 +91,16 @@ impl fmt::Display for TabChar {
 impl Default for OptionArgs {
     fn default() -> Self {
         let lists = vec![
-                "itemize",
-                "enumerate",
-                "description",
-                "inlineroman",
-                "inventory",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect();
-        let no_indent_envs = vec![
-                "document",
-            ]
+            "itemize",
+            "enumerate",
+            "description",
+            "inlineroman",
+            "inventory",
+        ]
+        .into_iter()
+        .map(std::borrow::ToOwned::to_owned)
+        .collect();
+        let no_indent_envs = vec!["document"]
             .into_iter()
             .map(std::borrow::ToOwned::to_owned)
             .collect();
@@ -257,7 +255,11 @@ fn display_arg_line(
 }
 
 /// Display an argument field which is a list of strings
-fn display_args_list(v: &[String], name: &str, f: &mut fmt::Formatter) -> fmt::Result {
+fn display_args_list(
+    v: &[String],
+    name: &str,
+    f: &mut fmt::Formatter,
+) -> fmt::Result {
     if !v.is_empty() {
         display_arg_line(f, name, &v[0])?;
         for x in &v[1..] {

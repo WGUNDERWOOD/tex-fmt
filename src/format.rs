@@ -39,16 +39,25 @@ pub fn format_file(
     };
 
     // Get environments to be indented as lists
-    let lists_begin: Vec<String> =
-        args.lists.iter().map(|l| format!("\\begin{{{l}}}")).collect();
+    let lists_begin: Vec<String> = args
+        .lists
+        .iter()
+        .map(|l| format!("\\begin{{{l}}}"))
+        .collect();
     let lists_end: Vec<String> =
         args.lists.iter().map(|l| format!("\\end{{{l}}}")).collect();
 
     // Get environments to be indented as lists
-    let no_indent_envs_begin: Vec<String> =
-        args.no_indent_envs.iter().map(|l| format!("\\begin{{{l}}}")).collect();
-    let no_indent_envs_end: Vec<String> =
-        args.no_indent_envs.iter().map(|l| format!("\\end{{{l}}}")).collect();
+    let no_indent_envs_begin: Vec<String> = args
+        .no_indent_envs
+        .iter()
+        .map(|l| format!("\\begin{{{l}}}"))
+        .collect();
+    let no_indent_envs_end: Vec<String> = args
+        .no_indent_envs
+        .iter()
+        .map(|l| format!("\\end{{{l}}}"))
+        .collect();
 
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
