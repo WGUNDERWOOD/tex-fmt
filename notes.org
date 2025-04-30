@@ -1,7 +1,9 @@
 #+title: tex-fmt
 * Tasks
 ** TODO Indicate which args are CLI and which are config
+** TODO Document config file
 ** TODO Publish lib HTML docs
+** TODO Add simple cli binary tests
 * Options and documentation
 ** Args struct
 ** OptionArgs struct
@@ -54,3 +56,43 @@
 *** Submit pull request and check relevant boxes
 ** Tidy repository
 *** Commit any new changes to NEWS.md or notes.org
+* CLI and config structure
+*** args.rs
+**** Core argument definitions
+**** Args struct defines arguments used internally by tex-fmt
+**** OptionArgs struct defines an intermediate target
+***** CLI arguments are read into OptionArgs in cli.rs
+***** Config file arguments are read into OptionArgs in config.rs
+***** Default values for OptionArgs are defined here
+**** These OptionArgs are merged together
+**** Then converted into Args
+**** Conflicting arguments are resolved
+**** The Display trait is implemented for args
+*** command.rs
+**** Contains the clap command definition
+**** Sets options exposed to the user on the CLI
+*** cli.rs
+**** Logic for reading from CLI
+**** Clap uses command.rs to read from CLI
+**** This file then parses from clap into OptionArgs
+*** config.rs
+**** Logic for reading from config file
+**** Determines the config file path by looking in several places
+**** Reads from this path and parses to a toml Table
+**** Values are then assigned to an OptionArgs struct
+* Process for adding new arguments
+** General
+*** args.rs
+**** Update Args struct if core argument
+**** Update OptionArgs struct
+**** Update Args resolve() if extra logic necessary
+**** Update Args fmt::Display if core argument
+** CLI arguments
+*** command.rs
+**** Update clap command definition
+*** cli.rs
+**** Update get_cli_args() and add extra logic if needed
+** Config arguments
+*** config.rs
+**** Update get_config_args()
+** Update README

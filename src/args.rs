@@ -147,9 +147,9 @@ impl OptionArgs {
 
 /// Get all arguments from CLI, config file, and defaults, and merge them
 pub fn get_args() -> Args {
-    let mut args = get_cli_args();
+    let mut args: OptionArgs = get_cli_args();
     let config = get_config(&args);
-    let config_args = get_config_args(config);
+    let config_args: Option<OptionArgs> = get_config_args(config);
     if let Some(c) = config_args {
         args.merge(c);
     }
