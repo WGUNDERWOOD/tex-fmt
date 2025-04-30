@@ -2,16 +2,6 @@
 * Tasks
 ** TODO Add simple cli binary tests
 ** TODO Publish lib HTML docs
-* Options and documentation
-** Args struct
-** OptionArgs struct
-** OptionArgs new function
-** Implement Default, Display, from for Args
-** CLI command
-** CLI args parser function
-** Config args parser function
-** Args resolver
-** GitHub README
 * Release process
 ** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main

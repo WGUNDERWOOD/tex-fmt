@@ -1,4 +1,5 @@
 use crate::args::*;
+use crate::cli::*;
 use crate::config::*;
 use crate::format::format_file;
 use crate::logging::*;
@@ -11,19 +12,36 @@ use std::path::PathBuf;
 fn test_file(
     source_file: &str,
     target_file: &str,
-    config_file: Option<PathBuf>,
+    config_file: &Option<PathBuf>,
+    cli_file: &Option<PathBuf>,
 ) -> bool {
-    // Get arguments from config file if it exists
-    let mut args = OptionArgs::new();
-    args.config = config_file;
+    // Get arguments from CLI file
+    let mut args = match cli_file {
+        Some(f) => {
+            let cli_args = fs::read_to_string(f).unwrap();
+            let cli_args = cli_args.strip_suffix("\n").unwrap();
+            let mut cli_args: Vec<&str> = cli_args.split_whitespace().collect();
+            cli_args.insert(0, "tex-fmt");
+            let matches =
+                get_cli_command().try_get_matches_from(&cli_args).unwrap();
+            get_cli_args(Some(matches))
+        }
+        None => OptionArgs::new(),
+    };
+
+    // Merge arguments from config file
+    args.config = config_file.clone();
     let config = get_config(&args);
     let config_args = get_config_args(config);
     if let Some(c) = config_args {
         args.merge(c);
     }
+
+    // Merge in default arguments
     args.merge(OptionArgs::default());
     let args = Args::from(args);
 
+    // Run tex-fmt
     let mut logs = Vec::<Log>::new();
     let source_text = fs::read_to_string(source_file).unwrap();
     let target_text = fs::read_to_string(target_file).unwrap();
@@ -63,90 +81,121 @@ fn test_file(
 }
 
 fn read_files_from_dir(dir: &PathBuf) -> Vec<String> {
-    fs::read_dir(dir)
+    let mut files: Vec<String> = fs::read_dir(dir)
         .unwrap()
         .map(|f| f.unwrap().file_name().into_string().unwrap())
-        .collect()
+        .collect();
+    files.sort();
+    files
+}
+
+fn get_config_file(dir: &fs::DirEntry) -> Option<PathBuf> {
+    let config_file = dir.path().join("tex-fmt.toml");
+    if config_file.exists() {
+        Some(config_file)
+    } else {
+        None
+    }
+}
+
+fn get_cli_file(dir: &fs::DirEntry) -> Option<PathBuf> {
+    let cli_file = dir.path().join("cli.txt");
+    if cli_file.exists() {
+        Some(cli_file)
+    } else {
+        None
+    }
+}
+
+fn test_source_target(
+    source_file: &str,
+    target_file: &str,
+    config_file: &Option<PathBuf>,
+    cli_file: &Option<PathBuf>,
+) -> bool {
+    let mut pass = true;
+    if !test_file(target_file, target_file, config_file, cli_file) {
+        print!(
+            "{}",
+            format!(
+                "Config file: {:?}\n\
+            CLI file: {:?}\n\
+            ",
+                config_file, cli_file
+            )
+            .yellow()
+            .bold()
+        );
+        pass = false;
+    }
+
+    if !test_file(source_file, target_file, config_file, cli_file) {
+        print!(
+            "{}",
+            format!(
+                "Config file: {:?}\n\
+            CLI file: {:?}\n\
+            ",
+                config_file, cli_file
+            )
+            .yellow()
+            .bold()
+        );
+        pass = false;
+    }
+    pass
 }
 
 #[test]
-fn test_source() {
+fn test() {
+    let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap();
     for test_dir in test_dirs {
         let test_dir = test_dir.unwrap();
+        let config_file = get_config_file(&test_dir);
+        let cli_file = get_cli_file(&test_dir);
         let source_dir = test_dir.path().join("source/");
         let source_files = read_files_from_dir(&source_dir);
-        for file in source_files {
-            let in_file = test_dir.path().join("source").join(file.clone());
-            let out_file = test_dir.path().join("target").join(file.clone());
-            let config_file = test_dir.path().join("tex-fmt.toml");
-            let config_file = if config_file.exists() {
-                Some(config_file)
-            } else {
-                None
-            };
-            dbg!(&in_file);
-            dbg!(&config_file);
-            if !test_file(
-                in_file.to_str().unwrap(),
-                out_file.to_str().unwrap(),
-                config_file,
-            ) {
-                panic!("Failed in {file}");
-            }
-        }
-    }
-}
-
-#[test]
-fn test_target() {
-    let test_dirs = fs::read_dir("./tests/").unwrap();
-    for test_dir in test_dirs {
-        let test_dir = test_dir.unwrap();
         let target_dir = test_dir.path().join("target/");
         let target_files = read_files_from_dir(&target_dir);
-        for file in target_files {
-            let in_file = test_dir.path().join("target").join(file.clone());
-            let config_file = test_dir.path().join("tex-fmt.toml");
-            let config_file = if config_file.exists() {
-                Some(config_file)
-            } else {
-                None
-            };
-            if !test_file(
-                in_file.to_str().unwrap(),
-                in_file.to_str().unwrap(),
-                config_file,
-            ) {
-                panic!("Failed in {file}");
-            }
-        }
-    }
-}
 
-#[test]
-#[ignore]
-fn test_short() {
-    let source_files = vec!["wrap/source/wrap.tex"];
-    let target_files = vec!["wrap/target/wrap.tex"];
-    let mut fail = false;
-    for i in 0..source_files.len() {
-        let source_file = source_files[i];
-        let target_file = target_files[i];
-        if !test_file(
-            &format!("tests/{source_file}"),
-            &format!("tests/{target_file}"),
-            None,
-        ) {
-            fail = true;
+        // Source and target file names should match
+        if source_files != target_files {
+            panic!("Source and target file names differ for {:?}", test_dir)
         }
-        if !test_file(
-            &format!("tests/{target_file}"),
-            &format!("tests/{target_file}"),
-            None,
-        ) {
-            fail = true;
+
+        // Test file formatting
+        for file in source_files {
+            let source_file = test_dir.path().join("source").join(file.clone());
+            let source_file = source_file.to_str().unwrap();
+            let target_file = test_dir.path().join("target").join(file.clone());
+            let target_file = target_file.to_str().unwrap();
+
+            // If both config and cli exist, either alone should work
+            if config_file.is_some() && cli_file.is_some() {
+                pass &= test_source_target(
+                    source_file,
+                    target_file,
+                    &config_file,
+                    &None,
+                );
+                pass &= test_source_target(
+                    source_file,
+                    target_file,
+                    &None,
+                    &cli_file,
+                );
+            }
+
+            // Pass both config and cli, even if one or more are None
+            pass &= test_source_target(
+                source_file,
+                target_file,
+                &config_file,
+                &cli_file,
+            );
         }
     }
-    assert!(!fail, "Some tests failed");
+
+    assert!(pass)
 }
