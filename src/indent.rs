@@ -45,23 +45,21 @@ fn get_diff(
     pattern: &Pattern,
     lists_begin: &[String],
     lists_end: &[String],
+    no_indent_envs_begin: &[String],
+    no_indent_envs_end: &[String],
 ) -> i8 {
-    // list environments get double indents
+    // indent for environments
     let mut diff: i8 = 0;
-
-    // other environments get single indents
     if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
-        // documents get no global indentation
-        if line.contains(DOC_BEGIN) {
+        if no_indent_envs_begin.iter().any(|r| line.contains(r)) {
             return 0;
-        };
+        }
         diff += 1;
         diff += i8::from(lists_begin.iter().any(|r| line.contains(r)));
     } else if pattern.contains_env_end && line.contains(ENV_END) {
-        // documents get no global indentation
-        if line.contains(DOC_END) {
+        if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
-        };
+        }
         diff -= 1;
         diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
     };
@@ -81,6 +79,7 @@ fn get_back(
     pattern: &Pattern,
     state: &State,
     lists_end: &[String],
+    no_indent_envs_end: &[String],
 ) -> i8 {
     // Only need to dedent if indentation is present
     if state.indent.actual == 0 {
@@ -89,10 +88,9 @@ fn get_back(
     let mut back: i8 = 0;
 
     if pattern.contains_env_end && line.contains(ENV_END) {
-        // documents get no global indentation
-        if line.contains(DOC_END) {
+        if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
-        };
+        }
         // list environments get double indents for indenting items
         for r in lists_end {
             if line.contains(r) {
@@ -118,6 +116,7 @@ fn get_back(
 }
 
 /// Calculate indentation properties of the current line
+#[allow(clippy::too_many_arguments)]
 fn get_indent(
     line: &str,
     prev_indent: &Indent,
@@ -125,9 +124,18 @@ fn get_indent(
     state: &State,
     lists_begin: &[String],
     lists_end: &[String],
+    no_indent_envs_begin: &[String],
+    no_indent_envs_end: &[String],
 ) -> Indent {
-    let diff = get_diff(line, pattern, lists_begin, lists_end);
-    let back = get_back(line, pattern, state, lists_end);
+    let diff = get_diff(
+        line,
+        pattern,
+        lists_begin,
+        lists_end,
+        no_indent_envs_begin,
+        no_indent_envs_end,
+    );
+    let back = get_back(line, pattern, state, lists_end, no_indent_envs_end);
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
@@ -147,6 +155,8 @@ pub fn calculate_indent(
     pattern: &Pattern,
     lists_begin: &[String],
     lists_end: &[String],
+    no_indent_envs_begin: &[String],
+    no_indent_envs_end: &[String],
 ) -> Indent {
     // Calculate the new indent by first removing the comment from the line
     // (if there is one) to ignore diffs from characters in there.
@@ -159,6 +169,8 @@ pub fn calculate_indent(
         state,
         lists_begin,
         lists_end,
+        no_indent_envs_begin,
+        no_indent_envs_end,
     );
 
     // Record the indent to the logs.
