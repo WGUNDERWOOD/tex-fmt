@@ -281,7 +281,8 @@ tex-fmt is over a thousand times faster than latexindent.
 
 Please feel free to open an issue or submit a pull request,
 including as much information as you can. Documentation of internals
-can be accessed by cloning this repository and running `cargo doc`.
+can be accessed by cloning this repository and running `cargo doc`,
+or by visiting the [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page.
 
 Alternatively, you can
 [Buy Me a Coffee](https://buymeacoffee.com/wgunderwood)!
