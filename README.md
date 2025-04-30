@@ -358,16 +358,17 @@ The following arguments can be passed on the command line.
 The following arguments can be provided in `tex-fmt.toml`.
 The first example in each row is the default value.
 
-| Option           | Type     | Examples              | Description |
-| ---------------- | -------- | --------------------- | --- |
-| `check`          | bool     | `false`               | Check formatting, do not modify files |
-| `print`          | bool     | `false`               | Print to stdout, do not modify files |
-| `fail-on-change` | bool     | `false`               | Fail if files are modified |
-| `wrap`           | bool     | `true`                | Wrap long lines |
-| `wraplen`        | int      | `80`, `100`           | Line length for wrapping |
-| `wrapmin`        | int      | `70`, `90`            | Target minimum length for line wrapping |
-| `tabsize`        | int      | `2`, `4`              | Number of characters to use as tab size |
-| `tabchar`        | str      | `"space"`, `"tab"`    | Character to use for indentation |
-| `stdin`          | bool     | `false`               | Process stdin as a single file, output to stdout |
-| `lists`          | arr[str] | `[]`, `["myitemize"]` | Extra list environments to be formatted as `itemize` |
-| `verbosity`      | str      | `"warn"`, `"error"`   | Verbosity level for terminal logging |
+| Option           | Type     | Examples               | Description |
+| ---------------- | -------- | ---------------------- | --- |
+| `check`          | bool     | `false`                | Check formatting, do not modify files |
+| `print`          | bool     | `false`                | Print to stdout, do not modify files |
+| `fail-on-change` | bool     | `false`                | Fail if files are modified |
+| `wrap`           | bool     | `true`                 | Wrap long lines |
+| `wraplen`        | int      | `80`, `100`            | Line length for wrapping |
+| `wrapmin`        | int      | `70`, `90`             | Target minimum length for line wrapping |
+| `tabsize`        | int      | `2`, `4`               | Number of characters to use as tab size |
+| `tabchar`        | str      | `"space"`, `"tab"`     | Character to use for indentation |
+| `stdin`          | bool     | `false`                | Process stdin as a single file, output to stdout |
+| `lists`          | arr[str] | `[]`, `["myitemize"]`  | Extra list environments to be formatted as `itemize` |
+| `no-indent-envs` | arr[str] | `[]`, `["mydocument"]` | Environments which are not indented |
+| `verbosity`      | str      | `"warn"`, `"error"`    | Verbosity level for terminal logging |
