@@ -136,6 +136,13 @@ pub fn get_config_args(
             .iter()
             .filter_map(|v| v.as_str().map(String::from))
             .collect(),
+        no_indent_envs: config
+            .get("no-indent-envs")
+            .and_then(|v| v.as_array())
+            .unwrap_or(&vec![])
+            .iter()
+            .filter_map(|v| v.as_str().map(String::from))
+            .collect(),
         verbosity,
         arguments: None,
         files: vec![],
