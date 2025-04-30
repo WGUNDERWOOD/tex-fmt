@@ -1,3 +1,5 @@
+//! Web assembly implementation
+
 use js_sys::{Object, Reflect};
 use merge::Merge;
 use std::path::PathBuf;
