@@ -37,16 +37,21 @@ fn find_wrap_point(
         if line_width > wrap_boundary && wrap_point.is_some() {
             break;
         }
-        if c == ' ' && prev_char != Some('\\') {
+        // TODO make this faster by checking if wrap_chars is a singleton
+        if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
             if after_char {
-                wrap_point = Some(i);
+                wrap_point = Some(i + 1);
             }
         } else if c != '%' {
             after_char = true;
         }
         prev_char = Some(c);
     }
-    wrap_point
+    line_width = line.chars().count();
+    match wrap_point {
+        Some(p) if p < line_width => Some(p),
+        _ => None,
+    }
 }
 
 /// Wrap a long line into a short prefix and a suffix
@@ -97,7 +102,7 @@ pub fn apply_wrap<'a>(
                 TEXT_LINE_START
             }
         });
-        let next_line = &line[p + 1..];
+        let next_line = &line[p..];
         [this_line, next_line_start, next_line]
     })
 }
