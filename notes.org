@@ -81,6 +81,7 @@
 ** Config arguments
 *** config.rs
 **** Update get_config_args()
+** Fix compiler warnings
 ** Implement behaviour
 ** Add tests
 ** Update README
