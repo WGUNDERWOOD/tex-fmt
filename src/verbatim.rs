@@ -2,7 +2,6 @@
 
 use crate::format::*;
 use crate::logging::*;
-use crate::regexes::*;
 use log::Level::Warn;
 
 /// Information on the verbatim state of a line
@@ -38,8 +37,10 @@ pub fn get_verbatim(
     file: &str,
     warn: bool,
     pattern: &Pattern,
+    verbatims_begin: &[String],
+    verbatims_end: &[String],
 ) -> Verbatim {
-    let diff = get_verbatim_diff(line, pattern);
+    let diff = get_verbatim_diff(line, pattern, verbatims_begin, verbatims_end);
     let actual = state.verbatim.actual + diff;
     let visual = actual > 0 || state.verbatim.actual > 0;
 
@@ -59,13 +60,18 @@ pub fn get_verbatim(
 }
 
 /// Calculate total verbatim depth change
-fn get_verbatim_diff(line: &str, pattern: &Pattern) -> i8 {
+fn get_verbatim_diff(
+    line: &str,
+    pattern: &Pattern,
+    verbatims_begin: &[String],
+    verbatims_end: &[String],
+) -> i8 {
     if pattern.contains_env_begin
-        && VERBATIMS_BEGIN.iter().any(|r| line.contains(r))
+        && verbatims_begin.iter().any(|r| line.contains(r))
     {
         1
     } else if pattern.contains_env_end
-        && VERBATIMS_END.iter().any(|r| line.contains(r))
+        && verbatims_end.iter().any(|r| line.contains(r))
     {
         -1
     } else {

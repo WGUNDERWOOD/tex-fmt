@@ -13,10 +13,6 @@ pub const ENV_END: &str = "\\end{";
 /// Acceptable LaTeX file extensions
 pub const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
 
-/// Names of LaTeX verbatim environments
-const VERBATIMS: [&str; 5] =
-    ["verbatim", "Verbatim", "lstlisting", "minted", "comment"];
-
 /// Regex matches for sectioning commands
 const SPLITTING: [&str; 6] = [
     r"\\begin\{",
@@ -40,12 +36,6 @@ lazy_static! {
         Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap();
     pub static ref RE_TRAIL: Regex =
         Regex::new(&format!(r" +{LINE_END}")).unwrap();
-    pub static ref VERBATIMS_BEGIN: Vec<String> = VERBATIMS
-        .iter()
-        .map(|l| format!("\\begin{{{l}}}"))
-        .collect();
-    pub static ref VERBATIMS_END: Vec<String> =
-        VERBATIMS.iter().map(|l| format!("\\end{{{l}}}")).collect();
     // Regex that matches splitting commands
     pub static ref RE_SPLITTING: Regex = Regex::new(
         SPLITTING_STRING.as_str()

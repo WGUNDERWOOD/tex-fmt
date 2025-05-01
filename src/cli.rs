@@ -72,6 +72,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
         noconfig: get_flag(&arg_matches, "noconfig"),
         lists: vec![],
+        verbatims: vec![],
         no_indent_envs: vec![],
         verbosity,
         arguments: get_flag(&arg_matches, "args"),
