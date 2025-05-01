@@ -30,6 +30,7 @@ impl Default for Verbatim {
 }
 
 /// Determine whether a line is in a verbatim environment
+#[allow(clippy::too_many_arguments)]
 pub fn get_verbatim(
     line: &str,
     state: &State,
