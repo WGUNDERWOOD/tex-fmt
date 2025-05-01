@@ -37,6 +37,8 @@ pub struct Args {
     pub config: Option<PathBuf>,
     /// Extra list environments
     pub lists: Vec<String>,
+    /// Extra verbatim environments
+    pub verbatims: Vec<String>,
     /// Environments which are not indented
     pub no_indent_envs: Vec<String>,
     /// Verbosity level for log messages
@@ -64,6 +66,8 @@ pub struct OptionArgs {
     pub noconfig: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub lists: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub verbatims: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub no_indent_envs: Vec<String>,
     pub verbosity: Option<LevelFilter>,
@@ -100,6 +104,11 @@ impl Default for OptionArgs {
         .into_iter()
         .map(std::borrow::ToOwned::to_owned)
         .collect();
+        let verbatims =
+            vec!["verbatim", "Verbatim", "lstlisting", "minted", "comment"]
+                .into_iter()
+                .map(std::borrow::ToOwned::to_owned)
+                .collect();
         let no_indent_envs = vec!["document"]
             .into_iter()
             .map(std::borrow::ToOwned::to_owned)
@@ -117,6 +126,7 @@ impl Default for OptionArgs {
             config: None,
             noconfig: Some(false),
             lists,
+            verbatims,
             no_indent_envs,
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
@@ -140,6 +150,7 @@ impl OptionArgs {
             config: None,
             noconfig: None,
             lists: vec![],
+            verbatims: vec![],
             no_indent_envs: vec![],
             verbosity: None,
             arguments: None,
@@ -175,6 +186,7 @@ impl Args {
             stdin: args.stdin.unwrap(),
             config: args.config,
             lists: args.lists,
+            verbatims: args.verbatims,
             no_indent_envs: args.no_indent_envs,
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
@@ -218,10 +230,9 @@ impl Args {
             exit_code = 1;
         }
 
-        // Remove duplicate list environments
+        // Remove duplicate environments
         self.lists.dedup();
-
-        // Remove duplicate no indent environments
+        self.verbatims.dedup();
         self.no_indent_envs.dedup();
 
         // Remove duplicate files
@@ -297,6 +308,7 @@ impl fmt::Display for Args {
             &self.verbosity.to_string().to_lowercase(),
         )?;
         display_args_list(&self.lists, "lists", f)?;
+        display_args_list(&self.verbatims, "lists", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
         display_args_list(&self.files, "files", f)?;
 
