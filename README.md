@@ -370,5 +370,6 @@ The first example in each row is the default value.
 | `tabchar`        | str      | `"space"`, `"tab"`     | Character to use for indentation |
 | `stdin`          | bool     | `false`                | Process stdin as a single file, output to stdout |
 | `lists`          | arr[str] | `[]`, `["myitemize"]`  | Extra list environments to be formatted as `itemize` |
+| `verbatims`      | arr[str] | `[]`, `["myverbatim"]` | Extra verbatim environments |
 | `no-indent-envs` | arr[str] | `[]`, `["mydocument"]` | Environments which are not indented |
 | `verbosity`      | str      | `"warn"`, `"error"`    | Verbosity level for terminal logging |
