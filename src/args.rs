@@ -41,6 +41,8 @@ pub struct Args {
     pub verbatims: Vec<String>,
     /// Environments which are not indented
     pub no_indent_envs: Vec<String>,
+    /// Characters after which lines can be wrapped
+    pub wrap_chars: Vec<char>,
     /// Verbosity level for log messages
     pub verbosity: LevelFilter,
     /// Print arguments and exit
@@ -70,6 +72,8 @@ pub struct OptionArgs {
     pub verbatims: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub no_indent_envs: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub wrap_chars: Vec<char>,
     pub verbosity: Option<LevelFilter>,
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
@@ -113,6 +117,7 @@ impl Default for OptionArgs {
             .into_iter()
             .map(std::borrow::ToOwned::to_owned)
             .collect();
+        let wrap_chars = vec![' '];
         Self {
             check: Some(false),
             print: Some(false),
@@ -128,6 +133,7 @@ impl Default for OptionArgs {
             lists,
             verbatims,
             no_indent_envs,
+            wrap_chars,
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
@@ -152,6 +158,7 @@ impl OptionArgs {
             lists: vec![],
             verbatims: vec![],
             no_indent_envs: vec![],
+            wrap_chars: vec![],
             verbosity: None,
             arguments: None,
             files: vec![],
@@ -188,6 +195,7 @@ impl Args {
             lists: args.lists,
             verbatims: args.verbatims,
             no_indent_envs: args.no_indent_envs,
+            wrap_chars: args.wrap_chars,
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
@@ -230,12 +238,11 @@ impl Args {
             exit_code = 1;
         }
 
-        // Remove duplicate environments
+        // Remove duplicate environments and files
         self.lists.dedup();
         self.verbatims.dedup();
         self.no_indent_envs.dedup();
-
-        // Remove duplicate files
+        self.wrap_chars.dedup();
         self.files.dedup();
 
         // Print arguments and exit
@@ -288,6 +295,8 @@ fn display_args_list(
 
 impl fmt::Display for Args {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let wrap_chars: Vec<String> =
+            self.wrap_chars.iter().map(|c| c.to_string()).collect();
         write!(f, "{}", "tex-fmt".magenta().bold())?;
         display_arg_line(f, "check", &self.check.to_string())?;
         display_arg_line(f, "print", &self.print.to_string())?;
@@ -308,8 +317,9 @@ impl fmt::Display for Args {
             &self.verbosity.to_string().to_lowercase(),
         )?;
         display_args_list(&self.lists, "lists", f)?;
-        display_args_list(&self.verbatims, "lists", f)?;
+        display_args_list(&self.verbatims, "verbatims", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
+        display_args_list(&wrap_chars, "wrap-chars", f)?;
         display_args_list(&self.files, "files", f)?;
 
         // Do not print `arguments` or `noconfig` fields
