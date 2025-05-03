@@ -12,8 +12,8 @@ use std::path::PathBuf;
 fn test_file(
     source_file: &str,
     target_file: &str,
-    config_file: &Option<PathBuf>,
-    cli_file: &Option<PathBuf>,
+    config_file: Option<&PathBuf>,
+    cli_file: Option<&PathBuf>,
 ) -> bool {
     // Get arguments from CLI file
     let mut args = match cli_file {
@@ -30,7 +30,7 @@ fn test_file(
     };
 
     // Merge arguments from config file
-    args.config = config_file.clone();
+    args.config = config_file.cloned();
     let config = get_config(&args);
     let config_args = get_config_args(config);
     if let Some(c) = config_args {
@@ -110,18 +110,17 @@ fn get_cli_file(dir: &fs::DirEntry) -> Option<PathBuf> {
 fn test_source_target(
     source_file: &str,
     target_file: &str,
-    config_file: &Option<PathBuf>,
-    cli_file: &Option<PathBuf>,
+    config_file: Option<&PathBuf>,
+    cli_file: Option<&PathBuf>,
 ) -> bool {
     let mut pass = true;
     if !test_file(target_file, target_file, config_file, cli_file) {
         print!(
             "{}",
             format!(
-                "Config file: {:?}\n\
-            CLI file: {:?}\n\
-            ",
-                config_file, cli_file
+                "Config file: {config_file:?}\n\
+            CLI file: {cli_file:?}\n\
+            "
             )
             .yellow()
             .bold()
@@ -133,10 +132,9 @@ fn test_source_target(
         print!(
             "{}",
             format!(
-                "Config file: {:?}\n\
-            CLI file: {:?}\n\
-            ",
-                config_file, cli_file
+                "Config file: {config_file:?}\n\
+            CLI file: {cli_file:?}\n\
+            "
             )
             .yellow()
             .bold()
@@ -177,14 +175,14 @@ fn test() {
                 pass &= test_source_target(
                     source_file,
                     target_file,
-                    &config_file,
-                    &None,
+                    config_file.as_ref(),
+                    None,
                 );
                 pass &= test_source_target(
                     source_file,
                     target_file,
-                    &None,
-                    &cli_file,
+                    None,
+                    cli_file.as_ref(),
                 );
             }
 
@@ -192,8 +190,8 @@ fn test() {
             pass &= test_source_target(
                 source_file,
                 target_file,
-                &config_file,
-                &cli_file,
+                config_file.as_ref(),
+                cli_file.as_ref(),
             );
         }
     }

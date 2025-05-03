@@ -8,9 +8,9 @@ use std::io::Read;
 
 /// Add a missing extension and read the file
 pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
-    // check if file has an accepted extension
+    // Check if file has an accepted extension
     let has_ext = EXTENSIONS.iter().any(|e| file.ends_with(e));
-    // if no valid extension, try adding .tex
+    // If no valid extension, try adding .tex
     let mut new_file = file.to_owned();
     if !has_ext {
         new_file.push_str(".tex");
