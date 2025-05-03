@@ -49,12 +49,12 @@ fn get_diff(
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
 ) -> i8 {
-    // do not indent if line contains \verb|...|
+    // Do not indent if line contains \verb|...|
     if pattern.contains_verb && line.contains(VERB) {
         return 0;
     }
 
-    // indent for environments
+    // Indentation for environments
     let mut diff: i8 = 0;
     if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
         if no_indent_envs_begin.iter().any(|r| line.contains(r)) {
@@ -70,7 +70,7 @@ fn get_diff(
         diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
     }
 
-    // indent for delimiters
+    // Indentation for delimiters
     diff += line
         .chars()
         .map(|x| i8::from(OPENS.contains(&x)) - i8::from(CLOSES.contains(&x)))
@@ -104,16 +104,16 @@ fn get_back(
         if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
         }
-        // list environments get double indents for indenting items
+        // List environments get double indents for indenting items
         for r in lists_end {
             if line.contains(r) {
                 return 2;
             }
         }
-        // other environments get single indents
+        // Other environments get single indents
         back = 1;
     } else if pattern.contains_item && line.contains(ITEM) {
-        // deindent items to make the rest of item environment appear indented
+        // Deindent items to make the rest of item environment appear indented
         back += 1;
     }
 

@@ -5,7 +5,7 @@ use crate::format::Pattern;
 /// Find the location where a comment begins in a line
 #[must_use]
 pub fn find_comment_index(line: &str, pattern: &Pattern) -> Option<usize> {
-    // often there is no '%' so check this first
+    // Often there is no '%' so check this first
     if pattern.contains_comment {
         let mut prev_c = ' ';
         for (i, c) in line.char_indices() {
