@@ -3,6 +3,7 @@
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/WGUNDERWOOD/tex-fmt/main/extra/logo.svg"
 )]
+#![warn(clippy::pedantic)]
 
 pub mod args;
 pub mod cli;

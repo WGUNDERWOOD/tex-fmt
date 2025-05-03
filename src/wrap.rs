@@ -1,9 +1,9 @@
 //! Utilities for wrapping long lines
 
-use crate::args::*;
-use crate::comments::*;
-use crate::format::*;
-use crate::logging::*;
+use crate::args::Args;
+use crate::comments::find_comment_index;
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
 use crate::regexes::VERB;
 use log::Level;
 use log::LevelFilter;
@@ -14,6 +14,7 @@ pub const TEXT_LINE_START: &str = "";
 pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
+#[must_use]
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
@@ -116,7 +117,7 @@ pub fn apply_wrap<'a>(
                 "Line cannot be wrapped.",
             );
         }
-    };
+    }
 
     wrap_point.map(|p| {
         let this_line = &line[0..p];
