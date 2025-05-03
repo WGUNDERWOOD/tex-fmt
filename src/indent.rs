@@ -49,10 +49,9 @@ fn get_diff(
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
 ) -> i8 {
-
     // do not indent if line contains \verb|...|
     if pattern.contains_verb && line.contains(VERB) {
-        return 0
+        return 0;
     }
 
     // indent for environments

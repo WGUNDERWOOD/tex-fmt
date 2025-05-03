@@ -47,10 +47,9 @@ pub fn remove_trailing_blank_lines(text: &str) -> String {
 /// before finding the match index and unwrapping.
 #[must_use]
 pub fn needs_split(line: &str, pattern: &Pattern) -> bool {
-
     // Don't split anything if the line contains a \verb|...|
     if pattern.contains_verb && line.contains(regexes::VERB) {
-        return false
+        return false;
     }
 
     // Check if we should format this line and if we've matched an environment.
