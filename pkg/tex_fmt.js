@@ -167,6 +167,11 @@ function getDataViewMemory0() {
     return cachedDataViewMemory0;
 }
 /**
+ * Main function for WASM interface with JS
+ *
+ * # Panics
+ *
+ * This function panics if the config cannot be parsed
  * @param {string} text
  * @param {string} config
  * @returns {any}

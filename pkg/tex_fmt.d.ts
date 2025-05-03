@@ -1,5 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
+/**
+ * Main function for WASM interface with JS
+ *
+ * # Panics
+ *
+ * This function panics if the config cannot be parsed
+ */
 export function main(text: string, config: string): any;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
