@@ -211,14 +211,14 @@ fn test_subset() {
     let test_names = ["cv", "lists"];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
-        test_names.iter().any(|t|
-        d.as_ref()
-            .unwrap()
-            .file_name()
-            .into_string()
-            .unwrap()
-            .contains(t)
-        )
+        test_names.iter().any(|t| {
+            d.as_ref()
+                .unwrap()
+                .file_name()
+                .into_string()
+                .unwrap()
+                .contains(t)
+        })
     });
     for test_dir in test_dirs {
         pass &= run_tests_in_dir(test_dir.unwrap());
