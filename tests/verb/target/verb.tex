@@ -19,4 +19,15 @@ words in a sentence
     \verb|code code code code code code code code code code code code code code code|
 \end{itemize}
 
+% Do not split \begin{environment} onto a new line if inside \verb|...|
+
+\verb|\end{description}|
+
+\verb|\begin{description}|
+
+% This should not affect line breaking
+
+Some words in a long sentence which could be broken before the verb
+part of this line \verb|\begin{description}|
+
 \end{document}
