@@ -4,6 +4,7 @@ use crate::args::*;
 use crate::comments::*;
 use crate::format::*;
 use crate::logging::*;
+use crate::regexes::VERB;
 use log::Level;
 use log::LevelFilter;
 
@@ -22,6 +23,7 @@ fn find_wrap_point(
     line: &str,
     indent_length: usize,
     args: &Args,
+    pattern: &Pattern,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
@@ -31,21 +33,49 @@ fn find_wrap_point(
 
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
 
-    // Return *byte* index rather than *char* index.
-    for (i, c) in line.char_indices() {
-        line_width += 1;
-        if line_width > wrap_boundary && wrap_point.is_some() {
-            break;
-        }
-        if c == ' ' && prev_char != Some('\\') {
-            if after_char {
-                wrap_point = Some(i);
-            }
-        } else if c != '%' {
+    if pattern.contains_verb && line.contains(VERB) {
+        // Special wrapping for lines containing \verb|...|
+        let verb_start = line.find(VERB).unwrap();
+        let verb_end = line[verb_start + 6..].find('|').unwrap_or(verb_start)
+            + verb_start
+            + 6;
+        if verb_start == 0 {
             after_char = true;
         }
-        prev_char = Some(c);
+        for (i, c) in line.char_indices() {
+            line_width += 1;
+            let inside_verb = (verb_start <= i) && (i <= verb_end);
+            if line_width > wrap_boundary && wrap_point.is_some() {
+                break;
+            }
+            if c == ' ' && prev_char != Some('\\') && !inside_verb {
+                if after_char {
+                    wrap_point = Some(i);
+                }
+            } else if c != '%' {
+                after_char = true;
+            }
+            prev_char = Some(c);
+        }
+    } else {
+        // Wrapping for lines not containing \verb|...|
+        for (i, c) in line.char_indices() {
+            line_width += 1;
+            if line_width > wrap_boundary && wrap_point.is_some() {
+                break;
+            }
+            if c == ' ' && prev_char != Some('\\') {
+                if after_char {
+                    wrap_point = Some(i);
+                }
+            } else if c != '%' {
+                after_char = true;
+            }
+            prev_char = Some(c);
+        }
     }
+
+    // Return *byte* index rather than *char* index.
     wrap_point
 }
 
@@ -70,7 +100,7 @@ pub fn apply_wrap<'a>(
             "Wrapping long line.",
         );
     }
-    let wrap_point = find_wrap_point(line, indent_length, args);
+    let wrap_point = find_wrap_point(line, indent_length, args, pattern);
     let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
