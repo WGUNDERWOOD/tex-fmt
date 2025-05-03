@@ -1,7 +1,7 @@
 //! Utilities for reading files
 
-use crate::logging::*;
-use crate::regexes::*;
+use crate::logging::{record_file_log, Log};
+use crate::regexes::EXTENSIONS;
 use log::Level::{Error, Trace};
 use std::fs;
 use std::io::Read;
@@ -14,7 +14,7 @@ pub fn read(file: &str, logs: &mut Vec<Log>) -> Option<(String, String)> {
     let mut new_file = file.to_owned();
     if !has_ext {
         new_file.push_str(".tex");
-    };
+    }
     if let Ok(text) = fs::read_to_string(&new_file) {
         return Some((new_file, text));
     }
