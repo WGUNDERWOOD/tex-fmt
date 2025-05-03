@@ -144,57 +144,84 @@ fn test_source_target(
     pass
 }
 
-#[test]
-fn test() {
+fn run_tests_in_dir(test_dir: fs::DirEntry) -> bool {
     let mut pass = true;
-    let test_dirs = fs::read_dir("./tests/").unwrap();
-    for test_dir in test_dirs {
-        let test_dir = test_dir.unwrap();
-        let config_file = get_config_file(&test_dir);
-        let cli_file = get_cli_file(&test_dir);
-        let source_dir = test_dir.path().join("source/");
-        let source_files = read_files_from_dir(&source_dir);
-        let target_dir = test_dir.path().join("target/");
-        let target_files = read_files_from_dir(&target_dir);
+    let config_file = get_config_file(&test_dir);
+    let cli_file = get_cli_file(&test_dir);
+    let source_dir = test_dir.path().join("source/");
+    let source_files = read_files_from_dir(&source_dir);
+    let target_dir = test_dir.path().join("target/");
+    let target_files = read_files_from_dir(&target_dir);
 
-        // Source and target file names should match
-        #[allow(clippy::manual_assert)]
-        if source_files != target_files {
-            panic!("Source and target file names differ for {test_dir:?}")
-        }
+    // Source and target file names should match
+    #[allow(clippy::manual_assert)]
+    if source_files != target_files {
+        panic!("Source and target file names differ for {test_dir:?}")
+    }
 
-        // Test file formatting
-        for file in source_files {
-            let source_file = test_dir.path().join("source").join(file.clone());
-            let source_file = source_file.to_str().unwrap();
-            let target_file = test_dir.path().join("target").join(file.clone());
-            let target_file = target_file.to_str().unwrap();
+    // Test file formatting
+    for file in source_files {
+        let source_file = test_dir.path().join("source").join(file.clone());
+        let source_file = source_file.to_str().unwrap();
+        let target_file = test_dir.path().join("target").join(file.clone());
+        let target_file = target_file.to_str().unwrap();
 
-            // If both config and cli exist, either alone should work
-            if config_file.is_some() && cli_file.is_some() {
-                pass &= test_source_target(
-                    source_file,
-                    target_file,
-                    config_file.as_ref(),
-                    None,
-                );
-                pass &= test_source_target(
-                    source_file,
-                    target_file,
-                    None,
-                    cli_file.as_ref(),
-                );
-            }
-
-            // Pass both config and cli, even if one or more are None
+        // If both config and cli exist, either alone should work
+        if config_file.is_some() && cli_file.is_some() {
             pass &= test_source_target(
                 source_file,
                 target_file,
                 config_file.as_ref(),
+                None,
+            );
+            pass &= test_source_target(
+                source_file,
+                target_file,
+                None,
                 cli_file.as_ref(),
             );
         }
+
+        // Pass both config and cli, even if one or more are None
+        pass &= test_source_target(
+            source_file,
+            target_file,
+            config_file.as_ref(),
+            cli_file.as_ref(),
+        );
     }
 
+    pass
+}
+
+#[test]
+fn test_all() {
+    let mut pass = true;
+    let test_dirs = fs::read_dir("./tests/").unwrap();
+    for test_dir in test_dirs {
+        pass &= run_tests_in_dir(test_dir.unwrap());
+    }
+
+    assert!(pass);
+}
+
+#[test]
+#[ignore]
+fn test_subset() {
+    let test_names = ["cv", "lists"];
+    let mut pass = true;
+    let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
+        test_names.iter().any(|t| {
+            d.as_ref()
+                .unwrap()
+                .file_name()
+                .into_string()
+                .unwrap()
+                .contains(t)
+        })
+    });
+    for test_dir in test_dirs {
+        pass &= run_tests_in_dir(test_dir.unwrap());
+    }
     assert!(pass);
 }
