@@ -1,3 +1,30 @@
+# v0.5.4
+
+## Allow custom non-indented environments
+
+- Pass `no-indent-envs = ["mydocument"]` in `tex-fmt.toml`.
+- Then no indentation is applied inside `\begin{mydocument}...\end{mydocument}`.
+- This is the default behaviour for `\begin{document}...\end{document}`.
+
+## Allow custom verbatim environments
+
+- Pass `verbatims = ["myverbatim"]` in `tex-fmt.toml`.
+- All formatting is then skipped inside `\begin{myverbatim}...\end{myverbatim}`.
+
+## Improve formatting when using `\verb|...|`
+
+- Lines are not broken inside `\verb|...|`.
+- Environments inside `\verb|...|` do not trigger new lines.
+- No indenting applied to lines containing `\verb|...|`.
+
+## Minor changes
+
+- Fix output bug in profiling script at `extra/prof.sh`.
+- Add link to [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page in README.
+- Add logo to [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page.
+- Add better tests for config file options and CLI arguments.
+- Improve documentation of config file options and CLI arguments in README.
+
 # v0.5.3
 
 - Add `--fail-on-change` flag.
