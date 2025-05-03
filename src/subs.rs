@@ -28,7 +28,6 @@ pub fn remove_tabs(text: &str, args: &Args) -> String {
 /// Remove double spaces
 #[must_use]
 pub fn remove_double_spaces(text: &str) -> String {
-    // TODO Need to respect verbatim environments
     regexes::RE_DOUBLE_SPACE.replace_all(text, " ").to_string()
 }
 

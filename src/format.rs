@@ -71,6 +71,10 @@ pub fn format_file(
                 &verbatims_begin,
                 &verbatims_end,
             ) {
+
+                // Remove double spaces
+                line = subs::remove_double_spaces(&line);
+
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.
                 if subs::needs_split(&line, &pattern) {
@@ -193,7 +197,6 @@ fn set_ignore_and_report(
 /// Cleans the given text by removing extra line breaks and trailing spaces,
 /// and also tabs if they shouldn't be used.
 fn clean_text(text: &str, args: &Args) -> String {
-    let mut text = subs::remove_double_spaces(&text);
     let mut text = subs::remove_extra_newlines(&text);
 
     if args.tabchar != TabChar::Tab {
