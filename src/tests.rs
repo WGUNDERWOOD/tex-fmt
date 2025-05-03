@@ -208,7 +208,12 @@ fn test_all() {
 #[test]
 #[ignore]
 fn test_subset() {
-    let test_names = ["cv", "lists"];
+    let test_names = [
+        //"cv",
+        //"lists",
+        //"phd_dissertation",
+        "masters_dissertation",
+    ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
         test_names.iter().any(|t|
