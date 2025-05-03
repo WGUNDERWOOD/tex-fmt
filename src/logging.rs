@@ -170,9 +170,10 @@ fn format_log(log: &Log) -> String {
 }
 
 /// Format all of the logs collected
+#[allow(clippy::similar_names)]
 pub fn format_logs(logs: &mut Vec<Log>, args: &Args) -> String {
     preprocess_logs(logs);
-    let mut logs_string = "".to_string();
+    let mut logs_string = String::new();
     for log in logs {
         if log.level <= args.verbosity {
             let log_string = format_log(log);
@@ -184,6 +185,10 @@ pub fn format_logs(logs: &mut Vec<Log>, args: &Args) -> String {
 }
 
 /// Print all of the logs collected
+///
+/// # Panics
+///
+/// This function panics if the file path does not exist
 pub fn print_logs(logs: &mut Vec<Log>) {
     preprocess_logs(logs);
     for log in logs {
@@ -204,10 +209,10 @@ pub fn print_logs(logs: &mut Vec<Log>) {
         );
 
         match log.level {
-            Error => log::error!("{}", log_string),
-            Warn => log::warn!("{}", log_string),
-            Info => log::info!("{}", log_string),
-            Trace => log::trace!("{}", log_string),
+            Error => log::error!("{log_string}"),
+            Warn => log::warn!("{log_string}"),
+            Info => log::info!("{log_string}"),
+            Trace => log::trace!("{log_string}"),
             Debug => panic!(),
         }
     }

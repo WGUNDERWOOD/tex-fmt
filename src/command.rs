@@ -4,6 +4,7 @@ use std::path::PathBuf;
 
 /// Construct the CLI command
 #[allow(clippy::too_many_lines)]
+#[must_use]
 pub fn get_cli_command() -> Command {
     Command::new("tex-fmt")
         .author("William George Underwood, wg.underwood13@gmail.com")
