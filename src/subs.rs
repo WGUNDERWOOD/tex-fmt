@@ -25,6 +25,13 @@ pub fn remove_tabs(text: &str, args: &Args) -> String {
     text.replace('\t', &replace)
 }
 
+/// Remove double spaces
+#[must_use]
+pub fn remove_double_spaces(text: &str) -> String {
+    // TODO Need to respect verbatim environments
+    regexes::RE_DOUBLE_SPACE.replace_all(text, " ").to_string()
+}
+
 /// Remove trailing spaces from line endings
 #[must_use]
 pub fn remove_trailing_spaces(text: &str) -> String {
