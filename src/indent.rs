@@ -1,10 +1,10 @@
 //! Utilities for indenting source lines
 
-use crate::args::*;
-use crate::comments::*;
-use crate::format::*;
-use crate::logging::*;
-use crate::regexes::*;
+use crate::args::Args;
+use crate::comments::{find_comment_index, remove_comment};
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM};
 use core::cmp::max;
 use log::Level;
 use log::LevelFilter;
@@ -25,6 +25,7 @@ pub struct Indent {
 
 impl Indent {
     /// Construct a new indentation state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             actual: 0,
@@ -62,7 +63,7 @@ fn get_diff(
         }
         diff -= 1;
         diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
-    };
+    }
 
     // indent for delimiters
     diff += line
@@ -95,14 +96,14 @@ fn get_back(
         for r in lists_end {
             if line.contains(r) {
                 return 2;
-            };
+            }
         }
         // other environments get single indents
         back = 1;
     } else if pattern.contains_item && line.contains(ITEM) {
         // deindent items to make the rest of item environment appear indented
         back += 1;
-    };
+    }
 
     // Dedent delimiters
     let mut cumul: i8 = back;
@@ -219,6 +220,7 @@ pub fn calculate_indent(
 }
 
 /// Apply the given indentation to a line
+#[must_use]
 pub fn apply_indent(
     line: &str,
     indent: &Indent,

@@ -524,7 +524,6 @@ dependencies = [
  "dirs",
  "env_logger",
  "js-sys",
- "lazy_static",
  "log",
  "merge",
  "regex",

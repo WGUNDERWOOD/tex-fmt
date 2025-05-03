@@ -73,7 +73,7 @@ fn test_file(
                     format!("+ {change}").green().bold(),
                 ),
                 ChangeTag::Equal => {}
-            };
+            }
         }
     }
 
@@ -160,8 +160,9 @@ fn test() {
         let target_files = read_files_from_dir(&target_dir);
 
         // Source and target file names should match
+        #[allow(clippy::manual_assert)]
         if source_files != target_files {
-            panic!("Source and target file names differ for {:?}", test_dir)
+            panic!("Source and target file names differ for {test_dir:?}")
         }
 
         // Test file formatting
@@ -197,5 +198,5 @@ fn test() {
         }
     }
 
-    assert!(pass)
+    assert!(pass);
 }
