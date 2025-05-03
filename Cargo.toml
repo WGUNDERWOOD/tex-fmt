@@ -1,6 +1,6 @@
 [package]
 name = "tex-fmt"
-version = "0.5.2"
+version = "0.5.3"
 authors = ["William George Underwood"]
 license = "MIT"
 repository = "https://github.com/WGUNDERWOOD/tex-fmt"
@@ -11,29 +11,29 @@ categories = ["command-line-utilities", "development-tools"]
 exclude = ["tests/*", "extra/*", "*.nix", ".github/*", "completion/*", "man/*"]
 
 [dependencies]
-clap = { version = "4.5.23", features = ["cargo"] }
-clap_complete = "4.5.40"
-clap_mangen = "0.2.24"
+clap = { version = "4.5.37", features = ["cargo"] }
+clap_complete = "4.5.48"
+clap_mangen = "0.2.26"
 colored = "2.2.0"
 dirs = "5.0.1"
-env_logger = "0.11.6"
-js-sys = "0.3.72"
+env_logger = "0.11.8"
+js-sys = "0.3.77"
 lazy_static = "1.5.0"
-log = "0.4.22"
+log = "0.4.27"
 merge = "0.1.0"
 regex = "1.11.1"
-similar = "2.6.0"
-toml = "0.8.19"
-wasm-bindgen = "0.2.95"
+similar = "2.7.0"
+toml = "0.8.22"
+wasm-bindgen = "0.2.100"
 web-time = "1.1.0"
 
 [features]
 shellinstall = []
 
 [build-dependencies]
-clap = { version = "4.5.23", features = ["cargo"] }
-clap_complete = "4.5.40"
-clap_mangen = "0.2.24"
+clap = { version = "4.5.37", features = ["cargo"] }
+clap_complete = "4.5.48"
+clap_mangen = "0.2.26"
 
 [profile.release]
 codegen-units = 1

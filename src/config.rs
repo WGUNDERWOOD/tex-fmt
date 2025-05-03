@@ -82,6 +82,16 @@ pub fn get_config(args: &OptionArgs) -> Option<(PathBuf, String, String)> {
     Some((config_path.unwrap(), config_path_string, config))
 }
 
+fn parse_array_string(name: &str, config: &Table) -> Vec<String> {
+    config
+        .get(name)
+        .and_then(|v| v.as_array())
+        .unwrap_or(&vec![])
+        .iter()
+        .filter_map(|v| v.as_str().map(String::from))
+        .collect()
+}
+
 /// Parse arguments from a config file path
 pub fn get_config_args(
     config: Option<(PathBuf, String, String)>,
@@ -129,13 +139,9 @@ pub fn get_config_args(
         stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
         config: Some(config_path),
         noconfig: None,
-        lists: config
-            .get("lists")
-            .and_then(|v| v.as_array())
-            .unwrap_or(&vec![])
-            .iter()
-            .filter_map(|v| v.as_str().map(String::from))
-            .collect(),
+        lists: parse_array_string("lists", &config),
+        verbatims: parse_array_string("verbatims", &config),
+        no_indent_envs: parse_array_string("no-indent-envs", &config),
         verbosity,
         arguments: None,
         files: vec![],

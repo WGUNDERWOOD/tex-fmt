@@ -10,6 +10,8 @@ use merge::Merge;
 use std::fmt;
 use std::path::PathBuf;
 
+const DISPLAY_HEADER_WIDTH: usize = 24;
+
 /// Arguments passed to tex-fmt
 #[derive(Debug)]
 pub struct Args {
@@ -35,6 +37,10 @@ pub struct Args {
     pub config: Option<PathBuf>,
     /// Extra list environments
     pub lists: Vec<String>,
+    /// Extra verbatim environments
+    pub verbatims: Vec<String>,
+    /// Environments which are not indented
+    pub no_indent_envs: Vec<String>,
     /// Verbosity level for log messages
     pub verbosity: LevelFilter,
     /// Print arguments and exit
@@ -60,6 +66,10 @@ pub struct OptionArgs {
     pub noconfig: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub lists: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub verbatims: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub no_indent_envs: Vec<String>,
     pub verbosity: Option<LevelFilter>,
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
@@ -68,7 +78,6 @@ pub struct OptionArgs {
 
 /// Character to use for indentation
 #[derive(Clone, Debug, PartialEq, Eq)]
-#[allow(clippy::missing_docs_in_private_items)]
 pub enum TabChar {
     Tab,
     Space,
@@ -85,6 +94,25 @@ impl fmt::Display for TabChar {
 
 impl Default for OptionArgs {
     fn default() -> Self {
+        let lists = vec![
+            "itemize",
+            "enumerate",
+            "description",
+            "inlineroman",
+            "inventory",
+        ]
+        .into_iter()
+        .map(std::borrow::ToOwned::to_owned)
+        .collect();
+        let verbatims =
+            vec!["verbatim", "Verbatim", "lstlisting", "minted", "comment"]
+                .into_iter()
+                .map(std::borrow::ToOwned::to_owned)
+                .collect();
+        let no_indent_envs = vec!["document"]
+            .into_iter()
+            .map(std::borrow::ToOwned::to_owned)
+            .collect();
         Self {
             check: Some(false),
             print: Some(false),
@@ -97,16 +125,9 @@ impl Default for OptionArgs {
             stdin: Some(false),
             config: None,
             noconfig: Some(false),
-            lists: vec![
-                "itemize",
-                "enumerate",
-                "description",
-                "inlineroman",
-                "inventory",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect(),
+            lists,
+            verbatims,
+            no_indent_envs,
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
@@ -128,16 +149,9 @@ impl OptionArgs {
             stdin: None,
             config: None,
             noconfig: None,
-            lists: vec![
-                "itemize",
-                "enumerate",
-                "description",
-                "inlineroman",
-                "inventory",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect(),
+            lists: vec![],
+            verbatims: vec![],
+            no_indent_envs: vec![],
             verbosity: None,
             arguments: None,
             files: vec![],
@@ -147,9 +161,9 @@ impl OptionArgs {
 
 /// Get all arguments from CLI, config file, and defaults, and merge them
 pub fn get_args() -> Args {
-    let mut args = get_cli_args();
+    let mut args: OptionArgs = get_cli_args(None);
     let config = get_config(&args);
-    let config_args = get_config_args(config);
+    let config_args: Option<OptionArgs> = get_config_args(config);
     if let Some(c) = config_args {
         args.merge(c);
     }
@@ -172,6 +186,8 @@ impl Args {
             stdin: args.stdin.unwrap(),
             config: args.config,
             lists: args.lists,
+            verbatims: args.verbatims,
+            no_indent_envs: args.no_indent_envs,
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
@@ -214,8 +230,10 @@ impl Args {
             exit_code = 1;
         }
 
-        // Remove duplicate list environments
+        // Remove duplicate environments
         self.lists.dedup();
+        self.verbatims.dedup();
+        self.no_indent_envs.dedup();
 
         // Remove duplicate files
         self.files.dedup();
@@ -241,9 +259,30 @@ fn display_arg_line(
     name: &str,
     value: &str,
 ) -> fmt::Result {
-    let width = 20;
+    let width = DISPLAY_HEADER_WIDTH;
     let name_fmt = format!("{}{}", name.bold(), ":");
     write!(f, "\n  {name_fmt:<width$} {value}")?;
+    Ok(())
+}
+
+/// Display an argument field which is a list of strings
+fn display_args_list(
+    v: &[String],
+    name: &str,
+    f: &mut fmt::Formatter,
+) -> fmt::Result {
+    if !v.is_empty() {
+        display_arg_line(f, name, &v[0])?;
+        for x in &v[1..] {
+            write!(
+                f,
+                "\n  {:<width$} {}",
+                "".bold().to_string(),
+                x,
+                width = DISPLAY_HEADER_WIDTH
+            )?;
+        }
+    }
     Ok(())
 }
 
@@ -268,32 +307,10 @@ impl fmt::Display for Args {
             "verbosity",
             &self.verbosity.to_string().to_lowercase(),
         )?;
-
-        if !self.lists.is_empty() {
-            display_arg_line(f, "lists", &self.lists[0])?;
-            for file in &self.lists[1..] {
-                write!(
-                    f,
-                    "\n  {:<width$} {}",
-                    "".bold().to_string(),
-                    file,
-                    width = 20
-                )?;
-            }
-        }
-
-        if !self.files.is_empty() {
-            display_arg_line(f, "files", &self.files[0])?;
-            for file in &self.files[1..] {
-                write!(
-                    f,
-                    "\n  {:<width$} {}",
-                    "".bold().to_string(),
-                    file,
-                    width = 20
-                )?;
-            }
-        }
+        display_args_list(&self.lists, "lists", f)?;
+        display_args_list(&self.verbatims, "lists", f)?;
+        display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
+        display_args_list(&self.files, "files", f)?;
 
         // Do not print `arguments` or `noconfig` fields
         Ok(())
