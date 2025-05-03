@@ -207,16 +207,18 @@ fn test_all() {
 
 #[test]
 #[ignore]
-fn test_one() {
-    let test_name = "cv";
+fn test_subset() {
+    let test_names = ["cv", "lists"];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
+        test_names.iter().any(|t|
         d.as_ref()
             .unwrap()
             .file_name()
             .into_string()
             .unwrap()
-            .contains(test_name)
+            .contains(t)
+        )
     });
     for test_dir in test_dirs {
         pass &= run_tests_in_dir(test_dir.unwrap());
