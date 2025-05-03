@@ -256,7 +256,7 @@ tex-fmt can be run before every git commit using
 ```yaml
 repos:
   - repo: https://github.com/WGUNDERWOOD/tex-fmt
-    rev: v0.5.3
+    rev: v0.5.4
     hooks:
       - id: tex-fmt
 ```
