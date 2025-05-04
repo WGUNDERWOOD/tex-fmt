@@ -32,7 +32,6 @@ fn find_wrap_point(
 
     // TODO better way to calculate this using i index?
     // I think this is actually wrong, need line.len() as using byte indices
-    let mut line_width = 0;
 
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
 
@@ -46,9 +45,8 @@ fn find_wrap_point(
             after_char = true;
         }
         for (i, c) in line.char_indices() {
-            line_width += 1;
             let inside_verb = (verb_start <= i) && (i <= verb_end);
-            if line_width > wrap_boundary && wrap_point.is_some() {
+            if i >= wrap_boundary && wrap_point.is_some() {
                 break;
             }
         if args.wrap_chars.contains(&c) && prev_char != Some('\\') && !inside_verb {
@@ -63,8 +61,7 @@ fn find_wrap_point(
     } else {
         // Wrapping for lines not containing \verb|...|
         for (i, c) in line.char_indices() {
-            line_width += 1;
-            if line_width > wrap_boundary && wrap_point.is_some() {
+            if i >= wrap_boundary && wrap_point.is_some() {
                 break;
             }
             if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
@@ -79,13 +76,10 @@ fn find_wrap_point(
         }
     }
     //dbg!(wrap_point);
-    //line_width = line.char_indices().count();
-    line_width = line.len();
-    dbg!(wrap_point);
-    dbg!(line_width);
+    //dbg!(line_width);
     // Return *byte* index rather than *char* index.
     match wrap_point {
-        Some(p) if p + 1 < line_width => Some(p),
+        Some(p) if p + 1 < line.len() => Some(p),
         _ => None,
     }
 }
