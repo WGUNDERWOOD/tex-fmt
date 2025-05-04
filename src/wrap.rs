@@ -27,11 +27,15 @@ fn find_wrap_point(
     pattern: &Pattern,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
-    let mut after_char = false;
+    let mut after_non_percent = false;
     let mut prev_char: Option<char> = None;
 
     // TODO better way to calculate this using i index?
     // I think this is actually wrong, need line.len() as using byte indices
+
+    // TODO wrap_point should be last byte before the split is inserted
+    // This may not be a valid code point
+    // TODO Rewrite all this logic
 
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
 
@@ -42,19 +46,20 @@ fn find_wrap_point(
             + verb_start
             + 6;
         if verb_start == 0 {
-            after_char = true;
+            after_non_percent = true;
         }
         for (i, c) in line.char_indices() {
             let inside_verb = (verb_start <= i) && (i <= verb_end);
             if i >= wrap_boundary && wrap_point.is_some() {
                 break;
             }
+        // TODO make this faster if only one wrap char provided
         if args.wrap_chars.contains(&c) && prev_char != Some('\\') && !inside_verb {
-                if after_char {
+                if after_non_percent {
                     wrap_point = Some(i);
                 }
             } else if c != '%' {
-                after_char = true;
+                after_non_percent = true;
             }
             prev_char = Some(c);
         }
@@ -65,21 +70,20 @@ fn find_wrap_point(
                 break;
             }
             if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
-                //dbg!(&c);
-                if after_char {
+                if after_non_percent {
                     wrap_point = Some(i);
                 }
             } else if c != '%' {
-                after_char = true;
+                after_non_percent = true;
             }
             prev_char = Some(c);
         }
     }
-    //dbg!(wrap_point);
-    //dbg!(line_width);
+
     // Return *byte* index rather than *char* index.
+    let last_char_index = line.char_indices().rev().next().map(|(i, _)| i).unwrap();
     match wrap_point {
-        Some(p) if p + 1 < line.len() => Some(p),
+        Some(p) if p < last_char_index => Some(p),
         _ => None,
     }
 }
@@ -123,8 +127,6 @@ pub fn apply_wrap<'a>(
         }
     }
 
-    //dbg!(&line);
-    //dbg!(wrap_point);
     wrap_point.map(|p| {
         let this_line = &line[0..=p];
         let next_line_start = comment_index.map_or("", |c| {
@@ -135,7 +137,6 @@ pub fn apply_wrap<'a>(
             }
         });
         let next_line = &line[p+1..];
-        //dbg!(&this_line);
         [this_line, next_line_start, next_line]
     })
 }
