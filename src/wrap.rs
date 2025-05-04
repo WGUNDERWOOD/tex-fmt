@@ -30,6 +30,8 @@ fn find_wrap_point(
     let mut after_char = false;
     let mut prev_char: Option<char> = None;
 
+    // TODO better way to calculate this using i index?
+    // I think this is actually wrong, need line.len() as using byte indices
     let mut line_width = 0;
 
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
@@ -66,6 +68,7 @@ fn find_wrap_point(
                 break;
             }
             if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
+                //dbg!(&c);
                 if after_char {
                     wrap_point = Some(i);
                 }
@@ -75,7 +78,11 @@ fn find_wrap_point(
             prev_char = Some(c);
         }
     }
-    line_width = line.chars().count();
+    //dbg!(wrap_point);
+    //line_width = line.char_indices().count();
+    line_width = line.len();
+    dbg!(wrap_point);
+    dbg!(line_width);
     // Return *byte* index rather than *char* index.
     match wrap_point {
         Some(p) if p + 1 < line_width => Some(p),
@@ -122,6 +129,8 @@ pub fn apply_wrap<'a>(
         }
     }
 
+    //dbg!(&line);
+    //dbg!(wrap_point);
     wrap_point.map(|p| {
         let this_line = &line[0..=p];
         let next_line_start = comment_index.map_or("", |c| {
@@ -132,6 +141,7 @@ pub fn apply_wrap<'a>(
             }
         });
         let next_line = &line[p+1..];
+        //dbg!(&this_line);
         [this_line, next_line_start, next_line]
     })
 }
