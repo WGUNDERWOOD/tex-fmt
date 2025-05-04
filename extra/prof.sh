@@ -7,6 +7,8 @@ BIN="../target/release/tex-fmt"
 
 mv "$DIR"/*/source/* "$DIR"
 rm "$DIR"/*/target/*
+find "$DIR" -name "*.toml" -delete
+find "$DIR" -name "*.txt" -delete
 find "$DIR"/* -empty -type d -delete
 find "$DIR" -empty -type d -delete
 

@@ -5,15 +5,21 @@ use merge::Merge;
 use std::path::PathBuf;
 use wasm_bindgen::prelude::*;
 
-use crate::args::*;
-use crate::config::*;
-use crate::format::*;
-use crate::logging::*;
+use crate::args::{Args, OptionArgs};
+use crate::config::get_config_args;
+use crate::format::format_file;
+use crate::logging::{format_logs, Log};
 
+/// Main function for WASM interface with JS
+///
+/// # Panics
+///
+/// This function panics if the config cannot be parsed
 #[wasm_bindgen]
+#[must_use]
 pub fn main(text: &str, config: &str) -> JsValue {
     // Get args
-    let config = Some((PathBuf::new(), "".to_string(), config.to_string()));
+    let config = Some((PathBuf::new(), String::new(), config.to_string()));
     let mut args: OptionArgs = get_config_args(config).unwrap();
     args.merge(OptionArgs::default());
     let mut args = Args::from(args);

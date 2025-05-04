@@ -1,6 +1,6 @@
 //! Read arguments from a config file
 
-use crate::args::*;
+use crate::args::{OptionArgs, TabChar};
 use dirs::config_dir;
 use log::LevelFilter;
 use std::env::current_dir;
@@ -16,24 +16,24 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     // Do not read config file
     if args.noconfig == Some(true) {
         return None;
-    };
+    }
     // Named path passed as cli arg
     if args.config.is_some() {
         return args.config.clone();
-    };
+    }
     // Config file in current directory
     if let Ok(mut config) = current_dir() {
         config.push(CONFIG);
         if config.exists() {
             return Some(config);
-        };
+        }
     }
     // Config file at git repository root
     if let Some(mut config) = find_git_root() {
         config.push(CONFIG);
         if config.exists() {
             return Some(config);
-        };
+        }
     }
     // Config file in user home config directory
     if let Some(mut config) = config_dir() {
@@ -41,7 +41,7 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
         config.push(CONFIG);
         if config.exists() {
             return Some(config);
-        };
+        }
     }
     None
 }
@@ -66,12 +66,14 @@ fn find_git_root() -> Option<PathBuf> {
 }
 
 /// Read content from a config file path
+///
+/// # Panics
+///
+/// This function panics if the config file cannot be read.
+#[must_use]
 pub fn get_config(args: &OptionArgs) -> Option<(PathBuf, String, String)> {
     let config_path = resolve_config_path(args);
-    #[allow(clippy::question_mark)]
-    if config_path.is_none() {
-        return None;
-    };
+    config_path.as_ref()?;
     let config_path_string = config_path
         .clone()
         .unwrap()
@@ -102,13 +104,15 @@ fn string_to_char(s: &str) -> char {
 }
 
 /// Parse arguments from a config file path
+///
+/// # Panics
+///
+/// This function panics if the config file cannot be parsed into TOML
+#[must_use]
 pub fn get_config_args(
     config: Option<(PathBuf, String, String)>,
 ) -> Option<OptionArgs> {
-    #[allow(clippy::question_mark)]
-    if config.is_none() {
-        return None;
-    }
+    config.as_ref()?;
     let (config_path, config_path_string, config) = config.unwrap();
     let config = config.parse::<Table>().unwrap_or_else(|_| {
         panic!("Failed to read config file at {config_path_string}")

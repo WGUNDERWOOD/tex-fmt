@@ -1,9 +1,10 @@
 //! Utilities for wrapping long lines
 
-use crate::args::*;
-use crate::comments::*;
-use crate::format::*;
-use crate::logging::*;
+use crate::args::Args;
+use crate::comments::find_comment_index;
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
+use crate::regexes::VERB;
 use log::Level;
 use log::LevelFilter;
 
@@ -13,6 +14,7 @@ pub const TEXT_LINE_START: &str = "";
 pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
+#[must_use]
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
@@ -22,6 +24,7 @@ fn find_wrap_point(
     line: &str,
     indent_length: usize,
     args: &Args,
+    pattern: &Pattern,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut after_char = false;
@@ -31,23 +34,49 @@ fn find_wrap_point(
 
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
 
-    // Return *byte* index rather than *char* index.
-    for (i, c) in line.char_indices() {
-        line_width += 1;
-        if line_width > wrap_boundary && wrap_point.is_some() {
-            break;
-        }
-        // TODO make this faster by checking if wrap_chars is a singleton
-        if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
-            if after_char {
-                wrap_point = Some(i + 1);
-            }
-        } else if c != '%' {
+    if pattern.contains_verb && line.contains(VERB) {
+        // Special wrapping for lines containing \verb|...|
+        let verb_start = line.find(VERB).unwrap();
+        let verb_end = line[verb_start + 6..].find('|').unwrap_or(verb_start)
+            + verb_start
+            + 6;
+        if verb_start == 0 {
             after_char = true;
         }
-        prev_char = Some(c);
+        for (i, c) in line.char_indices() {
+            line_width += 1;
+            let inside_verb = (verb_start <= i) && (i <= verb_end);
+            if line_width > wrap_boundary && wrap_point.is_some() {
+                break;
+            }
+        if args.wrap_chars.contains(&c) && prev_char != Some('\\') && !inside_verb {
+                if after_char {
+                    wrap_point = Some(i);
+                }
+            } else if c != '%' {
+                after_char = true;
+            }
+            prev_char = Some(c);
+        }
+    } else {
+        // Wrapping for lines not containing \verb|...|
+        for (i, c) in line.char_indices() {
+            line_width += 1;
+            if line_width > wrap_boundary && wrap_point.is_some() {
+                break;
+            }
+            if c == ' ' && prev_char != Some('\\') {
+                if after_char {
+                    wrap_point = Some(i);
+                }
+            } else if c != '%' {
+                after_char = true;
+            }
+            prev_char = Some(c);
+        }
     }
     line_width = line.chars().count();
+    // Return *byte* index rather than *char* index.
     match wrap_point {
         Some(p) if p < line_width => Some(p),
         _ => None,
@@ -75,7 +104,7 @@ pub fn apply_wrap<'a>(
             "Wrapping long line.",
         );
     }
-    let wrap_point = find_wrap_point(line, indent_length, args);
+    let wrap_point = find_wrap_point(line, indent_length, args, pattern);
     let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
@@ -91,7 +120,7 @@ pub fn apply_wrap<'a>(
                 "Line cannot be wrapped.",
             );
         }
-    };
+    }
 
     wrap_point.map(|p| {
         let this_line = &line[0..p];

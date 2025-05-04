@@ -1,7 +1,7 @@
 //! Utilities for ignoring verbatim environments
 
-use crate::format::*;
-use crate::logging::*;
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
 use log::Level::Warn;
 
 /// Information on the verbatim state of a line
@@ -15,6 +15,7 @@ pub struct Verbatim {
 
 impl Verbatim {
     /// Construct a new verbatim state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             actual: 0,

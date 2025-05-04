@@ -1,0 +1,33 @@
+\begin{document}
+
+% Do not break a line inside inline verb environment
+
+\verb|code code code code code code code code code code code code code code code code|
+
+% Ok to break a line before or after inline verb environment
+
+Some words in a sentence
+\verb|code code code code code code code code code code code|
+
+\verb|code code code code code code code code code code code| some
+words in a sentence
+
+% Indenting should be as usual
+
+\begin{itemize}
+  \item
+    \verb|code code code code code code code code code code code code code code code|
+\end{itemize}
+
+% Do not split \begin{environment} onto a new line if inside \verb|...|
+
+\verb|\end{description}|
+
+\verb|\begin{description}|
+
+% This should not affect line breaking
+
+Some words in a long sentence which could be broken before the verb
+part of this line \verb|\begin{description}|
+
+\end{document}
