@@ -318,7 +318,7 @@ impl fmt::Display for Args {
             &self.verbosity.to_string().to_lowercase(),
         )?;
         display_args_list(&self.lists, "lists", f)?;
-        display_args_list(&self.verbatims, "lists", f)?;
+        display_args_list(&self.verbatims, "verbatims", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
         display_args_list(&self.files, "files", f)?;
 
