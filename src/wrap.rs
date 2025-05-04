@@ -65,7 +65,7 @@ fn find_wrap_point(
             if line_width > wrap_boundary && wrap_point.is_some() {
                 break;
             }
-            if c == ' ' && prev_char != Some('\\') {
+            if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
                 if after_char {
                     wrap_point = Some(i);
                 }
@@ -78,7 +78,7 @@ fn find_wrap_point(
     line_width = line.chars().count();
     // Return *byte* index rather than *char* index.
     match wrap_point {
-        Some(p) if p < line_width => Some(p),
+        Some(p) if p + 1 < line_width => Some(p),
         _ => None,
     }
 }
@@ -123,7 +123,7 @@ pub fn apply_wrap<'a>(
     }
 
     wrap_point.map(|p| {
-        let this_line = &line[0..p];
+        let this_line = &line[0..=p];
         let next_line_start = comment_index.map_or("", |c| {
             if p > c {
                 COMMENT_LINE_START
@@ -131,7 +131,7 @@ pub fn apply_wrap<'a>(
                 TEXT_LINE_START
             }
         });
-        let next_line = &line[p..];
+        let next_line = &line[p+1..];
         [this_line, next_line_start, next_line]
     })
 }
