@@ -1,20 +1,24 @@
 //! Core methodology for formatting a file
 
-use crate::args::*;
-use crate::ignore::*;
-use crate::indent::*;
-use crate::logging::*;
-use crate::read::*;
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
-use crate::subs::*;
-use crate::verbatim::*;
-use crate::wrap::*;
-use crate::write::*;
+use crate::args::{Args, TabChar};
+use crate::ignore::{get_ignore, Ignore};
+use crate::indent::{apply_indent, calculate_indent, Indent};
+use crate::logging::{record_file_log, Log};
+use crate::read::{read, read_stdin};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERB};
+use crate::subs;
+use crate::verbatim::{get_verbatim, Verbatim};
+use crate::wrap::{apply_wrap, needs_wrap};
+use crate::write::process_output;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
 
 /// Central function to format a file
+///
+/// # Panics
+///
+/// This function panics upon an unrecoverable formatting error
 pub fn format_file(
     old_text: &str,
     file: &str,
@@ -69,10 +73,10 @@ pub fn format_file(
             ) {
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.
-                if needs_split(&line, &pattern) {
+                if subs::needs_split(&line, &pattern) {
                     // Split the line into two...
                     let (this_line, next_line) =
-                        split_line(&line, &temp_state, file, args, logs);
+                        subs::split_line(&line, &temp_state, file, args, logs);
                     // ... and queue the second part for formatting.
                     queue.push((linum_old, next_line.to_string()));
                     line = this_line.to_string();
@@ -146,8 +150,8 @@ pub fn format_file(
         record_file_log(logs, Warn, file, &msg);
     }
 
-    new_text = remove_trailing_spaces(&new_text);
-    new_text = remove_trailing_blank_lines(&new_text);
+    new_text = subs::remove_trailing_spaces(&new_text);
+    new_text = subs::remove_trailing_blank_lines(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
     new_text
 }
@@ -189,13 +193,13 @@ fn set_ignore_and_report(
 /// Cleans the given text by removing extra line breaks and trailing spaces,
 /// and also tabs if they shouldn't be used.
 fn clean_text(text: &str, args: &Args) -> String {
-    let mut text = remove_extra_newlines(text);
+    let mut text = subs::remove_extra_newlines(text);
 
     if args.tabchar != TabChar::Tab {
-        text = remove_tabs(&text, args);
+        text = subs::remove_tabs(&text, args);
     }
 
-    text = remove_trailing_spaces(&text);
+    text = subs::remove_trailing_spaces(&text);
 
     text
 }
@@ -219,6 +223,7 @@ pub struct State {
 
 impl State {
     /// Construct a new default state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             linum_old: 1,
@@ -238,6 +243,7 @@ impl Default for State {
 }
 
 /// Record whether a line contains certain patterns to avoid recomputing
+#[allow(clippy::struct_excessive_bools)]
 pub struct Pattern {
     /// Whether a begin environment pattern is present
     pub contains_env_begin: bool,
@@ -249,10 +255,13 @@ pub struct Pattern {
     pub contains_splitting: bool,
     /// Whether a comment is present
     pub contains_comment: bool,
+    /// Whether a verb environment is present
+    pub contains_verb: bool,
 }
 
 impl Pattern {
     /// Check if a string contains patterns
+    #[must_use]
     pub fn new(s: &str) -> Self {
         // If splitting does not match, most patterns are not present
         if RE_SPLITTING.is_match(s) {
@@ -262,6 +271,7 @@ impl Pattern {
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
                 contains_comment: s.contains('%'),
+                contains_verb: s.contains(VERB),
             }
         } else {
             Self {
@@ -270,6 +280,7 @@ impl Pattern {
                 contains_item: false,
                 contains_splitting: false,
                 contains_comment: s.contains('%'),
+                contains_verb: s.contains(VERB),
             }
         }
     }

@@ -12,8 +12,8 @@ use std::path::PathBuf;
 fn test_file(
     source_file: &str,
     target_file: &str,
-    config_file: &Option<PathBuf>,
-    cli_file: &Option<PathBuf>,
+    config_file: Option<&PathBuf>,
+    cli_file: Option<&PathBuf>,
 ) -> bool {
     // Get arguments from CLI file
     let mut args = match cli_file {
@@ -30,7 +30,7 @@ fn test_file(
     };
 
     // Merge arguments from config file
-    args.config = config_file.clone();
+    args.config = config_file.cloned();
     let config = get_config(&args);
     let config_args = get_config_args(config);
     if let Some(c) = config_args {
@@ -73,7 +73,7 @@ fn test_file(
                     format!("+ {change}").green().bold(),
                 ),
                 ChangeTag::Equal => {}
-            };
+            }
         }
     }
 
@@ -110,18 +110,17 @@ fn get_cli_file(dir: &fs::DirEntry) -> Option<PathBuf> {
 fn test_source_target(
     source_file: &str,
     target_file: &str,
-    config_file: &Option<PathBuf>,
-    cli_file: &Option<PathBuf>,
+    config_file: Option<&PathBuf>,
+    cli_file: Option<&PathBuf>,
 ) -> bool {
     let mut pass = true;
     if !test_file(target_file, target_file, config_file, cli_file) {
         print!(
             "{}",
             format!(
-                "Config file: {:?}\n\
-            CLI file: {:?}\n\
-            ",
-                config_file, cli_file
+                "Config file: {config_file:?}\n\
+            CLI file: {cli_file:?}\n\
+            "
             )
             .yellow()
             .bold()
@@ -133,10 +132,9 @@ fn test_source_target(
         print!(
             "{}",
             format!(
-                "Config file: {:?}\n\
-            CLI file: {:?}\n\
-            ",
-                config_file, cli_file
+                "Config file: {config_file:?}\n\
+            CLI file: {cli_file:?}\n\
+            "
             )
             .yellow()
             .bold()
@@ -146,56 +144,84 @@ fn test_source_target(
     pass
 }
 
-#[test]
-fn test() {
+fn run_tests_in_dir(test_dir: fs::DirEntry) -> bool {
     let mut pass = true;
-    let test_dirs = fs::read_dir("./tests/").unwrap();
-    for test_dir in test_dirs {
-        let test_dir = test_dir.unwrap();
-        let config_file = get_config_file(&test_dir);
-        let cli_file = get_cli_file(&test_dir);
-        let source_dir = test_dir.path().join("source/");
-        let source_files = read_files_from_dir(&source_dir);
-        let target_dir = test_dir.path().join("target/");
-        let target_files = read_files_from_dir(&target_dir);
+    let config_file = get_config_file(&test_dir);
+    let cli_file = get_cli_file(&test_dir);
+    let source_dir = test_dir.path().join("source/");
+    let source_files = read_files_from_dir(&source_dir);
+    let target_dir = test_dir.path().join("target/");
+    let target_files = read_files_from_dir(&target_dir);
 
-        // Source and target file names should match
-        if source_files != target_files {
-            panic!("Source and target file names differ for {:?}", test_dir)
-        }
+    // Source and target file names should match
+    #[allow(clippy::manual_assert)]
+    if source_files != target_files {
+        panic!("Source and target file names differ for {test_dir:?}")
+    }
 
-        // Test file formatting
-        for file in source_files {
-            let source_file = test_dir.path().join("source").join(file.clone());
-            let source_file = source_file.to_str().unwrap();
-            let target_file = test_dir.path().join("target").join(file.clone());
-            let target_file = target_file.to_str().unwrap();
+    // Test file formatting
+    for file in source_files {
+        let source_file = test_dir.path().join("source").join(file.clone());
+        let source_file = source_file.to_str().unwrap();
+        let target_file = test_dir.path().join("target").join(file.clone());
+        let target_file = target_file.to_str().unwrap();
 
-            // If both config and cli exist, either alone should work
-            if config_file.is_some() && cli_file.is_some() {
-                pass &= test_source_target(
-                    source_file,
-                    target_file,
-                    &config_file,
-                    &None,
-                );
-                pass &= test_source_target(
-                    source_file,
-                    target_file,
-                    &None,
-                    &cli_file,
-                );
-            }
-
-            // Pass both config and cli, even if one or more are None
+        // If both config and cli exist, either alone should work
+        if config_file.is_some() && cli_file.is_some() {
             pass &= test_source_target(
                 source_file,
                 target_file,
-                &config_file,
-                &cli_file,
+                config_file.as_ref(),
+                None,
+            );
+            pass &= test_source_target(
+                source_file,
+                target_file,
+                None,
+                cli_file.as_ref(),
             );
         }
+
+        // Pass both config and cli, even if one or more are None
+        pass &= test_source_target(
+            source_file,
+            target_file,
+            config_file.as_ref(),
+            cli_file.as_ref(),
+        );
     }
 
-    assert!(pass)
+    pass
+}
+
+#[test]
+fn test_all() {
+    let mut pass = true;
+    let test_dirs = fs::read_dir("./tests/").unwrap();
+    for test_dir in test_dirs {
+        pass &= run_tests_in_dir(test_dir.unwrap());
+    }
+
+    assert!(pass);
+}
+
+#[test]
+#[ignore]
+fn test_subset() {
+    let test_names = ["cv", "lists"];
+    let mut pass = true;
+    let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
+        test_names.iter().any(|t| {
+            d.as_ref()
+                .unwrap()
+                .file_name()
+                .into_string()
+                .unwrap()
+                .contains(t)
+        })
+    });
+    for test_dir in test_dirs {
+        pass &= run_tests_in_dir(test_dir.unwrap());
+    }
+    assert!(pass);
 }

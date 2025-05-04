@@ -22,9 +22,11 @@
 ** Publish to crates.io with cargo publish
 *** Pass --allow-dirty if notes.org has changed
 ** Publish GitHub release with notes from NEWS.md
+*** No need to add a title
 *** GitHub binaries published automatically with actions
 ** Publish in nixpkgs
-*** Check out master branch of nixpkgs fork
+*** Go to nixpkgs fork directory
+*** git checkout master
 *** git fetch upstream
 *** git rebase upstream/master
 *** git fetch

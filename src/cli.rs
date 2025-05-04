@@ -1,6 +1,6 @@
 //! Functionality to parse CLI arguments
 
-use crate::args::*;
+use crate::args::{OptionArgs, TabChar};
 use clap::ArgMatches;
 use clap_complete::{generate, Shell};
 use clap_mangen::Man;
@@ -20,6 +20,10 @@ fn get_flag(arg_matches: &ArgMatches, flag: &str) -> Option<bool> {
 }
 
 /// Parse CLI arguments into `OptionArgs` struct
+///
+/// # Panics
+///
+/// This function panics if the man page cannot be written.
 pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
     let mut command = get_cli_command();
     let arg_matches = match matches {

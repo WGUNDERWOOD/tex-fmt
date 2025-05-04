@@ -1,8 +1,8 @@
 //! Main arguments
 
-use crate::cli::*;
-use crate::config::*;
-use crate::logging::*;
+use crate::cli::get_cli_args;
+use crate::config::{get_config, get_config_args};
+use crate::logging::{record_file_log, Log};
 use colored::Colorize;
 use log::Level;
 use log::LevelFilter;
@@ -14,6 +14,7 @@ const DISPLAY_HEADER_WIDTH: usize = 24;
 
 /// Arguments passed to tex-fmt
 #[derive(Debug)]
+#[allow(clippy::struct_excessive_bools)]
 pub struct Args {
     /// Check formatting, do not modify files
     pub check: bool,
@@ -142,6 +143,7 @@ impl Default for OptionArgs {
 }
 
 impl OptionArgs {
+    #[must_use]
     pub fn new() -> Self {
         Self {
             check: None,
@@ -167,6 +169,7 @@ impl OptionArgs {
 }
 
 /// Get all arguments from CLI, config file, and defaults, and merge them
+#[must_use]
 pub fn get_args() -> Args {
     let mut args: OptionArgs = get_cli_args(None);
     let config = get_config(&args);
@@ -180,6 +183,13 @@ pub fn get_args() -> Args {
 
 impl Args {
     /// Construct concrete arguments from optional arguments
+    ///
+    /// # Panics
+    ///
+    /// This function panics when called on `OptionArgs` with `None` fields.
+    /// However this should never happen as merging in `OptionArgs::default()`
+    /// should overwrite any `None` fields.
+    #[must_use]
     pub fn from(args: OptionArgs) -> Self {
         Self {
             check: args.check.unwrap(),

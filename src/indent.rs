@@ -1,10 +1,10 @@
 //! Utilities for indenting source lines
 
-use crate::args::*;
-use crate::comments::*;
-use crate::format::*;
-use crate::logging::*;
-use crate::regexes::*;
+use crate::args::Args;
+use crate::comments::{find_comment_index, remove_comment};
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, VERB};
 use core::cmp::max;
 use log::Level;
 use log::LevelFilter;
@@ -25,6 +25,7 @@ pub struct Indent {
 
 impl Indent {
     /// Construct a new indentation state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             actual: 0,
@@ -48,7 +49,12 @@ fn get_diff(
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
 ) -> i8 {
-    // indent for environments
+    // Do not indent if line contains \verb|...|
+    if pattern.contains_verb && line.contains(VERB) {
+        return 0;
+    }
+
+    // Indentation for environments
     let mut diff: i8 = 0;
     if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
         if no_indent_envs_begin.iter().any(|r| line.contains(r)) {
@@ -62,9 +68,9 @@ fn get_diff(
         }
         diff -= 1;
         diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
-    };
+    }
 
-    // indent for delimiters
+    // Indentation for delimiters
     diff += line
         .chars()
         .map(|x| i8::from(OPENS.contains(&x)) - i8::from(CLOSES.contains(&x)))
@@ -87,22 +93,29 @@ fn get_back(
     }
     let mut back: i8 = 0;
 
+    // Don't apply any indenting if a \verb|...| is present
+    if pattern.contains_verb && line.contains(VERB) {
+        return 0;
+    }
+
+    // Calculate dedentation for environments
     if pattern.contains_env_end && line.contains(ENV_END) {
+        // Some environments are not indented
         if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
         }
-        // list environments get double indents for indenting items
+        // List environments get double indents for indenting items
         for r in lists_end {
             if line.contains(r) {
                 return 2;
-            };
+            }
         }
-        // other environments get single indents
+        // Other environments get single indents
         back = 1;
     } else if pattern.contains_item && line.contains(ITEM) {
-        // deindent items to make the rest of item environment appear indented
+        // Deindent items to make the rest of item environment appear indented
         back += 1;
-    };
+    }
 
     // Dedent delimiters
     let mut cumul: i8 = back;
@@ -219,6 +232,7 @@ pub fn calculate_indent(
 }
 
 /// Apply the given indentation to a line
+#[must_use]
 pub fn apply_indent(
     line: &str,
     indent: &Indent,
