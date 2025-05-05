@@ -97,9 +97,10 @@ fn parse_array_string(name: &str, config: &Table) -> Vec<String> {
 fn string_to_char(s: &str) -> char {
     let mut chars = s.chars();
     let c = chars.next().expect("String is empty");
-    if chars.next().is_some() {
-        panic!("String contains more than one character");
-    }
+    assert!(
+        chars.next().is_none(),
+        "String contains more than one character",
+    );
     c
 }
 
