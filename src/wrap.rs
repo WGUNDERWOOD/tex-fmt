@@ -19,7 +19,46 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
-/// Find the best place to break a long line
+fn is_wrap_point(
+    i: usize,
+    c: char,
+    prev_c: Option<char>,
+    inside_verb: bool,
+    line_len: usize,
+    args: &Args,
+) -> bool {
+    // TODO make this faster if only one wrap char provided
+    // c must be a valid breaking character
+    args.wrap_chars.contains(&c)
+        // Must not be preceded by '\'
+        && prev_c != Some('\\')
+        // Do not break inside a \verb|...|
+        && !inside_verb
+        // No point breaking at the end of the line
+        && (i + 1 < line_len)
+}
+
+fn get_verb_end(verb_start: Option<usize>, line: &str) -> Option<usize> {
+    let verb_len = 6;
+    verb_start
+        .map(|v| line[v + verb_len..].find('|').unwrap_or(v) + v + verb_len)
+}
+
+fn is_inside_verb(
+    i: usize,
+    contains_verb: bool,
+    verb_start: Option<usize>,
+    verb_end: Option<usize>,
+) -> bool {
+    if contains_verb {
+        (verb_start.unwrap() <= i) && (i <= verb_end.unwrap())
+    } else {
+        false
+    }
+}
+
+/// Find the best place to break a long line.
+/// Provided as a *byte* index, not a *char* index.
 fn find_wrap_point(
     line: &str,
     indent_length: usize,
@@ -27,65 +66,36 @@ fn find_wrap_point(
     pattern: &Pattern,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
-    let mut after_non_percent = false;
-    let mut prev_char: Option<char> = None;
-
-    // TODO better way to calculate this using i index?
-    // I think this is actually wrong, need line.len() as using byte indices
-
-    // TODO wrap_point should be last byte before the split is inserted
-    // This may not be a valid code point
-    // TODO Rewrite all this logic
-
+    let mut prev_c: Option<char> = None;
+    let contains_verb = pattern.contains_verb && line.contains(VERB);
+    let verb_start: Option<usize> =
+        contains_verb.then(|| line.find(VERB).unwrap());
+    let verb_end = get_verb_end(verb_start, line);
+    let mut after_non_percent = verb_start == Some(0);
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
+    let line_len = line.len();
 
-    if pattern.contains_verb && line.contains(VERB) {
+    for (i, c) in line.char_indices() {
+        if i >= wrap_boundary && wrap_point.is_some() {
+            break;
+        }
         // Special wrapping for lines containing \verb|...|
-        let verb_start = line.find(VERB).unwrap();
-        let verb_end = line[verb_start + 6..].find('|').unwrap_or(verb_start)
-            + verb_start
-            + 6;
-        if verb_start == 0 {
+        let inside_verb =
+            is_inside_verb(i, contains_verb, verb_start, verb_end);
+        if is_wrap_point(i, c, prev_c, inside_verb, line_len, args) {
+            if after_non_percent {
+                // Get index of the byte after which
+                // line break will be inserted.
+                // Note this may not be a valid char index.
+                wrap_point = Some(i + c.len_utf8() - 1);
+            }
+        } else if c != '%' {
             after_non_percent = true;
         }
-        for (i, c) in line.char_indices() {
-            let inside_verb = (verb_start <= i) && (i <= verb_end);
-            if i >= wrap_boundary && wrap_point.is_some() {
-                break;
-            }
-        // TODO make this faster if only one wrap char provided
-        if args.wrap_chars.contains(&c) && prev_char != Some('\\') && !inside_verb {
-                if after_non_percent {
-                    wrap_point = Some(i);
-                }
-            } else if c != '%' {
-                after_non_percent = true;
-            }
-            prev_char = Some(c);
-        }
-    } else {
-        // Wrapping for lines not containing \verb|...|
-        for (i, c) in line.char_indices() {
-            if i >= wrap_boundary && wrap_point.is_some() {
-                break;
-            }
-            if args.wrap_chars.contains(&c) && prev_char != Some('\\') {
-                if after_non_percent {
-                    wrap_point = Some(i);
-                }
-            } else if c != '%' {
-                after_non_percent = true;
-            }
-            prev_char = Some(c);
-        }
+        prev_c = Some(c);
     }
 
-    // Return *byte* index rather than *char* index.
-    let last_char_index = line.char_indices().rev().next().map(|(i, _)| i).unwrap();
-    match wrap_point {
-        Some(p) if p < last_char_index => Some(p),
-        _ => None,
-    }
+    wrap_point
 }
 
 /// Wrap a long line into a short prefix and a suffix
@@ -136,7 +146,7 @@ pub fn apply_wrap<'a>(
                 TEXT_LINE_START
             }
         });
-        let next_line = &line[p+1..];
+        let next_line = &line[p + 1..];
         [this_line, next_line_start, next_line]
     })
 }
