@@ -27,15 +27,8 @@ fn is_wrap_point(
     line_len: usize,
     args: &Args,
 ) -> bool {
-
-    let c_is_wrap_char = if args.only_wrap_at_space {
-        c == ' '
-    } else {
-        args.wrap_chars.contains(&c)
-    };
-
-    // c must be a valid wrapping character
-    c_is_wrap_char
+    // Character c must be a valid wrapping character
+    args.wrap_chars.contains(&c)
         // Must not be preceded by '\'
         && prev_c != Some('\\')
         // Do not break inside a \verb|...|
