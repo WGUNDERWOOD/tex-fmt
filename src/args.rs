@@ -306,7 +306,7 @@ fn display_args_list(
 impl fmt::Display for Args {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let wrap_chars: Vec<String> =
-            self.wrap_chars.iter().map(|c| c.to_string()).collect();
+            self.wrap_chars.iter().map(std::string::ToString::to_string).collect();
         write!(f, "{}", "tex-fmt".magenta().bold())?;
         display_arg_line(f, "check", &self.check.to_string())?;
         display_arg_line(f, "print", &self.print.to_string())?;
