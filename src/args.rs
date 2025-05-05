@@ -44,6 +44,8 @@ pub struct Args {
     pub no_indent_envs: Vec<String>,
     /// Characters after which lines can be wrapped
     pub wrap_chars: Vec<char>,
+    /// If wrap_chars = [' '], use faster wrapping logic
+    pub only_wrap_at_space: bool,
     /// Verbosity level for log messages
     pub verbosity: LevelFilter,
     /// Print arguments and exit
@@ -181,6 +183,10 @@ pub fn get_args() -> Args {
     Args::from(args)
 }
 
+fn is_only_wrap_at_space(wrap_chars: &[char]) -> bool {
+    wrap_chars == [' ']
+}
+
 impl Args {
     /// Construct concrete arguments from optional arguments
     ///
@@ -191,6 +197,7 @@ impl Args {
     /// should overwrite any `None` fields.
     #[must_use]
     pub fn from(args: OptionArgs) -> Self {
+        let only_wrap_at_space = is_only_wrap_at_space(&args.wrap_chars);
         Self {
             check: args.check.unwrap(),
             print: args.print.unwrap(),
@@ -206,6 +213,7 @@ impl Args {
             verbatims: args.verbatims,
             no_indent_envs: args.no_indent_envs,
             wrap_chars: args.wrap_chars,
+            only_wrap_at_space,
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
