@@ -16,6 +16,8 @@ pub const COMMENT_LINE_START: &str = "% ";
 /// Check if a line needs wrapping
 #[must_use]
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
+    // TODO this should be done with bytes too?
+    // Or maybe everything should use char length not byte length?
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
