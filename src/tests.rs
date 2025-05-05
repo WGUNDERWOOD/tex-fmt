@@ -209,11 +209,10 @@ fn test_all() {
 #[ignore]
 fn test_subset() {
     let test_names = [
-        "wrap_chars",
+        //"wrap_chars",
         //"cv",
         //"short_document",
         "wrap",
-        //"masters_dissertation",
     ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
