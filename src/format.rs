@@ -71,9 +71,8 @@ pub fn format_file(
                 &verbatims_begin,
                 &verbatims_end,
             ) {
-
                 // Remove double spaces
-                line = subs::remove_double_spaces(&line);
+                line = subs::remove_double_spaces(&line, &pattern);
 
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.

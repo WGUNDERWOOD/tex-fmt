@@ -5,6 +5,7 @@ use crate::comments::find_comment_index;
 use crate::format::{Pattern, State};
 use crate::logging::{record_line_log, Log};
 use crate::regexes;
+use crate::wrap::get_verb_end;
 use crate::LINE_END;
 use log::Level;
 use log::LevelFilter;
@@ -27,8 +28,22 @@ pub fn remove_tabs(text: &str, args: &Args) -> String {
 
 /// Remove double spaces
 #[must_use]
-pub fn remove_double_spaces(text: &str) -> String {
-    regexes::RE_DOUBLE_SPACE.replace_all(text, " ").to_string()
+pub fn remove_double_spaces(line: &str, pattern: &Pattern) -> String {
+    let contains_verb = pattern.contains_verb && line.contains(regexes::VERB);
+    if contains_verb {
+        let verb_start = line.find(regexes::VERB).unwrap();
+        if let Some(verb_end) = get_verb_end(Some(verb_start), line) {
+            let before_verb =
+                regexes::RE_DOUBLE_SPACE.replace_all(&line[..verb_start], " ");
+            let inside_verb = &line[verb_start..verb_end];
+            let after_verb =
+                regexes::RE_DOUBLE_SPACE.replace_all(&line[verb_end..], " ");
+            return format!("{before_verb}{inside_verb}{after_verb}")
+        }
+    } else {
+        return regexes::RE_DOUBLE_SPACE.replace_all(line, " ").to_string();
+    };
+    line.to_string()
 }
 
 /// Remove trailing spaces from line endings
