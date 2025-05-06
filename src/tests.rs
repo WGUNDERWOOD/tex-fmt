@@ -209,13 +209,17 @@ fn test_all() {
 #[ignore]
 fn test_subset() {
     let test_names = [
-        //"cv",
-        //"lists",
+        "brackets",
+        "comments",
+        "cv",
+        "lists",
         //"masters_dissertation",
-        //"phd_dissertation",
-        //"short_document",
+        "phd_dissertation",
+        "short_document",
+        "verb",
+        "verbatim",
         "wrap",
-        //"wrap_chars",
+        "wrap_chars",
     ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
