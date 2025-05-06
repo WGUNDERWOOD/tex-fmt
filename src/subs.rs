@@ -27,6 +27,11 @@ pub fn remove_tabs(text: &str, args: &Args) -> String {
 }
 
 /// Remove double spaces
+///
+/// # Panics
+///
+/// Should not panic as the regex match is unwrapped after checking existence
+/// of a valid match.
 #[must_use]
 pub fn remove_double_spaces(line: &str, pattern: &Pattern) -> String {
     let contains_verb = pattern.contains_verb && line.contains(regexes::VERB);
@@ -42,7 +47,7 @@ pub fn remove_double_spaces(line: &str, pattern: &Pattern) -> String {
         }
     } else {
         return regexes::RE_DOUBLE_SPACE.replace_all(line, " ").to_string();
-    };
+    }
     line.to_string()
 }
 

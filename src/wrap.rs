@@ -37,6 +37,7 @@ fn is_wrap_point(
         && (i + 1 < line_len)
 }
 
+#[must_use]
 pub fn get_verb_end(verb_start: Option<usize>, line: &str) -> Option<usize> {
     let verb_len = 6;
     verb_start

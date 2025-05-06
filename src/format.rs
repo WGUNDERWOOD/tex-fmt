@@ -19,6 +19,7 @@ use std::iter::zip;
 /// # Panics
 ///
 /// This function panics upon an unrecoverable formatting error
+#[allow(clippy::too_many_lines)]
 pub fn format_file(
     old_text: &str,
     file: &str,
@@ -205,7 +206,7 @@ fn set_ignore_and_report(
 /// Cleans the given text by removing extra line breaks and trailing spaces,
 /// and also tabs if they shouldn't be used.
 fn clean_text(text: &str, args: &Args) -> String {
-    let mut text = subs::remove_extra_newlines(&text);
+    let mut text = subs::remove_extra_newlines(text);
 
     if args.tabchar != TabChar::Tab {
         text = subs::remove_tabs(&text, args);
