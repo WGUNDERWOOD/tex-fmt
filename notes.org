@@ -69,24 +69,24 @@
 **** Reads from this path and parses to a toml Table
 **** Values are then assigned to an OptionArgs struct
 * Process for adding new arguments
-** DONE General
-*** DONE args.rs
-**** DONE Update Args struct if core argument
-**** DONE Update OptionArgs struct
-**** DONE Update Args resolve() if extra logic necessary
-**** DONE Update Args fmt::Display if core argument
-** DONE CLI arguments
-*** DONE command.rs
-**** DONE Update clap command definition
-*** DONE cli.rs
-**** DONE Update get_cli_args() and add extra logic if needed
-** DONE Config arguments
-*** DONE config.rs
-**** DONE Update get_config_args()
-** DONE Fix compiler warnings
-** DONE Implement behaviour
-** TODO Add tests
-** TODO Update README
-*** TODO CLI options
-*** TODO Config options
-*** TODO Usage section if commonly used option
+** General
+*** args.rs
+**** Update Args struct if core argument
+**** Update OptionArgs struct
+**** Update Args resolve() if extra logic necessary
+**** Update Args fmt::Display if core argument
+** CLI arguments
+*** command.rs
+**** Update clap command definition
+*** cli.rs
+**** Update get_cli_args() and add extra logic if needed
+** Config arguments
+*** config.rs
+**** Update get_config_args()
+** Fix compiler warnings
+** Implement behaviour
+** Add tests
+** Update README
+*** CLI options
+*** Config options
+*** Usage section if commonly used option
