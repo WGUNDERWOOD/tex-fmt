@@ -372,4 +372,5 @@ The first example in each row is the default value.
 | `lists`          | arr[str] | `[]`, `["myitemize"]`  | Extra list environments to be formatted as `itemize` |
 | `verbatims`      | arr[str] | `[]`, `["myverbatim"]` | Extra verbatim environments |
 | `no-indent-envs` | arr[str] | `[]`, `["mydocument"]` | Environments which are not indented |
+| `wrap-chars`     | arr[str] | `[]`, `["。"]`         | Characters after which lines may be wrapped |
 | `verbosity`      | str      | `"warn"`, `"error"`    | Verbosity level for terminal logging |

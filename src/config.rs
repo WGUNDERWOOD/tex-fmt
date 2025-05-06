@@ -94,6 +94,16 @@ fn parse_array_string(name: &str, config: &Table) -> Vec<String> {
         .collect()
 }
 
+fn string_to_char(s: &str) -> char {
+    let mut chars = s.chars();
+    let c = chars.next().expect("String is empty");
+    assert!(
+        chars.next().is_none(),
+        "String contains more than one character",
+    );
+    c
+}
+
 /// Parse arguments from a config file path
 ///
 /// # Panics
@@ -123,6 +133,12 @@ pub fn get_config_args(
         _ => None,
     };
 
+    // Read wrap_chars to Vec<char> not Vec<String>
+    let wrap_chars: Vec<char> = parse_array_string("wrap-chars", &config)
+        .iter()
+        .map(|c| string_to_char(c))
+        .collect();
+
     let args = OptionArgs {
         check: config.get("check").map(|x| x.as_bool().unwrap()),
         print: config.get("print").map(|x| x.as_bool().unwrap()),
@@ -146,6 +162,7 @@ pub fn get_config_args(
         lists: parse_array_string("lists", &config),
         verbatims: parse_array_string("verbatims", &config),
         no_indent_envs: parse_array_string("no-indent-envs", &config),
+        wrap_chars,
         verbosity,
         arguments: None,
         files: vec![],
