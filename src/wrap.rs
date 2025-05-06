@@ -19,7 +19,45 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
-/// Find the best place to break a long line
+fn is_wrap_point(
+    i: usize,
+    c: char,
+    prev_c: Option<char>,
+    inside_verb: bool,
+    line_len: usize,
+    args: &Args,
+) -> bool {
+    // Character c must be a valid wrapping character
+    args.wrap_chars.contains(&c)
+        // Must not be preceded by '\'
+        && prev_c != Some('\\')
+        // Do not break inside a \verb|...|
+        && !inside_verb
+        // No point breaking at the end of the line
+        && (i + 1 < line_len)
+}
+
+fn get_verb_end(verb_start: Option<usize>, line: &str) -> Option<usize> {
+    let verb_len = 6;
+    verb_start
+        .map(|v| line[v + verb_len..].find('|').unwrap_or(v) + v + verb_len)
+}
+
+fn is_inside_verb(
+    i: usize,
+    contains_verb: bool,
+    verb_start: Option<usize>,
+    verb_end: Option<usize>,
+) -> bool {
+    if contains_verb {
+        (verb_start.unwrap() <= i) && (i <= verb_end.unwrap())
+    } else {
+        false
+    }
+}
+
+/// Find the best place to break a long line.
+/// Provided as a *byte* index, not a *char* index.
 fn find_wrap_point(
     line: &str,
     indent_length: usize,
@@ -27,56 +65,35 @@ fn find_wrap_point(
     pattern: &Pattern,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
-    let mut after_char = false;
-    let mut prev_char: Option<char> = None;
-
-    let mut line_width = 0;
-
+    let mut prev_c: Option<char> = None;
+    let contains_verb = pattern.contains_verb && line.contains(VERB);
+    let verb_start: Option<usize> =
+        contains_verb.then(|| line.find(VERB).unwrap());
+    let verb_end = get_verb_end(verb_start, line);
+    let mut after_non_percent = verb_start == Some(0);
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
+    let line_len = line.len();
 
-    if pattern.contains_verb && line.contains(VERB) {
+    for (i, c) in line.char_indices() {
+        if i >= wrap_boundary && wrap_point.is_some() {
+            break;
+        }
         // Special wrapping for lines containing \verb|...|
-        let verb_start = line.find(VERB).unwrap();
-        let verb_end = line[verb_start + 6..].find('|').unwrap_or(verb_start)
-            + verb_start
-            + 6;
-        if verb_start == 0 {
-            after_char = true;
+        let inside_verb =
+            is_inside_verb(i, contains_verb, verb_start, verb_end);
+        if is_wrap_point(i, c, prev_c, inside_verb, line_len, args) {
+            if after_non_percent {
+                // Get index of the byte after which
+                // line break will be inserted.
+                // Note this may not be a valid char index.
+                wrap_point = Some(i + c.len_utf8() - 1);
+            }
+        } else if c != '%' {
+            after_non_percent = true;
         }
-        for (i, c) in line.char_indices() {
-            line_width += 1;
-            let inside_verb = (verb_start <= i) && (i <= verb_end);
-            if line_width > wrap_boundary && wrap_point.is_some() {
-                break;
-            }
-            if c == ' ' && prev_char != Some('\\') && !inside_verb {
-                if after_char {
-                    wrap_point = Some(i);
-                }
-            } else if c != '%' {
-                after_char = true;
-            }
-            prev_char = Some(c);
-        }
-    } else {
-        // Wrapping for lines not containing \verb|...|
-        for (i, c) in line.char_indices() {
-            line_width += 1;
-            if line_width > wrap_boundary && wrap_point.is_some() {
-                break;
-            }
-            if c == ' ' && prev_char != Some('\\') {
-                if after_char {
-                    wrap_point = Some(i);
-                }
-            } else if c != '%' {
-                after_char = true;
-            }
-            prev_char = Some(c);
-        }
+        prev_c = Some(c);
     }
 
-    // Return *byte* index rather than *char* index.
     wrap_point
 }
 
@@ -120,7 +137,7 @@ pub fn apply_wrap<'a>(
     }
 
     wrap_point.map(|p| {
-        let this_line = &line[0..p];
+        let this_line = &line[0..=p];
         let next_line_start = comment_index.map_or("", |c| {
             if p > c {
                 COMMENT_LINE_START

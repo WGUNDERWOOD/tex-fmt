@@ -144,10 +144,10 @@ fn test_source_target(
     pass
 }
 
-fn run_tests_in_dir(test_dir: fs::DirEntry) -> bool {
+fn run_tests_in_dir(test_dir: &fs::DirEntry) -> bool {
     let mut pass = true;
-    let config_file = get_config_file(&test_dir);
-    let cli_file = get_cli_file(&test_dir);
+    let config_file = get_config_file(test_dir);
+    let cli_file = get_cli_file(test_dir);
     let source_dir = test_dir.path().join("source/");
     let source_files = read_files_from_dir(&source_dir);
     let target_dir = test_dir.path().join("target/");
@@ -199,7 +199,7 @@ fn test_all() {
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap();
     for test_dir in test_dirs {
-        pass &= run_tests_in_dir(test_dir.unwrap());
+        pass &= run_tests_in_dir(&test_dir.unwrap());
     }
 
     assert!(pass);
@@ -208,7 +208,12 @@ fn test_all() {
 #[test]
 #[ignore]
 fn test_subset() {
-    let test_names = ["cv", "lists"];
+    let test_names = [
+        //"wrap_chars",
+        //"cv",
+        //"short_document",
+        "wrap",
+    ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
         test_names.iter().any(|t| {
@@ -221,7 +226,7 @@ fn test_subset() {
         })
     });
     for test_dir in test_dirs {
-        pass &= run_tests_in_dir(test_dir.unwrap());
+        pass &= run_tests_in_dir(&test_dir.unwrap());
     }
     assert!(pass);
 }
