@@ -226,6 +226,11 @@ pub fn calculate_indent(
         );
         indent.actual = indent.actual.max(0);
         indent.visual = indent.visual.max(0);
+
+        // If this is the first negatively indented line, record in the state
+        if state.linum_first_negative_indent.is_none() {
+            state.linum_first_negative_indent = Some(state.linum_new)
+        }
     }
 
     indent

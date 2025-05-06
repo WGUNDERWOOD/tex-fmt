@@ -146,10 +146,19 @@ pub fn format_file(
         }
     }
 
+    // Warn about indents not returning to zero
     if !indents_return_to_zero(&state) {
         let msg = format!(
             "Indent does not return to zero. Last non-indented line is line {}",
             state.linum_last_zero_indent
+        );
+        record_file_log(logs, Warn, file, &msg);
+    }
+
+    // Warn about first negative indent
+    if let Some(n) = state.linum_first_negative_indent {
+        let msg = format!(
+            "Negative indents. First negatively indented line is line {n}",
         );
         record_file_log(logs, Warn, file, &msg);
     }
@@ -223,6 +232,8 @@ pub struct State {
     pub verbatim: Verbatim,
     /// Line number in the new file of the last non-indented line
     pub linum_last_zero_indent: usize,
+    /// Line number in the new file of the first negatively indented line
+    pub linum_first_negative_indent: Option<usize>,
 }
 
 impl State {
@@ -236,6 +247,7 @@ impl State {
             indent: Indent::new(),
             verbatim: Verbatim::new(),
             linum_last_zero_indent: 1,
+            linum_first_negative_indent: None,
         }
     }
 }
