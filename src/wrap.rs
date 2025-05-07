@@ -20,7 +20,7 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
 }
 
 fn is_wrap_point(
-    i: usize,
+    i_byte: usize,
     c: char,
     prev_c: Option<char>,
     inside_verb: bool,
@@ -34,24 +34,24 @@ fn is_wrap_point(
         // Do not break inside a \verb|...|
         && !inside_verb
         // No point breaking at the end of the line
-        && (i + 1 < line_len)
+        && (i_byte + 1 < line_len)
 }
 
 #[must_use]
-pub fn get_verb_end(verb_start: Option<usize>, line: &str) -> Option<usize> {
+fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
     let verb_len = 6;
-    verb_start
+    verb_byte_start
         .map(|v| line[v + verb_len..].find('|').unwrap_or(v) + v + verb_len)
 }
 
 fn is_inside_verb(
-    i: usize,
+    i_byte: usize,
     contains_verb: bool,
     verb_start: Option<usize>,
     verb_end: Option<usize>,
 ) -> bool {
     if contains_verb {
-        (verb_start.unwrap() <= i) && (i <= verb_end.unwrap())
+        (verb_start.unwrap() <= i_byte) && (i_byte <= verb_end.unwrap())
     } else {
         false
     }
@@ -75,19 +75,19 @@ fn find_wrap_point(
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
     let line_len = line.len();
 
-    for (i, c) in line.char_indices() {
-        if i >= wrap_boundary && wrap_point.is_some() {
+    for (i_char, (i_byte, c)) in line.char_indices().enumerate() {
+        if i_char >= wrap_boundary && wrap_point.is_some() {
             break;
         }
         // Special wrapping for lines containing \verb|...|
         let inside_verb =
-            is_inside_verb(i, contains_verb, verb_start, verb_end);
-        if is_wrap_point(i, c, prev_c, inside_verb, line_len, args) {
+            is_inside_verb(i_byte, contains_verb, verb_start, verb_end);
+        if is_wrap_point(i_byte, c, prev_c, inside_verb, line_len, args) {
             if after_non_percent {
                 // Get index of the byte after which
                 // line break will be inserted.
                 // Note this may not be a valid char index.
-                wrap_point = Some(i + c.len_utf8() - 1);
+                wrap_point = Some(i_byte + c.len_utf8() - 1);
             }
         } else if c != '%' {
             after_non_percent = true;
