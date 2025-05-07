@@ -1,0 +1,425 @@
+% !TeX root = main.tex
+\chapter{线性映射}
+\section{线性映射的向量空间}
+% TODO:  Problems to do: 11; 13; 14; 16; 17
+初学线性代数常犯的错误是，在了解矩阵与线性变换的一一对应后，便不愿再思考线性映射的本质，这对于线性代数精髓的掌握，是极为不利的。
+\begin{quote}
+  ``我的经验是，如果抛开矩阵的话，可将一个原本用矩阵完成的证明缩短 50\%.''
+  % TODO: Better quotation
+  \hfill --- Emil Artin\footnote{摘自LADR, 3c}
+\end{quote}
+\subsubsection{什么不是线性映射？}
+线性映射最基本也是最重要的定义如下:
+\begin{definition}
+  设\(V\)和\(W\)是两个向量空间，\(T: V \to W\) 是一个映射，如果对于任意的\(u,
+  v \in V\)和任意的\(a \in \F\)，都有:
+  \begin{description}
+    \item[可加性:] \(T(u+v)=T(u)+T(v)\)
+    \item[齐次性:] \(T(a u) = a T(u)\)
+  \end{description}
+  则称\(T\)是一个线性映射。
+\end{definition}
+可以看到，线性映射的定义与矩阵是毫无关系的。
+
+接下来我们参照习题8、9，给出两个不是线性映射的例子:
+
+\paragraph{满足齐次性不满足可加性的变换}
+取
+\begin{align*}
+  \varphi: \C &\to \C \\
+  v &\mapsto
+  \begin{cases}
+    v, &\Im v \geq 0 \\
+    2v, &\Im v < 0
+  \end{cases}
+\end{align*}
+容易证明在各个方向上\(\varphi\) 都是齐次的，但显然不满足可加性。
+
+\paragraph{满足可加性不满足齐次性的变换}
+取
+\begin{align*}
+  \varphi: \C &\to \C \\
+  a+b \i &\mapsto a
+\end{align*}
+容易发现\(\forall a+b\i,c+d\i \in \C,\) 有
+\begin{align*}
+  \varphi((a+b\i)+(c+d\i)) &= \varphi((a+c)+(b+d)\i) = a+c \\
+  &=\varphi(a+b\i) + \varphi(c+d\i) =a+c
+\end{align*}
+但是
+\begin{align*}
+  \varphi(\i(a+b\i)) &= \varphi(b-a\i) = b \\
+  &\neq \i\varphi(a+b\i) =\i a
+\end{align*}
+于是\(\varphi\) 不是线性映射。
+
+实际上以上两个反例的构造与之前子空间反例\ref{item:subspace
+counterexample}
+的构造非常相似，其中我们能够一窥可加性与齐次性真正的含义:
+\begin{description}
+  \item[可加性:] 加法能够扩展基向量，却不能严格要求方向一致，容易导致值域离散或方向有限
+  \item[齐次性:] 线性映射在缩放时保持方向一致，但不能扩展基向量。
+\end{description}
+
+感兴趣的读者看完书上内容后可能会好奇: ``那存不存在\(\varphi: \R \to
+\R\) 满足可加性却不是线性映射呢？'' 有的兄弟，有的。
+事实上我们是在问是否存在\(f:\R \to \R\)使得方程
+\[
+  f(x+y) = f(x) + f(y) \qquad \forall x,y \in \R
+\]
+有非线性解。这就是大名鼎鼎的Cauchy方程! （看到这里可能会唤醒你数分I死去的回忆）
+% TODO: Input roman characters
+% TODO：Solution to Cauchy equation
+% TODO: How to reference problems?
+% TODO: Environment for problems
+
+线性映射的有趣例子包括:
+\begin{itemize}
+  \item 微分算子 \(D: \C^{\infty} \to
+    \C^{\infty}\), \(D(f) = f'\)
+  \item 积分算子 \(I: \C^{\infty} \to
+    \C^{\infty}\), \(I(f) = \int f\)
+  \item 移位映射 \(S: \F^{\infty} \to \F^{\infty}\)，
+    \(S((x_{1},\dots, x_{n}, \dots)) = (x_{2},\dots,
+    x_{n}, \dots)\)
+  \item （加法）逆映射 映射 \(T\) 在 \(\L(V,W)\) 中的加法逆元
+    \(S(v)=T(-v)\)
+\end{itemize}
+\subsection{为什么线性映射能写成矩阵？}
+线性映射引理告诉我们: 线性映射被基和基的像唯一确定。接下来我们顺着习题3，证明线性映射可以写成矩阵的形式
+\begin{theorem}
+  设\(T \in \L(\F^{n},\F^{m})\)
+  存在标量\(A_{j,k} \in
+  \F (j = 1, \dots ,m, k=1, \dots, n) \)，使得:
+  \[
+    T(x_{1},\dots,x_{n})=(A_{1,1}x_{1}+\dots+A_{1,n}x_{n},\dots,A_{m,1}x_{1}+\dots+A_{m,n}x_{n})
+  \]
+  对任意\(x_{1},\dots,x_{n} \in \F\) 成立
+\end{theorem}
+
+\begin{proof}
+  记\(e_{1}, \dots, e_{n}\) 是\(\F^{n}\)的基向量，
+  \(e'_{1}, \dots, e'_{m}\)
+  是\(\F^{m}\)的基向量。
+  不妨设 \(T(e_{i}) = A_{1,i}e'_{1} +
+    A_{2,i}e'_{2} + \dots +
+  A_{m,i}e'_{m}\) 对于所有 \(1\leq i\leq n\) 成立。
+  于是:
+  \begin{align*}
+    T(x_{1},\dots,x_{n}) &= T(x_{1}e_{1} + \dots +
+    x_{n}e_{n})\\
+    &= x_{1}T(e_{1}) + \dots + x_{n}T(e_{n})\\
+    &= x_{1}(A_{1,1}e'_{1} + A_{2,1}e'_{2} +
+    \dots + A_{m,1}e'_{m}) \nonumber \\
+    &\quad + \dots +
+    x_{n}(A_{1,n}e'_{1} + A_{2,n}e'_{2} +
+    \dots + A_{m,n}e'_{m})\\    &=
+    (A_{1,1}x_{1}+\dots+A_{1,n}x_{n},\dots,A_{m,1}x_{1}+\dots+A_{m,n}x_{n})
+  \end{align*}
+  也即\[
+    T(x_1, \dots, x_n) =
+    \begin{pmatrix}
+      A_{1,1} & A_{1,2} & \dots & A_{1,n} \\
+      A_{2,1} & A_{2,2} & \dots & A_{2,n} \\
+      \vdots  & \vdots  & \ddots & \vdots  \\
+      A_{m,1} & A_{m,2} & \dots & A_{m,n}
+    \end{pmatrix}
+    \begin{pmatrix}
+      x_1 \\
+      x_2 \\
+      \vdots \\
+      x_n
+    \end{pmatrix}
+  \]
+\end{proof}
+这事实上证明了所有（有限维）线性变换都可以写成矩阵的形式
+
+\subsection{其他性质}
+\begin{itemize}
+  \item 线性映射对加法、数乘构成新的线性空间
+  \item \(V\)到\(V\)的线性映射构成一个幺环（矩阵环）
+  \item （习题1, 2）不严谨的说，线性映射的笛卡尔积也是线性变换。即若\(\A_{1}\)
+    是\(V_{1} \to W_{1}\) 的线性变换，\(\A_{2}\)
+    是\(V_{2} \to W_{2}\) 的线性变换，则
+    \begin{align*}
+      \A_{1} \times \A_{2} : V_{1}
+      \times V_{2} &\to W_{1} \times W_{2}\\
+      (v_{1},v_{2}) &\mapsto
+      (\A_{1}(v_{1}),\A_{2}(v_{2}))
+    \end{align*}
+    是\(V_{1} \times V_{2} \to
+    W_{1} \times W_{2}\) 的线性变换。
+  \item （习题4）线性变换不严格单调降低向量组的秩
+  \item （习题7）一维子空间有特征值
+\end{itemize}
+
+从抽象代数的角度看，线性映射\(\A \in \L(V,W)\)可以看作是从\(V\) 到\(W\)
+保持线性结构的映射，也就是同态。故也可记\(\L(V,W)=\Hom(V,W)\)
+
+\section{零空间与值域}
+\subsection{记号}
+\begin{description}
+  \item[零空间(Null space):] \(\nullspace \A\)
+    \(\A\) 是单射当且仅当
+    \(\nullspace \A = \{0\}\)
+  \item[值域(Range):] \(\range \A\)
+    \(\A\) 是满射当且仅当
+    \(\range \A = W\)
+\end{description}
+个人认为这样的记号比高代当中 \(\A^{-1}(\mathbf{0})\) 和 \(\A(V)\)
+更自然，更能体现出零空间和值域是线性变换内蕴的性质.\footnote{当然记号
+  \(\operatorname{Ker} \A\) 也很不错的，
+因为它看起来更酷一些 \UseVerb{smile}}
+
+\(\A\)的零空间与值域都构成线性空间。
+
+\subsection{为什么线性映射基本定理基本？}
+
+\begin{theorem}
+  假设\(V\) 是有限维的且 \(T \in \L(V,W)\)，那么\(\range
+  T\) 是有限维的，且\[
+    \dim V = \dim \nullspace T + \dim \range T
+  \]
+\end{theorem}
+% TODO: Add Proofs
+本书中先取零空间的基向量并扩充为整个空间的基，再证明扩充得到的向量经过线性变换后构成值域的一组基向量。
+相比于高等代数中取值域基的逆向量并在值域与定义域中反复横跳的证明方法而言，
+书中的证明避免了对线性相关的技巧性讨论，自然而符合直觉。
+
+\begin{proof}
+  令\(u_1, \dots , u_{m}\) 是\(\null T\) 的一个基，于是\(\dim
+  \null T = m\)，线性无关组 \(u_{1}, \dots ,u_{m}\) 可以被扩充为\(V\) 的一组基。
+\end{proof}
+
+线性映射基本定理是极为强大的工具，可以直接推导出以下结论:
+
+\begin{itemize}
+  \item 映到更高维空间上的线性映射不是满射
+  \item 映到更低维空间上的线性映射不是单射
+\end{itemize}
+所以线性映射是双射当且仅当它的值域和定义域维数相等! 这就为逆的定义提供了必要条件
+
+如果我们把线性方程组的左半部分看作一个线性映射，那么我们直接可以看出:
+\begin{itemize}
+  \item 齐次线性方程组有非零解当且仅当未知数个数大于等于方程个数
+  \item 方程个数多于未知数个数的线性方程组当常数项取某些值时无解．
+\end{itemize}
+
+在高等代数中这两个结论的证明都是依靠高斯消元法证明的，从实用性出发以LU分解的角度给出;
+这里的证明则从线性变换的角度给出: 线性方程组就是线性变换。
+
+最后，如果我们反观习题3A. 4，我们将发现它是线性代数基本定理的直接推论:
+\begin{proof}
+  记\(T'= T|\Span(v_{1}, \dots, v_{m})\)，
+  则对于\[T': \Span(v_{1}, \dots, v_{m}) \to
+  \Span(Tv_{1}, \dots, Tv_{m})\]
+  有:
+  \[
+    \dim \Span(v_{1}, \dots, v_{m}) = \dim
+    \nullspace T' +
+    \dim \range T' \geq \dim \range T' = m
+  \]
+  故\(v_{1}, \dots, v_{m}\) 线性无关。
+\end{proof}
+
+如果从马后炮的视角来看，
+线性映射基本定理的重要之处在于它给出了线性映射可逆性的充要条件，
+以及所有线性空间的分类——线性空间的同构性被其维数唯一确定。这是非常强的结论。
+
+\section{矩阵}
+\subsection{什么是矩阵}
+矩阵是一种高效表示线性变换的方法，是一种助记符，是一个配方表。
+
+在高等代数中，我时常对这样的记号感到困惑:
+\begin{align*}
+  \A(\varepsilon_{1}, \dots, \varepsilon_{n}) &=
+  (\A(\varepsilon_{1}), \dots,
+  \A(\varepsilon_{n})) = (\varepsilon_{1},
+  \dots, \varepsilon_{n})A\\
+  \varepsilon &= (\varepsilon_{1}, \dots, \varepsilon_{n})
+  (x_{1}, \dots,   x_{n})^{\mathrm{T}}
+\end{align*}
+好端端的矩阵，为什么前面必须乘一堆向量组？
+
+高等代数中，我们只讨论了\(V \to V\)的线性变换，
+并且已经先入为主的给出了\(\varepsilon_{1}, \dots, \varepsilon_{n}\) 作为基向量。
+即便如此，当我们单纯讨论记号\(A\) 时，
+我们仅仅在讨论矩阵代数——充其量是在讨论\(\F^{n}\) 上的线性变换。
+只有在矩阵前乘上给定的基向量组，我们才能表示\(V\) 上的线性变换。
+
+\subsection{什么是矩阵乘法}
+\subsection{秩!}
+% 可逆线性变换的逆也是线性变换，保持数乘和加法结构。这说明可逆线性变换本身就是一个同构。
+\section{向量空间的积与商}
+\subsection{把子空间放大}
+% TODO:  reference to section 2
+书接上回，我们早就知道线性空间的和能够放大线性空间，同样，直积也可以放大线性空间。
+更一般的，直积可以看作是一种普通的拓展代数系统的方式。
+
+同一数域上的线性空间即可定义直积。
+
+\begin{theorem}
+  设\(V_1, \dots , V_{m}\) 都是\(V\) 上的线性空间，那么 \(V_{1}
+  \times \dots \times V_{m}\) 是一个线性空间。并且满足\[
+    \dim (V_{1} \times \dots \times V_{m}) = \dim V_{1}
+    + \dots + \dim V_{m}
+  \]
+\end{theorem}
+（注意不要想当然的认为是乘法）
+
+\subsubsection{与直和的关系}
+线性空间的直和与直积同构。虽然高维空间下子空间和的维数会变得非常复杂，但直和的维数始终是各子空间维数之和。
+（考虑线性映射\(\Gamma: V_{1} \times \dots \times V_{m} \to V_{1}
++ \dots + V_{m}\)）
+% TODO:  Add reference to an exercise
+
+\subsection{把线性空间缩小}
+商空间的内容与商群、商环中的内容几乎可以一一对应:
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{>{\bfseries}l@{\hspace{2em}}l}
+    \toprule
+    \textbf{线性代数概念} & \textbf{抽象代数对应概念} \\
+    \midrule
+    子空间的平移\(a+U\) & 陪集\(aH\) (coset) \\
+    子空间互不相交 & 分划 (partition) \\
+    商空间\(V/U\) & 商群\(G/H\) (quotient group) \\
+    商映射\(\pi\) & 自然映射\(\pi\) (natural map) \\
+    商空间的维数 & 拉格朗日定理 (Lagrange's theorem) \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:quotient-space-group}
+\end{table}
+
+但商空间的性质却比商群、商环更为美妙: 线性空间对于任意子空间\(U\)都可以取商空间。而群只能对正规子群做商，
+环只能对理想做商，甚至于环做商的对象---理想---甚至不是子环。
+% TODO: Add reference
+
+太大的代数结构我们看不全，太小的代数结构我们看不清。直积允许我们放大代数结构，而商空间则允许我们缩小代数结构。
+在某种意义上，求商空间可以直接看做直积的逆运算
+
+\subsubsection{矩阵分块的原理}
+\begin{problem}
+  设\(V_1,\dots ,V_{m}\) 是向量空间，证明\(\L(V_1\times
+  \dots \times V_{m},W)\) 和\(\L(V_1,W)\times \dots
+  \times \L(V_{m},W)\) 是同构向量空间。
+\end{problem}
+
+\begin{proof}
+  记\(\dim V_{i}=n_{i}\)，\(\dim W=m\)
+  \begin{align*}
+    &\mathrel{\phantom{=}}\dim \L(V_{1} \times
+    \dots \times V_{m}, W) \\
+    &= (n_1+\dots+n_{m})m \\
+    &= n_{1}m + \dots + n_{m}m \\
+    &= \dim \L(V_{1},W) + \dots +
+    \dim \L(V_{m},W)\\
+  \end{align*}
+\end{proof}
+% TODO: I want to add a matrix here to illustrate the proof
+这道题的证明是简单的。但却启示我们向量空间直积的线性映射空间同构于线性映射空间的直积，
+其实是在告诉我们可以矩阵按列组合/分块的几何意义是\hl{向量空间做直积/商}。
+
+同理，\(\L(V,W_1\times W_{n})\cong
+  \L(V,W_1)\times \dots \times
+\L(V,W_{n})\) 表示的是矩阵按行分块的几何意义。
+
+\begin{problem}
+  设\(V\) 是一个有限维线性空间，\(U\) 是\(V\) 的子空间，证明:
+  \[
+    U/V \times V \cong U
+  \]
+\end{problem}
+
+\begin{proof}
+  \[
+    \dim (U/V \times V) = \dim U + \dim V - \dim U = \dim U
+  \]
+  故\(U/V \times V \cong U\)
+\end{proof}
+
+在群上却罕见这样的优美性质。由\(\Z/n\Z \cong
+\Z_{n}\)，
+考虑\(\Z/n\Z\times\Z_{n}\) 与\(\Z\) 的关系
+
+\(\forall (a_1+n\Z, b_1),(a_2+n\Z, b_2) \in
+\Z/n\Z \times \Z_{n}\), 设\[
+  (a_1+n\Z, b_1)+(a_2+n\Z, b_2) =
+  (a_3+n\Z, b_3)
+\]
+
+则有:
+\begin{align*}
+  a_3 &= a_1 + a_2 \mod n \\
+  b_3 &= b_1 + b_2
+\end{align*}
+
+考虑\(c=(1+n\Z,0) \in \Z/n\Z \times
+\Z_{n}\)，则由上计算关系可知\(c, c^{2}, c^{3}, \dots \) 只有有限的\(n\) 个值，
+而\(\Z\)中任意非零元的幂都是无限的。这说明
+\[
+  \Z/n\Z \times \Z_{n} \not\cong \Z
+\]
+
+与子空间的性质截然不同。
+
+\section{对偶}
+%! 这一章的解读可能与对偶空间正确的理解相差甚远，请读者仔细甄别
+% TODO: Make That a readable warning
+% TODO: 共轭，对偶，都是什么意思
+% TODO: Better reference
+% TODO：what is the difference between quote and quotation
+
+\begin{quote}
+  Duality in Mathematics is not a theorem, but a ``principle''
+
+  \hfill --- Michael Atiyah
+\end{quote}
+
+在我看来，对偶空间就是在研究如何使转置矩阵有意义.\footnote{共轭、对偶、伴随具体都是什么意思，
+我也不太清楚\UseVerb{confused}}
+
+% TODO:  Add reference
+在前面我们早有介绍，向量可以写作矩阵的形式。可是向量怎么能看作线性变换呢？我们实际上是将\(V\)
+上向量看作线性变换：\[
+  \L(\F,V):
+  \begin{pmatrix}
+    x_1 \\
+    x_2 \\
+    \vdots \\
+    x_n
+  \end{pmatrix}
+\]
+
+向量空间\(V\) 与\(\L(\F,V)\) 同构，这样的等价也没有任何问题。
+那么同样考虑该向量（或者说矩阵）的转置:
+\[
+  \L(V,\F):
+  \begin{pmatrix}
+    x_1 & x_2 & \dots & x_n
+  \end{pmatrix}
+\]
+
+从线性变换的角度看，这是一个从\(V\) 到\(\F\) 的线性映射，也就是一个\textbf{线性泛函}。从某种意义上，
+线性泛函就是一个行向量。这样理解不仅可以省去不断把线性泛函看作函数而非``对象''，
+导致在思考对偶映射时处理``线性映射空间上的线性映射空间''的麻烦，对偶基向量也一目了然:
+他们只不过基向量的转置 \((1,0,\dots ,0)\),\((0,1,\dots ,0),\dots \) 罢了。
+
+线性泛函通过矩阵乘法作用在向量上，也就是行向量与列向量的乘法。不严谨的说，可以看作两个向量之间的内积，
+线性泛函的作用也就是求``分量''。基于我们对内积空间的认识，不难理解
+\begin{theorem}
+  设\(V\) 是有限维线性空间，\(v_{1}, \dots ,v_{n}\) 是\(V\) 的一组基，\(v \in V\)，
+  \(V'\) 是\(V\) 的对偶空间，\(\varphi_{1}, \dots ,\varphi_{n}\)
+  是\(v_{1}, \dots ,v_{n}\) 的对偶基，\(\varphi \in V'\)
+  则:
+  \begin{align*}
+    v &= \varphi_{1}(v)v_{1} + \dots + \varphi_{n}(v)v_{n} \\
+    \varphi &= \varphi(v_{1})\varphi_{1} + \dots +
+    \varphi(v_{n})\varphi_{n}
+  \end{align*}
+\end{theorem}
+
+至于对偶映射为何定义为\(T'(\varphi)=\varphi \circ T\)，
+我目前还仅能暂时理解为转置矩阵做行向量乘法需把向量放到矩阵的左侧。更深层次的关于对偶本质的理解，
+\href{https://www.zhihu.com/question/38464481/answer/2110009942}{这篇文章}有一些新的见解。

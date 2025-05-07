@@ -19,6 +19,7 @@ use std::iter::zip;
 /// # Panics
 ///
 /// This function panics upon an unrecoverable formatting error
+#[allow(clippy::too_many_lines)]
 pub fn format_file(
     old_text: &str,
     file: &str,

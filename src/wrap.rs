@@ -73,9 +73,8 @@ fn find_wrap_point(
     let mut after_non_percent = verb_start == Some(0);
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
     let line_len = line.len();
-    let mut i_char = 0;
 
-    for (i_byte, c) in line.char_indices() {
+    for (i_char, (i_byte, c)) in line.char_indices().enumerate() {
         if i_char >= wrap_boundary && wrap_point.is_some() {
             break;
         }
@@ -93,7 +92,6 @@ fn find_wrap_point(
             after_non_percent = true;
         }
         prev_c = Some(c);
-        i_char += 1;
     }
 
     wrap_point
