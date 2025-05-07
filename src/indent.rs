@@ -229,7 +229,7 @@ pub fn calculate_indent(
 
         // If this is the first negatively indented line, record in the state
         if state.linum_first_negative_indent.is_none() {
-            state.linum_first_negative_indent = Some(state.linum_new)
+            state.linum_first_negative_indent = Some(state.linum_new);
         }
     }
 
