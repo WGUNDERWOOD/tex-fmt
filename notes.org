@@ -1,5 +1,7 @@
 #+title: tex-fmt
 * Tasks
+** TODO Add # tex-fmt.toml to online tool
+** TODO Change box colours in online tool
 * Release process
 ** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
