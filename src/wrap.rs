@@ -86,7 +86,11 @@ fn find_wrap_point(
                 // Get index of the byte after which
                 // line break will be inserted.
                 // Note this may not be a valid char index.
-                wrap_point = Some(i_byte + c.len_utf8() - 1);
+                let wrap_byte = i_byte + c.len_utf8() - 1;
+                // Don't wrap here if this is the end of the line anyway
+                if wrap_byte + 1 < line_len{
+                    wrap_point = Some(wrap_byte);
+                }
             }
         } else if c != '%' {
             after_non_percent = true;
@@ -146,6 +150,8 @@ pub fn apply_wrap<'a>(
             }
         });
         let next_line = &line[p + 1..];
+        dbg!(&this_line);
+        dbg!(&next_line);
         [this_line, next_line_start, next_line]
     })
 }
