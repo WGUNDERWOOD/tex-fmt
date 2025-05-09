@@ -88,7 +88,7 @@ fn find_wrap_point(
                 // Note this may not be a valid char index.
                 let wrap_byte = i_byte + c.len_utf8() - 1;
                 // Don't wrap here if this is the end of the line anyway
-                if wrap_byte + 1 < line_len{
+                if wrap_byte + 1 < line_len {
                     wrap_point = Some(wrap_byte);
                 }
             }
