@@ -2,7 +2,7 @@
 echo "Getting performance metrics"
 DIR="$(mktemp -d)"
 cp -r ../tests/* "$DIR"
-cargo build --release
+RUSTFLAGS="-C target-cpu=native" cargo build --release
 
 calc(){ awk "BEGIN { print ""$*"" }"; }
 
