@@ -150,8 +150,6 @@ pub fn apply_wrap<'a>(
             }
         });
         let next_line = &line[p + 1..];
-        dbg!(&this_line);
-        dbg!(&next_line);
         [this_line, next_line_start, next_line]
     })
 }
