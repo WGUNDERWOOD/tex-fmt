@@ -45,7 +45,6 @@ pub static RE_TRAIL: LazyLock<Regex> =
 pub static RE_SPLITTING: LazyLock<RegexSet> =
     LazyLock::new(|| RegexSet::new(SPLITTING).unwrap());
 
-// TODO Do this with a RegexSet
 // Matches splitting commands with non-whitespace characters before it.
 pub static RE_SPLITTING_SHARED_LINE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(
