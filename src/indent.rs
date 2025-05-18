@@ -146,7 +146,8 @@ fn get_indent(
         no_indent_envs_begin,
         no_indent_envs_end,
     );
-    let mut back = get_back(line, pattern, state, lists_end, no_indent_envs_end);
+    let mut back =
+        get_back(line, pattern, state, lists_end, no_indent_envs_end);
     let diff_back_delim = get_diff_back_delim(line);
     diff += diff_back_delim.0;
     back += diff_back_delim.1;
