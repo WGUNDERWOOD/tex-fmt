@@ -70,12 +70,6 @@ fn get_diff(
         diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
     }
 
-    // Indentation for delimiters
-    diff += line
-        .chars()
-        .map(|x| i8::from(OPENS.contains(&x)) - i8::from(CLOSES.contains(&x)))
-        .sum::<i8>();
-
     diff
 }
 
@@ -117,15 +111,19 @@ fn get_back(
         back += 1;
     }
 
-    // Dedent delimiters
-    let mut cumul: i8 = back;
-    for c in line.chars() {
-        cumul -= i8::from(OPENS.contains(&c));
-        cumul += i8::from(CLOSES.contains(&c));
-        back = max(cumul, back);
-    }
-
     back
+}
+
+/// Calculate delimiter-based indent and dedent together for performance
+fn get_diff_back_delim(line: &str) -> (i8, i8) {
+    let mut diff: i8 = 0;
+    let mut back: i8 = 0;
+    for c in line.chars() {
+        diff -= i8::from(OPENS.contains(&c));
+        diff += i8::from(CLOSES.contains(&c));
+        back = max(diff, back);
+    }
+    (-diff, back)
 }
 
 /// Calculate indentation properties of the current line
@@ -140,7 +138,7 @@ fn get_indent(
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
 ) -> Indent {
-    let diff = get_diff(
+    let mut diff = get_diff(
         line,
         pattern,
         lists_begin,
@@ -148,7 +146,10 @@ fn get_indent(
         no_indent_envs_begin,
         no_indent_envs_end,
     );
-    let back = get_back(line, pattern, state, lists_end, no_indent_envs_end);
+    let mut back = get_back(line, pattern, state, lists_end, no_indent_envs_end);
+    let diff_back_delim = get_diff_back_delim(line);
+    diff += diff_back_delim.0;
+    back += diff_back_delim.1;
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
