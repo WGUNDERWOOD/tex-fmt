@@ -3,6 +3,7 @@
 use crate::cli::get_cli_args;
 use crate::config::{get_config, get_config_args};
 use crate::logging::{record_file_log, Log};
+use crate::search::find_files;
 use colored::Colorize;
 use log::Level;
 use log::LevelFilter;
@@ -50,6 +51,8 @@ pub struct Args {
     pub arguments: bool,
     /// List of files to be formatted
     pub files: Vec<String>,
+    /// Recursive search for all possible files
+    pub search: Vec<String>,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -79,6 +82,8 @@ pub struct OptionArgs {
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub files: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub search: Vec<String>,
 }
 
 /// Character to use for indentation
@@ -138,6 +143,7 @@ impl Default for OptionArgs {
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
+            search: vec![],
         }
     }
 }
@@ -164,6 +170,7 @@ impl OptionArgs {
             verbosity: None,
             arguments: None,
             files: vec![],
+            search: vec![],
         }
     }
 }
@@ -209,6 +216,7 @@ impl Args {
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
+            search: args.search,
         }
     }
 
@@ -225,6 +233,14 @@ impl Args {
         } else {
             self.wraplen
         };
+
+        // recursive search for files
+        if !self.search.is_empty() {
+            // appends self.files with newly found files
+            for dir in self.search.iter() {
+                find_files(dir.into(), &mut self.files);
+            }
+        }
 
         // Check files are passed if no --stdin
         if !self.stdin && self.files.is_empty() {
