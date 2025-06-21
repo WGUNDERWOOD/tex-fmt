@@ -15,6 +15,7 @@ pub mod indent;
 pub mod logging;
 pub mod read;
 pub mod regexes;
+pub mod search;
 pub mod subs;
 pub mod verbatim;
 pub mod wasm;

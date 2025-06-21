@@ -166,6 +166,7 @@ pub fn get_config_args(
         verbosity,
         arguments: None,
         files: vec![],
+        search: vec![],
     };
     Some(args)
 }
