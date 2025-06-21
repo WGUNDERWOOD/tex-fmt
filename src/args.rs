@@ -235,7 +235,12 @@ impl Args {
 
         // recursive search for files
         if self.recursive {
-            let tmp = self.files.clone();
+            let tmp = if self.files.is_empty() {
+                vec!["./".to_string()]
+            } else {
+                self.files.clone()
+            };
+
             // appends self.files with newly found files
             for dir in tmp.iter() {
                 find_files(dir.into(), &mut self.files);
@@ -244,13 +249,26 @@ impl Args {
             self.files.retain(|e| PathBuf::from(e).is_file());
         }
 
-        // Check files are passed if no --stdin
+        // Check if dir is passed without -r
+        if !self.recursive
+            && self.files.iter().any(|e| PathBuf::from(e).is_dir())
+        {
+            record_file_log(
+                logs,
+                Level::Error,
+                "",
+                "A directory was passed but --recursive was not.",
+            );
+            exit_code = 1;
+        }
+
+        // Check files are passed if no --stdin (also catches no -r)
         if !self.stdin && self.files.is_empty() {
             record_file_log(
                 logs,
                 Level::Error,
                 "",
-                "No files specified. Provide filenames or pass --stdin.",
+                "No files specified. Provide filenames, or pass -r, or pass --stdin.",
             );
             exit_code = 1;
         }
