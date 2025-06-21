@@ -166,7 +166,7 @@ pub fn get_config_args(
         verbosity,
         arguments: None,
         files: vec![],
-        search: vec![],
+        recursive: config.get("recursive").map(|x| x.as_bool().unwrap()),
     };
     Some(args)
 }

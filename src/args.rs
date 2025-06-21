@@ -52,7 +52,7 @@ pub struct Args {
     /// List of files to be formatted
     pub files: Vec<String>,
     /// Recursive search for all possible files
-    pub search: Vec<String>,
+    pub recursive: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -82,8 +82,7 @@ pub struct OptionArgs {
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub files: Vec<String>,
-    #[merge(strategy = merge::vec::append)]
-    pub search: Vec<String>,
+    pub recursive: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -143,7 +142,7 @@ impl Default for OptionArgs {
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
-            search: vec![],
+            recursive: Some(false),
         }
     }
 }
@@ -170,7 +169,7 @@ impl OptionArgs {
             verbosity: None,
             arguments: None,
             files: vec![],
-            search: vec![],
+            recursive: None,
         }
     }
 }
@@ -216,7 +215,7 @@ impl Args {
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
-            search: args.search,
+            recursive: args.recursive.unwrap(),
         }
     }
 
@@ -235,11 +234,14 @@ impl Args {
         };
 
         // recursive search for files
-        if !self.search.is_empty() {
+        if self.recursive {
+            let tmp = self.files.clone();
             // appends self.files with newly found files
-            for dir in self.search.iter() {
+            for dir in tmp.iter() {
                 find_files(dir.into(), &mut self.files);
             }
+
+            self.files.retain(|e| PathBuf::from(e).is_file());
         }
 
         // Check files are passed if no --stdin

@@ -126,10 +126,10 @@ pub fn get_cli_command() -> Command {
                 .help("List of files to be formatted"),
         )
         .arg(
-            Arg::new("search")
+            Arg::new("recursive")
                 .short('r')
-                .long("search")
-                .action(Append)
+                .long("recursive")
+                .action(SetTrue)
                 .help("Recursively search for all files that can be formatted")
         )
 }
