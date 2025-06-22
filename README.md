@@ -177,21 +177,15 @@ section below.
 
 ``` shell
 tex-fmt file.tex                   # format file.tex and overwrite
-tex-fmt -r                         # recursively format all acceptable files in current directory
-tex-fmt -r file.tex someDir/       # format file.tex and recursively format files in someDir
 tex-fmt --check file.tex           # check if file.tex is correctly formatted
 tex-fmt --print file.tex           # format file.tex and print to stdout
+tex-fmt --recursive                # recursively format files in current directory
+tex-fmt --recursive dir/           # recursively format files in dir
 tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1 if overwritten
 tex-fmt --nowrap file.tex          # do not wrap long lines
 tex-fmt --stdin                    # read from stdin and print to stdout
 tex-fmt --help                     # view help information
 ```
-
-### Ignore in Recursive
-
-Recursive searches for files will ignore anything in `.gitignore` and 
-in a `.ignore` file. The convention in both is same as for `git` with
-`.gitignore` files. 
 
 ### Configuration
 
@@ -239,6 +233,12 @@ To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
 
 Verbatim environments including `verbatim`, `Verbatim`, `lstlisting`
 and `minted` are automatically skipped.
+
+### Ignoring files in recursive mode
+
+Recursive searches with `--recursive` or `-r` will
+ignore patterns in `.gitignore` and `.ignore` files,
+following git conventions.
 
 ### Shell completion
 
@@ -342,10 +342,10 @@ The following arguments can be passed on the command line.
 
 | Option                 | Alias | Default | Description |
 | ---------------------- | ----- | ------- | --- |
-| `--recursive`          | `-r`  |         | Recursively searches directories for acceptable files |
 | `--check`              | `-c`  |         | Check formatting, do not modify files |
 | `--print`              | `-p`  |         | Print to stdout, do not modify files |
 | `--fail-on-change`     | `-f`  |         | Fail if files are modified |
+| `--recursive`          | `-r`  |         | Recursively search for files to format |
 | `--nowrap`             | `-n`  |         | Do not wrap long lines |
 | `--wraplen <N>`        | `-l`  | `80`    | Line length for wrapping |
 | `--tabsize <N>`        | `-t`  | `2`     | Number of characters to use as tab size |

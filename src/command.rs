@@ -130,6 +130,6 @@ pub fn get_cli_command() -> Command {
                 .short('r')
                 .long("recursive")
                 .action(SetTrue)
-                .help("Recursively search for all files that can be formatted")
+                .help("Recursively search for files to format")
         )
 }
