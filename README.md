@@ -177,6 +177,8 @@ section below.
 
 ``` shell
 tex-fmt file.tex                   # format file.tex and overwrite
+tex-fmt -r                         # recursively format all acceptable files in current directory
+tex-fmt -r file.tex someDir/       # format file.tex and recursively format files in someDir
 tex-fmt --check file.tex           # check if file.tex is correctly formatted
 tex-fmt --print file.tex           # format file.tex and print to stdout
 tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1 if overwritten
@@ -184,6 +186,12 @@ tex-fmt --nowrap file.tex          # do not wrap long lines
 tex-fmt --stdin                    # read from stdin and print to stdout
 tex-fmt --help                     # view help information
 ```
+
+### Ignore in Recursive
+
+Recursive searches for files will ignore anything in `.gitignore` and 
+in a `.ignore` file. The convention in both is same as for `git` with
+`.gitignore` files. 
 
 ### Configuration
 
@@ -334,6 +342,7 @@ The following arguments can be passed on the command line.
 
 | Option                 | Alias | Default | Description |
 | ---------------------- | ----- | ------- | --- |
+| `--recursive`          | `-r`  |         | Recursively searches directories for acceptable files |
 | `--check`              | `-c`  |         | Check formatting, do not modify files |
 | `--print`              | `-p`  |         | Print to stdout, do not modify files |
 | `--fail-on-change`     | `-f`  |         | Fail if files are modified |
