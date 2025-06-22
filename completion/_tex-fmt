@@ -40,6 +40,8 @@ _tex-fmt() {
 '--trace[Show trace messages]' \
 '--man[Generate man page]' \
 '--args[Print arguments passed to tex-fmt and exit]' \
+'-r[Recursively search for files to format]' \
+'--recursive[Recursively search for files to format]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '-V[Print version]' \

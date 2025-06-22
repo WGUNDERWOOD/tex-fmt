@@ -46,6 +46,8 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
             [CompletionResult]::new('--trace', '--trace', [CompletionResultType]::ParameterName, 'Show trace messages')
             [CompletionResult]::new('--man', '--man', [CompletionResultType]::ParameterName, 'Generate man page')
             [CompletionResult]::new('--args', '--args', [CompletionResultType]::ParameterName, 'Print arguments passed to tex-fmt and exit')
+            [CompletionResult]::new('-r', '-r', [CompletionResultType]::ParameterName, 'Recursively search for files to format')
+            [CompletionResult]::new('--recursive', '--recursive', [CompletionResultType]::ParameterName, 'Recursively search for files to format')
             [CompletionResult]::new('-h', '-h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', '--help', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('-V', '-V ', [CompletionResultType]::ParameterName, 'Print version')
