@@ -86,6 +86,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
             .unwrap_or_default()
             .map(ToOwned::to_owned)
             .collect::<Vec<String>>(),
+        recursive: get_flag(&arg_matches, "recursive"),
     };
     args
 }

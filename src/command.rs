@@ -1,6 +1,6 @@
-use clap::{value_parser, Command, Arg, ArgAction};
-use ArgAction::{Append, SetTrue};
+use clap::{value_parser, Arg, ArgAction, Command};
 use std::path::PathBuf;
+use ArgAction::{Append, SetTrue};
 
 /// Construct the CLI command
 #[allow(clippy::too_many_lines)]
@@ -124,5 +124,12 @@ pub fn get_cli_command() -> Command {
             Arg::new("files")
                 .action(Append)
                 .help("List of files to be formatted"),
+        )
+        .arg(
+            Arg::new("recursive")
+                .short('r')
+                .long("recursive")
+                .action(SetTrue)
+                .help("Recursively search for files to format")
         )
 }
