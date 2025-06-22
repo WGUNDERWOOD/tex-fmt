@@ -3,6 +3,7 @@
 use crate::cli::get_cli_args;
 use crate::config::{get_config, get_config_args};
 use crate::logging::{record_file_log, Log};
+use crate::search::find_files;
 use colored::Colorize;
 use log::Level;
 use log::LevelFilter;
@@ -50,6 +51,8 @@ pub struct Args {
     pub arguments: bool,
     /// List of files to be formatted
     pub files: Vec<String>,
+    /// Recursive search for all possible files
+    pub recursive: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -79,6 +82,7 @@ pub struct OptionArgs {
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub files: Vec<String>,
+    pub recursive: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -138,6 +142,7 @@ impl Default for OptionArgs {
             verbosity: Some(LevelFilter::Warn),
             arguments: Some(false),
             files: vec![],
+            recursive: Some(false),
         }
     }
 }
@@ -164,6 +169,7 @@ impl OptionArgs {
             verbosity: None,
             arguments: None,
             files: vec![],
+            recursive: None,
         }
     }
 }
@@ -209,6 +215,7 @@ impl Args {
             verbosity: args.verbosity.unwrap(),
             arguments: args.arguments.unwrap(),
             files: args.files,
+            recursive: args.recursive.unwrap(),
         }
     }
 
@@ -226,13 +233,42 @@ impl Args {
             self.wraplen
         };
 
-        // Check files are passed if no --stdin
+        // recursive search for files
+        if self.recursive {
+            let tmp = if self.files.is_empty() {
+                vec!["./".to_string()]
+            } else {
+                self.files.clone()
+            };
+
+            // appends self.files with newly found files
+            for dir in tmp.iter() {
+                find_files(dir.into(), &mut self.files);
+            }
+
+            self.files.retain(|e| PathBuf::from(e).is_file());
+        }
+
+        // Check if dir is passed without -r
+        if !self.recursive
+            && self.files.iter().any(|e| PathBuf::from(e).is_dir())
+        {
+            record_file_log(
+                logs,
+                Level::Error,
+                "",
+                "A directory was passed but --recursive was not.",
+            );
+            exit_code = 1;
+        }
+
+        // Check files are passed if no --stdin (also catches no -r)
         if !self.stdin && self.files.is_empty() {
             record_file_log(
                 logs,
                 Level::Error,
                 "",
-                "No files specified. Provide filenames or pass --stdin.",
+                "No files specified. Provide filenames, or pass -r, or pass --stdin.",
             );
             exit_code = 1;
         }
