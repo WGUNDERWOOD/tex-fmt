@@ -241,7 +241,7 @@ impl Args {
                 self.files.clone()
             };
 
-            for dir in tmp.iter() {
+            for dir in &tmp {
                 find_files(dir.into(), &mut self.files);
             }
 
