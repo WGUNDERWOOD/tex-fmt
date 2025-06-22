@@ -51,7 +51,7 @@ pub struct Args {
     pub arguments: bool,
     /// List of files to be formatted
     pub files: Vec<String>,
-    /// Recursive search for all possible files
+    /// Recursive search for files
     pub recursive: bool,
 }
 
@@ -233,7 +233,7 @@ impl Args {
             self.wraplen
         };
 
-        // recursive search for files
+        // Recursive file search
         if self.recursive {
             let tmp = if self.files.is_empty() {
                 vec!["./".to_string()]
@@ -241,7 +241,6 @@ impl Args {
                 self.files.clone()
             };
 
-            // appends self.files with newly found files
             for dir in tmp.iter() {
                 find_files(dir.into(), &mut self.files);
             }
@@ -249,7 +248,7 @@ impl Args {
             self.files.retain(|e| PathBuf::from(e).is_file());
         }
 
-        // Check if dir is passed without -r
+        // Check if directory is passed without --recursive
         if !self.recursive
             && self.files.iter().any(|e| PathBuf::from(e).is_dir())
         {
@@ -257,18 +256,18 @@ impl Args {
                 logs,
                 Level::Error,
                 "",
-                "A directory was passed but --recursive was not.",
+                "A directory was passed without --recursive.",
             );
             exit_code = 1;
         }
 
-        // Check files are passed if no --stdin (also catches no -r)
+        // Check files are passed if no --stdin or --recursive
         if !self.stdin && self.files.is_empty() {
             record_file_log(
                 logs,
                 Level::Error,
                 "",
-                "No files specified. Provide filenames, or pass -r, or pass --stdin.",
+                "No files specified. Provide filenames, or pass --recursive or --stdin.",
             );
             exit_code = 1;
         }
