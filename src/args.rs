@@ -50,7 +50,7 @@ pub struct Args {
     /// Print arguments and exit
     pub arguments: bool,
     /// List of files to be formatted
-    pub files: Vec<String>,
+    pub files: Vec<PathBuf>,
     /// Recursive search for files
     pub recursive: bool,
 }
@@ -81,7 +81,7 @@ pub struct OptionArgs {
     pub verbosity: Option<LevelFilter>,
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
-    pub files: Vec<String>,
+    pub files: Vec<PathBuf>,
     pub recursive: Option<bool>,
 }
 
@@ -222,6 +222,7 @@ impl Args {
     /// Resolve conflicting arguments
     pub fn resolve(&mut self, logs: &mut Vec<Log>) -> u8 {
         let mut exit_code = 0;
+        let empty_path = PathBuf::from("");
 
         // stdin implies print
         self.print |= self.stdin;
@@ -236,7 +237,7 @@ impl Args {
         // Recursive file search
         if self.recursive {
             let tmp = if self.files.is_empty() {
-                vec!["./".to_string()]
+                vec![PathBuf::from("./")]
             } else {
                 self.files.clone()
             };
@@ -245,17 +246,15 @@ impl Args {
                 find_files(dir.into(), &mut self.files);
             }
 
-            self.files.retain(|e| PathBuf::from(e).is_file());
+            self.files.retain(|e| e.is_file());
         }
 
         // Check if directory is passed without --recursive
-        if !self.recursive
-            && self.files.iter().any(|e| PathBuf::from(e).is_dir())
-        {
+        if !self.recursive && self.files.iter().any(|e| e.is_dir()) {
             record_file_log(
                 logs,
                 Level::Error,
-                "",
+                &empty_path,
                 "A directory was passed without --recursive.",
             );
             exit_code = 1;
@@ -266,7 +265,7 @@ impl Args {
             record_file_log(
                 logs,
                 Level::Error,
-                "",
+                &empty_path,
                 "No files specified. Provide filenames, or pass --recursive or --stdin.",
             );
             exit_code = 1;
@@ -277,7 +276,7 @@ impl Args {
             record_file_log(
                 logs,
                 Level::Error,
-                "",
+                &empty_path,
                 "Do not provide file name(s) when using --stdin.",
             );
             exit_code = 1;
@@ -368,7 +367,16 @@ impl fmt::Display for Args {
         display_args_list(&self.verbatims, "verbatims", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
         display_args_list(&wrap_chars, "wrap-chars", f)?;
-        display_args_list(&self.files, "files", f)?;
+        display_args_list(
+            &self
+                .files
+                .clone()
+                .into_iter()
+                .map(|e| e.into_os_string().into_string().unwrap())
+                .collect::<Vec<String>>(),
+            "files",
+            f,
+        )?;
 
         // Do not print `arguments` or `noconfig` fields
         Ok(())

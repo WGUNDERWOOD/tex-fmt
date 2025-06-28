@@ -28,8 +28,8 @@ pub fn main(text: &str, config: &str) -> JsValue {
     // Run tex-fmt
     let mut logs = Vec::<Log>::new();
     args.resolve(&mut logs);
-    let file = "input";
-    let new_text = format_file(text, file, &args, &mut logs);
+    let file = PathBuf::from("input");
+    let new_text = format_file(text, &file, &args, &mut logs);
     let logs = format_logs(&mut logs, &args);
 
     // Wrap into JS object
