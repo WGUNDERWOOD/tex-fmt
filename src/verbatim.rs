@@ -3,7 +3,7 @@
 use crate::format::{Pattern, State};
 use crate::logging::{record_line_log, Log};
 use log::Level::Warn;
-use std::path::PathBuf;
+use std::path::Path;
 
 /// Information on the verbatim state of a line
 #[derive(Clone, Debug)]
@@ -37,7 +37,7 @@ pub fn get_verbatim(
     line: &str,
     state: &State,
     logs: &mut Vec<Log>,
-    file: &PathBuf,
+    file: &Path,
     warn: bool,
     pattern: &Pattern,
     verbatims_begin: &[String],
