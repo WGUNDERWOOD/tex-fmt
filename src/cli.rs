@@ -84,7 +84,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
         files: arg_matches
             .get_many::<String>("files")
             .unwrap_or_default()
-            .map(|e| PathBuf::from(e))
+            .map(PathBuf::from)
             .collect::<Vec<PathBuf>>(),
         recursive: get_flag(&arg_matches, "recursive"),
     };

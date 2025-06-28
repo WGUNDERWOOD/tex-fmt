@@ -8,7 +8,7 @@ use log::Level::{Debug, Error, Info, Trace, Warn};
 use log::LevelFilter;
 use std::cmp::Reverse;
 use std::io::Write;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use web_time::Instant;
 
 /// Holds a log entry
@@ -34,7 +34,7 @@ pub struct Log {
 fn record_log(
     logs: &mut Vec<Log>,
     level: Level,
-    file: &PathBuf,
+    file: &Path,
     linum_new: Option<usize>,
     linum_old: Option<usize>,
     line: Option<String>,
@@ -43,7 +43,7 @@ fn record_log(
     let log = Log {
         level,
         time: Instant::now(),
-        file: file.clone(),
+        file: file.to_path_buf(),
         linum_new,
         linum_old,
         line,
@@ -56,7 +56,7 @@ fn record_log(
 pub fn record_file_log(
     logs: &mut Vec<Log>,
     level: Level,
-    file: &PathBuf,
+    file: &Path,
     message: &str,
 ) {
     record_log(logs, level, file, None, None, None, message);
@@ -66,7 +66,7 @@ pub fn record_file_log(
 pub fn record_line_log(
     logs: &mut Vec<Log>,
     level: Level,
-    file: &PathBuf,
+    file: &Path,
     linum_new: usize,
     linum_old: usize,
     line: &str,
@@ -195,11 +195,7 @@ pub fn print_logs(logs: &mut Vec<Log>) {
         let log_string = format!(
             "{} {}: {}",
             "tex-fmt".magenta().bold(),
-            if log.file.exists() {
-                log.file.to_str().unwrap().blue().bold()
-            } else {
-                log.file.to_str().unwrap().blue().bold()
-            },
+            log.file.to_str().unwrap().blue().bold(),
             format_log(log),
         );
 

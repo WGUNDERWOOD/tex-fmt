@@ -4,10 +4,10 @@ use crate::args::Args;
 use crate::logging::{record_file_log, Log};
 use log::Level::{Error, Info};
 use std::fs;
-use std::path::PathBuf;
+use std::path::Path;
 
 /// Write a formatted file to disk
-fn write_file(file: &PathBuf, text: &str) {
+fn write_file(file: &Path, text: &str) {
     let filepath = file.canonicalize().unwrap();
     fs::write(filepath, text).expect("Could not write the file");
 }
@@ -15,7 +15,7 @@ fn write_file(file: &PathBuf, text: &str) {
 /// Handle the newly formatted file
 pub fn process_output(
     args: &Args,
-    file: &PathBuf,
+    file: &Path,
     text: &str,
     new_text: &str,
     logs: &mut Vec<Log>,

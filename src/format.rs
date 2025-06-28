@@ -13,7 +13,7 @@ use crate::write::process_output;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// Central function to format a file
 ///
@@ -23,7 +23,7 @@ use std::path::PathBuf;
 #[allow(clippy::too_many_lines)]
 pub fn format_file(
     old_text: &str,
-    file: &PathBuf,
+    file: &Path,
     args: &Args,
     logs: &mut Vec<Log>,
 ) -> String {
@@ -181,7 +181,7 @@ fn set_ignore_and_report(
     line: &str,
     temp_state: &mut State,
     logs: &mut Vec<Log>,
-    file: &PathBuf,
+    file: &Path,
     pattern: &Pattern,
     verbatims_begin: &[String],
     verbatims_end: &[String],
@@ -320,9 +320,8 @@ pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
     } else {
         for file in &args.files {
             if let Some(text) = read(file, logs) {
-                let new_text = format_file(&text, &file, args, logs);
-                exit_code |=
-                    process_output(args, &file, &text, &new_text, logs);
+                let new_text = format_file(&text, file, args, logs);
+                exit_code |= process_output(args, file, &text, &new_text, logs);
             } else {
                 exit_code = 1;
             }
