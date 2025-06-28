@@ -7,6 +7,7 @@ use crate::logging::{record_line_log, Log};
 use crate::regexes::VERB;
 use log::Level;
 use log::LevelFilter;
+use std::path::PathBuf;
 
 /// String slice to start wrapped text lines
 pub const TEXT_LINE_START: &str = "";
@@ -106,7 +107,7 @@ pub fn apply_wrap<'a>(
     line: &'a str,
     indent_length: usize,
     state: &State,
-    file: &str,
+    file: &PathBuf,
     args: &Args,
     logs: &mut Vec<Log>,
     pattern: &Pattern,

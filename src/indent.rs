@@ -8,6 +8,7 @@ use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, VERB};
 use core::cmp::max;
 use log::Level;
 use log::LevelFilter;
+use std::path::PathBuf;
 
 /// Opening delimiters
 const OPENS: [char; 3] = ['{', '(', '['];
@@ -165,7 +166,7 @@ pub fn calculate_indent(
     line: &str,
     state: &mut State,
     logs: &mut Vec<Log>,
-    file: &str,
+    file: &PathBuf,
     args: &Args,
     pattern: &Pattern,
     lists_begin: &[String],
