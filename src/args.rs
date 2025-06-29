@@ -234,6 +234,13 @@ impl Args {
             self.wraplen
         };
 
+        // Add .tex to any pathless non-dir file
+        for file in &mut self.files {
+            if !file.is_dir() && file.extension().is_none() {
+                file.set_extension(".tex");
+            }
+        }
+
         // Recursive file search
         if self.recursive {
             let tmp = if self.files.is_empty() {
