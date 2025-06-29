@@ -243,7 +243,7 @@ impl Args {
             };
 
             for dir in &tmp {
-                find_files(dir.into(), &mut self.files);
+                find_files(dir, &mut self.files);
             }
 
             self.files.retain(|e| e.is_file());
