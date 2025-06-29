@@ -242,8 +242,10 @@ impl Args {
                 self.files.clone()
             };
 
-            for dir in &tmp {
-                find_files(dir, &mut self.files);
+            for file in &tmp {
+                if file.is_dir() {
+                    find_files(file, &mut self.files);
+                }
             }
 
             self.files.retain(|e| e.is_file());
