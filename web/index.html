@@ -7,12 +7,13 @@
   <title> tex-fmt | LaTeX formatter </title>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Noto+Sans&family=Source+Code+Pro&display=swap');
     :root {
       --col-dark: #191924;
-      --col-dim: #292934;
+      --col-dull: #3b3b3e;
+      --col-dim: #303045;
       --col-mid: #9999a4;
+      --col-gray: #808088;
       --col-light: #faf7e5;
       --col-orange: #e5652e;
       --col-yellow: #eed858;
@@ -70,10 +71,22 @@
       margin-bottom: 12px;
       margin-top: 0px;
     }
-    .textBox {
+    .textBoxInput {
       color: var(--col-light);
       background-color: var(--col-dim);
       border: 2px solid var(--col-mid);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: 'Source Code Pro', sans-serif;
+      resize: none;
+      width: 100%;
+      box-sizing: border-box;
+      max-width: 700px;
+    }
+    .textBoxOutput {
+      color: var(--col-light);
+      background-color: var(--col-dull);
+      border: 2px solid var(--col-gray);
       border-radius: 4px;
       font-size: 14px;
       font-family: 'Source Code Pro', sans-serif;
@@ -137,12 +150,12 @@
 
     <div class="textCol" >
       <h3> Input </h3>
-      <textarea id="inputText" rows="30" cols="80" class=textBox></textarea>
+      <textarea id="inputText" rows="30" cols="80" class=textBoxInput></textarea>
     </div>
 
     <div class="textCol" >
       <h3> Output </h3>
-      <textarea id="outputText" rows="30" cols="80" class=textBox readonly></textarea>
+      <textarea id="outputText" rows="30" cols="80" class=textBoxOutput readonly></textarea>
     </div>
 
   </div>
@@ -152,18 +165,22 @@
 
     <div class="textCol" >
       <h3> Config </h3>
-      <textarea id="configText" rows="20" cols="80" class=textBox></textarea>
+      <textarea id="configText" rows="20" cols="80" class=textBoxInput># tex-fmt.toml</textarea>
     </div>
 
     <div class="textCol" >
       <h3> Logs </h3>
-      <textarea id="logText" rows="20" cols="80" class=textBox readonly></textarea>
+      <textarea id="logText" rows="20" cols="80" class=textBoxOutput readonly></textarea>
     </div>
 
   </div>
 
   <!-- Import script -->
   <script type="module" src="./index.js"></script>
+
+  <!-- goatcounter -->
+  <script data-goatcounter="https://wgunderwood.goatcounter.com/count"
+    async src="//gc.zgo.at/count.js"></script>
 
 </body>
 </html>

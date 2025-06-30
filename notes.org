@@ -1,47 +1,33 @@
 #+title: tex-fmt
 * Tasks
-** TODO Work on browser version
-** TODO Actions yaml long lines
-** TODO Indicate which args are CLI and which are config
-** TODO Add to Nix home-manager with empty config file
-** TODO Update wasm-bindgen to 0.2.99 when released in nixpkgs
-** TODO Publish HTML docs
 ** TODO CTAN submission
 *** TODO Avoid making directories when building archive
 *** TODO Add PDF documentation and source
 *** TODO Discuss package name
-* Options and documentation
-** Args struct
-** OptionArgs struct
-** OptionArgs new function
-** Implement Default, Display, from for Args
-** CLI command
-** CLI args parser function
-** Config args parser function
-** Args resolver
-** GitHub README
+** TODO Check order of deleting multiple empty lines and trimming trailing space
 * Release process
-** Update release notes
+** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
-*** Write in NEWS.md
 ** Update version number in Cargo.toml
-** Update version number for pre-commit
+** Update version number for pre-commit in README
 ** Update Nix flake and lock
-*** Check for new NixOS version (nixos-XX.XX) for flake.nix
 *** just nix
+*** nix develop
 ** Update Rust version
 *** just upgrade
 ** Run tests
 *** just
 *** just perf
 *** Update performance results in README.md
-** Push to GitHub and check tests pass
+** Push to GitHub and check action tests pass
 ** Create a git tag
-*** git tag vX.X.X
+*** git tag vY.Y.Y
 *** git push --tags
+*** Can delete remote tags with git push --delete origin vY.Y.Y
 ** Publish to crates.io with cargo publish
 *** Pass --allow-dirty if notes.org has changed
 ** Publish GitHub release with notes from NEWS.md
+*** No need to add a title
 *** GitHub binaries published automatically with actions
 ** Submit to CTAN
 *** Update version in ctan/tex-fmt.pkg
@@ -51,7 +37,8 @@
 *** Validate with cd ctan && ctan-o-mat tex-fmt.pkg
 *** Submit with cd ctan && ctan-o-mat --submit tex-fmt.pkg
 ** Publish in nixpkgs
-*** Check out master branch of nixpkgs fork
+*** Go to nixpkgs fork directory
+*** git checkout master
 *** git fetch upstream
 *** git rebase upstream/master
 *** git fetch
@@ -69,3 +56,49 @@
 *** Submit pull request and check relevant boxes
 ** Tidy repository
 *** Commit any new changes to NEWS.md or notes.org
+* CLI and config structure
+*** args.rs
+**** Core argument definitions
+**** Args struct defines arguments used internally by tex-fmt
+**** OptionArgs struct defines an intermediate target
+***** CLI arguments are read into OptionArgs in cli.rs
+***** Config file arguments are read into OptionArgs in config.rs
+***** Default values for OptionArgs are defined here
+**** These OptionArgs are merged together
+**** Then converted into Args
+**** Conflicting arguments are resolved
+**** The Display trait is implemented for args
+*** command.rs
+**** Contains the clap command definition
+**** Sets options exposed to the user on the CLI
+*** cli.rs
+**** Logic for reading from CLI
+**** Clap uses command.rs to read from CLI
+**** This file then parses from clap into OptionArgs
+*** config.rs
+**** Logic for reading from config file
+**** Determines the config file path by looking in several places
+**** Reads from this path and parses to a toml Table
+**** Values are then assigned to an OptionArgs struct
+* Process for adding new arguments
+** General
+*** args.rs
+**** Update Args struct if core argument
+**** Update OptionArgs struct
+**** Update Args resolve() if extra logic necessary
+**** Update Args fmt::Display if core argument
+** CLI arguments
+*** command.rs
+**** Update clap command definition
+*** cli.rs
+**** Update get_cli_args() and add extra logic if needed
+** Config arguments
+*** config.rs
+**** Update get_config_args()
+** Fix compiler warnings
+** Implement behaviour
+** Add tests
+** Update README
+*** CLI options
+*** Config options
+*** Usage section if commonly used option

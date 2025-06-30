@@ -56,22 +56,21 @@ jobs:
         run: cargo install cross
       - name: Build
         run: |
-          ${{ matrix.program }} build --target ${{ matrix.target }} \
-            --all-features --release --locked
+          ${{ matrix.program }} build --target ${{ matrix.target }} --all-features --release --locked
       - name: Compress (windows)
         if: ${{ contains(matrix.os, 'windows') }}
         run: |
-          ${{ format('Compress-Archive target/{0}/release/tex-fmt.exe {1}', \
+          ${{ format('Compress-Archive target/{0}/release/tex-fmt.exe {1}',
             matrix.target, matrix.archive) }}
       - name: Compress (macos)
         if: ${{ contains(matrix.os, 'macos') }}
         run: |
-          ${{ format('gtar -czvf {1} -C target/{0}/release tex-fmt', \
+          ${{ format('gtar -czvf {1} -C target/{0}/release tex-fmt',
             matrix.target, matrix.archive) }}
       - name: Compress (linux)
         if: ${{ contains(matrix.os, 'ubuntu') }}
         run: |
-          ${{ format('tar -czvf {1} -C target/{0}/release tex-fmt', \
+          ${{ format('tar -czvf {1} -C target/{0}/release tex-fmt',
             matrix.target, matrix.archive) }}
       - name: Upload binary archive
         uses: actions/upload-artifact@v4
@@ -87,9 +86,7 @@ jobs:
       - uses: actions/download-artifact@v4
       - name: Publish binaries
         run: |
-          gh release upload \
-            ${{ github.ref_name }} $(find . -iname tex-fmt*.zip)
-          gh release upload \
-            ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
+          gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.zip)
+          gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

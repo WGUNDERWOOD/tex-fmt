@@ -1,3 +1,38 @@
+# v0.5.4
+
+## Allow custom non-indented environments
+
+- Pass `no-indent-envs = ["mydocument"]` in `tex-fmt.toml`.
+- Then no indentation is applied inside `\begin{mydocument}...\end{mydocument}`.
+- This is the default behaviour for `\begin{document}...\end{document}`.
+
+## Allow custom verbatim environments
+
+- Pass `verbatims = ["myverbatim"]` in `tex-fmt.toml`.
+- All formatting is then skipped inside `\begin{myverbatim}...\end{myverbatim}`.
+
+## Improve formatting when using `\verb|...|`
+
+- Lines are not broken inside `\verb|...|`.
+- Environments inside `\verb|...|` do not trigger new lines.
+- No indenting applied to lines containing `\verb|...|`.
+
+## Minor changes
+
+- Fix output bug in profiling script at `extra/prof.sh`.
+- Add link to [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page in README.
+- Add logo to [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page.
+- Add better tests for config file options and CLI arguments.
+- Improve documentation of config file options and CLI arguments in README.
+
+# v0.5.3
+
+- Add `--fail-on-change` flag.
+- Deploy web app for using tex-fmt in a browser.
+- Simplify testing structure.
+- Switch nix flake input to nixpkgs-unstable.
+- Update README with GitHub Action, mason.nvim, Debian, bibtex-tidy, pre-commit.
+
 # v0.5.2
 
 - Fix critical bug with config files missing the `lists` field.
@@ -26,7 +61,7 @@ Configuring tex-fmt can now be achieved using a configuration file as well as CL
 Man pages can be generated using the `--man` flag. Pre-built man pages are also available for download from the GitHub repository.
 
 ## Shell completion
-Completion files for popular shells, including bash, fish, zsh, elvish and PowerShell, can be generated using the `--completion <shell>` flag. Pre-built completion scripts are also available for download from the GitHub repository.
+Completion files for popular shells, including bash, fish, zsh, elvish and PowerShell, can be generated using the `--completion <SHELL>` flag. Pre-built completion scripts are also available for download from the GitHub repository.
 
 ## Minor changes
 - Arguments passed to tex-fmt can be inspected by passing `--args`
