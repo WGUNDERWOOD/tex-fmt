@@ -1,6 +1,6 @@
 //! Read arguments from a config file
 
-use crate::args::*;
+use crate::args::{OptionArgs, TabChar};
 use dirs::config_dir;
 use log::LevelFilter;
 use std::env::current_dir;
@@ -16,24 +16,24 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
     // Do not read config file
     if args.noconfig == Some(true) {
         return None;
-    };
+    }
     // Named path passed as cli arg
     if args.config.is_some() {
         return args.config.clone();
-    };
+    }
     // Config file in current directory
     if let Ok(mut config) = current_dir() {
         config.push(CONFIG);
         if config.exists() {
             return Some(config);
-        };
+        }
     }
     // Config file at git repository root
     if let Some(mut config) = find_git_root() {
         config.push(CONFIG);
         if config.exists() {
             return Some(config);
-        };
+        }
     }
     // Config file in user home config directory
     if let Some(mut config) = config_dir() {
@@ -41,7 +41,7 @@ fn resolve_config_path(args: &OptionArgs) -> Option<PathBuf> {
         config.push(CONFIG);
         if config.exists() {
             return Some(config);
-        };
+        }
     }
     None
 }
@@ -66,12 +66,14 @@ fn find_git_root() -> Option<PathBuf> {
 }
 
 /// Read content from a config file path
+///
+/// # Panics
+///
+/// This function panics if the config file cannot be read.
+#[must_use]
 pub fn get_config(args: &OptionArgs) -> Option<(PathBuf, String, String)> {
     let config_path = resolve_config_path(args);
-    #[allow(clippy::question_mark)]
-    if config_path.is_none() {
-        return None;
-    };
+    config_path.as_ref()?;
     let config_path_string = config_path
         .clone()
         .unwrap()
@@ -82,14 +84,36 @@ pub fn get_config(args: &OptionArgs) -> Option<(PathBuf, String, String)> {
     Some((config_path.unwrap(), config_path_string, config))
 }
 
+fn parse_array_string(name: &str, config: &Table) -> Vec<String> {
+    config
+        .get(name)
+        .and_then(|v| v.as_array())
+        .unwrap_or(&vec![])
+        .iter()
+        .filter_map(|v| v.as_str().map(String::from))
+        .collect()
+}
+
+fn string_to_char(s: &str) -> char {
+    let mut chars = s.chars();
+    let c = chars.next().expect("String is empty");
+    assert!(
+        chars.next().is_none(),
+        "String contains more than one character",
+    );
+    c
+}
+
 /// Parse arguments from a config file path
+///
+/// # Panics
+///
+/// This function panics if the config file cannot be parsed into TOML
+#[must_use]
 pub fn get_config_args(
     config: Option<(PathBuf, String, String)>,
 ) -> Option<OptionArgs> {
-    #[allow(clippy::question_mark)]
-    if config.is_none() {
-        return None;
-    }
+    config.as_ref()?;
     let (config_path, config_path_string, config) = config.unwrap();
     let config = config.parse::<Table>().unwrap_or_else(|_| {
         panic!("Failed to read config file at {config_path_string}")
@@ -108,6 +132,12 @@ pub fn get_config_args(
         Some("space") => Some(TabChar::Space),
         _ => None,
     };
+
+    // Read wrap_chars to Vec<char> not Vec<String>
+    let wrap_chars: Vec<char> = parse_array_string("wrap-chars", &config)
+        .iter()
+        .map(|c| string_to_char(c))
+        .collect();
 
     let args = OptionArgs {
         check: config.get("check").map(|x| x.as_bool().unwrap()),
@@ -129,16 +159,14 @@ pub fn get_config_args(
         stdin: config.get("stdin").map(|x| x.as_bool().unwrap()),
         config: Some(config_path),
         noconfig: None,
-        lists: config
-            .get("lists")
-            .and_then(|v| v.as_array())
-            .unwrap_or(&vec![])
-            .iter()
-            .filter_map(|v| v.as_str().map(String::from))
-            .collect(),
+        lists: parse_array_string("lists", &config),
+        verbatims: parse_array_string("verbatims", &config),
+        no_indent_envs: parse_array_string("no-indent-envs", &config),
+        wrap_chars,
         verbosity,
         arguments: None,
         files: vec![],
+        recursive: None,
     };
     Some(args)
 }

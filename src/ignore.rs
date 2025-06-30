@@ -1,7 +1,7 @@
 //! Utilities for ignoring/skipping source lines
 
-use crate::format::*;
-use crate::logging::*;
+use crate::format::State;
+use crate::logging::{record_line_log, Log};
 use log::Level::Warn;
 
 /// Information on the ignored state of a line
@@ -15,6 +15,7 @@ pub struct Ignore {
 
 impl Ignore {
     /// Construct a new ignore state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             actual: false,
