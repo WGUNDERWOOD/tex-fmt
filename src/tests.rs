@@ -10,8 +10,8 @@ use std::fs;
 use std::path::PathBuf;
 
 fn test_file(
-    source_file: &str,
-    target_file: &str,
+    source_file: &PathBuf,
+    target_file: &PathBuf,
     config_file: Option<&PathBuf>,
     cli_file: Option<&PathBuf>,
 ) -> bool {
@@ -52,8 +52,8 @@ fn test_file(
         println!(
             "{} {} -> {}",
             "fail".red().bold(),
-            source_file.yellow().bold(),
-            target_file.yellow().bold()
+            source_file.to_str().unwrap().yellow().bold(),
+            target_file.to_str().unwrap().yellow().bold()
         );
         let diff = TextDiff::from_lines(&fmt_source_text, &target_text);
         for change in diff.iter_all_changes() {
@@ -108,8 +108,8 @@ fn get_cli_file(dir: &fs::DirEntry) -> Option<PathBuf> {
 }
 
 fn test_source_target(
-    source_file: &str,
-    target_file: &str,
+    source_file: &PathBuf,
+    target_file: &PathBuf,
     config_file: Option<&PathBuf>,
     cli_file: Option<&PathBuf>,
 ) -> bool {
@@ -161,22 +161,20 @@ fn run_tests_in_dir(test_dir: &fs::DirEntry) -> bool {
 
     // Test file formatting
     for file in source_files {
-        let source_file = test_dir.path().join("source").join(file.clone());
-        let source_file = source_file.to_str().unwrap();
-        let target_file = test_dir.path().join("target").join(file.clone());
-        let target_file = target_file.to_str().unwrap();
+        let source_file = test_dir.path().join("source").join(&file);
+        let target_file = test_dir.path().join("target").join(&file);
 
         // If both config and cli exist, either alone should work
         if config_file.is_some() && cli_file.is_some() {
             pass &= test_source_target(
-                source_file,
-                target_file,
+                &source_file,
+                &target_file,
                 config_file.as_ref(),
                 None,
             );
             pass &= test_source_target(
-                source_file,
-                target_file,
+                &source_file,
+                &target_file,
                 None,
                 cli_file.as_ref(),
             );
@@ -184,8 +182,8 @@ fn run_tests_in_dir(test_dir: &fs::DirEntry) -> bool {
 
         // Pass both config and cli, even if one or more are None
         pass &= test_source_target(
-            source_file,
-            target_file,
+            &source_file,
+            &target_file,
             config_file.as_ref(),
             cli_file.as_ref(),
         );
