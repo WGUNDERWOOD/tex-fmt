@@ -243,13 +243,13 @@ impl Args {
 
         // Recursive file search
         if self.recursive {
-            let tmp = if self.files.is_empty() {
+            let files_tmp = if self.files.is_empty() {
                 vec![PathBuf::from("./")]
             } else {
                 self.files.clone()
             };
 
-            for file in &tmp {
+            for file in &files_tmp {
                 if file.is_dir() {
                     find_files(file, &mut self.files);
                 }
