@@ -1,6 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO Check order of deleting multiple empty lines and trimming trailing space
 * Release process
 ** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
