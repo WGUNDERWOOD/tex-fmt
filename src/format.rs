@@ -13,6 +13,7 @@ use crate::write::process_output;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
+use std::path::{Path, PathBuf};
 
 /// Central function to format a file
 ///
@@ -22,7 +23,7 @@ use std::iter::zip;
 #[allow(clippy::too_many_lines)]
 pub fn format_file(
     old_text: &str,
-    file: &str,
+    file: &Path,
     args: &Args,
     logs: &mut Vec<Log>,
 ) -> String {
@@ -180,7 +181,7 @@ fn set_ignore_and_report(
     line: &str,
     temp_state: &mut State,
     logs: &mut Vec<Log>,
-    file: &str,
+    file: &Path,
     pattern: &Pattern,
     verbatims_begin: &[String],
     verbatims_end: &[String],
@@ -308,18 +309,19 @@ const fn indents_return_to_zero(state: &State) -> bool {
 pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
     let mut exit_code = 0;
     if args.stdin {
-        if let Some((file, text)) = read_stdin(logs) {
-            let new_text = format_file(&text, &file, args, logs);
-            exit_code = process_output(args, &file, &text, &new_text, logs);
+        let stdin_path = PathBuf::from("<stdin>");
+        if let Some(text) = read_stdin(logs) {
+            let new_text = format_file(&text, &stdin_path, args, logs);
+            exit_code =
+                process_output(args, &stdin_path, &text, &new_text, logs);
         } else {
             exit_code = 1;
         }
     } else {
         for file in &args.files {
-            if let Some((file, text)) = read(file, logs) {
-                let new_text = format_file(&text, &file, args, logs);
-                exit_code |=
-                    process_output(args, &file, &text, &new_text, logs);
+            if let Some(text) = read(file, logs) {
+                let new_text = format_file(&text, file, args, logs);
+                exit_code |= process_output(args, file, &text, &new_text, logs);
             } else {
                 exit_code = 1;
             }
