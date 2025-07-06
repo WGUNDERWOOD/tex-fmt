@@ -1,13 +1,14 @@
 //! Utilities for indenting source lines
 
-use crate::args::*;
-use crate::comments::*;
-use crate::format::*;
-use crate::logging::*;
-use crate::regexes::*;
+use crate::args::Args;
+use crate::comments::{find_comment_index, remove_comment};
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, VERB};
 use core::cmp::max;
 use log::Level;
 use log::LevelFilter;
+use std::path::Path;
 
 /// Opening delimiters
 const OPENS: [char; 3] = ['{', '(', '['];
@@ -25,6 +26,7 @@ pub struct Indent {
 
 impl Indent {
     /// Construct a new indentation state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             actual: 0,
@@ -33,83 +35,123 @@ impl Indent {
     }
 }
 
+impl Default for Indent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Calculate total indentation change due to the current line
-fn get_diff(line: &str, pattern: &Pattern) -> i8 {
-    // list environments get double indents
+fn get_diff(
+    line: &str,
+    pattern: &Pattern,
+    lists_begin: &[String],
+    lists_end: &[String],
+    no_indent_envs_begin: &[String],
+    no_indent_envs_end: &[String],
+) -> i8 {
+    // Do not indent if line contains \verb|...|
+    if pattern.contains_verb && line.contains(VERB) {
+        return 0;
+    }
+
+    // Indentation for environments
     let mut diff: i8 = 0;
-
-    // other environments get single indents
     if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
-        // documents get no global indentation
-        if line.contains(DOC_BEGIN) {
+        if no_indent_envs_begin.iter().any(|r| line.contains(r)) {
             return 0;
-        };
+        }
         diff += 1;
-        diff += i8::from(LISTS_BEGIN.iter().any(|r| line.contains(r)));
+        diff += i8::from(lists_begin.iter().any(|r| line.contains(r)));
     } else if pattern.contains_env_end && line.contains(ENV_END) {
-        // documents get no global indentation
-        if line.contains(DOC_END) {
+        if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
-        };
+        }
         diff -= 1;
-        diff -= i8::from(LISTS_END.iter().any(|r| line.contains(r)));
-    };
-
-    // indent for delimiters
-    diff += line
-        .chars()
-        .map(|x| i8::from(OPENS.contains(&x)) - i8::from(CLOSES.contains(&x)))
-        .sum::<i8>();
+        diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
+    }
 
     diff
 }
 
 /// Calculate dedentation for the current line
-fn get_back(line: &str, pattern: &Pattern, state: &State) -> i8 {
+fn get_back(
+    line: &str,
+    pattern: &Pattern,
+    state: &State,
+    lists_end: &[String],
+    no_indent_envs_end: &[String],
+) -> i8 {
     // Only need to dedent if indentation is present
     if state.indent.actual == 0 {
         return 0;
     }
     let mut back: i8 = 0;
 
+    // Don't apply any indenting if a \verb|...| is present
+    if pattern.contains_verb && line.contains(VERB) {
+        return 0;
+    }
+
+    // Calculate dedentation for environments
     if pattern.contains_env_end && line.contains(ENV_END) {
-        // documents get no global indentation
-        if line.contains(DOC_END) {
+        // Some environments are not indented
+        if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
-        };
-        // list environments get double indents for indenting items
-        for r in LISTS_END.iter() {
+        }
+        // List environments get double indents for indenting items
+        for r in lists_end {
             if line.contains(r) {
                 return 2;
-            };
+            }
         }
-        // other environments get single indents
+        // Other environments get single indents
         back = 1;
     } else if pattern.contains_item && line.contains(ITEM) {
-        // deindent items to make the rest of item environment appear indented
+        // Deindent items to make the rest of item environment appear indented
         back += 1;
-    };
-
-    // Dedent delimiters
-    let mut cumul: i8 = back;
-    for c in line.chars() {
-        cumul -= i8::from(OPENS.contains(&c));
-        cumul += i8::from(CLOSES.contains(&c));
-        back = max(cumul, back);
     }
 
     back
 }
 
+/// Calculate delimiter-based indent and dedent together for performance
+fn get_diff_back_delim(line: &str) -> (i8, i8) {
+    let mut diff: i8 = 0;
+    let mut back: i8 = 0;
+    for c in line.chars() {
+        diff -= i8::from(OPENS.contains(&c));
+        diff += i8::from(CLOSES.contains(&c));
+        back = max(diff, back);
+    }
+    (-diff, back)
+}
+
 /// Calculate indentation properties of the current line
+#[allow(clippy::too_many_arguments)]
 fn get_indent(
     line: &str,
     prev_indent: &Indent,
     pattern: &Pattern,
     state: &State,
+    lists_begin: &[String],
+    lists_end: &[String],
+    no_indent_envs_begin: &[String],
+    no_indent_envs_end: &[String],
 ) -> Indent {
-    let diff = get_diff(line, pattern);
-    let back = get_back(line, pattern, state);
+    let mut diff = get_diff(
+        line,
+        pattern,
+        lists_begin,
+        lists_end,
+        no_indent_envs_begin,
+        no_indent_envs_end,
+    );
+    let mut back =
+        get_back(line, pattern, state, lists_end, no_indent_envs_end);
+    let diff_back_delim = get_diff_back_delim(line);
+    diff += diff_back_delim.0;
+    back += diff_back_delim.1;
     let actual = prev_indent.actual + diff;
     let visual = prev_indent.actual - back;
     Indent { actual, visual }
@@ -119,19 +161,33 @@ fn get_indent(
 /// This functions saves the calculated [Indent], which might be
 /// negative, to the given [State], and then ensures that the returned
 /// [Indent] is non-negative.
+#[allow(clippy::too_many_arguments)]
 pub fn calculate_indent(
     line: &str,
     state: &mut State,
     logs: &mut Vec<Log>,
-    file: &str,
+    file: &Path,
     args: &Args,
     pattern: &Pattern,
+    lists_begin: &[String],
+    lists_end: &[String],
+    no_indent_envs_begin: &[String],
+    no_indent_envs_end: &[String],
 ) -> Indent {
     // Calculate the new indent by first removing the comment from the line
     // (if there is one) to ignore diffs from characters in there.
-    let comment_index = find_comment_index(line);
+    let comment_index = find_comment_index(line, pattern);
     let line_strip = remove_comment(line, comment_index);
-    let mut indent = get_indent(line_strip, &state.indent, pattern, state);
+    let mut indent = get_indent(
+        line_strip,
+        &state.indent,
+        pattern,
+        state,
+        lists_begin,
+        lists_end,
+        no_indent_envs_begin,
+        no_indent_envs_end,
+    );
 
     // Record the indent to the logs.
     if args.verbosity == LevelFilter::Trace {
@@ -173,12 +229,18 @@ pub fn calculate_indent(
         );
         indent.actual = indent.actual.max(0);
         indent.visual = indent.visual.max(0);
+
+        // If this is the first negatively indented line, record in the state
+        if state.linum_first_negative_indent.is_none() {
+            state.linum_first_negative_indent = Some(state.linum_new);
+        }
     }
 
     indent
 }
 
 /// Apply the given indentation to a line
+#[must_use]
 pub fn apply_indent(
     line: &str,
     indent: &Indent,
@@ -193,7 +255,7 @@ pub fn apply_indent(
     }
 
     // If line is correctly indented, return it directly
-    #[allow(clippy::cast_possible_wrap)]
+    #[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)]
     let n_indent_chars = (indent.visual * args.tabsize as i8) as usize;
     if first_non_whitespace == Some(n_indent_chars) {
         return line.into();

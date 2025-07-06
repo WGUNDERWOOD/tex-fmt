@@ -1,8 +1,9 @@
 //! Utilities for ignoring/skipping source lines
 
-use crate::format::*;
-use crate::logging::*;
+use crate::format::State;
+use crate::logging::{record_line_log, Log};
 use log::Level::Warn;
+use std::path::Path;
 
 /// Information on the ignored state of a line
 #[derive(Clone, Debug)]
@@ -15,6 +16,7 @@ pub struct Ignore {
 
 impl Ignore {
     /// Construct a new ignore state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             actual: false,
@@ -23,12 +25,18 @@ impl Ignore {
     }
 }
 
+impl Default for Ignore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Determine whether a line should be ignored
 pub fn get_ignore(
     line: &str,
     state: &State,
     logs: &mut Vec<Log>,
-    file: &str,
+    file: &Path,
     warn: bool,
 ) -> Ignore {
     let skip = contains_ignore_skip(line);

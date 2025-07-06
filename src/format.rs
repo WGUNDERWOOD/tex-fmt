@@ -1,21 +1,29 @@
 //! Core methodology for formatting a file
 
-use crate::args::*;
-use crate::ignore::*;
-use crate::indent::*;
-use crate::logging::*;
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING};
-use crate::subs::*;
-use crate::verbatim::*;
-use crate::wrap::*;
+use crate::args::{Args, TabChar};
+use crate::ignore::{get_ignore, Ignore};
+use crate::indent::{apply_indent, calculate_indent, Indent};
+use crate::logging::{record_file_log, Log};
+use crate::read::{read, read_stdin};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERB};
+use crate::subs;
+use crate::verbatim::{get_verbatim, Verbatim};
+use crate::wrap::{apply_wrap, needs_wrap};
+use crate::write::process_output;
 use crate::LINE_END;
 use log::Level::{Info, Warn};
 use std::iter::zip;
+use std::path::{Path, PathBuf};
 
 /// Central function to format a file
+///
+/// # Panics
+///
+/// This function panics upon an unrecoverable formatting error
+#[allow(clippy::too_many_lines)]
 pub fn format_file(
     old_text: &str,
-    file: &str,
+    file: &Path,
     args: &Args,
     logs: &mut Vec<Log>,
 ) -> String {
@@ -36,6 +44,14 @@ pub fn format_file(
         TabChar::Space => " ",
     };
 
+    // Get special environments
+    let lists_begin = get_begins(&args.lists);
+    let lists_end = get_ends(&args.lists);
+    let verbatims_begin = get_begins(&args.verbatims);
+    let verbatims_end = get_ends(&args.verbatims);
+    let no_indent_envs_begin = get_begins(&args.no_indent_envs);
+    let no_indent_envs_end = get_ends(&args.no_indent_envs);
+
     loop {
         if let Some((linum_old, mut line)) = queue.pop() {
             // Read the patterns present on this line.
@@ -47,20 +63,22 @@ pub fn format_file(
             // Update the state with the line number from the queue.
             temp_state.linum_old = linum_old;
 
-            // If the line should not be ignored ...
+            // If the line should not be ignored...
             if !set_ignore_and_report(
                 &line,
                 &mut temp_state,
                 logs,
                 file,
                 &pattern,
+                &verbatims_begin,
+                &verbatims_end,
             ) {
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.
-                if needs_split(&line, &pattern) {
-                    // Split the line into two ...
+                if subs::needs_split(&line, &pattern) {
+                    // Split the line into two...
                     let (this_line, next_line) =
-                        split_line(&line, &temp_state, file, args, logs);
+                        subs::split_line(&line, &temp_state, file, args, logs);
                     // ... and queue the second part for formatting.
                     queue.push((linum_old, next_line.to_string()));
                     line = this_line.to_string();
@@ -75,6 +93,10 @@ pub fn format_file(
                     file,
                     args,
                     &pattern,
+                    &lists_begin,
+                    &lists_end,
+                    &no_indent_envs_begin,
+                    &no_indent_envs_end,
                 );
 
                 #[allow(clippy::cast_possible_wrap)]
@@ -92,6 +114,7 @@ pub fn format_file(
                         file,
                         args,
                         logs,
+                        &pattern,
                     );
                     if let Some([this_line, next_line_start, next_line]) =
                         wrapped_lines
@@ -121,6 +144,7 @@ pub fn format_file(
         }
     }
 
+    // Warn about indents not returning to zero
     if !indents_return_to_zero(&state) {
         let msg = format!(
             "Indent does not return to zero. Last non-indented line is line {}",
@@ -129,9 +153,26 @@ pub fn format_file(
         record_file_log(logs, Warn, file, &msg);
     }
 
-    new_text = remove_trailing_spaces(&new_text);
+    // Warn about first negative indent
+    if let Some(n) = state.linum_first_negative_indent {
+        let msg = format!(
+            "Negative indents. First negatively indented line is line {n}",
+        );
+        record_file_log(logs, Warn, file, &msg);
+    }
+
+    new_text = subs::remove_trailing_spaces(&new_text);
+    new_text = subs::remove_trailing_blank_lines(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
     new_text
+}
+
+fn get_begins(v: &[String]) -> Vec<String> {
+    v.iter().map(|l| format!("\\begin{{{l}}}")).collect()
+}
+
+fn get_ends(v: &[String]) -> Vec<String> {
+    v.iter().map(|l| format!("\\end{{{l}}}")).collect()
 }
 
 /// Sets the `ignore` and `verbatim` flags in the given [State] based on
@@ -140,12 +181,22 @@ fn set_ignore_and_report(
     line: &str,
     temp_state: &mut State,
     logs: &mut Vec<Log>,
-    file: &str,
+    file: &Path,
     pattern: &Pattern,
+    verbatims_begin: &[String],
+    verbatims_end: &[String],
 ) -> bool {
     temp_state.ignore = get_ignore(line, temp_state, logs, file, true);
-    temp_state.verbatim =
-        get_verbatim(line, temp_state, logs, file, true, pattern);
+    temp_state.verbatim = get_verbatim(
+        line,
+        temp_state,
+        logs,
+        file,
+        true,
+        pattern,
+        verbatims_begin,
+        verbatims_end,
+    );
 
     temp_state.verbatim.visual || temp_state.ignore.visual
 }
@@ -153,13 +204,13 @@ fn set_ignore_and_report(
 /// Cleans the given text by removing extra line breaks and trailing spaces,
 /// and also tabs if they shouldn't be used.
 fn clean_text(text: &str, args: &Args) -> String {
-    let mut text = remove_extra_newlines(text);
+    let mut text = subs::remove_extra_newlines(text);
 
     if args.tabchar != TabChar::Tab {
-        text = remove_tabs(&text, args);
+        text = subs::remove_tabs(&text, args);
     }
 
-    text = remove_trailing_spaces(&text);
+    text = subs::remove_trailing_spaces(&text);
 
     text
 }
@@ -179,10 +230,13 @@ pub struct State {
     pub verbatim: Verbatim,
     /// Line number in the new file of the last non-indented line
     pub linum_last_zero_indent: usize,
+    /// Line number in the new file of the first negatively indented line
+    pub linum_first_negative_indent: Option<usize>,
 }
 
 impl State {
     /// Construct a new default state
+    #[must_use]
     pub const fn new() -> Self {
         Self {
             linum_old: 1,
@@ -191,11 +245,19 @@ impl State {
             indent: Indent::new(),
             verbatim: Verbatim::new(),
             linum_last_zero_indent: 1,
+            linum_first_negative_indent: None,
         }
     }
 }
 
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Record whether a line contains certain patterns to avoid recomputing
+#[allow(clippy::struct_excessive_bools)]
 pub struct Pattern {
     /// Whether a begin environment pattern is present
     pub contains_env_begin: bool,
@@ -205,18 +267,25 @@ pub struct Pattern {
     pub contains_item: bool,
     /// Whether a splitting pattern is present
     pub contains_splitting: bool,
+    /// Whether a comment is present
+    pub contains_comment: bool,
+    /// Whether a verb environment is present
+    pub contains_verb: bool,
 }
 
 impl Pattern {
     /// Check if a string contains patterns
+    #[must_use]
     pub fn new(s: &str) -> Self {
-        // If splitting does not match, no patterns are present
+        // If splitting does not match, most patterns are not present
         if RE_SPLITTING.is_match(s) {
             Self {
                 contains_env_begin: s.contains(ENV_BEGIN),
                 contains_env_end: s.contains(ENV_END),
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
+                contains_comment: s.contains('%'),
+                contains_verb: s.contains(VERB),
             }
         } else {
             Self {
@@ -224,6 +293,8 @@ impl Pattern {
                 contains_env_end: false,
                 contains_item: false,
                 contains_splitting: false,
+                contains_comment: s.contains('%'),
+                contains_verb: s.contains(VERB),
             }
         }
     }
@@ -232,4 +303,29 @@ impl Pattern {
 /// Ensure that the indentation returns to zero at the end of the file
 const fn indents_return_to_zero(state: &State) -> bool {
     state.indent.actual == 0
+}
+
+/// Run tex-fmt with the provided arguments
+pub fn run(args: &Args, logs: &mut Vec<Log>) -> u8 {
+    let mut exit_code = 0;
+    if args.stdin {
+        let stdin_path = PathBuf::from("<stdin>");
+        if let Some(text) = read_stdin(logs) {
+            let new_text = format_file(&text, &stdin_path, args, logs);
+            exit_code =
+                process_output(args, &stdin_path, &text, &new_text, logs);
+        } else {
+            exit_code = 1;
+        }
+    } else {
+        for file in &args.files {
+            if let Some(text) = read(file, logs) {
+                let new_text = format_file(&text, file, args, logs);
+                exit_code |= process_output(args, file, &text, &new_text, logs);
+            } else {
+                exit_code = 1;
+            }
+        }
+    }
+    exit_code
 }
