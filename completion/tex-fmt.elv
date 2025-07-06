@@ -43,6 +43,8 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand --trace 'Show trace messages'
             cand --man 'Generate man page'
             cand --args 'Print arguments passed to tex-fmt and exit'
+            cand -r 'Recursively search for files to format'
+            cand --recursive 'Recursively search for files to format'
             cand -h 'Print help'
             cand --help 'Print help'
             cand -V 'Print version'

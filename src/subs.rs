@@ -9,6 +9,7 @@ use crate::wrap::get_verb_end;
 use crate::LINE_END;
 use log::Level;
 use log::LevelFilter;
+use std::path::Path;
 
 /// Remove multiple line breaks
 #[must_use]
@@ -121,7 +122,7 @@ pub fn needs_split(line: &str, pattern: &Pattern) -> bool {
 pub fn split_line<'a>(
     line: &'a str,
     state: &State,
-    file: &str,
+    file: &Path,
     args: &Args,
     logs: &mut Vec<Log>,
 ) -> (&'a str, &'a str) {

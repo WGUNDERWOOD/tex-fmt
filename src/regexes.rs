@@ -1,7 +1,7 @@
 //! Regexes and matching utilities
 
 use crate::LINE_END;
-use regex::Regex;
+use regex::{Regex, RegexSet};
 use std::sync::LazyLock;
 
 /// Match a LaTeX \item
@@ -46,8 +46,8 @@ pub static RE_TRAIL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(&format!(r" +{LINE_END}")).unwrap());
 
 // Regex that matches splitting commands
-pub static RE_SPLITTING: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(SPLITTING_STRING.as_str()).unwrap());
+pub static RE_SPLITTING: LazyLock<RegexSet> =
+    LazyLock::new(|| RegexSet::new(SPLITTING).unwrap());
 
 // Matches splitting commands with non-whitespace characters before it.
 pub static RE_SPLITTING_SHARED_LINE: LazyLock<Regex> = LazyLock::new(|| {
