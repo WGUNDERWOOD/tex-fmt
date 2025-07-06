@@ -3,6 +3,7 @@
 use crate::format::State;
 use crate::logging::{record_line_log, Log};
 use log::Level::Warn;
+use std::path::Path;
 
 /// Information on the ignored state of a line
 #[derive(Clone, Debug)]
@@ -35,7 +36,7 @@ pub fn get_ignore(
     line: &str,
     state: &State,
     logs: &mut Vec<Log>,
-    file: &str,
+    file: &Path,
     warn: bool,
 ) -> Ignore {
     let skip = contains_ignore_skip(line);
