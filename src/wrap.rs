@@ -1,11 +1,13 @@
 //! Utilities for wrapping long lines
 
-use crate::args::*;
-use crate::comments::*;
-use crate::format::*;
-use crate::logging::*;
+use crate::args::Args;
+use crate::comments::find_comment_index;
+use crate::format::{Pattern, State};
+use crate::logging::{record_line_log, Log};
+use crate::regexes::VERB;
 use log::Level;
 use log::LevelFilter;
+use std::path::Path;
 
 /// String slice to start wrapped text lines
 pub const TEXT_LINE_START: &str = "";
@@ -13,39 +15,90 @@ pub const TEXT_LINE_START: &str = "";
 pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
+#[must_use]
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
     args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
 }
 
-/// Find the best place to break a long line
+fn is_wrap_point(
+    i_byte: usize,
+    c: char,
+    prev_c: Option<char>,
+    inside_verb: bool,
+    line_len: usize,
+    args: &Args,
+) -> bool {
+    // Character c must be a valid wrapping character
+    args.wrap_chars.contains(&c)
+        // Must not be preceded by '\'
+        && prev_c != Some('\\')
+        // Do not break inside a \verb|...|
+        && !inside_verb
+        // No point breaking at the end of the line
+        && (i_byte + 1 < line_len)
+}
+
+fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
+    let verb_len = 6;
+    verb_byte_start
+        .map(|v| line[v + verb_len..].find('|').unwrap_or(v) + v + verb_len)
+}
+
+fn is_inside_verb(
+    i_byte: usize,
+    contains_verb: bool,
+    verb_start: Option<usize>,
+    verb_end: Option<usize>,
+) -> bool {
+    if contains_verb {
+        (verb_start.unwrap() <= i_byte) && (i_byte <= verb_end.unwrap())
+    } else {
+        false
+    }
+}
+
+/// Find the best place to break a long line.
+/// Provided as a *byte* index, not a *char* index.
 fn find_wrap_point(
     line: &str,
     indent_length: usize,
     args: &Args,
+    pattern: &Pattern,
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
-    let mut after_char = false;
-    let mut prev_char: Option<char> = None;
-
-    let mut line_width = 0;
-
+    let mut prev_c: Option<char> = None;
+    let contains_verb = pattern.contains_verb && line.contains(VERB);
+    let verb_start: Option<usize> =
+        contains_verb.then(|| line.find(VERB).unwrap());
+    let verb_end = get_verb_end(verb_start, line);
+    let mut after_non_percent = verb_start == Some(0);
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
+    let line_len = line.len();
 
-    // Return *byte* index rather than *char* index.
-    for (i, c) in line.char_indices() {
-        line_width += 1;
-        if line_width > wrap_boundary && wrap_point.is_some() {
+    for (i_char, (i_byte, c)) in line.char_indices().enumerate() {
+        if i_char >= wrap_boundary && wrap_point.is_some() {
             break;
         }
-        if c == ' ' && prev_char != Some('\\') {
-            if after_char {
-                wrap_point = Some(i);
+        // Special wrapping for lines containing \verb|...|
+        let inside_verb =
+            is_inside_verb(i_byte, contains_verb, verb_start, verb_end);
+        if is_wrap_point(i_byte, c, prev_c, inside_verb, line_len, args) {
+            if after_non_percent {
+                // Get index of the byte after which
+                // line break will be inserted.
+                // Note this may not be a valid char index.
+                let wrap_byte = i_byte + c.len_utf8() - 1;
+                // Don't wrap here if this is the end of the line anyway
+                if wrap_byte + 1 < line_len {
+                    wrap_point = Some(wrap_byte);
+                }
             }
         } else if c != '%' {
-            after_char = true;
+            after_non_percent = true;
         }
-        prev_char = Some(c);
+        prev_c = Some(c);
     }
+
     wrap_point
 }
 
@@ -54,9 +107,10 @@ pub fn apply_wrap<'a>(
     line: &'a str,
     indent_length: usize,
     state: &State,
-    file: &str,
+    file: &Path,
     args: &Args,
     logs: &mut Vec<Log>,
+    pattern: &Pattern,
 ) -> Option<[&'a str; 3]> {
     if args.verbosity == LevelFilter::Trace {
         record_line_log(
@@ -69,8 +123,8 @@ pub fn apply_wrap<'a>(
             "Wrapping long line.",
         );
     }
-    let wrap_point = find_wrap_point(line, indent_length, args);
-    let comment_index = find_comment_index(line);
+    let wrap_point = find_wrap_point(line, indent_length, args, pattern);
+    let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
         Some(p) if p <= args.wraplen.into() => {}
@@ -85,10 +139,10 @@ pub fn apply_wrap<'a>(
                 "Line cannot be wrapped.",
             );
         }
-    };
+    }
 
     wrap_point.map(|p| {
-        let this_line = &line[0..p];
+        let this_line = &line[0..=p];
         let next_line_start = comment_index.map_or("", |c| {
             if p > c {
                 COMMENT_LINE_START
