@@ -1,10 +1,11 @@
-use clap::{value_parser, Command, Arg, ArgAction};
-use ArgAction::{Append, SetTrue};
+use clap::{value_parser, Arg, ArgAction, Command};
 use std::path::PathBuf;
+use ArgAction::{Append, SetTrue};
 
 /// Construct the CLI command
 #[allow(clippy::too_many_lines)]
-fn get_cli_command() -> Command {
+#[must_use]
+pub fn get_cli_command() -> Command {
     Command::new("tex-fmt")
         .author("William George Underwood, wg.underwood13@gmail.com")
         .about(clap::crate_description!())
@@ -29,7 +30,7 @@ fn get_cli_command() -> Command {
                 .short('f')
                 .long("fail-on-change")
                 .action(SetTrue)
-                .help("Format files and return non-zero exit code when modifying files")
+                .help("Format files and return non-zero exit code if files are modified")
         )
         .arg(
             Arg::new("nowrap")
@@ -42,6 +43,7 @@ fn get_cli_command() -> Command {
             Arg::new("wraplen")
                 .short('l')
                 .long("wraplen")
+                .value_name("N")
                 .value_parser(value_parser!(u8))
                 .help("Line length for wrapping [default: 80]"),
         )
@@ -49,6 +51,7 @@ fn get_cli_command() -> Command {
             Arg::new("tabsize")
                 .short('t')
                 .long("tabsize")
+                .value_name("N")
                 .value_parser(value_parser!(u8))
                 .help("Number of characters to use as tab size [default: 2]"),
         )
@@ -68,8 +71,9 @@ fn get_cli_command() -> Command {
         .arg(
             Arg::new("config")
                 .long("config")
+                .value_name("PATH")
                 .value_parser(value_parser!(PathBuf))
-                .help("Path to configuration file")
+                .help("Path to config file")
         )
         .arg(
             Arg::new("noconfig")
@@ -100,8 +104,8 @@ fn get_cli_command() -> Command {
         .arg(
             Arg::new("completion")
                 .long("completion")
+                .value_name("SHELL")
                 .value_parser(value_parser!(Shell))
-                .value_name("shell")
                 .help("Generate shell completion script")
         )
         .arg(
@@ -120,5 +124,12 @@ fn get_cli_command() -> Command {
             Arg::new("files")
                 .action(Append)
                 .help("List of files to be formatted"),
+        )
+        .arg(
+            Arg::new("recursive")
+                .short('r')
+                .long("recursive")
+                .action(SetTrue)
+                .help("Recursively search for files to format")
         )
 }

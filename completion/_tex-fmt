@@ -15,18 +15,18 @@ _tex-fmt() {
 
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" : \
-'-l+[Line length for wrapping \[default\: 80\]]: :_default' \
-'--wraplen=[Line length for wrapping \[default\: 80\]]: :_default' \
-'-t+[Number of characters to use as tab size \[default\: 2\]]: :_default' \
-'--tabsize=[Number of characters to use as tab size \[default\: 2\]]: :_default' \
-'--config=[Path to configuration file]: :_files' \
-'--completion=[Generate shell completion script]:shell:(bash elvish fish powershell zsh)' \
+'-l+[Line length for wrapping \[default\: 80\]]:N:_default' \
+'--wraplen=[Line length for wrapping \[default\: 80\]]:N:_default' \
+'-t+[Number of characters to use as tab size \[default\: 2\]]:N:_default' \
+'--tabsize=[Number of characters to use as tab size \[default\: 2\]]:N:_default' \
+'--config=[Path to config file]:PATH:_files' \
+'--completion=[Generate shell completion script]:SHELL:(bash elvish fish powershell zsh)' \
 '-c[Check formatting, do not modify files]' \
 '--check[Check formatting, do not modify files]' \
 '-p[Print to stdout, do not modify files]' \
 '--print[Print to stdout, do not modify files]' \
-'-f[Format files and return non-zero exit code when modifying files]' \
-'--fail-on-change[Format files and return non-zero exit code when modifying files]' \
+'-f[Format files and return non-zero exit code if files are modified]' \
+'--fail-on-change[Format files and return non-zero exit code if files are modified]' \
 '-n[Do not wrap long lines]' \
 '--nowrap[Do not wrap long lines]' \
 '--usetabs[Use tabs instead of spaces for indentation]' \
@@ -40,6 +40,8 @@ _tex-fmt() {
 '--trace[Show trace messages]' \
 '--man[Generate man page]' \
 '--args[Print arguments passed to tex-fmt and exit]' \
+'-r[Recursively search for files to format]' \
+'--recursive[Recursively search for files to format]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '-V[Print version]' \

@@ -8,7 +8,7 @@ use log::Level::{Debug, Error, Info, Trace, Warn};
 use log::LevelFilter;
 use std::cmp::Reverse;
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use web_time::Instant;
 
 /// Holds a log entry
@@ -19,7 +19,7 @@ pub struct Log {
     /// Time when the entry was logged
     pub time: Instant,
     /// File name associated with the entry
-    pub file: String,
+    pub file: PathBuf,
     /// Line number in the formatted file
     pub linum_new: Option<usize>,
     /// Line number in the original file
@@ -34,7 +34,7 @@ pub struct Log {
 fn record_log(
     logs: &mut Vec<Log>,
     level: Level,
-    file: &str,
+    file: &Path,
     linum_new: Option<usize>,
     linum_old: Option<usize>,
     line: Option<String>,
@@ -43,7 +43,7 @@ fn record_log(
     let log = Log {
         level,
         time: Instant::now(),
-        file: file.to_string(),
+        file: file.to_path_buf(),
         linum_new,
         linum_old,
         line,
@@ -56,7 +56,7 @@ fn record_log(
 pub fn record_file_log(
     logs: &mut Vec<Log>,
     level: Level,
-    file: &str,
+    file: &Path,
     message: &str,
 ) {
     record_log(logs, level, file, None, None, None, message);
@@ -66,7 +66,7 @@ pub fn record_file_log(
 pub fn record_line_log(
     logs: &mut Vec<Log>,
     level: Level,
-    file: &str,
+    file: &Path,
     linum_new: usize,
     linum_old: usize,
     line: &str,
@@ -170,9 +170,10 @@ fn format_log(log: &Log) -> String {
 }
 
 /// Format all of the logs collected
+#[allow(clippy::similar_names)]
 pub fn format_logs(logs: &mut Vec<Log>, args: &Args) -> String {
     preprocess_logs(logs);
-    let mut logs_string = "".to_string();
+    let mut logs_string = String::new();
     for log in logs {
         if log.level <= args.verbosity {
             let log_string = format_log(log);
@@ -184,30 +185,25 @@ pub fn format_logs(logs: &mut Vec<Log>, args: &Args) -> String {
 }
 
 /// Print all of the logs collected
+///
+/// # Panics
+///
+/// This function panics if the file path does not exist
 pub fn print_logs(logs: &mut Vec<Log>) {
     preprocess_logs(logs);
     for log in logs {
         let log_string = format!(
             "{} {}: {}",
             "tex-fmt".magenta().bold(),
-            match log.file.as_str() {
-                "<stdin>" | "" => "<stdin>".blue().bold(),
-                _ => Path::new(&log.file)
-                    .file_name()
-                    .unwrap()
-                    .to_str()
-                    .unwrap()
-                    .blue()
-                    .bold(),
-            },
+            log.file.to_str().unwrap().blue().bold(),
             format_log(log),
         );
 
         match log.level {
-            Error => log::error!("{}", log_string),
-            Warn => log::warn!("{}", log_string),
-            Info => log::info!("{}", log_string),
-            Trace => log::trace!("{}", log_string),
+            Error => log::error!("{log_string}"),
+            Warn => log::warn!("{log_string}"),
+            Info => log::info!("{log_string}"),
+            Trace => log::trace!("{log_string}"),
             Debug => panic!(),
         }
     }

@@ -1,6 +1,6 @@
 //! Functionality to parse CLI arguments
 
-use crate::args::*;
+use crate::args::{OptionArgs, TabChar};
 use clap::ArgMatches;
 use clap_complete::{generate, Shell};
 use clap_mangen::Man;
@@ -20,9 +20,16 @@ fn get_flag(arg_matches: &ArgMatches, flag: &str) -> Option<bool> {
 }
 
 /// Parse CLI arguments into `OptionArgs` struct
-pub fn get_cli_args() -> OptionArgs {
+///
+/// # Panics
+///
+/// This function panics if the man page cannot be written.
+pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
     let mut command = get_cli_command();
-    let arg_matches = command.clone().get_matches();
+    let arg_matches = match matches {
+        Some(m) => m,
+        None => command.clone().get_matches(),
+    };
 
     // Generate completions and exit
     if let Some(shell) = arg_matches.get_one::<Shell>("completion") {
@@ -69,13 +76,17 @@ pub fn get_cli_args() -> OptionArgs {
         config: arg_matches.get_one::<PathBuf>("config").cloned(),
         noconfig: get_flag(&arg_matches, "noconfig"),
         lists: vec![],
+        verbatims: vec![],
+        no_indent_envs: vec![],
+        wrap_chars: vec![],
         verbosity,
         arguments: get_flag(&arg_matches, "args"),
         files: arg_matches
             .get_many::<String>("files")
             .unwrap_or_default()
-            .map(ToOwned::to_owned)
-            .collect::<Vec<String>>(),
+            .map(PathBuf::from)
+            .collect::<Vec<PathBuf>>(),
+        recursive: get_flag(&arg_matches, "recursive"),
     };
     args
 }

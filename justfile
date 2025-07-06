@@ -13,7 +13,7 @@ build:
   @cargo build -r
 
 test:
-  @cargo test
+  @cargo test --no-fail-fast
 
 doc:
   @cargo doc

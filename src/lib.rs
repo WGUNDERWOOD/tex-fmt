@@ -1,5 +1,10 @@
 //! Main library
 
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/WGUNDERWOOD/tex-fmt/main/extra/logo.svg"
+)]
+#![warn(clippy::pedantic)]
+
 pub mod args;
 pub mod cli;
 pub mod comments;
@@ -10,6 +15,7 @@ pub mod indent;
 pub mod logging;
 pub mod read;
 pub mod regexes;
+pub mod search;
 pub mod subs;
 pub mod verbatim;
 pub mod wasm;
