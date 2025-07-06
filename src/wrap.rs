@@ -39,7 +39,7 @@ fn is_wrap_point(
 }
 
 #[must_use]
-fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
+pub fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
     let verb_len = 6;
     verb_byte_start
         .map(|v| line[v + verb_len..].find('|').unwrap_or(v) + v + verb_len)
