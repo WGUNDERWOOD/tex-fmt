@@ -14,7 +14,7 @@ pub const ENV_BEGIN: &str = "\\begin{";
 pub const ENV_END: &str = "\\end{";
 
 /// Acceptable LaTeX file extensions
-pub const EXTENSIONS: [&str; 4] = [".tex", ".bib", ".sty", ".cls"];
+pub const EXTENSIONS: [&str; 4] = ["tex", "bib", "sty", "cls"];
 /// Match a LaTeX \verb|...|
 pub const VERB: &str = "\\verb|";
 
