@@ -8,9 +8,14 @@ use std::io::Read;
 use std::path::PathBuf;
 
 /// Add a missing extension and read the file
+///
+/// # Panics
+///
+/// This function panics when a file extension cannot be converted to a string.
 pub fn read(file: &PathBuf, logs: &mut Vec<Log>) -> Option<String> {
     // Check if file has an accepted extension
-    let has_ext = EXTENSIONS.iter().any(|e| file.ends_with(e));
+    let ext = file.extension().unwrap().to_str().unwrap();
+    let has_ext = EXTENSIONS.contains(&ext);
 
     if let Ok(text) = fs::read_to_string(file) {
         return Some(text);
