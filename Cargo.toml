@@ -20,6 +20,10 @@ exclude = [
     "notes.org",
 ]
 
+[features]
+shellinstall = []
+wasm = ["dep:js-sys", "dep:wasm-bindgen"]
+
 [dependencies]
 clap = { version = "4.5.40", features = ["cargo"] }
 clap_complete = "4.5.54"
@@ -28,17 +32,14 @@ colored = "2.2.0"
 dirs = "5.0.1"
 env_logger = "0.11.8"
 ignore = "0.4.23"
-js-sys = "0.3.77"
+js-sys = { version = "0.3.77", optional = true }
 log = "0.4.27"
 merge = "0.1.0"
 regex = "1.11.1"
 similar = "2.7.0"
 toml = "0.8.23"
-wasm-bindgen = "0.2.100"
+wasm-bindgen = { version = "0.2.100", optional = true }
 web-time = "1.1.0"
-
-[features]
-shellinstall = []
 
 [build-dependencies]
 clap = { version = "4.5.40", features = ["cargo"] }
