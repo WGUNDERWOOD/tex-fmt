@@ -59,16 +59,27 @@ pub struct Args {
 #[derive(Clone, Debug, Merge)]
 #[allow(clippy::missing_docs_in_private_items)]
 pub struct OptionArgs {
+    #[merge(strategy = merge::option::overwrite_none)]
     pub check: Option<bool>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub print: Option<bool>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub fail_on_change: Option<bool>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub wrap: Option<bool>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub wraplen: Option<u8>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub wrapmin: Option<u8>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub tabsize: Option<u8>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub tabchar: Option<TabChar>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub stdin: Option<bool>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub config: Option<PathBuf>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub noconfig: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub lists: Vec<String>,
@@ -78,10 +89,13 @@ pub struct OptionArgs {
     pub no_indent_envs: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub wrap_chars: Vec<char>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub verbosity: Option<LevelFilter>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub files: Vec<PathBuf>,
+    #[merge(strategy = merge::option::overwrite_none)]
     pub recursive: Option<bool>,
 }
 
