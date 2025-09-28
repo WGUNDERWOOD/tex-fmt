@@ -207,26 +207,11 @@ fn test_all() {
 #[ignore]
 fn test_subset() {
     let test_names = [
-        "brackets",
-        "comments",
-        "cv",
-        "empty",
-        "environments",
-        //"higher_categories_thesis",
-        "ignore",
-        "lists",
-        //"masters_dissertation",
-        "no_indent_envs",
-        "phd_dissertation",
-        "readme",
-        "sections",
-        "short_document",
-        "tabsize",
-        "unicode",
+        //"wrap_chars",
+        //"cv",
+        //"short_document",
+        //"wrap",
         "verb",
-        "verbatim",
-        "wrap",
-        "wrap_chars",
     ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {

@@ -4,7 +4,7 @@ use crate::args::Args;
 use crate::comments::find_comment_index;
 use crate::format::{Pattern, State};
 use crate::logging::{record_line_log, Log};
-use crate::regexes::VERB;
+use crate::regexes::VERBS;
 use log::Level;
 use log::LevelFilter;
 use std::path::Path;
@@ -38,11 +38,9 @@ fn is_wrap_point(
         && (i_byte + 1 < line_len)
 }
 
-#[must_use]
-pub fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
-    let verb_len = 6;
+fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
     verb_byte_start
-        .map(|v| line[v + verb_len..].find('|').unwrap_or(v) + v + verb_len)
+        .map(|v| line[v..].match_indices('|').nth(1).map(|(i, _)| i + v))?
 }
 
 fn is_inside_verb(
@@ -68,10 +66,15 @@ fn find_wrap_point(
 ) -> Option<usize> {
     let mut wrap_point: Option<usize> = None;
     let mut prev_c: Option<char> = None;
-    let contains_verb = pattern.contains_verb && line.contains(VERB);
-    let verb_start: Option<usize> =
-        contains_verb.then(|| line.find(VERB).unwrap());
+    let contains_verb =
+        pattern.contains_verb && VERBS.iter().any(|x| line.contains(x));
+    dbg!(&line);
+    let verb_start: Option<usize> = contains_verb
+        .then(|| VERBS.iter().filter_map(|&x| line.find(x)).min().unwrap());
+    dbg!(&verb_start);
+
     let verb_end = get_verb_end(verb_start, line);
+    dbg!(&verb_end);
     let mut after_non_percent = verb_start == Some(0);
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
     let line_len = line.len();

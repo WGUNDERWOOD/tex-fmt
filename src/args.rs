@@ -237,7 +237,7 @@ impl Args {
         // Add .tex to any pathless non-dir file
         for file in &mut self.files {
             if !file.is_dir() && file.extension().is_none() {
-                file.set_extension(".tex");
+                file.set_extension("tex");
             }
         }
 
