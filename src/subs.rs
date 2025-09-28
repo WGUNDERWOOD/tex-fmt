@@ -35,16 +35,25 @@ pub fn remove_tabs(text: &str, args: &Args) -> String {
 /// of a valid match.
 #[must_use]
 pub fn remove_double_spaces(line: &str, pattern: &Pattern) -> String {
-    let contains_verb = pattern.contains_verb && line.contains(regexes::VERB);
+    let contains_verb = pattern.contains_verb
+        && regexes::VERBS.iter().any(|x| line.contains(x));
     if contains_verb {
-        let verb_start = line.find(regexes::VERB).unwrap();
+        let verb_start: usize = contains_verb
+            .then(|| {
+                regexes::VERBS
+                    .iter()
+                    .filter_map(|&x| line.find(x))
+                    .min()
+                    .unwrap()
+            })
+            .unwrap();
         if let Some(verb_end) = get_verb_end(Some(verb_start), line) {
             let before_verb =
                 regexes::RE_DOUBLE_SPACE.replace_all(&line[..verb_start], " ");
             let inside_verb = &line[verb_start..verb_end];
             let after_verb =
                 regexes::RE_DOUBLE_SPACE.replace_all(&line[verb_end..], " ");
-            return format!("{before_verb}{inside_verb}{after_verb}")
+            return format!("{before_verb}{inside_verb}{after_verb}");
         }
     } else {
         return regexes::RE_DOUBLE_SPACE.replace_all(line, " ").to_string();
