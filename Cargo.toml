@@ -34,7 +34,7 @@ env_logger = "0.11.8"
 ignore = "0.4.23"
 js-sys = { version = "0.3.77", optional = true }
 log = "0.4.27"
-merge = "0.1.0"
+merge = "0.2.0"
 regex = "1.11.1"
 similar = "2.7.0"
 toml = "0.8.23"
