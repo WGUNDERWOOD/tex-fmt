@@ -36,7 +36,7 @@ latex:
 
 wasm:
   @mkdir -p web/pkg
-  @cargo build -r --lib --target wasm32-unknown-unknown
+  @cargo build -r -F wasm --lib --target wasm32-unknown-unknown
   @wasm-bindgen --target web --out-dir web/pkg \
       target/wasm32-unknown-unknown/release/tex_fmt.wasm
   @cd web/pkg && wasm-opt -Oz -o tex_fmt_bg.wasm tex_fmt_bg.wasm
