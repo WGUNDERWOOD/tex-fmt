@@ -1,3 +1,5 @@
+//! Finding files in the file system
+
 use crate::regexes::EXTENSIONS;
 use ignore::Walk;
 use std::path::PathBuf;
