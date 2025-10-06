@@ -1,6 +1,6 @@
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
-.TH tex-fmt 1  "tex-fmt 0.5.5" 
+.TH tex-fmt 1  "tex-fmt 0.5.6" 
 .SH NAME
 tex\-fmt \- LaTeX formatter written in Rust
 .SH SYNOPSIS
@@ -21,10 +21,10 @@ Format files and return non\-zero exit code if files are modified
 \fB\-n\fR, \fB\-\-nowrap\fR
 Do not wrap long lines
 .TP
-\fB\-l\fR, \fB\-\-wraplen\fR=\fIN\fR
+\fB\-l\fR, \fB\-\-wraplen\fR \fI<N>\fR
 Line length for wrapping [default: 80]
 .TP
-\fB\-t\fR, \fB\-\-tabsize\fR=\fIN\fR
+\fB\-t\fR, \fB\-\-tabsize\fR \fI<N>\fR
 Number of characters to use as tab size [default: 2]
 .TP
 \fB\-\-usetabs\fR
@@ -33,7 +33,7 @@ Use tabs instead of spaces for indentation
 \fB\-s\fR, \fB\-\-stdin\fR
 Process stdin as a single file, output to stdout
 .TP
-\fB\-\-config\fR=\fIPATH\fR
+\fB\-\-config\fR \fI<PATH>\fR
 Path to config file
 .TP
 \fB\-\-noconfig\fR
@@ -48,7 +48,7 @@ Hide warning messages
 \fB\-\-trace\fR
 Show trace messages
 .TP
-\fB\-\-completion\fR=\fISHELL\fR
+\fB\-\-completion\fR \fI<SHELL>\fR
 Generate shell completion script
 .br
 
@@ -73,6 +73,6 @@ Print version
 [\fIfiles\fR]
 List of files to be formatted
 .SH VERSION
-v0.5.5
+v0.5.6
 .SH AUTHORS
 William George Underwood, wg.underwood13@gmail.com

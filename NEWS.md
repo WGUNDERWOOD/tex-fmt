@@ -1,3 +1,10 @@
+# v0.5.6
+
+- Gate web functionality behind a crate feature.
+- Fix bug with `wrapmin` configuration option being ignored.
+- Handle `\mintinline` as `\verb`.
+- Fix bug with file extension handling
+
 # v0.5.5
 
 - Implement recursive file formatting with `--recursive` or `-r`.
