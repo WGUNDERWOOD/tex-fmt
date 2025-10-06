@@ -1,52 +1,52 @@
 #+title: tex-fmt
 * Tasks
 * Release process
-** DONE Checkout main branch
-** DONE Update release notes in NEWS.md
-*** DONE git log --oneline --no-merges vX.X.X..main
-** DONE Update version number in Cargo.toml to vY.Y.Y
-** DONE Update version number for pre-commit in README
-** DONE Update Nix flake and lock
-*** DONE just nix
-*** DONE nix develop
-** DONE Update Rust version
-*** DONE just upgrade
-** DONE Run tests
-*** DONE just
-*** DONE just perf
-*** DONE Update performance results in README.md
-** TODO Push to GitHub and check action tests pass
-** TODO Create a git tag
-*** TODO git tag vY.Y.Y
-*** TODO git push --tags
-*** TODO Can delete remote tags with git push --delete origin vY.Y.Y
-** TODO Publish to crates.io
-*** TODO cargo package --list
-*** TODO cargo publish
-*** TODO Pass --allow-dirty if notes.org has changed
-** TODO Publish GitHub release with notes from NEWS.md
-*** TODO No need to add a title
-*** TODO GitHub binaries published automatically with actions
-** TODO Publish in nixpkgs
-*** TODO Go to nixpkgs fork directory
-*** TODO git checkout master
-*** TODO git fetch upstream
-*** TODO git rebase upstream/master
-*** TODO git fetch
-*** TODO git push --force-with-lease origin master
-*** TODO git branch -d update-tex-fmt
-*** TODO git switch --create update-tex-fmt upstream/master
-*** TODO nvim pkgs/by-name/te/tex-fmt/package.nix
-*** TODO Update version and invalidate src.hash and cargoHash
-*** TODO nix-build -A tex-fmt
-*** TODO Fix both hashes, get a successful build
-*** TODO git add pkgs/by-name/te/tex-fmt/package.nix
-*** TODO git commit -m "tex-fmt: X.X.X -> Y.Y.Y"
-*** TODO git push --set-upstream origin HEAD
-*** TODO Go to GitHub and create a pull request
-*** TODO Submit pull request and check relevant boxes
-** TODO Tidy repository
-*** TODO Commit any new changes to NEWS.md or notes.org
+** Checkout main branch
+** Update release notes in NEWS.md
+*** git log --oneline --no-merges vX.X.X..main
+** Update version number in Cargo.toml to vY.Y.Y
+** Update version number for pre-commit in README
+** Update Nix flake and lock
+*** just nix
+*** nix develop
+** Update Rust version
+*** just upgrade
+** Run tests
+*** just
+*** just perf
+*** Update performance results in README.md
+** Push to GitHub and check action tests pass
+** Create a git tag
+*** git tag vY.Y.Y
+*** git push --tags
+*** Can delete remote tags with git push --delete origin vY.Y.Y
+** Publish to crates.io
+*** cargo package --list
+*** cargo publish
+*** Pass --allow-dirty if notes.org has changed
+** Publish GitHub release with notes from NEWS.md
+*** No need to add a title
+*** GitHub binaries published automatically with actions
+** Publish in nixpkgs
+*** Go to nixpkgs fork directory
+*** git checkout master
+*** git fetch upstream
+*** git rebase upstream/master
+*** git fetch
+*** git push --force-with-lease origin master
+*** git branch -d update-tex-fmt
+*** git switch --create update-tex-fmt upstream/master
+*** nvim pkgs/by-name/te/tex-fmt/package.nix
+*** Update version and invalidate src.hash and cargoHash
+*** nix-build -A tex-fmt
+*** Fix both hashes, get a successful build
+*** git add pkgs/by-name/te/tex-fmt/package.nix
+*** git commit -m "tex-fmt: X.X.X -> Y.Y.Y"
+*** git push --set-upstream origin HEAD
+*** Go to GitHub and create a pull request
+*** Submit pull request and check relevant boxes
+** Tidy repository
+*** Commit any new changes to NEWS.md or notes.org
 * CLI and config structure
 *** args.rs
 **** Core argument definitions
