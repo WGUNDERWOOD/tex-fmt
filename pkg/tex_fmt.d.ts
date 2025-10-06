@@ -1,11 +1,24 @@
 /* tslint:disable */
 /* eslint-disable */
+/**
+ * Main function for WASM interface with JS
+ *
+ * # Panics
+ *
+ * This function panics if the config cannot be parsed
+ */
+export function main(text: string, config: string): any;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly __wbindgen_export_0: WebAssembly.Table;
+  readonly main: (a: number, b: number, c: number, d: number) => any;
+  readonly __wbindgen_exn_store: (a: number) => void;
+  readonly __externref_table_alloc: () => number;
+  readonly __wbindgen_export_2: WebAssembly.Table;
+  readonly __wbindgen_malloc: (a: number, b: number) => number;
+  readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_start: () => void;
 }
 
