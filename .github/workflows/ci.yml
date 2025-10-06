@@ -67,7 +67,7 @@ jobs:
         with:
           version: '0.2.100'
       - name: Build wasm
-        run: cargo build -r --lib --target wasm32-unknown-unknown
+        run: cargo build -r -F wasm --lib --target wasm32-unknown-unknown
       - name: Bind wasm
         run: |
           wasm-bindgen --target web --out-dir web/pkg \
