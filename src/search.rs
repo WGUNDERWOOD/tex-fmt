@@ -15,9 +15,11 @@ pub fn find_files(dir: &PathBuf, files: &mut Vec<PathBuf>) {
         // If entry is file and has accepted extension, push to files
         if entry.file_type().unwrap().is_file() {
             let file = entry.path();
-            let ext = file.extension().unwrap().to_str().unwrap();
-            if EXTENSIONS.contains(&ext) {
-                files.push(file.to_path_buf());
+            if let Some(ext_osstr) = file.extension() {
+                let ext = ext_osstr.to_str().unwrap();
+                if EXTENSIONS.contains(&ext) {
+                    files.push(file.to_path_buf());
+                }
             }
         }
     }
