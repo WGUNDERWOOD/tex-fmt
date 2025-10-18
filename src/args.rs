@@ -59,16 +59,27 @@ pub struct Args {
 #[derive(Clone, Debug, Merge)]
 #[allow(clippy::missing_docs_in_private_items)]
 pub struct OptionArgs {
+    #[merge(strategy= merge::option::overwrite_none)]
     pub check: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub print: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub fail_on_change: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub wrap: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub wraplen: Option<u8>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub wrapmin: Option<u8>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub tabsize: Option<u8>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub tabchar: Option<TabChar>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub stdin: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub config: Option<PathBuf>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub noconfig: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub lists: Vec<String>,
@@ -78,10 +89,13 @@ pub struct OptionArgs {
     pub no_indent_envs: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub wrap_chars: Vec<char>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub verbosity: Option<LevelFilter>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub arguments: Option<bool>,
     #[merge(strategy = merge::vec::append)]
     pub files: Vec<PathBuf>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub recursive: Option<bool>,
 }
 
@@ -129,7 +143,7 @@ impl Default for OptionArgs {
             fail_on_change: Some(false),
             wrap: Some(true),
             wraplen: Some(80),
-            wrapmin: Some(70),
+            wrapmin: None,
             tabsize: Some(2),
             tabchar: Some(TabChar::Space),
             stdin: Some(false),
@@ -194,16 +208,26 @@ impl Args {
     ///
     /// This function panics when called on `OptionArgs` with `None` fields.
     /// However this should never happen as merging in `OptionArgs::default()`
-    /// should overwrite any `None` fields.
+    /// should overwrite any `None` fields except for `wrapmin`.
     #[must_use]
     pub fn from(args: OptionArgs) -> Self {
+        // Set wrapmin
+        let wraplen = args.wraplen.unwrap();
+        let wrapmin = if let Some(w) = args.wrapmin {
+            w.min(wraplen)
+        } else if wraplen >= 50 {
+            wraplen - 10
+        } else {
+            wraplen
+        };
+
         Self {
             check: args.check.unwrap(),
             print: args.print.unwrap(),
             fail_on_change: args.fail_on_change.unwrap(),
             wrap: args.wrap.unwrap(),
             wraplen: args.wraplen.unwrap(),
-            wrapmin: args.wrapmin.unwrap(),
+            wrapmin,
             tabsize: args.tabsize.unwrap(),
             tabchar: args.tabchar.unwrap(),
             stdin: args.stdin.unwrap(),
@@ -227,17 +251,10 @@ impl Args {
         // stdin implies print
         self.print |= self.stdin;
 
-        // Set wrapmin
-        self.wrapmin = if self.wraplen >= 50 {
-            self.wraplen - 10
-        } else {
-            self.wraplen
-        };
-
         // Add .tex to any pathless non-dir file
         for file in &mut self.files {
             if !file.is_dir() && file.extension().is_none() {
-                file.set_extension(".tex");
+                file.set_extension("tex");
             }
         }
 
