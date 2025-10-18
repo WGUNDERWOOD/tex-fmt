@@ -1,8 +1,6 @@
 #+title: tex-fmt
 * Tasks
 ** TODO CTAN submission
-*** DONE Fix README (non stub)
-*** TODO Fix PDF documentation (non stub), include tex file
 * Release process
 ** Checkout main branch
 ** Update release notes in NEWS.md
@@ -31,14 +29,15 @@
 *** No need to add a title
 *** GitHub binaries published automatically with actions
 ** Submit to CTAN
-*** Update version in ctan/latex-formatter.pkg
-*** Update README at ctan/README.md
+*** Update version, update, announcement in ctan/latex-formatter.pkg
+*** Update ctan/README.md
 *** Update LaTeX docs at ctan/latex-formatter.tex
-*** rm -rf ctan/latex-formatter/
-*** gh release download vX.X.X -D ctan/latex-formatter/bin
+*** cd ctan
 *** just ctan
-*** Validate with cd ctan && ctan-o-mat latex-formatter.pkg
-*** Submit with cd ctan && ctan-o-mat --submit latex-formatter.pkg
+*** gh release download vY.Y.Y -D latex-formatter/bin
+*** tar -czf latex-formatter.tar.gz latex-formatter
+*** Validate with ctan-o-mat latex-formatter.pkg
+*** Submit with ctan-o-mat --submit latex-formatter.pkg
 ** Publish in nixpkgs
 *** Go to nixpkgs fork directory
 *** git checkout master

@@ -57,10 +57,15 @@ shellcheck:
   @shellcheck extra/*.sh
 
 ctan:
+  @rm -f ctan/latex-formatter.pdf ctan/latex-formatter.tar.gz
+  @cd ctan && latexmk -pdf latex-formatter.tex
+  @rm -rf ctan/latex-formatter
+  @rm -f ctan/*.aux ctan/*.fdb_latexmk ctan/*.fls ctan/*.log
+  @rm -f ctan/*.synctex.gz ctan/*.dvi
+  @mkdir -p ctan/latex-formatter
+  @cp ctan/latex-formatter.pdf ctan/latex-formatter
   @cp ctan/README.md LICENSE NEWS.md Cargo.toml ctan/latex-formatter
   @cp -r src/ ctan/latex-formatter
-  #@pandoc -o ctan/latex-formatter/latex-formatter.pdf ctan/README.md
-  @cd ctan && tar -czf latex-formatter.tar.gz latex-formatter
 
 nix:
   @nix flake update
