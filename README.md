@@ -189,7 +189,7 @@ tex-fmt --help                     # view help information
 
 ### Configuration
 
-Options can also be read from a configuration file, which
+Options can also be set using a configuration file, which
 will be read from the following locations, in order of decreasing priority.
 
 - A named config file passed as `tex-fmt --config <PATH>`

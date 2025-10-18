@@ -13,3 +13,7 @@ cachegrind.out
 /web/pkg
 /ctan/latex-formatter/
 *.tar.gz
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
