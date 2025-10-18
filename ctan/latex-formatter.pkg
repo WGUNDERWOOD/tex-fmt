@@ -10,6 +10,6 @@
 \update{false}
 \topic{code-layout}
 \summary{LaTeX formatter written in Rust}
-\description{This package provides the `tex-fmt` command-line tool for formatting LaTeX source files. Binaries are included for Linux, MacOS and Windows.}
-\announcement{This package provides the `tex-fmt` command-line tool for formatting LaTeX source files. Binaries are included for Linux, MacOS and Windows.}
+\description{This package provides the `tex-fmt` command line tool for formatting LaTeX source files. Binaries are included for Linux, MacOS and Windows.}
+\announcement{This package provides the `tex-fmt` command line tool for formatting LaTeX source files. Binaries are included for Linux, MacOS and Windows.}
 \file{latex-formatter.tar.gz}

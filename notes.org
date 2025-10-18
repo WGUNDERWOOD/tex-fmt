@@ -32,6 +32,8 @@
 *** GitHub binaries published automatically with actions
 ** Submit to CTAN
 *** Update version in ctan/latex-formatter.pkg
+*** Update README at ctan/README.md
+*** Update LaTeX docs at ctan/latex-formatter.tex
 *** rm -rf ctan/latex-formatter/
 *** gh release download vX.X.X -D ctan/latex-formatter/bin
 *** just ctan

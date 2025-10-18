@@ -4,7 +4,7 @@ An extremely fast LaTeX formatter written in Rust.
 
 ## Description
 
-This package provides the `tex-fmt` command-line tool
+This package provides the `tex-fmt` command line tool
 for formatting LaTeX source files. It implements indentation
 and line wrapping rules which are aware of TeX and LaTeX syntax,
 including comments and various environments.

@@ -12,10 +12,9 @@
 
 \section{Overview}
 
-The latex-formatter CTAN package provides the tex-fmt command-line
+The latex-formatter CTAN package provides the tex-fmt command line
 tool for formatting LaTeX source files.
-
-\renewcommand{\arraystretch}{1.8}
+Main features include:
 
 \begin{itemize}
   \item Extremely fast run-time performance
@@ -26,6 +25,7 @@ tool for formatting LaTeX source files.
   \item Written entirely in safe Rust
 \end{itemize}
 
+\renewcommand{\arraystretch}{1.8}
 \begin{table}[H]
   \begin{center}
     \begin{tabular}{|c|c|}
@@ -117,12 +117,11 @@ will be read from the following locations, in order of decreasing priority.
     %
     \begin{itemize}
       \item Linux: \texttt{\textasciitilde/.config/tex-fmt/tex-fmt.toml}
-      \item macOS: \texttt{/Users/<user>/Library/Application
+      \item macOS: \texttt{/Users/<USER>/Library/Application
         Support/tex-fmt/tex-fmt.toml}
       \item Windows:
-        \texttt{C:\textbackslash
-          Users\textbackslash<user>\textbackslash AppData\textbackslash
-        Roaming\textbackslash tex-fmt\textbackslash tex-fmt.toml}
+        \texttt{C:\symbol{92}Users\symbol{92}<USER>\symbol{92}%
+        AppData\symbol{92}Roaming\symbol{92}tex-fmt\symbol{92}tex-fmt.toml}
     \end{itemize}
 
 \end{itemize}
@@ -285,16 +284,18 @@ The first example in each row is the default value.
       \texttt{tabchar}        & str      & \texttt{"space"},
       \texttt{"tab"}     & Character to use for indentation \\
       \texttt{stdin}          & bool     & \texttt{false}
-      & Process stdin as a single file, output to stdout \\
+      & Process stdin as a single file, \\
+      & & & output to stdout \\
       \texttt{lists}          & arr[str] & \texttt{[]},
-      \texttt{["myitemize"]}  & Extra list environments to be
-      formatted as \texttt{itemize} \\
+      \texttt{["myitemize"]}  & Extra list environments \\
+                              & & & to be formatted as \texttt{itemize} \\
       \texttt{verbatims}      & arr[str] & \texttt{[]},
       \texttt{["myverbatim"]} & Extra verbatim environments \\
       \texttt{no-indent-envs} & arr[str] & \texttt{[]},
       \texttt{["mydocument"]} & Environments which are not indented \\
       \texttt{wrap-chars}     & arr[str] & \texttt{[]},
-      \texttt{["。"]}         & Characters after which lines may be wrapped \\
+      \texttt{[","]}         & Characters after which lines \\
+                             & & & may be wrapped \\
       \texttt{verbosity}      & str      & \texttt{"warn"},
       \texttt{"error"}    & Verbosity level for terminal logging \\
       \hline

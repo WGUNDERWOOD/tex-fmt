@@ -198,8 +198,8 @@ will be read from the following locations, in order of decreasing priority.
 - A file named `tex-fmt.toml` in a subdirectory titled `tex-fmt/`
   in the user's configuration directory
     - Linux: `~/.config/tex-fmt/tex-fmt.toml`
-    - macOS: `/Users/<user>/Library/Application Support/tex-fmt/tex-fmt.toml`
-    - Windows: `C:\Users\<user>\AppData\Roaming\tex-fmt\tex-fmt.toml`
+    - macOS: `/Users/<USER>/Library/Application Support/tex-fmt/tex-fmt.toml`
+    - Windows: `C:\Users\<USER>\AppData\Roaming\tex-fmt\tex-fmt.toml`
 
 Arguments passed on the command line will always override those
 specified in configuration files. An example configuration file
