@@ -11,5 +11,5 @@ perf.data*
 *.png
 cachegrind.out
 /web/pkg
-/ctan/tex-fmt/
+/ctan/latex-formatter/
 *.tar.gz
