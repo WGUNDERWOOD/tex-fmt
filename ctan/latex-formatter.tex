@@ -1,0 +1,362 @@
+
+\documentclass{scrartcl}
+
+\usepackage[utf8x]{inputenc}
+
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{longtable}
+
+\usepackage{hyperref}
+
+
+
+
+
+\setcounter{footnote}{0}
+
+\hypersetup{colorlinks=true,urlcolor=blue}
+
+\begin{document}
+\section{tex-fmt }\hypertarget{tex-fmt-img-srchttpsgithubcomwgunderwoodtex-fmtrawmainextralogosvg-alttex-fmt-alignright-width160-}{}\label{tex-fmt-img-srchttpsgithubcomwgunderwoodtex-fmtrawmainextralogosvg-alttex-fmt-alignright-width160-}
+
+\href{https://github.com/wgunderwood/tex-fmt/actions/workflows/ci.yml}{}
+\href{https://crates.io/crates/tex-fmt}{}
+\href{https://repology.org/project/tex-fmt/versions}{}
+\href{https://mit-license.org/}{}
+
+An extremely fast LaTeX formatter written in Rust.
+Try it out now in your
+\href{https://wgunderwood.github.io/tex-fmt/}{browser}!
+
+\begin{itemize}
+\item{} ⚡~{} Extremely fast run-time performance
+\item{} 🔧~{} Minimal configuration required
+\item{} 📟~{} Command line interface
+\item{} 📜~{} Handles LaTeX file types \texttt{.tex}, \texttt{.bib}, \texttt{.cls}, and \texttt{.sty}
+\item{} 🦀~{} Written entirely in safe Rust
+\end{itemize}
+
+\subsection{Installation}\hypertarget{installation}{}\label{installation}
+
+\subsubsection{Cargo}\hypertarget{cargo}{}\label{cargo}
+
+Install the \href{https://crates.io/crates/tex-fmt}{stable release} with
+
+\texttt{shell
+cargo install tex-fmt
+}
+
+Install from \href{https://github.com/WGUNDERWOOD/tex-fmt}{GitHub} with
+
+\texttt{shell
+cargo install --git "https://github.com/wgunderwood/tex-fmt"
+}
+
+\subsubsection{Nix}\hypertarget{nix}{}\label{nix}
+
+Install from
+\href{https://search.nixos.org/packages?channel=unstable&query=tex-fmt}{nixpkgs}
+into a temporary shell with
+
+\texttt{shell
+nix-shell -p tex-fmt
+}
+
+Build from source using flakes with
+
+\texttt{shell
+nix build "github:wgunderwood/tex-fmt"
+}
+
+Add to your NixOS installation with
+
+\texttt{nix
+environment.systemPackages = {[}
+  pkgs.tex-fmt
+{]};
+}
+
+It is also included in
+\href{https://github.com/numtide/treefmt-nix/tree/main}{treefmt-nix}.
+
+\subsubsection{Arch Linux}\hypertarget{arch-linux}{}\label{arch-linux}
+
+Install from the
+\href{https://aur.archlinux.org/packages/tex-fmt}{Arch User Repository}.
+For example, using the \href{https://github.com/Jguer/yay}{yay} AUR helper:
+
+\texttt{shell
+yay -S tex-fmt
+}
+
+\subsubsection{Debian}\hypertarget{debian}{}\label{debian}
+
+Install from the \href{https://www.debian.org/distrib/packages}{Debian archive}
+(trixie and later):
+
+\texttt{shell
+apt install tex-fmt
+}
+
+\subsubsection{Homebrew}\hypertarget{homebrew}{}\label{homebrew}
+
+Install using
+\href{https://formulae.brew.sh/formula/tex-fmt}{Homebrew} with
+
+\texttt{shell
+brew install tex-fmt
+}
+
+\subsubsection{Binary download}\hypertarget{binary-download}{}\label{binary-download}
+
+Binaries for various platforms are available on the GitHub
+\href{https://github.com/WGUNDERWOOD/tex-fmt/releases}{releases} page.
+
+\subsubsection{Visual Studio Code}\hypertarget{visual-studio-code}{}\label{visual-studio-code}
+
+Integration with VS Code is provided by the
+\href{https://github.com/James-Yu/LaTeX-Workshop}{LaTeX Workshop}
+extension. You will need to first install tex-fmt
+through one of the above methods.
+
+\subsubsection{Neovim}\hypertarget{neovim}{}\label{neovim}
+
+A package for Neovim is provided by
+\href{https://github.com/williamboman/mason.nvim}{mason.nvim}.
+
+\subsubsection{GitHub Action}\hypertarget{github-action}{}\label{github-action}
+
+The \href{https://github.com/grayespinoza/tex-fmt-action}{tex-fmt-action} can install and run tex-fmt.
+
+\subsection{Usage}\hypertarget{usage}{}\label{usage}
+
+The most commonly used options are given below.
+For a full list, see the
+\href{https://github.com/WGUNDERWOOD/tex-fmt?tab=readme-ov-file#options}{options}
+section below.
+
+\texttt{shell
+tex-fmt file.tex                   \# format file.tex and overwrite
+tex-fmt --check file.tex           \# check if file.tex is correctly formatted
+tex-fmt --print file.tex           \# format file.tex and print to stdout
+tex-fmt --recursive                \# recursively format files in current directory
+tex-fmt --recursive dir/           \# recursively format files in dir
+tex-fmt --fail-on-change file.tex  \# format file.tex and return exit-code 1 if overwritten
+tex-fmt --nowrap file.tex          \# do not wrap long lines
+tex-fmt --stdin                    \# read from stdin and print to stdout
+tex-fmt --help                     \# view help information
+}
+
+\subsubsection{Configuration}\hypertarget{configuration}{}\label{configuration}
+
+Options can also be read from a configuration file, which
+will be read from the following locations, in order of decreasing priority.
+
+\begin{itemize}
+\item{} A named config file passed as \texttt{tex-fmt --config \textless{}PATH\textgreater{}}
+\item{} A file named \texttt{tex-fmt.toml} in the current working directory
+\item{} A file named \texttt{tex-fmt.toml} in the root directory of the current git repository
+\item{} A file named \texttt{tex-fmt.toml} in a subdirectory titled \texttt{tex-fmt/}
+in the user's configuration directory
+
+
+\begin{itemize}
+\item{} Linux: \texttt{\ensuremath{\sim}/.config/tex-fmt/tex-fmt.toml}
+\item{} macOS: \texttt{/Users/\textless{}user\textgreater{}/Library/Application Support/tex-fmt/tex-fmt.toml}
+\item{} Windows: \texttt{C:\textbackslash{}Users\textbackslash{}\textless{}user\textgreater{}\textbackslash{}AppData\textbackslash{}Roaming\textbackslash{}tex-fmt\textbackslash{}tex-fmt.toml}
+\end{itemize}
+\end{itemize}
+
+Arguments passed on the command line will always override those
+specified in configuration files. An example configuration file
+is available at
+\href{https://github.com/WGUNDERWOOD/tex-fmt/blob/main/tex-fmt.toml}{tex-fmt.toml}.
+To ignore all config files, use the \texttt{--noconfig} flag.
+
+Note for contributors: this repository's configuration file will be
+automatically applied if tex-fmt is run from within the repository.
+Use \texttt{--noconfig} or \texttt{--config \textless{}PATH\textgreater{}} to avoid this.
+
+\subsubsection{Disabling the formatter}\hypertarget{disabling-the-formatter}{}\label{disabling-the-formatter}
+
+Ending a source line with \texttt{\% tex-fmt: skip} disables formatting for that line.
+To disable the formatter for a block, use \texttt{\% tex-fmt: off} and \texttt{\% tex-fmt: on}.
+
+``` tex
+\textbackslash{}documentclass\{article\}
+
+\textbackslash{}begin\{document\}
+
+\begin{verbatim}This line is skipped % tex-fmt: skip
+\end{verbatim}
+
+\% tex-fmt: off
+  These lines are also
+    not formatted or wrapped
+\% tex-fmt: on
+
+\textbackslash{}end\{document\}
+```
+
+Verbatim environments including \texttt{verbatim}, \texttt{Verbatim}, \texttt{lstlisting}
+and \texttt{minted} are automatically skipped.
+
+\subsubsection{Ignoring files in recursive mode}\hypertarget{ignoring-files-in-recursive-mode}{}\label{ignoring-files-in-recursive-mode}
+
+Recursive searches with \texttt{--recursive} or \texttt{-r} will
+ignore patterns in \texttt{.gitignore} and \texttt{.ignore} files,
+following git conventions.
+
+\subsubsection{Shell completion}\hypertarget{shell-completion}{}\label{shell-completion}
+
+Shell completion scripts can be generated at run-time using the
+\texttt{--completion \textless{}SHELL\textgreater{}} flag. See the
+\href{https://github.com/WGUNDERWOOD/tex-fmt/tree/main/completion}{completion}
+directory for more details.
+
+\subsubsection{Man page}\hypertarget{man-page}{}\label{man-page}
+
+A man page can be generated at run-time using the
+\texttt{--man} flag. See the
+\href{https://github.com/WGUNDERWOOD/tex-fmt/tree/main/man}{man}
+directory for more details.
+
+\subsubsection{Pre-commit hook}\hypertarget{pre-commit-hook}{}\label{pre-commit-hook}
+
+tex-fmt can be run before every git commit using
+\href{http://pre-commit.com}{pre-commit} with the following
+\texttt{.pre-commit-config.yaml} in your repository root:
+
+\texttt{yaml
+repos:
+  - repo: https://github.com/WGUNDERWOOD/tex-fmt
+    rev: v0.5.6
+    hooks:
+      - id: tex-fmt
+}
+
+To prevent the pre-commit hook from modifying your files, add:
+
+\texttt{yaml
+      - id: tex-fmt
+        args: {[}--check{]}
+}
+
+\subsection{Performance}\hypertarget{performance}{}\label{performance}
+
+When formatting all of the test cases,
+tex-fmt is over a thousand times faster than latexindent.
+
+\begin{longtable}{|l|l|l|l|l|l|}
+\hline
+\textbf{Files} & \textbf{Lines} & \textbf{Size} & \textbf{tex-fmt} & \textbf{latexindent} & \textbf{latexindent -m}\\
+\hline
+51 & 94k & 3.5M & \textbf{0.055s} & 106s {[}x1927{]} & 127s {[}x2309{]}\\
+\hline
+\end{longtable}
+
+\subsection{Contribution}\hypertarget{contribution}{}\label{contribution}
+
+Please feel free to open an issue or submit a pull request,
+including as much information as you can. Documentation of internals
+can be accessed by cloning this repository and running \texttt{cargo doc},
+or by visiting the \href{https://docs.rs/tex-fmt/latest/tex_fmt/}{docs.rs} page.
+
+Alternatively, you can
+\href{https://buymeacoffee.com/wgunderwood}{Buy Me a Coffee}!
+
+\subsection{Limitations}\hypertarget{limitations}{}\label{limitations}
+
+\begin{itemize}
+\item{} Semantic parsing of LaTeX code not conducted
+\item{} No linting or correction of syntax errors
+\item{} Compliance with existing formatting guidelines not guaranteed
+\item{} No spelling or grammar checking
+\end{itemize}
+
+\subsection{Existing tools}\hypertarget{existing-tools}{}\label{existing-tools}
+
+\begin{itemize}
+\item{} \href{https://github.com/cmhughes/latexindent.pl}{latexindent}.
+Perl script, many configuration options, slow on large files
+\item{} \href{https://github.com/FlamingTempura/bibtex-tidy}{bibtex-tidy}.
+JavaScript program, specifically for BibTeX files
+\item{} \href{http://bfc.sfsu.edu/cgi-bin/hsu.pl?LaTeX_Tidy}{LaTeXTidy}.
+Perl script, download links seem to be broken
+\item{} \href{https://c.albert-thompson.com/latex-pretty/}{latex-pretty}.
+Browser-based, uses latexindent as the backend
+\item{} \href{https://latexformat.com/}{latexformat.com}.
+Browser-based
+\item{} \href{http://ftp.math.utah.edu/pub/texpretty/}{texpretty}.
+C program which works sometimes and appears to be fast
+\item{} \href{https://latex-editor.pages.dev/formatter/}{latex-editor}.
+Browser-based
+\item{} \href{https://github.com/engeljh/vim-latexfmt}{LaTeXFmt}.
+Vim plugin, does not apply indentation
+\item{} \href{https://github.com/nfode/latex-formatter}{latex-formatter}.
+Visual Studio plugin, uses latexindent as the backend
+\item{} \href{https://repo.or.cz/llf.git}{LLF}.
+Lua script, many configuration options
+\end{itemize}
+
+\subsection{Options}\hypertarget{options}{}\label{options}
+
+\subsubsection{Command line options}\hypertarget{command-line-options}{}\label{command-line-options}
+
+The following arguments can be passed on the command line.
+
+\begin{longtable}{|l|l|l|l|}
+\hline
+Option & Alias & Default & Description\\
+\hline
+\texttt{--check} & \texttt{-c} &  & Check formatting, do not modify files\\
+\texttt{--print} & \texttt{-p} &  & Print to stdout, do not modify files\\
+\texttt{--fail-on-change} & \texttt{-f} &  & Fail if files are modified\\
+\texttt{--recursive} & \texttt{-r} &  & Recursively search for files to format\\
+\texttt{--nowrap} & \texttt{-n} &  & Do not wrap long lines\\
+\texttt{--wraplen \textless{}N\textgreater{}} & \texttt{-l} & \texttt{80} & Line length for wrapping\\
+\texttt{--tabsize \textless{}N\textgreater{}} & \texttt{-t} & \texttt{2} & Number of characters to use as tab size\\
+\texttt{--usetabs} &  &  & Use tabs instead of spaces for indentation\\
+\texttt{--stdin} & \texttt{-s} &  & Process stdin as a single file, output to stdout\\
+\texttt{--config \textless{}PATH\textgreater{}} &  &  & Path to config file\\
+\texttt{--noconfig} &  &  & Do not read any config file\\
+\texttt{--verbose} & \texttt{-v} &  & Show info messages\\
+\texttt{--quiet} & \texttt{-q} &  & Hide warning messages\\
+\texttt{--trace} &  &  & Show trace messages\\
+\texttt{--completion \textless{}SHELL\textgreater{}} &  &  & Generate a shell completion script\\
+\texttt{--man} &  &  & Generate a man page\\
+\texttt{--args} &  &  & View arguments passed to tex-fmt\\
+\texttt{--help} & \texttt{-h} &  & Print help\\
+\texttt{--version} & \texttt{-V} &  & Print version\\
+\hline
+\end{longtable}
+
+\subsubsection{Configuration file options}\hypertarget{configuration-file-options}{}\label{configuration-file-options}
+
+The following arguments can be provided in \texttt{tex-fmt.toml}.
+The first example in each row is the default value.
+
+\begin{longtable}{|l|l|l|l|}
+\hline
+Option & Type & Examples & Description\\
+\hline
+\texttt{check} & bool & \texttt{false} & Check formatting, do not modify files\\
+\texttt{print} & bool & \texttt{false} & Print to stdout, do not modify files\\
+\texttt{fail-on-change} & bool & \texttt{false} & Fail if files are modified\\
+\texttt{wrap} & bool & \texttt{true} & Wrap long lines\\
+\texttt{wraplen} & int & \texttt{80}, \texttt{100} & Line length for wrapping\\
+\texttt{wrapmin} & int & \texttt{70}, \texttt{90} & Target minimum length for line wrapping\\
+\texttt{tabsize} & int & \texttt{2}, \texttt{4} & Number of characters to use as tab size\\
+\texttt{tabchar} & str & \texttt{"space"}, \texttt{"tab"} & Character to use for indentation\\
+\texttt{stdin} & bool & \texttt{false} & Process stdin as a single file, output to stdout\\
+\texttt{lists} & arr{[}str{]} & \texttt{{[}{]}}, \texttt{{[}"myitemize"{]}} & Extra list environments to be formatted as \texttt{itemize}\\
+\texttt{verbatims} & arr{[}str{]} & \texttt{{[}{]}}, \texttt{{[}"myverbatim"{]}} & Extra verbatim environments\\
+\texttt{no-indent-envs} & arr{[}str{]} & \texttt{{[}{]}}, \texttt{{[}"mydocument"{]}} & Environments which are not indented\\
+\texttt{wrap-chars} & arr{[}str{]} & \texttt{{[}{]}}, \texttt{{[}"。"{]}} & Characters after which lines may be wrapped\\
+\texttt{verbosity} & str & \texttt{"warn"}, \texttt{"error"} & Verbosity level for terminal logging\\
+\hline
+\end{longtable}
+
+
+\end{document}

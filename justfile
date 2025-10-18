@@ -57,10 +57,10 @@ shellcheck:
   @shellcheck extra/*.sh
 
 ctan:
-  @cp ctan/README.md LICENSE NEWS.md Cargo.toml ctan/tex-fmt
-  @cp -r src/ ctan/tex-fmt
-  @pandoc -o ctan/tex-fmt/tex-fmt.pdf ctan/README.md
-  @cd ctan && tar -czf tex-fmt.tar.gz tex-fmt
+  @cp ctan/README.md LICENSE NEWS.md Cargo.toml ctan/latex-formatter
+  @cp -r src/ ctan/latex-formatter
+  #@pandoc -o ctan/latex-formatter/latex-formatter.pdf ctan/README.md
+  @cd ctan && tar -czf latex-formatter.tar.gz latex-formatter
 
 nix:
   @nix flake update
