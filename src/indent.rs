@@ -4,7 +4,7 @@ use crate::args::Args;
 use crate::comments::{find_comment_index, remove_comment};
 use crate::format::{Pattern, State};
 use crate::logging::{record_line_log, Log};
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, VERB};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, VERBS};
 use core::cmp::max;
 use log::Level;
 use log::LevelFilter;
@@ -51,7 +51,7 @@ fn get_diff(
     no_indent_envs_end: &[String],
 ) -> i8 {
     // Do not indent if line contains \verb|...|
-    if pattern.contains_verb && line.contains(VERB) {
+    if pattern.contains_verb && VERBS.iter().any(|x| line.contains(x)) {
         return 0;
     }
 
@@ -89,7 +89,7 @@ fn get_back(
     let mut back: i8 = 0;
 
     // Don't apply any indenting if a \verb|...| is present
-    if pattern.contains_verb && line.contains(VERB) {
+    if pattern.contains_verb && VERBS.iter().any(|x| line.contains(x)) {
         return 0;
     }
 
