@@ -167,6 +167,12 @@ A package for Neovim is provided by
 
 The [tex-fmt-action](https://github.com/grayespinoza/tex-fmt-action) can install and run tex-fmt.
 
+### CTAN
+
+A package named
+[latex-formatter](https://ctan.org/pkg/latex-formatter)
+is on CTAN.
+
 ## Usage
 
 The most commonly used options are given below.
