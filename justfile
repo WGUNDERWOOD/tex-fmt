@@ -63,7 +63,7 @@ ctan:
   @rm -f ctan/*.aux ctan/*.fdb_latexmk ctan/*.fls ctan/*.log
   @rm -f ctan/*.synctex.gz ctan/*.dvi
   @mkdir -p ctan/latex-formatter
-  @cp ctan/latex-formatter.pdf ctan/latex-formatter
+  @cp ctan/latex-formatter.pdf ctan/latex-formatter.tex ctan/latex-formatter
   @cp ctan/README.md LICENSE NEWS.md Cargo.toml ctan/latex-formatter
   @cp -r src/ ctan/latex-formatter
 

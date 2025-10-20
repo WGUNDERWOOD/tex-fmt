@@ -7,6 +7,7 @@
 *** git log --oneline --no-merges vX.X.X..main
 ** Update version number in Cargo.toml to vY.Y.Y
 ** Update version number for pre-commit in README
+** Update year in LICENSE
 ** Update Nix flake and lock
 *** just nix
 *** nix develop
