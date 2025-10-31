@@ -39,8 +39,12 @@ fn is_wrap_point(
 }
 
 fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
-    verb_byte_start
-        .map(|v| line[v..].match_indices('|').nth(1).map(|(i, _)| i + v))?
+    verb_byte_start.map(|v| {
+        line[v..]
+            .match_indices(['|', '+'])
+            .nth(1)
+            .map(|(i, _)| i + v)
+    })?
 }
 
 fn is_inside_verb(
