@@ -1,6 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO CTAN submission
 * Release process
 ** Checkout main branch
 ** Update release notes in NEWS.md
