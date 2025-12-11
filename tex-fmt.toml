@@ -9,3 +9,7 @@ stdin = false
 verbosity = "warn"
 lists = []
 no-indent-envs = []
+
+wrap-by-visual-len = true
+wrap-cjk=true
+# wrap-chars = ["。","，","：","；","！","？","、","．"]

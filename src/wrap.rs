@@ -16,13 +16,15 @@ pub const TEXT_LINE_START: &str = "";
 /// String slice to start wrapped comment lines
 pub const COMMENT_LINE_START: &str = "% ";
 
-const CJK_PROHIBITED_AT_START: &[char] = &[
+// CJK characters that should not appear at the start of a line
+const CJK_CHARS_PROHIBITED_AT_START: &[char] = &[
     '·', '’', '”', '†', '‡', '›', '℃', '：', '、', '。', '〃', '〉', '》',
     '」', '』', '〕', '〗', '〞', '﹘', '﹚', '﹜', '！', '＂', '％', '＇',
     '）', '，', '．', '：', '；', '？', '］', '｝', '～', '…', '―'
 ];
 
-const CJK_PROHIBITED_AT_END: &[char] = &[
+// CJK characters that should not appear at the end of a line
+const CJK_CHARS_PROHIBITED_AT_END: &[char] = &[
     '£', '§', '¨', '«', '‘', '“', '〈', '《', '「', '『', '〔', '〖', '〝',
     '﹙', '﹛', '（', '［', '｛', '￥', '$',
 ];
@@ -46,11 +48,11 @@ fn is_cjk_wrap_point(
     is_cjk_char(c) 
         // Next char not prohibited at start
         && match next_c {
-            Some(c) => !CJK_PROHIBITED_AT_START.contains(&c),
+            Some(c) => !CJK_CHARS_PROHIBITED_AT_START.contains(&c),
             None => true,
         }
         // this char not prohibited at end
-        && !CJK_PROHIBITED_AT_END.contains(&c)
+        && !CJK_CHARS_PROHIBITED_AT_END.contains(&c)
         // colon followed by opening quotes is not a wrap point
         && !matches!((c, next_c), ('：', Some('“' | '「' | '『' | '‘')))
 }
