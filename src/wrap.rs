@@ -8,28 +8,85 @@ use crate::regexes::VERBS;
 use log::Level;
 use log::LevelFilter;
 use std::path::Path;
+use unicode_width::UnicodeWidthChar;
+use unicode_width::UnicodeWidthStr;
 
 /// String slice to start wrapped text lines
 pub const TEXT_LINE_START: &str = "";
 /// String slice to start wrapped comment lines
 pub const COMMENT_LINE_START: &str = "% ";
 
+// CJK characters that should not appear at the start of a line
+const CJK_CHARS_PROHIBITED_AT_START: &[char] = &[
+    '·', '’', '”', '†', '‡', '›', '℃', '：', '、', '。', '〃', '〉', '》',
+    '」', '』', '〕', '〗', '〞', '﹘', '﹚', '﹜', '！', '＂', '％', '＇',
+    '）', '，', '．', '：', '；', '？', '］', '｝', '～', '…', '―'
+];
+
+// CJK characters that should not appear at the end of a line
+const CJK_CHARS_PROHIBITED_AT_END: &[char] = &[
+    '£', '§', '¨', '«', '‘', '“', '〈', '《', '「', '『', '〔', '〖', '〝',
+    '﹙', '﹛', '（', '［', '｛', '￥', '$',
+];
+
 /// Check if a line needs wrapping
 #[must_use]
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
-    args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
+    args.wrap
+        && (if args.wrap_by_visual_len {
+            line.width()
+        } else {
+            line.chars().count()
+        } + indent_length
+            > args.wraplen.into())
+}
+
+fn is_cjk_wrap_point(
+    c: char,
+    next_c: Option<char>,
+) -> bool {
+    is_cjk_char(c) 
+        // Next char not prohibited at start
+        && match next_c {
+            Some(c) => !CJK_CHARS_PROHIBITED_AT_START.contains(&c),
+            None => true,
+        }
+        // this char not prohibited at end
+        && !CJK_CHARS_PROHIBITED_AT_END.contains(&c)
+        // colon followed by opening quotes is not a wrap point
+        && !matches!((c, next_c), ('：', Some('“' | '「' | '『' | '‘')))
+}
+
+fn is_cjk_char(c: char) -> bool {
+    matches!(c,
+        // CJK Unified Ideographs
+        '\u{4E00}'..='\u{9FFF}'
+        // CJK Unified Ideographs Extension A
+        | '\u{3400}'..='\u{4DBF}'
+        // Hiragana
+        | '\u{3040}'..='\u{309F}'
+        // Katakana
+        | '\u{30A0}'..='\u{30FF}'
+        // Hangul Syllables
+        | '\u{AC00}'..='\u{D7AF}'
+        // CJK Symbols and Punctuation
+        | '\u{3000}'..='\u{303F}'
+    )
 }
 
 fn is_wrap_point(
     i_byte: usize,
     c: char,
     prev_c: Option<char>,
+    next_c: Option<char>,
     inside_verb: bool,
     line_len: usize,
     args: &Args,
 ) -> bool {
+    // wrap at CJK characters if enabled, it will ignore wrap_chars constraint
+    ((args.wrap_cjk && is_cjk_wrap_point(c, next_c)) ||
     // Character c must be a valid wrapping character
-    args.wrap_chars.contains(&c)
+    args.wrap_chars.contains(&c))
         // Must not be preceded by '\'
         && prev_c != Some('\\')
         // Do not break inside a \verb|...|
@@ -80,25 +137,39 @@ fn find_wrap_point(
     let wrap_boundary = usize::from(args.wrapmin) - indent_length;
     let line_len = line.len();
 
-    for (i_char, (i_byte, c)) in line.char_indices().enumerate() {
-        if i_char >= wrap_boundary && wrap_point.is_some() {
+    let mut current_width = 0;
+    // peekable iterator over char indices
+    let mut chars_iter = line.char_indices().peekable();
+
+    while let Some((i_byte, c)) = chars_iter.next() {
+        // cumulative character width
+        current_width += if args.wrap_by_visual_len {
+            c.width().unwrap_or(0)
+        } else {
+            1
+        };
+        // stop if we have exceeded the wrap boundary and found a wrap point
+        if current_width >= wrap_boundary && wrap_point.is_some() {
             break;
         }
         // Special wrapping for lines containing \verb|...|
         let inside_verb =
             is_inside_verb(i_byte, contains_verb, verb_start, verb_end);
-        if is_wrap_point(i_byte, c, prev_c, inside_verb, line_len, args) {
-            if after_non_percent {
-                // Get index of the byte after which
-                // line break will be inserted.
-                // Note this may not be a valid char index.
-                let wrap_byte = i_byte + c.len_utf8() - 1;
-                // Don't wrap here if this is the end of the line anyway
-                if wrap_byte + 1 < line_len {
-                    wrap_point = Some(wrap_byte);
-                }
+        let next_c = chars_iter.peek().map(|(_, c)| *c);
+        if is_wrap_point(i_byte, c, prev_c, next_c, inside_verb, line_len, args)
+            && after_non_percent {
+            // Get index of the byte after which
+            // line break will be inserted.
+            // Note this may not be a valid char index.
+            let wrap_byte = i_byte + c.len_utf8() - 1;
+            // Don't wrap here if this is the end of the line anyway
+            if wrap_byte + 1 < line_len {
+                wrap_point = Some(wrap_byte);
             }
-        } else if c != '%' {
+        }
+        // Unlike English,
+        // a CJK character can be both a wrap point and a non-% character
+        if c != '%' {
             after_non_percent = true;
         }
         prev_c = Some(c);
@@ -132,7 +203,14 @@ pub fn apply_wrap<'a>(
     let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
-        Some(p) if p <= args.wraplen.into() => {}
+        Some(p) if {
+            // caluculate line visual length if wrap_by_visual_len is enabled
+            (if args.wrap_by_visual_len {
+                line.get(..=p).map_or(0, unicode_width::UnicodeWidthStr::width)
+            } else {
+                p
+            }) <= args.wraplen.into()
+        } => {}
         _ => {
             record_line_log(
                 logs,
