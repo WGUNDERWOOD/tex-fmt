@@ -132,4 +132,16 @@ pub fn get_cli_command() -> Command {
                 .action(SetTrue)
                 .help("Recursively search for files to format")
         )
+        .arg(
+            Arg::new("wrap-by-visual-len")
+                .long("wrap-by-visual-len")
+                .action(SetTrue)
+                .help("Use visual length instead of character count when wrapping")
+        )
+        .arg(
+            Arg::new("wrap-cjk")
+                .long("wrap-cjk")
+                .action(SetTrue)
+                .help("Allow wrap at CJK characters")
+        )
 }

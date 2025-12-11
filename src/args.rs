@@ -53,6 +53,10 @@ pub struct Args {
     pub files: Vec<PathBuf>,
     /// Recursive search for files
     pub recursive: bool,
+    /// Use visual length instead of character count when wrapping
+    pub wrap_by_visual_len: bool,
+    /// Allow wrap at CJK characters
+    pub wrap_cjk: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -97,6 +101,10 @@ pub struct OptionArgs {
     pub files: Vec<PathBuf>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub recursive: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub wrap_by_visual_len: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub wrap_cjk: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -157,6 +165,8 @@ impl Default for OptionArgs {
             arguments: Some(false),
             files: vec![],
             recursive: Some(false),
+            wrap_by_visual_len: Some(false),
+            wrap_cjk: Some(false),
         }
     }
 }
@@ -184,6 +194,8 @@ impl OptionArgs {
             arguments: None,
             files: vec![],
             recursive: None,
+            wrap_by_visual_len: None,
+            wrap_cjk: None,
         }
     }
 }
@@ -240,6 +252,8 @@ impl Args {
             arguments: args.arguments.unwrap(),
             files: args.files,
             recursive: args.recursive.unwrap(),
+            wrap_by_visual_len: args.wrap_by_visual_len.unwrap(),
+            wrap_cjk: args.wrap_cjk.unwrap(),
         }
     }
 
@@ -377,6 +391,11 @@ impl fmt::Display for Args {
         display_arg_line(f, "wrap", &self.wrap.to_string())?;
         display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
+        display_arg_line(
+            f,
+            "wrap-by-visual-len",
+            &self.wrap_by_visual_len.to_string(),
+        )?;
         display_arg_line(f, "tabsize", &self.tabsize.to_string())?;
         display_arg_line(f, "tabchar", &self.tabchar.to_string())?;
         display_arg_line(f, "stdin", &self.stdin.to_string())?;
