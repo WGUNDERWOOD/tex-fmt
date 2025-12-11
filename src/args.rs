@@ -391,6 +391,7 @@ impl fmt::Display for Args {
         display_arg_line(f, "wrap", &self.wrap.to_string())?;
         display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
+        display_arg_line(f, "wrap-cjk", &self.wrap_cjk.to_string())?;
         display_arg_line(
             f,
             "wrap-by-visual-len",
