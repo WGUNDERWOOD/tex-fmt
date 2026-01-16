@@ -44,7 +44,7 @@ pub fn get_cli_command() -> Command {
                 .short('l')
                 .long("wraplen")
                 .value_name("N")
-                .value_parser(value_parser!(u8))
+                .value_parser(value_parser!(usize))
                 .help("Line length for wrapping [default: 80]"),
         )
         .arg(
