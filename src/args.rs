@@ -26,9 +26,9 @@ pub struct Args {
     /// Wrap long lines
     pub wrap: bool,
     /// Maximum allowed line length
-    pub wraplen: u8,
+    pub wraplen: usize,
     /// Wrap lines longer than this
-    pub wrapmin: u8,
+    pub wrapmin: usize,
     /// Number of characters to use as tab size
     pub tabsize: u8,
     /// Characters to use for indentation
@@ -68,9 +68,9 @@ pub struct OptionArgs {
     #[merge(strategy= merge::option::overwrite_none)]
     pub wrap: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
-    pub wraplen: Option<u8>,
+    pub wraplen: Option<usize>,
     #[merge(strategy= merge::option::overwrite_none)]
-    pub wrapmin: Option<u8>,
+    pub wrapmin: Option<usize>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub tabsize: Option<u8>,
     #[merge(strategy= merge::option::overwrite_none)]
