@@ -54,7 +54,7 @@ pub struct Args {
     /// Recursive search for files
     pub recursive: bool,
     /// Indent based on delimiters (brackets, braces, parens)
-    pub delim_indent: bool,
+    pub indent_delims: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -100,7 +100,7 @@ pub struct OptionArgs {
     #[merge(strategy= merge::option::overwrite_none)]
     pub recursive: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
-    pub delim_indent: Option<bool>,
+    pub indent_delims: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -161,7 +161,7 @@ impl Default for OptionArgs {
             arguments: Some(false),
             files: vec![],
             recursive: Some(false),
-            delim_indent: Some(true),
+            indent_delims: Some(true),
         }
     }
 }
@@ -189,7 +189,7 @@ impl OptionArgs {
             arguments: None,
             files: vec![],
             recursive: None,
-            delim_indent: None,
+            indent_delims: None,
         }
     }
 }
@@ -246,7 +246,7 @@ impl Args {
             arguments: args.arguments.unwrap(),
             files: args.files,
             recursive: args.recursive.unwrap(),
-            delim_indent: args.delim_indent.unwrap(),
+            indent_delims: args.indent_delims.unwrap(),
         }
     }
 
@@ -386,7 +386,7 @@ impl fmt::Display for Args {
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
         display_arg_line(f, "tabsize", &self.tabsize.to_string())?;
         display_arg_line(f, "tabchar", &self.tabchar.to_string())?;
-        display_arg_line(f, "delim-indent", &self.delim_indent.to_string())?;
+        display_arg_line(f, "indent-delims", &self.indent_delims.to_string())?;
         display_arg_line(f, "stdin", &self.stdin.to_string())?;
         match &self.config {
             None => display_arg_line(f, "config", "None")?,

@@ -138,7 +138,7 @@ fn get_indent(
     lists_end: &[String],
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
-    delim_indent: bool,
+    indent_delims: bool,
 ) -> Indent {
     let mut diff = get_diff(
         line,
@@ -150,7 +150,7 @@ fn get_indent(
     );
     let mut back =
         get_back(line, pattern, state, lists_end, no_indent_envs_end);
-    if delim_indent {
+    if indent_delims {
         let diff_back_delim = get_diff_back_delim(line);
         diff += diff_back_delim.0;
         back += diff_back_delim.1;
@@ -190,7 +190,7 @@ pub fn calculate_indent(
         lists_end,
         no_indent_envs_begin,
         no_indent_envs_end,
-        args.delim_indent,
+        args.indent_delims,
     );
 
     // Record the indent to the logs.

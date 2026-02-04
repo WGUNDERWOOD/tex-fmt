@@ -49,7 +49,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
     } else {
         None
     };
-    let delim_indent: Option<bool> = if arg_matches.get_flag("nodelimindent") {
+    let indent_delims: Option<bool> = if arg_matches.get_flag("no-indent-delims") {
         Some(false)
     } else {
         None
@@ -92,7 +92,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
             .map(PathBuf::from)
             .collect::<Vec<PathBuf>>(),
         recursive: get_flag(&arg_matches, "recursive"),
-        delim_indent,
+        indent_delims,
     };
     args
 }

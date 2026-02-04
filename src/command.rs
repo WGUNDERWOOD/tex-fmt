@@ -40,8 +40,8 @@ pub fn get_cli_command() -> Command {
                 .help("Do not wrap long lines"),
         )
         .arg(
-            Arg::new("nodelimindent")
-                .long("nodelimindent")
+            Arg::new("no-indent-delims")
+                .long("no-indent-delims")
                 .action(SetTrue)
                 .help("Do not indent based on delimiters (brackets, braces, parentheses)"),
         )
