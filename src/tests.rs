@@ -204,7 +204,6 @@ fn test_all() {
 }
 
 #[test]
-#[ignore]
 fn test_subset() {
     let test_names = [
         //"wrap_chars",
