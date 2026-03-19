@@ -7,6 +7,7 @@ use crate::logging::{record_file_log, Log};
 use crate::read::{read, read_stdin};
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERBS};
 use crate::subs;
+use crate::table::{align_tables};
 use crate::verbatim::{get_verbatim, Verbatim};
 use crate::wrap::{apply_wrap, needs_wrap};
 use crate::write::process_output;
@@ -160,6 +161,9 @@ pub fn format_file(
         );
         record_file_log(logs, Warn, file, &msg);
     }
+
+    // Align tables
+    new_text = align_tables(&new_text);
 
     new_text = subs::remove_trailing_spaces(&new_text);
     new_text = subs::remove_trailing_blank_lines(&new_text);
