@@ -21,7 +21,7 @@ pkgs.mkShell {
     pkgs.gh
     pkgs.hyperfine
     pkgs.lld
-    pkgs.poppler_utils
+    pkgs.poppler-utils
     pkgs.ripgrep
     pkgs.rustfmt
     pkgs.shellcheck
