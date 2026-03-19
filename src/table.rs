@@ -2,6 +2,54 @@
 
 use itertools::Itertools;
 
+// New ideas
+// Write a function to format a table only
+//    Takes text for a table environment in and formats it to a string
+// Then write separate logic for finding tables in the file
+// Finally write logic for formatting the full file
+
+pub fn get_max_delims_per_line(text: &str) -> usize {
+    text.lines().map(|l| l.matches('&').count()).max().unwrap()
+}
+
+pub fn get_position_of_jth_delim(line: &str, j: usize) -> Option<usize> {
+    line.chars()
+        .enumerate()
+        .filter(|&(_, c)| c == '&')
+        .nth(j)
+        .map(|(i, _)| i)
+}
+
+pub fn get_max_position_of_jth_delim(text: &str, j: usize) -> Option<usize> {
+    text.lines().map(|l| get_position_of_jth_delim(l, j)).flatten().max()
+}
+
+pub fn get_offset_for_jth_delim(text: &str, j: usize) -> Vec<Option<usize>> {
+    let max_position = get_max_position_of_jth_delim(text, j);
+    text
+        .lines()
+        .map(|l| get_position_of_jth_delim(l, j))
+        .map(|pos| pos.map(|p| max_position.map(|m| m - p)).flatten())
+        .collect()
+}
+
+pub fn align_table(text: &str) -> String {
+    // Get max number of delimiters on any line
+    let max_delims_per_line = get_max_delims_per_line(text);
+
+    // For j in [n_delims]
+    //     Get the position of the rightmost jth delimiter
+    //     Record the offset necessary
+
+    text.to_string()
+}
+
+pub fn align_tables(text: &str) -> String {
+    text.to_string()
+}
+
+
+/*
 pub fn align_tables(text: &str) -> String {
 
     let table_begins = ["\\begin{tabular}"];
@@ -92,3 +140,4 @@ pub fn align_tables(text: &str) -> String {
 
     new_text.to_string()
 }
+*/
