@@ -1,6 +1,6 @@
 default: test doc clippy format shellcheck shellinstall wasm
 
-all: default prof binary logo perf latex
+all: default prof binary logo ctan perf latex
 
 alias b := build
 alias d := doc
@@ -36,7 +36,7 @@ latex:
 
 wasm:
   @mkdir -p web/pkg
-  @cargo build -r --lib --target wasm32-unknown-unknown
+  @cargo build -r -F wasm --lib --target wasm32-unknown-unknown
   @wasm-bindgen --target web --out-dir web/pkg \
       target/wasm32-unknown-unknown/release/tex_fmt.wasm
   @cd web/pkg && wasm-opt -Oz -o tex_fmt_bg.wasm tex_fmt_bg.wasm
@@ -56,6 +56,17 @@ upgrade:
 shellcheck:
   @shellcheck extra/*.sh
 
+ctan:
+  @rm -f ctan/latex-formatter.pdf ctan/latex-formatter.tar.gz
+  @cd ctan && latexmk -pdf latex-formatter.tex
+  @rm -rf ctan/latex-formatter
+  @rm -f ctan/*.aux ctan/*.fdb_latexmk ctan/*.fls ctan/*.log
+  @rm -f ctan/*.synctex.gz ctan/*.dvi
+  @mkdir -p ctan/latex-formatter
+  @cp ctan/latex-formatter.pdf ctan/latex-formatter.tex ctan/latex-formatter
+  @cp ctan/README.md LICENSE NEWS.md Cargo.toml ctan/latex-formatter
+  @cp -r src/ ctan/latex-formatter
+
 nix:
   @nix flake update
 
@@ -69,3 +80,14 @@ logo:
   @cd extra && magick -background none card.svg -resize 1280x640\! card.png
   @cd extra && inkscape -w 2560 -h 1280 card.svg -o card.png
   @cd extra && rm -f logo.png card.svg
+
+clean:
+  @cargo clean
+  @rm -fv result
+  @rm -fv extra/perf.data extra/perf.data.old
+  @rm -fv extra/flamegraph.svg extra/card.png
+  @rm -fv extra/hyperfine-*.csv
+  @rm -rfv web/pkg/
+  @rm -rfv ctan/latex-formatter/
+  @rm -fv ctan/latex-formatter.pdf
+  @rm -fv ctan/latex-formatter.tar.gz

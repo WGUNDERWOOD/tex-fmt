@@ -1,0 +1,306 @@
+\documentclass{article}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage[a4paper,margin=1.2in]{geometry}
+
+\title{The latex-formatter CTAN package \\ v0.5.6}
+\author{William G.\ Underwood}
+
+\begin{document}
+
+\maketitle
+
+\section{Overview}
+
+The latex-formatter CTAN package provides the tex-fmt command line
+tool for formatting LaTeX source files.
+Main features include:
+
+\begin{itemize}
+  \item Extremely fast run-time performance
+  \item Minimal configuration required
+  \item Command line interface
+  \item Handles LaTeX file types \texttt{.tex},
+    \texttt{.bib}, \texttt{.cls}, and \texttt{.sty}
+  \item Written entirely in safe Rust
+\end{itemize}
+
+\renewcommand{\arraystretch}{1.8}
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|c|c|}
+      \hline
+      {\large Before \texttt{tex-fmt file.tex}}
+      &
+      {\large After \texttt{tex-fmt file.tex}}
+      \\
+      \hline
+      \begin{minipage}{5cm}
+        \vspace*{2mm}
+        \begin{verbatim}
+\documentclass{article}
+
+\begin{document}
+
+\begin{itemize}
+\item Lists with items
+over multiple lines
+\end{itemize}
+
+\begin{equation}
+E = m c^2
+\end{equation}
+
+\end{document}
+        \end{verbatim}
+      \end{minipage}
+      &
+      \begin{minipage}{5cm}
+        \vspace*{2mm}
+        \begin{verbatim}
+\documentclass{article}
+
+\begin{document}
+
+\begin{itemize}
+  \item Lists with items
+    over multiple lines
+\end{itemize}
+
+\begin{equation}
+  E = m c^2
+\end{equation}
+
+\end{document}
+        \end{verbatim}
+      \end{minipage}
+      \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\pagebreak
+
+\section{Usage}
+
+The most commonly used options are given below.
+For a full list, see Section~\ref{sec:options}.
+
+\begin{verbatim}
+tex-fmt file.tex                   # format file.tex and overwrite
+tex-fmt --check file.tex           # check if file.tex is correctly formatted
+tex-fmt --print file.tex           # format file.tex and print to stdout
+tex-fmt --recursive                # recursively format files in
+                                   # current directory
+tex-fmt --recursive dir/           # recursively format files in dir
+tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1
+                                   # if overwritten
+tex-fmt --nowrap file.tex          # do not wrap long lines
+tex-fmt --stdin                    # read from stdin and print to stdout
+tex-fmt --help                     # view help information
+\end{verbatim}
+
+\subsection{Configuration}
+
+Options can also be set using a configuration file, which
+will be read from the following locations, in order of decreasing priority.
+
+\begin{itemize}
+  \item A named config file passed as \texttt{tex-fmt --config <PATH>}
+  \item A file named \texttt{tex-fmt.toml} in the current working directory
+  \item A file named \texttt{tex-fmt.toml} in the root directory of
+    the current git repository
+  \item A file named \texttt{tex-fmt.toml} in a subdirectory titled
+    \texttt{tex-fmt/}
+    in the user's configuration directory at
+    %
+    \begin{itemize}
+      \item Linux: \texttt{\textasciitilde/.config/tex-fmt/tex-fmt.toml}
+      \item macOS: \texttt{/Users/<USER>/Library/Application
+        Support/tex-fmt/tex-fmt.toml}
+      \item Windows:
+        \texttt{C:\symbol{92}Users\symbol{92}<USER>\symbol{92}%
+        AppData\symbol{92}Roaming\symbol{92}tex-fmt\symbol{92}tex-fmt.toml}
+    \end{itemize}
+
+\end{itemize}
+
+Arguments passed on the command line will always override those
+specified in configuration files.
+To ignore all config files, use the \texttt{--noconfig} flag.
+An example configuration file is as follows.
+
+\begin{verbatim}
+# tex-fmt.toml
+check = false
+print = false
+wrap = true
+wraplen = 80
+tabsize = 2
+tabchar = "space"
+stdin = false
+verbosity = "warn"
+lists = []
+no-indent-envs = []
+\end{verbatim}
+
+\pagebreak
+
+\subsection{Disabling the formatter}
+
+Ending a source line with \texttt{\% tex-fmt: skip}
+disables formatting for that line.
+To disable the formatter for a block, use \texttt{\% tex-fmt: off}
+and \texttt{\% tex-fmt: on}.
+Verbatim environments including
+\texttt{verbatim},
+\texttt{Verbatim},
+\texttt{lstlisting}
+and \texttt{minted} are automatically skipped.
+
+\begin{verbatim}
+\documentclass{article}
+\begin{document}
+    This line is skipped % tex-fmt: skip
+% tex-fmt: off
+  These lines are also
+    not formatted or wrapped
+% tex-fmt: on
+\end{document}
+\end{verbatim}
+
+\subsection{Ignoring files in recursive mode}
+
+Recursive searches with \texttt{--recursive} or \texttt{-r} will
+ignore patterns in \texttt{.gitignore} and \texttt{.ignore} files,
+following git conventions.
+
+\subsection{Shell completion}
+
+Shell completion scripts can be generated at run-time using the
+\texttt{--completion <SHELL>} flag.
+
+\subsection{Man page}
+
+A man page can be generated at run-time using the
+\texttt{--man} flag.
+
+\section{Limitations}
+
+\begin{itemize}
+  \item Semantic parsing of LaTeX code not conducted
+  \item No linting or correction of syntax errors
+  \item Compliance with existing formatting guidelines not guaranteed
+  \item No spelling or grammar checking
+\end{itemize}
+
+\pagebreak
+
+\section{Options}
+\label{sec:options}
+
+\subsection{Command line options}
+
+The following arguments can be passed on the command line.
+
+\renewcommand{\arraystretch}{1.2}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      \multicolumn{1}{|c|}{Option}
+      & \multicolumn{1}{|c|}{Alias}
+      & \multicolumn{1}{|c|}{Default}
+      & \multicolumn{1}{|c|}{Description} \\
+      \hline
+      \texttt{--check}              & \texttt{-c}  &         & Check
+      formatting, do not modify files \\
+      \texttt{--print}              & \texttt{-p}  &         & Print
+      to stdout, do not modify files \\
+      \texttt{--fail-on-change}     & \texttt{-f}  &         & Fail
+      if files are modified \\
+      \texttt{--recursive}          & \texttt{-r}  &         &
+      Recursively search for files to format \\
+      \texttt{--nowrap}             & \texttt{-n}  &         & Do not
+      wrap long lines \\
+      \texttt{--wraplen <N>}        & \texttt{-l}  & \texttt{80}    &
+      Line length for wrapping \\
+      \texttt{--tabsize <N>}        & \texttt{-t}  & \texttt{2}     &
+      Number of characters to use as tab size \\
+      \texttt{--usetabs}            &       &         & Use tabs
+      instead of spaces for indentation \\
+      \texttt{--stdin}              & \texttt{-s}  &         &
+      Process stdin as a single file, output to stdout \\
+      \texttt{--config <PATH>}      &       &         & Path to config file \\
+      \texttt{--noconfig}           &       &         & Do not read
+      any config file \\
+      \texttt{--verbose}            & \texttt{-v}  &         & Show
+      info messages \\
+      \texttt{--quiet}              & \texttt{-q}  &         & Hide
+      warning messages \\
+      \texttt{--trace}              &       &         & Show trace messages \\
+      \texttt{--completion <SHELL>} &       &         & Generate a
+      shell completion script \\
+      \texttt{--man}                &       &         & Generate a man page \\
+      \texttt{--args}               &       &         & View
+      arguments passed to tex-fmt \\
+      \texttt{--help}               & \texttt{-h}  &         & Print help \\
+      \texttt{--version}            & \texttt{-V}  &         & Print version \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\subsection{Configuration file options}
+
+The following arguments can be provided in \texttt{tex-fmt.toml}.
+The first example in each row is the default value.
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{|l|l|l|l|}
+      \hline
+      \multicolumn{1}{|c|}{Option}
+      & \multicolumn{1}{|c|}{Type}
+      & \multicolumn{1}{|c|}{Examples}
+      & \multicolumn{1}{|c|}{Description} \\
+      \hline
+      \texttt{check}          & bool     & \texttt{false}
+      & Check formatting, do not modify files \\
+      \texttt{print}          & bool     & \texttt{false}
+      & Print to stdout, do not modify files \\
+      \texttt{fail-on-change} & bool     & \texttt{false}
+      & Fail if files are modified \\
+      \texttt{wrap}           & bool     & \texttt{true}
+      & Wrap long lines \\
+      \texttt{wraplen}        & int      & \texttt{80}, \texttt{100}
+      & Line length for wrapping \\
+      \texttt{wrapmin}        & int      & \texttt{70}, \texttt{90}
+      & Target minimum length for line wrapping \\
+      \texttt{tabsize}        & int      & \texttt{2}, \texttt{4}
+      & Number of characters to use as tab size \\
+      \texttt{tabchar}        & str      & \texttt{"space"},
+      \texttt{"tab"}     & Character to use for indentation \\
+      \texttt{stdin}          & bool     & \texttt{false}
+      & Process stdin as a single file, \\
+      & & & output to stdout \\
+      \texttt{lists}          & arr[str] & \texttt{[]},
+      \texttt{["myitemize"]}  & Extra list environments \\
+                              & & & to be formatted as \texttt{itemize} \\
+      \texttt{verbatims}      & arr[str] & \texttt{[]},
+      \texttt{["myverbatim"]} & Extra verbatim environments \\
+      \texttt{no-indent-envs} & arr[str] & \texttt{[]},
+      \texttt{["mydocument"]} & Environments which are not indented \\
+      \texttt{wrap-chars}     & arr[str] & \texttt{[]},
+      \texttt{[","]}         & Characters after which lines \\
+                             & & & may be wrapped \\
+      \texttt{verbosity}      & str      & \texttt{"warn"},
+      \texttt{"error"}    & Verbosity level for terminal logging \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\end{document}

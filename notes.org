@@ -1,11 +1,12 @@
 #+title: tex-fmt
 * Tasks
-** TODO Check order of deleting multiple empty lines and trimming trailing space
 * Release process
+** Checkout main branch
 ** Update release notes in NEWS.md
 *** git log --oneline --no-merges vX.X.X..main
-** Update version number in Cargo.toml
+** Update version number in Cargo.toml to vY.Y.Y
 ** Update version number for pre-commit in README
+** Update year in LICENSE
 ** Update Nix flake and lock
 *** just nix
 *** nix develop
@@ -20,11 +21,23 @@
 *** git tag vY.Y.Y
 *** git push --tags
 *** Can delete remote tags with git push --delete origin vY.Y.Y
-** Publish to crates.io with cargo publish
+** Publish to crates.io
+*** cargo package --list
+*** cargo publish
 *** Pass --allow-dirty if notes.org has changed
 ** Publish GitHub release with notes from NEWS.md
 *** No need to add a title
 *** GitHub binaries published automatically with actions
+** Submit to CTAN
+*** Update version, update, announcement in ctan/latex-formatter.pkg
+*** Update ctan/README.md
+*** Update LaTeX docs at ctan/latex-formatter.tex
+*** cd ctan
+*** just ctan
+*** gh release download vY.Y.Y -D latex-formatter/bin
+*** tar -czf latex-formatter.tar.gz latex-formatter
+*** Validate with ctan-o-mat latex-formatter.pkg
+*** Submit with ctan-o-mat --submit latex-formatter.pkg
 ** Publish in nixpkgs
 *** Go to nixpkgs fork directory
 *** git checkout master
