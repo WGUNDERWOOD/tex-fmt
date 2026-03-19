@@ -167,6 +167,12 @@ A package for Neovim is provided by
 
 The [tex-fmt-action](https://github.com/grayespinoza/tex-fmt-action) can install and run tex-fmt.
 
+### CTAN
+
+A package named
+[latex-formatter](https://ctan.org/pkg/latex-formatter)
+is on CTAN.
+
 ## Usage
 
 The most commonly used options are given below.
@@ -189,7 +195,7 @@ tex-fmt --help                     # view help information
 
 ### Configuration
 
-Options can also be read from a configuration file, which
+Options can also be set using a configuration file, which
 will be read from the following locations, in order of decreasing priority.
 
 - A named config file passed as `tex-fmt --config <PATH>`
@@ -198,8 +204,8 @@ will be read from the following locations, in order of decreasing priority.
 - A file named `tex-fmt.toml` in a subdirectory titled `tex-fmt/`
   in the user's configuration directory
     - Linux: `~/.config/tex-fmt/tex-fmt.toml`
-    - macOS: `/Users/<user>/Library/Application Support/tex-fmt/tex-fmt.toml`
-    - Windows: `C:\Users\<user>\AppData\Roaming\tex-fmt\tex-fmt.toml`
+    - macOS: `/Users/<USER>/Library/Application Support/tex-fmt/tex-fmt.toml`
+    - Windows: `C:\Users\<USER>\AppData\Roaming\tex-fmt\tex-fmt.toml`
 
 Arguments passed on the command line will always override those
 specified in configuration files. An example configuration file
@@ -264,7 +270,7 @@ tex-fmt can be run before every git commit using
 ```yaml
 repos:
   - repo: https://github.com/WGUNDERWOOD/tex-fmt
-    rev: v0.5.5
+    rev: v0.5.6
     hooks:
       - id: tex-fmt
 ```

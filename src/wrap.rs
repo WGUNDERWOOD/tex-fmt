@@ -17,7 +17,7 @@ pub const COMMENT_LINE_START: &str = "% ";
 /// Check if a line needs wrapping
 #[must_use]
 pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
-    args.wrap && (line.chars().count() + indent_length > args.wraplen.into())
+    args.wrap && (line.chars().count() + indent_length > args.wraplen)
 }
 
 fn is_wrap_point(
@@ -39,8 +39,12 @@ fn is_wrap_point(
 }
 
 fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
-    verb_byte_start
-        .map(|v| line[v..].match_indices('|').nth(1).map(|(i, _)| i + v))?
+    verb_byte_start.map(|v| {
+        line[v..]
+            .match_indices(['|', '+'])
+            .nth(1)
+            .map(|(i, _)| i + v)
+    })?
 }
 
 fn is_inside_verb(
@@ -68,15 +72,12 @@ fn find_wrap_point(
     let mut prev_c: Option<char> = None;
     let contains_verb =
         pattern.contains_verb && VERBS.iter().any(|x| line.contains(x));
-    dbg!(&line);
     let verb_start: Option<usize> = contains_verb
         .then(|| VERBS.iter().filter_map(|&x| line.find(x)).min().unwrap());
-    dbg!(&verb_start);
 
     let verb_end = get_verb_end(verb_start, line);
-    dbg!(&verb_end);
     let mut after_non_percent = verb_start == Some(0);
-    let wrap_boundary = usize::from(args.wrapmin) - indent_length;
+    let wrap_boundary = args.wrapmin - indent_length;
     let line_len = line.len();
 
     for (i_char, (i_byte, c)) in line.char_indices().enumerate() {
@@ -131,7 +132,7 @@ pub fn apply_wrap<'a>(
     let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
-        Some(p) if p <= args.wraplen.into() => {}
+        Some(p) if p <= args.wraplen => {}
         _ => {
             record_line_log(
                 logs,
