@@ -5,7 +5,7 @@ use crate::ignore::{get_ignore, Ignore};
 use crate::indent::{apply_indent, calculate_indent, Indent};
 use crate::logging::{record_file_log, Log};
 use crate::read::{read, read_stdin};
-use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERB};
+use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERBS};
 use crate::subs;
 use crate::verbatim::{get_verbatim, Verbatim};
 use crate::wrap::{apply_wrap, needs_wrap};
@@ -277,6 +277,8 @@ impl Pattern {
     /// Check if a string contains patterns
     #[must_use]
     pub fn new(s: &str) -> Self {
+        let contains_comment = s.contains('%');
+        let contains_verb = VERBS.iter().any(|x| s.contains(x));
         // If splitting does not match, most patterns are not present
         if RE_SPLITTING.is_match(s) {
             Self {
@@ -284,8 +286,8 @@ impl Pattern {
                 contains_env_end: s.contains(ENV_END),
                 contains_item: s.contains(ITEM),
                 contains_splitting: true,
-                contains_comment: s.contains('%'),
-                contains_verb: s.contains(VERB),
+                contains_comment,
+                contains_verb,
             }
         } else {
             Self {
@@ -293,8 +295,8 @@ impl Pattern {
                 contains_env_end: false,
                 contains_item: false,
                 contains_splitting: false,
-                contains_comment: s.contains('%'),
-                contains_verb: s.contains(VERB),
+                contains_comment,
+                contains_verb,
             }
         }
     }

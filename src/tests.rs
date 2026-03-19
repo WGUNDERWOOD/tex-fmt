@@ -210,7 +210,8 @@ fn test_subset() {
         //"wrap_chars",
         //"cv",
         //"short_document",
-        "wrap",
+        //"wrap",
+        "verb",
     ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
