@@ -119,10 +119,18 @@ fn get_back(
 fn get_diff_back_delim(line: &str) -> (i8, i8) {
     let mut diff: i8 = 0;
     let mut back: i8 = 0;
+    let mut prev_is_escape = false;
     for c in line.chars() {
-        diff -= i8::from(OPENS.contains(&c));
-        diff += i8::from(CLOSES.contains(&c));
+        diff -= i8::from(OPENS.contains(&c) && !prev_is_escape);
+        diff += i8::from(CLOSES.contains(&c) && !prev_is_escape);
         back = max(diff, back);
+
+        // Additionally check the the previous character was an escape character
+        if prev_is_escape && c == '\\' {
+            prev_is_escape = false;
+        } else {
+            prev_is_escape = c == '\\';
+        }
     }
     (-diff, back)
 }
