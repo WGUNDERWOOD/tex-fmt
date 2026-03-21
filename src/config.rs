@@ -167,6 +167,7 @@ pub fn get_config_args(
         arguments: None,
         files: vec![],
         recursive: None,
+        indent_delims: config.get("indent-delims").map(|x| x.as_bool().unwrap()),
     };
     Some(args)
 }

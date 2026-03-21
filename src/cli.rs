@@ -49,6 +49,11 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
     } else {
         None
     };
+    let indent_delims: Option<bool> = if arg_matches.get_flag("no-indent-delims") {
+        Some(false)
+    } else {
+        None
+    };
     let tabchar = if arg_matches.get_flag("usetabs") {
         Some(TabChar::Tab)
     } else {
@@ -87,6 +92,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
             .map(PathBuf::from)
             .collect::<Vec<PathBuf>>(),
         recursive: get_flag(&arg_matches, "recursive"),
+        indent_delims,
     };
     args
 }
