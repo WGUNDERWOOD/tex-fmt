@@ -24,8 +24,10 @@ pub fn get_max_position_of_jth_delim(text: &str, j: usize) -> Option<usize> {
     text.lines().map(|l| get_position_of_jth_delim(l, j)).flatten().max()
 }
 
-pub fn get_offset_for_jth_delim(text: &str, j: usize) -> Vec<Option<usize>> {
+pub fn get_offsets_for_jth_delim(text: &str, j: usize) -> Vec<Option<usize>> {
     let max_position = get_max_position_of_jth_delim(text, j);
+    //dbg!(j);
+    //dbg!(max_position);
     text
         .lines()
         .map(|l| get_position_of_jth_delim(l, j))
@@ -37,14 +39,20 @@ pub fn align_table(text: &str) -> String {
     // Get max number of delimiters on any line
     let max_delims_per_line = get_max_delims_per_line(text);
 
-    // For j in [n_delims]
-    //     Get the position of the rightmost jth delimiter
-    //     Record the offset necessary
+    // Calculate the necessary offset of each delim for each line
+    // TODO Just do this one line at a time, then build the text for that line
+    for j in 0..max_delims_per_line {
+        let offsets_for_jth_delim =
+            get_offsets_for_jth_delim(&text, j);
+        dbg!(j);
+        println!("{:?}", &offsets_for_jth_delim);
+    }
 
     text.to_string()
 }
 
 pub fn align_tables(text: &str) -> String {
+    align_table(text);
     text.to_string()
 }
 
