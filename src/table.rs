@@ -10,7 +10,7 @@ fn clean_table(text: &str) -> String {
 }
 
 // Then we get the starting positions of all delims.
-pub fn get_positions(text: &str) -> Vec<Vec<usize>> {
+fn get_positions(text: &str) -> Vec<Vec<usize>> {
     text.lines()
         .map(|l| {
             let mut prev = None;
@@ -30,20 +30,19 @@ pub fn get_positions(text: &str) -> Vec<Vec<usize>> {
 }
 
 // Then we find the desired new positions of the delims
-fn get_new_positions(positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
-    let n_lines = positions.len();
-    let n_delims = positions.iter().map(|l| l.len()).max().unwrap();
-    let mut new_positions = positions.clone();
+fn get_new_positions(positions: &[Vec<usize>]) -> Vec<Vec<usize>> {
+    let n_delims = positions.iter().map(std::vec::Vec::len).max().unwrap();
+    let mut new_positions = positions.to_owned();
     for j in 0..n_delims {
         let positions: Vec<Option<usize>> =
             new_positions.iter().map(|l| l.get(j).copied()).collect();
         let new_position: usize = positions.iter().max().unwrap().unwrap();
-        for l in 0..n_lines {
-            let n_delims_line = new_positions[l].len();
+        for line in &mut new_positions {
+            let n_delims_line = line.len();
             if n_delims_line > j {
-                let offset = new_position - new_positions[l][j];
-                for r in j..n_delims_line {
-                    new_positions[l][r] += offset;
+                let offset = new_position - line[j];
+                for pos in line.iter_mut().skip(j) {
+                    *pos += offset;
                 }
             }
         }
@@ -53,8 +52,8 @@ fn get_new_positions(positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
 
 // Then we calculate the cumulative offsets needed
 fn get_offsets(
-    positions: &Vec<Vec<usize>>,
-    new_positions: &Vec<Vec<usize>>,
+    positions: &[Vec<usize>],
+    new_positions: &[Vec<usize>],
 ) -> Vec<Vec<usize>> {
     let mut offsets = vec![];
     for l in 0..positions.len() {
@@ -64,19 +63,19 @@ fn get_offsets(
             offset.push(new_positions[l][j] - positions[l][j] - prev_offset);
             prev_offset = new_positions[l][j] - positions[l][j];
         }
-        offsets.push(offset)
+        offsets.push(offset);
     }
     offsets
 }
 
 // Use the offsets to format one table line
-fn format_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
+fn format_table_line(line: &str, offsets_delims_row: &[usize]) -> String {
     let mut new_line = String::new();
     let mut j = 0;
     for c in line.chars() {
         if c == '&' {
             let offset = offsets_delims_row.get(j).copied().unwrap_or(0);
-            new_line.extend(std::iter::repeat(' ').take(offset));
+            new_line.extend(std::iter::repeat_n(' ', offset));
             j += 1;
         }
         new_line.push(c);
@@ -85,8 +84,8 @@ fn format_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
 }
 
 // Use the offsets to format the table text
-pub fn format_table(text: &str) -> String {
-    let clean_text = clean_table(&text);
+fn format_table(text: &str) -> String {
+    let clean_text = clean_table(text);
     let positions = get_positions(&clean_text);
     let new_positions = get_new_positions(&positions);
     let offsets = get_offsets(&positions, &new_positions);
@@ -99,7 +98,7 @@ pub fn format_table(text: &str) -> String {
     new_text
 }
 
-pub fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
+fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     let table_begins = ["\\begin{tabular}"];
     let table_ends = ["\\end{tabular}"];
     let mut table_positions = vec![];
@@ -110,15 +109,16 @@ pub fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
             begin = linum;
         } else if table_ends.iter().any(|r| line.contains(r)) {
             end = linum;
-            table_positions.push((begin, end))
+            table_positions.push((begin, end));
         }
     }
     table_positions
 }
 
+#[must_use]
 pub fn format_tables(text: &str) -> String {
     let table_positions = find_table_positions(text);
-    if table_positions.len() == 0 {
+    if table_positions.is_empty() {
         return text.to_string();
     }
 
