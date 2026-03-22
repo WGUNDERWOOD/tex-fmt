@@ -5,8 +5,8 @@ use regex::Regex;
 
 // First we remove all double spaces from the table
 fn clean_table(text: &str) -> String {
-    let re = Regex::new(r"(?<=\S) {2,}").unwrap();
-    re.replace_all(text, " ").to_string()
+    let re = Regex::new(r"(\S) {2,}").unwrap();
+    re.replace_all(text, "$1 ").to_string()
 }
 
 // Then we get the starting positions of all delims.
@@ -35,15 +35,18 @@ fn get_new_positions(positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
     let n_delims = positions.iter().map(|l| l.len()).max().unwrap();
     let mut new_positions = positions.clone();
     for j in 0..n_delims {
+        //dbg!(j);
         let positions: Vec<Option<usize>> = new_positions
             .iter()
             .map(|l| l.get(j).copied())
             .collect();
         let new_position: usize = positions.iter().max().unwrap().unwrap();
         for l in 0..n_lines {
-            if new_positions[l].len() > j {
+            //dbg!(l);
+            let n_delims_line = new_positions[l].len();
+            if n_delims_line > j {
                 let offset = new_position - new_positions[l][j];
-                for r in j..n_delims {
+                for r in j..n_delims_line {
                     new_positions[l][r] += offset;
                 }
             }
@@ -84,14 +87,16 @@ fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
 
 // Use the offsets to align the table text
 pub fn align_table(text: &str) -> String {
-    let positions = get_positions(&text);
+    //println!("{}", &text);
+    let clean_text = clean_table(&text);
+    let positions = get_positions(&clean_text);
     let new_positions = get_new_positions(&positions);
     let offsets = get_offsets(&positions, &new_positions);
-    dbg!(&positions);
-    dbg!(&new_positions);
-    dbg!(&offsets);
+    //dbg!(&positions);
+    //dbg!(&new_positions);
+    //dbg!(&offsets);
     let mut new_text = String::new();
-    for (linum, line) in text.lines().enumerate() {
+    for (linum, line) in clean_text.lines().enumerate() {
         let new_line = align_table_line(line, &offsets[linum]);
         new_text.push_str(&new_line);
         new_text.push('\n');
