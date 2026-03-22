@@ -212,7 +212,7 @@ fn test_subset() {
         //"short_document",
         //"wrap",
         //"verb",
-        "align_tables",
+        "format_tables",
     ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {

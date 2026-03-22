@@ -87,6 +87,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
             .map(PathBuf::from)
             .collect::<Vec<PathBuf>>(),
         recursive: get_flag(&arg_matches, "recursive"),
+        format_tables: get_flag(&arg_matches, "format-tables"),
     };
     args
 }
