@@ -167,7 +167,9 @@ pub fn get_config_args(
         arguments: None,
         files: vec![],
         recursive: None,
-        format_tables: config.get("format_tables").map(|x| x.as_bool().unwrap()),
+        format_tables: config
+            .get("format-tables")
+            .map(|x| x.as_bool().unwrap()),
     };
     Some(args)
 }
