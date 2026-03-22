@@ -53,7 +53,19 @@ fn get_max_positions_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<usize> {
     //max_positions_delims
 }
 
-// TODO Oh boy this is more complicated than I thought
+// TODO Oh boy this is more complicated than I thought...
+// First we should remove all double spaces from the table
+// (except indents at the start of the line).
+// Then we get the starting positions of all delims.
+// Then we find the desired new position of the 1st delim
+// (this is the position of the rightmost 1st delim).
+// Next we calculate the offset (positive) that must
+// be applied to each 1st delim.
+// We then update all the delim positions by applying
+// this offset to every entry.
+// Then we find the desired new position of the 2nd delim
+// (this is the position of the rightmost 2nd delim).
+// Etc
 
 pub fn get_offsets_delims(
     positions_delims: &Vec<Vec<usize>>,
