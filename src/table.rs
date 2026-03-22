@@ -1,19 +1,6 @@
 //! Formatting tables
 
-// TODO
-// Only format tables, not whole document
-
-//pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
-//    text.lines()
-//        .map(|l| {
-//            l.chars()
-//                .enumerate()
-//                .filter(|&(_, c)| c == '&')
-//                .map(|(i, _)| i)
-//                .collect()
-//        })
-//        .collect()
-//}
+use itertools::Itertools;
 
 pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
     text.lines()
@@ -23,7 +10,11 @@ pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
                 .filter_map(|(i, c)| {
                     let is_match = c == '&' && prev != Some('\\');
                     prev = Some(c);
-                    if is_match { Some(i) } else { None }
+                    if is_match {
+                        Some(i)
+                    } else {
+                        None
+                    }
                 })
                 .collect()
         })
@@ -31,6 +22,7 @@ pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
 }
 
 fn get_max_positions_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<usize> {
+    // get rightmost jth delimiters for each j
     let mut max_positions_delims = vec![];
     for line in positions_delims {
         for (j, &pos) in line.iter().enumerate() {
@@ -41,18 +33,47 @@ fn get_max_positions_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<usize> {
             }
         }
     }
+
+    // ensure these are increasing in j
+    let mut prev_pos: usize = *max_positions_delims.get(0).unwrap_or(&0);
     max_positions_delims
+        .into_iter()
+        .enumerate()
+        .map(|(i, pos)| {
+            if i > 0 {
+                dbg!(prev_pos);
+                prev_pos = pos.max(prev_pos + 2);
+                prev_pos
+            } else {
+                pos
+            }
+        })
+    .collect()
+    //dbg!(&max_positions_delims);
+    //max_positions_delims
 }
 
-pub fn get_offsets_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
+// TODO Oh boy this is more complicated than I thought
+
+pub fn get_offsets_delims(
+    positions_delims: &Vec<Vec<usize>>,
+) -> Vec<Vec<usize>> {
     let max_positions_delims = get_max_positions_delims(positions_delims);
     let n_lines = positions_delims.len();
-    let mut offsets_delims: Vec<Vec<usize>> = (0..n_lines).map(|_| vec![]).collect();
+    let mut offsets_delims: Vec<Vec<usize>> =
+        (0..n_lines).map(|_| vec![]).collect();
     for (linum, line) in positions_delims.into_iter().enumerate() {
         let mut offset_counter = 0;
         dbg!(linum);
         for j in 0..line.len() {
+            dbg!(j);
+            //dbg!(max_positions_delims[j]);
+            //dbg!(positions_delims[linum][j]);
+            dbg!(&positions_delims[linum]);
+            dbg!(&max_positions_delims);
+            dbg!(offset_counter);
             let offset = max_positions_delims[j] - positions_delims[linum][j];
+            dbg!(offset);
             offsets_delims[linum].push(offset - offset_counter);
             offset_counter = offset;
         }
@@ -74,87 +95,43 @@ fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
     new_line
 }
 
-
-//fn get_positions_delims()
-
-// fn get_position_jth_delim
-// get array of linum x j containing position
-// get max positions from this array
-// calculate offsets from array and this max
-//     get another array of linum x j containing offsets
-// fn of line to rebuild it correctly formatted
-
-//pub fn get_max_position_jth_delim(text: &str, j: usize) -> Option<usize> {
-//text.lines()
-//.map(|l| get_position_jth_delim(l, j))
-//.flatten()
-//.max()
-//}
-
-//pub fn get_offset_for_jth_delim(
-//line: &str,
-//j: usize,
-//max_position_jth_delim: usize,
-//) -> Vec<Option<usize>> {
-//let max_position = get_max_position_jth_delim(text, j);
-//dbg!(j);
-//dbg!(max_position);
-//text.lines()
-//.map(|l| get_position_jth_delim(l, j))
-//.map(|pos| pos.map(|p| max_position.map(|m| m - p)).flatten())
-//.collect()
-//}
+// TODO This treats the whole doc as one table...
 
 pub fn align_table(text: &str) -> String {
-
-    let table_begins = ["\\begin{tabular}"];
-    let table_ends = ["\\end{tabular}"];
-
-    //println!("{}", &text);
+    println!("{}", &text);
     let positions_delims = get_positions_delims(text);
     let offsets_delims = get_offsets_delims(&positions_delims);
     let mut new_text = String::new();
-    let mut in_table_env = false;
+    //let mut in_table_env = false;
     for (linum, line) in text.lines().enumerate() {
+        //if table_begins.iter().any(|r| line.contains(r)) {
+        //in_table_env = true;
+        //new_text.push_str(line);
+        //new_text.push('\n');
+        //continue;
+        //} else if table_ends.iter().any(|r| line.contains(r)) {
+        //in_table_env = false;
+        //}
 
-        if table_begins.iter().any(|r| line.contains(r)) {
-            in_table_env = true;
-            new_text.push_str(line);
-            new_text.push('\n');
-            continue;
-        } else if table_ends.iter().any(|r| line.contains(r)) {
-            in_table_env = false;
-        }
-
-        if in_table_env {
-            let new_line = align_table_line(line, &offsets_delims[linum]);
-            new_text.push_str(&new_line);
-        } else {
-            new_text.push_str(line);
-        }
+        //if in_table_env {
+        let new_line = align_table_line(line, &offsets_delims[linum]);
+        new_text.push_str(&new_line);
+        //} else {
+        //new_text.push_str(line);
+        //}
 
         new_text.push('\n');
-
     }
 
     new_text
 }
 
-pub fn align_tables(text: &str) -> String {
-    align_table(text)
-}
-
-/*
-pub fn align_tables(text: &str) -> String {
-
+pub fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     let table_begins = ["\\begin{tabular}"];
     let table_ends = ["\\end{tabular}"];
+    let mut table_positions = vec![];
     let mut begin: usize = 0;
     let mut end: usize;
-
-    let mut table_positions: Vec<(usize, usize)> = vec![];
-
-    // find tables in text
     for (linum, line) in text.lines().enumerate() {
         if table_begins.iter().any(|r| line.contains(r)) {
             begin = linum;
@@ -163,10 +140,48 @@ pub fn align_tables(text: &str) -> String {
             table_positions.push((begin, end))
         }
     }
+    table_positions
+}
+
+pub fn align_tables(text: &str) -> String {
+    let table_positions = find_table_positions(text);
+    if table_positions.len() == 0 {
+        return text.to_string();
+    }
 
     let first_table_begin = table_positions[0].0;
     let mut new_text: String = text.lines().take(first_table_begin).join("\n");
     new_text.push('\n');
+
+    for (t, table_position) in table_positions.iter().enumerate() {
+        // format each table
+        let begin = table_position.0;
+        let end = table_position.1;
+        let table_text: String =
+            text.lines().skip(begin).take(end - begin + 1).join("\n");
+        let new_table_text = align_table(&table_text);
+        new_text.push_str(&new_table_text);
+
+        // format text following each table
+        let next_table_begin = if t + 1 < table_positions.len() {
+            table_positions[t + 1].0
+        } else {
+            text.lines().count()
+        };
+        let next_text: String = text
+            .lines()
+            .skip(end + 1)
+            .take(next_table_begin - end - 1)
+            .join("\n");
+        new_text.push_str(&next_text);
+        new_text.push('\n');
+    }
+
+    new_text
+}
+
+/*
+pub fn align_tables(text: &str) -> String {
 
     // for each table
     for (t, table_position) in table_positions.iter().enumerate() {
@@ -222,15 +237,6 @@ pub fn align_tables(text: &str) -> String {
             new_text.push('\n');
         }
 
-        let next_table_begin = if t + 1 < table_positions.len() {
-                table_positions[t+1].0
-        } else {
-            text.lines().count()
-        };
-        let next_text: String =
-            text.lines().skip(end+1).take(next_table_begin - end - 1).join("\n");
-        new_text.push_str(&next_text);
-        new_text.push('\n');
     }
 
     new_text.to_string()
