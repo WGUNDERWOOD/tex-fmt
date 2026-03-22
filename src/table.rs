@@ -1,61 +1,120 @@
 //! Formatting tables
 
-use itertools::Itertools;
-
 // New ideas
 // Write a function to format a table only
 //    Takes text for a table environment in and formats it to a string
 // Then write separate logic for finding tables in the file
 // Finally write logic for formatting the full file
 
-pub fn get_max_delims_per_line(text: &str) -> usize {
-    text.lines().map(|l| l.matches('&').count()).max().unwrap()
-}
+//pub fn get_max_delims_per_line(text: &str) -> usize {
+//text.lines().map(|l| l.matches('&').count()).max().unwrap()
+//}
 
-pub fn get_position_of_jth_delim(line: &str, j: usize) -> Option<usize> {
-    line.chars()
-        .enumerate()
-        .filter(|&(_, c)| c == '&')
-        .nth(j)
-        .map(|(i, _)| i)
-}
-
-pub fn get_max_position_of_jth_delim(text: &str, j: usize) -> Option<usize> {
-    text.lines().map(|l| get_position_of_jth_delim(l, j)).flatten().max()
-}
-
-pub fn get_offsets_for_jth_delim(text: &str, j: usize) -> Vec<Option<usize>> {
-    let max_position = get_max_position_of_jth_delim(text, j);
-    //dbg!(j);
-    //dbg!(max_position);
-    text
-        .lines()
-        .map(|l| get_position_of_jth_delim(l, j))
-        .map(|pos| pos.map(|p| max_position.map(|m| m - p)).flatten())
+pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
+    text.lines()
+        .map(|l| {
+            l.chars()
+                .enumerate()
+                .filter(|&(_, c)| c == '&')
+                .map(|(i, _)| i)
+                .collect()
+        })
         .collect()
 }
 
-pub fn align_table(text: &str) -> String {
-    // Get max number of delimiters on any line
-    let max_delims_per_line = get_max_delims_per_line(text);
+fn get_max_positions_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<usize> {
+    let mut max_positions_delims = vec![];
+    for line in positions_delims {
+        for (j, &pos) in line.iter().enumerate() {
+            if j >= max_positions_delims.len() {
+                max_positions_delims.push(pos);
+            } else {
+                max_positions_delims[j] = max_positions_delims[j].max(pos);
+            }
+        }
+    }
+    max_positions_delims
+}
 
-    // Calculate the necessary offset of each delim for each line
-    // TODO Just do this one line at a time, then build the text for that line
-    for j in 0..max_delims_per_line {
-        let offsets_for_jth_delim =
-            get_offsets_for_jth_delim(&text, j);
-        dbg!(j);
-        println!("{:?}", &offsets_for_jth_delim);
+pub fn get_offsets_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
+    let max_positions_delims = get_max_positions_delims(positions_delims);
+    let n_lines = positions_delims.len();
+    let mut offsets_delims: Vec<Vec<usize>> = (0..n_lines).map(|_| vec![]).collect();
+    for (linum, line) in positions_delims.into_iter().enumerate() {
+        let mut offset_counter = 0;
+        for j in 0..line.len() {
+            let offset = max_positions_delims[j] - positions_delims[linum][j];
+            offsets_delims[linum].push(offset - offset_counter);
+            offset_counter = offset;
+        }
+    }
+    offsets_delims
+}
+
+fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
+    let mut new_line = String::new();
+    let mut j = 0;
+    for c in line.chars() {
+        if c == '&' {
+            let offset = offsets_delims_row.get(j).copied().unwrap_or(0);
+            new_line.extend(std::iter::repeat(' ').take(offset));
+            j += 1;
+        }
+        new_line.push(c);
+    }
+    new_line
+}
+
+
+//fn get_positions_delims()
+
+// fn get_position_jth_delim
+// get array of linum x j containing position
+// get max positions from this array
+// calculate offsets from array and this max
+//     get another array of linum x j containing offsets
+// fn of line to rebuild it correctly formatted
+
+//pub fn get_max_position_jth_delim(text: &str, j: usize) -> Option<usize> {
+//text.lines()
+//.map(|l| get_position_jth_delim(l, j))
+//.flatten()
+//.max()
+//}
+
+//pub fn get_offset_for_jth_delim(
+//line: &str,
+//j: usize,
+//max_position_jth_delim: usize,
+//) -> Vec<Option<usize>> {
+//let max_position = get_max_position_jth_delim(text, j);
+//dbg!(j);
+//dbg!(max_position);
+//text.lines()
+//.map(|l| get_position_jth_delim(l, j))
+//.map(|pos| pos.map(|p| max_position.map(|m| m - p)).flatten())
+//.collect()
+//}
+
+pub fn align_table(text: &str) -> String {
+    let positions_delims = get_positions_delims(text);
+    let offsets_delims = get_offsets_delims(&positions_delims);
+    //dbg!(&offsets_delims);
+
+    let mut new_text = String::new();
+    for (linum, line) in text.lines().enumerate() {
+        let new_line = align_table_line(line, &offsets_delims[linum]);
+        dbg!(&new_line);
+        new_text.push_str(&new_line);
+        new_text.push('\n');
     }
 
-    text.to_string()
+    new_text
 }
 
 pub fn align_tables(text: &str) -> String {
-    align_table(text);
-    text.to_string()
+    align_table(text)
 }
-
 
 /*
 pub fn align_tables(text: &str) -> String {
