@@ -3,7 +3,14 @@
 use itertools::Itertools;
 use regex::Regex;
 
-pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
+// First we remove all double spaces from the table
+fn clean_table(text: &str) -> String {
+    let re = Regex::new(r"(?<=\S) {2,}").unwrap();
+    re.replace_all(text, " ").to_string()
+}
+
+// Then we get the starting positions of all delims.
+pub fn get_positions(text: &str) -> Vec<Vec<usize>> {
     text.lines()
         .map(|l| {
             let mut prev = None;
@@ -21,6 +28,77 @@ pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
         })
         .collect()
 }
+
+// Then we find the desired new positions of the delims
+fn get_new_positions(positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
+    let n_lines = positions.len();
+    let n_delims = positions.iter().map(|l| l.len()).max().unwrap();
+    let mut new_positions = positions.clone();
+    for j in 0..n_delims {
+        let positions: Vec<Option<usize>> = new_positions
+            .iter()
+            .map(|l| l.get(j).copied())
+            .collect();
+        let new_position: usize = positions.iter().max().unwrap().unwrap();
+        for l in 0..n_lines {
+            if new_positions[l].len() > j {
+                let offset = new_position - new_positions[l][j];
+                for r in j..n_delims {
+                    new_positions[l][r] += offset;
+                }
+            }
+        }
+    }
+    new_positions
+}
+
+// Then we calculate the cumulative offsets needed
+fn get_offsets(positions: &Vec<Vec<usize>>, new_positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
+    let mut offsets = vec![];
+    for l in 0..positions.len() {
+        let mut prev_offset = 0;
+        let mut offset = vec![];
+        for j in 0..positions[l].len() {
+            offset.push(new_positions[l][j] - positions[l][j] - prev_offset);
+            prev_offset = new_positions[l][j] - positions[l][j];
+        }
+        offsets.push(offset)
+    }
+    offsets
+}
+
+// Use the offsets to align one table line
+fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
+    let mut new_line = String::new();
+    let mut j = 0;
+    for c in line.chars() {
+        if c == '&' {
+            let offset = offsets_delims_row.get(j).copied().unwrap_or(0);
+            new_line.extend(std::iter::repeat(' ').take(offset));
+            j += 1;
+        }
+        new_line.push(c);
+    }
+    new_line
+}
+
+// Use the offsets to align the table text
+pub fn align_table(text: &str) -> String {
+    let positions = get_positions(&text);
+    let new_positions = get_new_positions(&positions);
+    let offsets = get_offsets(&positions, &new_positions);
+    dbg!(&positions);
+    dbg!(&new_positions);
+    dbg!(&offsets);
+    let mut new_text = String::new();
+    for (linum, line) in text.lines().enumerate() {
+        let new_line = align_table_line(line, &offsets[linum]);
+        new_text.push_str(&new_line);
+        new_text.push('\n');
+    }
+    new_text
+}
+
 
 //fn get_max_positions_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<usize> {
 //    // get rightmost jth delimiters for each j
@@ -80,32 +158,7 @@ pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
 //    offsets_delims
 //}
 
-fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
-    let mut new_line = String::new();
-    let mut j = 0;
-    for c in line.chars() {
-        if c == '&' {
-            let offset = offsets_delims_row.get(j).copied().unwrap_or(0);
-            new_line.extend(std::iter::repeat(' ').take(offset));
-            j += 1;
-        }
-        new_line.push(c);
-    }
-    new_line
-}
 
-pub fn align_table(text: &str) -> String {
-    //println!("{}", &text);
-    let positions_delims = get_positions_delims(&text);
-    let offsets = get_offsets(positions_delims);
-    let mut new_text = String::new();
-    for (linum, line) in text.lines().enumerate() {
-        let new_line = align_table_line(line, &offsets[linum]);
-        new_text.push_str(&new_line);
-        new_text.push('\n');
-    }
-    new_text
-}
 
 pub fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     let table_begins = ["\\begin{tabular}"];
@@ -223,55 +276,3 @@ pub fn align_tables(text: &str) -> String {
     new_text.to_string()
 }
 */
-
-// TODO Oh boy this is more complicated than I thought...
-// First we should remove all double spaces from the table
-// (except indents at the start of the line).
-// Then we get the starting positions of all delims.
-// Then we find the desired new position of the 1st delim
-// (this is the position of the rightmost 1st delim).
-// Next we calculate the offset (positive) that must
-// be applied to each 1st delim.
-// We then update all the delim positions by applying
-// this offset to every entry.
-// Then we find the desired new position of the 2nd delim
-// (this is the position of the rightmost 2nd delim).
-// Etc
-
-fn clean_table(text: &str) -> String {
-    let re = Regex::new(r"(?<=\S) {2,}").unwrap();
-    re.replace_all(text, " ").to_string()
-}
-
-fn get_offsets(
-    positions_delims: Vec<Vec<usize>>,
-) -> Vec<Vec<usize>> {
-    let n_lines = positions_delims.len();
-    let n_delims = positions_delims.iter().map(|l| l.len()).max().unwrap();
-    let mut new_positions_delims = positions_delims.clone();
-    for j in 0..n_delims {
-        let positions: Vec<Option<usize>> = new_positions_delims
-            .iter()
-            .map(|l| l.get(j).copied())
-            .collect();
-        let new_position: usize = positions.iter().max().unwrap().unwrap();
-        for l in 0..n_lines {
-            if new_positions_delims[l].len() > j {
-                let offset: usize = new_position - new_positions_delims[l][j];
-                for r in (j + 1)..n_delims {
-                    new_positions_delims[l][r] += offset;
-                }
-            }
-        }
-    }
-    new_positions_delims
-        .iter()
-        .enumerate()
-        .map(|(l, line)| {
-            line.iter()
-                .enumerate()
-                .map(|(j, _)| line[j] - positions_delims[l][j])
-                .collect()
-        })
-        .collect()
-}
