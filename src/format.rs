@@ -7,7 +7,7 @@ use crate::logging::{record_file_log, Log};
 use crate::read::{read, read_stdin};
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERBS};
 use crate::subs;
-use crate::table::{align_tables};
+use crate::table::align_tables;
 use crate::verbatim::{get_verbatim, Verbatim};
 use crate::wrap::{apply_wrap, needs_wrap};
 use crate::write::process_output;
