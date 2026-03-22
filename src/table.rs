@@ -35,14 +35,10 @@ fn get_new_positions(positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
     let n_delims = positions.iter().map(|l| l.len()).max().unwrap();
     let mut new_positions = positions.clone();
     for j in 0..n_delims {
-        //dbg!(j);
-        let positions: Vec<Option<usize>> = new_positions
-            .iter()
-            .map(|l| l.get(j).copied())
-            .collect();
+        let positions: Vec<Option<usize>> =
+            new_positions.iter().map(|l| l.get(j).copied()).collect();
         let new_position: usize = positions.iter().max().unwrap().unwrap();
         for l in 0..n_lines {
-            //dbg!(l);
             let n_delims_line = new_positions[l].len();
             if n_delims_line > j {
                 let offset = new_position - new_positions[l][j];
@@ -56,7 +52,10 @@ fn get_new_positions(positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
 }
 
 // Then we calculate the cumulative offsets needed
-fn get_offsets(positions: &Vec<Vec<usize>>, new_positions: &Vec<Vec<usize>>) -> Vec<Vec<usize>> {
+fn get_offsets(
+    positions: &Vec<Vec<usize>>,
+    new_positions: &Vec<Vec<usize>>,
+) -> Vec<Vec<usize>> {
     let mut offsets = vec![];
     for l in 0..positions.len() {
         let mut prev_offset = 0;
@@ -87,14 +86,10 @@ fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
 
 // Use the offsets to align the table text
 pub fn align_table(text: &str) -> String {
-    //println!("{}", &text);
     let clean_text = clean_table(&text);
     let positions = get_positions(&clean_text);
     let new_positions = get_new_positions(&positions);
     let offsets = get_offsets(&positions, &new_positions);
-    //dbg!(&positions);
-    //dbg!(&new_positions);
-    //dbg!(&offsets);
     let mut new_text = String::new();
     for (linum, line) in clean_text.lines().enumerate() {
         let new_line = align_table_line(line, &offsets[linum]);
@@ -103,67 +98,6 @@ pub fn align_table(text: &str) -> String {
     }
     new_text
 }
-
-
-//fn get_max_positions_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<usize> {
-//    // get rightmost jth delimiters for each j
-//    let mut max_positions_delims = vec![];
-//    for line in positions_delims {
-//        for (j, &pos) in line.iter().enumerate() {
-//            if j >= max_positions_delims.len() {
-//                max_positions_delims.push(pos);
-//            } else {
-//                max_positions_delims[j] = max_positions_delims[j].max(pos);
-//            }
-//        }
-//    }
-//
-//    // ensure these are increasing in j
-//    let mut prev_pos: usize = *max_positions_delims.get(0).unwrap_or(&0);
-//    max_positions_delims
-//        .into_iter()
-//        .enumerate()
-//        .map(|(i, pos)| {
-//            if i > 0 {
-//                dbg!(prev_pos);
-//                prev_pos = pos.max(prev_pos + 2);
-//                prev_pos
-//            } else {
-//                pos
-//            }
-//        })
-//    .collect()
-//    //dbg!(&max_positions_delims);
-//    //max_positions_delims
-//}
-
-//pub fn get_offsets_delims(
-//    positions_delims: &Vec<Vec<usize>>,
-//) -> Vec<Vec<usize>> {
-//    let max_positions_delims = get_max_positions_delims(positions_delims);
-//    let n_lines = positions_delims.len();
-//    let mut offsets_delims: Vec<Vec<usize>> =
-//        (0..n_lines).map(|_| vec![]).collect();
-//    for (linum, line) in positions_delims.into_iter().enumerate() {
-//        let mut offset_counter = 0;
-//        dbg!(linum);
-//        for j in 0..line.len() {
-//            dbg!(j);
-//            //dbg!(max_positions_delims[j]);
-//            //dbg!(positions_delims[linum][j]);
-//            dbg!(&positions_delims[linum]);
-//            dbg!(&max_positions_delims);
-//            dbg!(offset_counter);
-//            let offset = max_positions_delims[j] - positions_delims[linum][j];
-//            dbg!(offset);
-//            offsets_delims[linum].push(offset - offset_counter);
-//            offset_counter = offset;
-//        }
-//    }
-//    offsets_delims
-//}
-
-
 
 pub fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     let table_begins = ["\\begin{tabular}"];
@@ -218,66 +152,3 @@ pub fn align_tables(text: &str) -> String {
 
     new_text
 }
-
-/*
-pub fn align_tables(text: &str) -> String {
-
-    // for each table
-    for (t, table_position) in table_positions.iter().enumerate() {
-
-        // get the desired delimiter positions
-        let begin = table_position.0;
-        let end = table_position.1;
-        let mut max_delim_positions: Vec<usize> = vec![];
-        for line in text.lines().skip(begin).take(end - begin + 1) {
-            let mut delim_positions: Vec<usize> = vec![];
-            for (i, c) in line.chars().enumerate() {
-                if c == '&' {
-                    delim_positions.push(i);
-                }
-            }
-            for (i, p) in delim_positions.iter().enumerate() {
-                if max_delim_positions.len() > i {
-                    if *p > max_delim_positions[i] {
-                        max_delim_positions[i] = *p;
-                    }
-                } else {
-                    max_delim_positions.push(*p);
-                }
-            }
-        }
-
-        // get gaps between delimiter positions
-        let diff_delim_positions: Vec<_> =
-            max_delim_positions.first()
-            .into_iter()
-            .copied()
-            .chain(max_delim_positions.windows(2).map(|w| w[1] - w[0]))
-            .collect();
-
-        // insert characters as appropriate
-        for line in text.lines().skip(begin).take(end - begin + 1) {
-            let mut new_line = String::new();
-            let mut delim_counter = 0;
-            let mut prev_delim_position = 0;
-            for (i, c) in line.chars().enumerate() {
-                if c == '&' {
-                    let space_needed = diff_delim_positions[delim_counter]
-                        + prev_delim_position - i;
-                    if space_needed > 0 {
-                        new_line.push_str(&" ".repeat(space_needed));
-                    }
-                    delim_counter += 1;
-                    prev_delim_position = i;
-                }
-                new_line.push(c)
-            }
-            new_text.push_str(&new_line);
-            new_text.push('\n');
-        }
-
-    }
-
-    new_text.to_string()
-}
-*/
