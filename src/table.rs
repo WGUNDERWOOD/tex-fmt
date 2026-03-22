@@ -69,8 +69,8 @@ fn get_offsets(
     offsets
 }
 
-// Use the offsets to align one table line
-fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
+// Use the offsets to format one table line
+fn format_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
     let mut new_line = String::new();
     let mut j = 0;
     for c in line.chars() {
@@ -84,15 +84,15 @@ fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
     new_line
 }
 
-// Use the offsets to align the table text
-pub fn align_table(text: &str) -> String {
+// Use the offsets to format the table text
+pub fn format_table(text: &str) -> String {
     let clean_text = clean_table(&text);
     let positions = get_positions(&clean_text);
     let new_positions = get_new_positions(&positions);
     let offsets = get_offsets(&positions, &new_positions);
     let mut new_text = String::new();
     for (linum, line) in clean_text.lines().enumerate() {
-        let new_line = align_table_line(line, &offsets[linum]);
+        let new_line = format_table_line(line, &offsets[linum]);
         new_text.push_str(&new_line);
         new_text.push('\n');
     }
@@ -116,7 +116,7 @@ pub fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     table_positions
 }
 
-pub fn align_tables(text: &str) -> String {
+pub fn format_tables(text: &str) -> String {
     let table_positions = find_table_positions(text);
     if table_positions.len() == 0 {
         return text.to_string();
@@ -132,7 +132,7 @@ pub fn align_tables(text: &str) -> String {
         let end = table_position.1;
         let table_text: String =
             text.lines().skip(begin).take(end - begin + 1).join("\n");
-        let new_table_text = align_table(&table_text);
+        let new_table_text = format_table(&table_text);
         new_text.push_str(&new_table_text);
 
         // format text following each table
