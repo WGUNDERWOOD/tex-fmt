@@ -204,7 +204,7 @@ fn test_all() {
 }
 
 #[test]
-#[ignore]
+#[ignore = "For faster testing of specific tests"]
 fn test_subset() {
     let test_names = [
         //"wrap_chars",
