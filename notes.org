@@ -12,6 +12,7 @@
 *** nix develop
 ** Update Rust version
 *** just upgrade
+*** Update bindgen in CI GitHub action file
 ** Run tests
 *** just
 *** just perf
