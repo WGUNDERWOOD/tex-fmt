@@ -1,22 +1,30 @@
 //! Formatting tables
 
-// New ideas
-// Write a function to format a table only
-//    Takes text for a table environment in and formats it to a string
-// Then write separate logic for finding tables in the file
-// Finally write logic for formatting the full file
+// TODO
+// Only format tables, not whole document
 
-//pub fn get_max_delims_per_line(text: &str) -> usize {
-//text.lines().map(|l| l.matches('&').count()).max().unwrap()
+//pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
+//    text.lines()
+//        .map(|l| {
+//            l.chars()
+//                .enumerate()
+//                .filter(|&(_, c)| c == '&')
+//                .map(|(i, _)| i)
+//                .collect()
+//        })
+//        .collect()
 //}
 
 pub fn get_positions_delims(text: &str) -> Vec<Vec<usize>> {
     text.lines()
         .map(|l| {
-            l.chars()
-                .enumerate()
-                .filter(|&(_, c)| c == '&')
-                .map(|(i, _)| i)
+            let mut prev = None;
+            l.char_indices()
+                .filter_map(|(i, c)| {
+                    let is_match = c == '&' && prev != Some('\\');
+                    prev = Some(c);
+                    if is_match { Some(i) } else { None }
+                })
                 .collect()
         })
         .collect()
@@ -42,6 +50,7 @@ pub fn get_offsets_delims(positions_delims: &Vec<Vec<usize>>) -> Vec<Vec<usize>>
     let mut offsets_delims: Vec<Vec<usize>> = (0..n_lines).map(|_| vec![]).collect();
     for (linum, line) in positions_delims.into_iter().enumerate() {
         let mut offset_counter = 0;
+        dbg!(linum);
         for j in 0..line.len() {
             let offset = max_positions_delims[j] - positions_delims[linum][j];
             offsets_delims[linum].push(offset - offset_counter);
@@ -97,16 +106,35 @@ fn align_table_line(line: &str, offsets_delims_row: &Vec<usize>) -> String {
 //}
 
 pub fn align_table(text: &str) -> String {
+
+    let table_begins = ["\\begin{tabular}"];
+    let table_ends = ["\\end{tabular}"];
+
+    //println!("{}", &text);
     let positions_delims = get_positions_delims(text);
     let offsets_delims = get_offsets_delims(&positions_delims);
-    //dbg!(&offsets_delims);
-
     let mut new_text = String::new();
+    let mut in_table_env = false;
     for (linum, line) in text.lines().enumerate() {
-        let new_line = align_table_line(line, &offsets_delims[linum]);
-        dbg!(&new_line);
-        new_text.push_str(&new_line);
+
+        if table_begins.iter().any(|r| line.contains(r)) {
+            in_table_env = true;
+            new_text.push_str(line);
+            new_text.push('\n');
+            continue;
+        } else if table_ends.iter().any(|r| line.contains(r)) {
+            in_table_env = false;
+        }
+
+        if in_table_env {
+            let new_line = align_table_line(line, &offsets_delims[linum]);
+            new_text.push_str(&new_line);
+        } else {
+            new_text.push_str(line);
+        }
+
         new_text.push('\n');
+
     }
 
     new_text
