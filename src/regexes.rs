@@ -37,7 +37,7 @@ pub static RE_NEWLINES: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(&format!(r"{LINE_END}{LINE_END}({LINE_END})+")).unwrap()
 });
 
-// Regex to match trailing new ines
+// Regex to match trailing new lines
 pub static RE_TRAIL: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(&format!(r" +{LINE_END}")).unwrap());
 
