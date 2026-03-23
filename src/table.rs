@@ -2,14 +2,16 @@
 
 use itertools::Itertools;
 use regex::Regex;
+use crate::format::State;
+use crate::regexes::{TABLES_BEGIN, TABLES_END};
 
-// First we remove all double spaces from the table
+// Remove all double spaces from the table
 fn clean_table(text: &str) -> String {
     let re = Regex::new(r"(\S) {2,}").unwrap();
     re.replace_all(text, "$1 ").to_string()
 }
 
-// Then we get the starting positions of all delims.
+// Get the starting positions of all delims
 fn get_positions(text: &str) -> Vec<Vec<usize>> {
     text.lines()
         .map(|l| {
@@ -29,7 +31,7 @@ fn get_positions(text: &str) -> Vec<Vec<usize>> {
         .collect()
 }
 
-// Then we find the desired new positions of the delims
+// Find the desired new positions of the delims
 fn get_new_positions(positions: &[Vec<usize>]) -> Vec<Vec<usize>> {
     let n_delims = positions.iter().map(std::vec::Vec::len).max().unwrap();
     let mut new_positions = positions.to_owned();
@@ -50,7 +52,7 @@ fn get_new_positions(positions: &[Vec<usize>]) -> Vec<Vec<usize>> {
     new_positions
 }
 
-// Then we calculate the cumulative offsets needed
+// Calculate the cumulative offsets needed
 fn get_offsets(
     positions: &[Vec<usize>],
     new_positions: &[Vec<usize>],
@@ -68,7 +70,7 @@ fn get_offsets(
     offsets
 }
 
-// Use the offsets to format one table line
+// Use the offsets to format one line of the table
 fn format_table_line(line: &str, offsets_delims_row: &[usize]) -> String {
     let mut new_line = String::new();
     let mut j = 0;
@@ -83,7 +85,7 @@ fn format_table_line(line: &str, offsets_delims_row: &[usize]) -> String {
     new_line
 }
 
-// Use the offsets to format the table text
+// Format a single table
 fn format_table(text: &str) -> String {
     let clean_text = clean_table(text);
     let positions = get_positions(&clean_text);
@@ -98,16 +100,23 @@ fn format_table(text: &str) -> String {
     new_text
 }
 
+fn contains_table_begin(line: &str) -> bool {
+    TABLES_BEGIN.iter().any(|r| line.contains(r))
+}
+
+fn contains_table_end(line: &str) -> bool {
+    TABLES_END.iter().any(|r| line.contains(r))
+}
+
+// Locate all the tables in the text
 fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
-    let table_begins = ["\\begin{tabular}"];
-    let table_ends = ["\\end{tabular}"];
     let mut table_positions = vec![];
     let mut begin: usize = 0;
     let mut end: usize;
     for (linum, line) in text.lines().enumerate() {
-        if table_begins.iter().any(|r| line.contains(r)) {
+        if contains_table_begin(line) {
             begin = linum;
-        } else if table_ends.iter().any(|r| line.contains(r)) {
+        } else if contains_table_end(line) {
             end = linum;
             table_positions.push((begin, end));
         }
@@ -115,6 +124,7 @@ fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     table_positions
 }
 
+// Format all the tables in the text
 #[must_use]
 pub fn format_tables(text: &str) -> String {
     let table_positions = find_table_positions(text);
@@ -151,4 +161,45 @@ pub fn format_tables(text: &str) -> String {
     }
 
     new_text
+}
+
+
+/// Information on the table state of a line
+#[derive(Clone, Debug)]
+pub struct Table {
+    /// Whether the line is in a table
+    pub actual: bool,
+    /// Whether the line appears to be in a table
+    pub visual: bool,
+}
+
+impl Table {
+    /// Construct a new table state
+    #[must_use]
+    pub const fn new() -> Self {
+        Self {
+            actual: false,
+            visual: false,
+        }
+    }
+}
+
+// Check if a line is inside a table
+pub fn is_inside_table(line: &str, state: &State) -> Table {
+    let begin = contains_table_begin(line);
+    let end = contains_table_end(line);
+    let actual: bool;
+    let visual: bool;
+    if begin {
+        actual = true;
+        visual = true;
+    } else if end {
+        actual = false;
+        visual = true;
+    } else {
+        actual = state.table.actual;
+        visual = state.table.actual;
+    }
+
+    Table { actual, visual }
 }

@@ -15,6 +15,7 @@ pub const ENV_END: &str = "\\end{";
 
 /// Acceptable LaTeX file extensions
 pub const EXTENSIONS: [&str; 4] = ["tex", "bib", "sty", "cls"];
+
 /// Match a LaTeX \verb|...|
 pub const VERBS: [&str; 3] = ["\\verb|", "\\verb+", "\\mintinline"];
 
@@ -27,6 +28,10 @@ const SPLITTING: [&str; 6] = [
     r"\\chapter\*?\{",
     r"\\part\*?\{",
 ];
+
+/// Match table commands
+pub const TABLES_BEGIN: [&str; 1] = ["\\begin{tabular}"];
+pub const TABLES_END: [&str; 1] = ["\\end{tabular}"];
 
 // A static `String` which is a regex to match any of [`SPLITTING_COMMANDS`].
 static SPLITTING_STRING: LazyLock<String> =
