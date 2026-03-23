@@ -5,6 +5,11 @@ use regex::Regex;
 use crate::format::State;
 use crate::regexes::{TABLES_BEGIN, TABLES_END};
 
+// TODO Handle verbatim material inside tables
+// TODO Ignore \makecell command contents
+// TODO Handle \multicolumn material
+// TODO Implement automatic line breaking
+
 // Remove all double spaces from the table
 fn clean_table(text: &str) -> String {
     let re = Regex::new(r"(\S) {2,}").unwrap();
