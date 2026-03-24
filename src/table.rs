@@ -5,16 +5,35 @@ use regex::Regex;
 use crate::format::State;
 use crate::regexes::{TABLES_BEGIN, TABLES_END};
 
-// TODO Handle verbatim material inside tables
-// TODO Ignore \makecell command contents
-// TODO Handle \multicolumn material
-// TODO Implement automatic line breaking
-
 // Remove all double spaces from the table
-fn clean_table(text: &str) -> String {
+fn remove_double_spaces(text: &str) -> String {
     let re = Regex::new(r"(\S) {2,}").unwrap();
     re.replace_all(text, "$1 ").to_string()
 }
+
+// Add line breaks after "\\" 
+// TODO it might be easier to call this before indentation in format.rs
+// TODO use queuing implementation like wrap.rs does
+//fn add_line_breaks(text: &str) -> String {
+//    let re_break = Regex::new(r"\\\\.*\S").unwrap();
+//    let re_indent = Regex::new(r"^\s*\S").unwrap();
+//    let re_next_line = Regex::new(r"^\s*\S").unwrap();
+//    for line in text.lines() {
+//        if re_break.is_match(line) {
+//            let indent = re_indent.find(line)
+//                .map(|m| {
+//                    let s = m.as_str();
+//                    &s[..s.len() - 1]
+//                })
+//                .unwrap_or("");
+//            dbg!(&line);
+//            dbg!(&indent);
+//            let next_line = 
+//        }
+//    }
+//    //text.replace("\\\\", "\\\\\n").to_string()
+//    text.to_string()
+//}
 
 // Get the starting positions of all delims
 fn get_positions(text: &str) -> Vec<Vec<usize>> {
@@ -92,7 +111,7 @@ fn format_table_line(line: &str, offsets_delims_row: &[usize]) -> String {
 
 // Format a single table
 fn format_table(text: &str) -> String {
-    let clean_text = clean_table(text);
+    let clean_text = remove_double_spaces(text);
     let positions = get_positions(&clean_text);
     let new_positions = get_new_positions(&positions);
     let offsets = get_offsets(&positions, &new_positions);
@@ -189,7 +208,14 @@ impl Table {
     }
 }
 
+impl Default for Table {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 // Check if a line is inside a table
+#[must_use]
 pub fn is_inside_table(line: &str, state: &State) -> Table {
     let begin = contains_table_begin(line);
     let end = contains_table_end(line);
