@@ -16,8 +16,14 @@ pub const COMMENT_LINE_START: &str = "% ";
 
 /// Check if a line needs wrapping
 #[must_use]
-pub fn needs_wrap(line: &str, indent_length: usize, args: &Args, state: &State) -> bool {
-    args.wrap && (line.chars().count() + indent_length > args.wraplen)
+pub fn needs_wrap(
+    line: &str,
+    indent_length: usize,
+    args: &Args,
+    state: &State,
+) -> bool {
+    args.wrap
+        && (line.chars().count() + indent_length > args.wraplen)
         && !(state.table.visual && args.format_tables)
 }
 

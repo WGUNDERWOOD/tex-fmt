@@ -107,7 +107,12 @@ pub fn format_file(
 
                 // Wrap the line before applying the indent, and loop back
                 // if the line needed wrapping.
-                if needs_wrap(line.trim_start(), indent_length, args, &temp_state) {
+                if needs_wrap(
+                    line.trim_start(),
+                    indent_length,
+                    args,
+                    &temp_state,
+                ) {
                     let wrapped_lines = apply_wrap(
                         line.trim_start(),
                         indent_length,

@@ -1,6 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO Implement automatic line breaking in tables
 ** TODO Handle verbatim material inside tables
 ** TODO Ignore \makecell command contents in tables
 ** TODO Handle \multicolumn material in tables
