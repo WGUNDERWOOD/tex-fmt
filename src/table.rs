@@ -12,28 +12,46 @@ fn remove_double_spaces(text: &str) -> String {
 }
 
 // Add line breaks after "\\" 
-// TODO it might be easier to call this before indentation in format.rs
-// TODO use queuing implementation like wrap.rs does
-//fn add_line_breaks(text: &str) -> String {
-//    let re_break = Regex::new(r"\\\\.*\S").unwrap();
-//    let re_indent = Regex::new(r"^\s*\S").unwrap();
-//    let re_next_line = Regex::new(r"^\s*\S").unwrap();
-//    for line in text.lines() {
-//        if re_break.is_match(line) {
-//            let indent = re_indent.find(line)
-//                .map(|m| {
-//                    let s = m.as_str();
-//                    &s[..s.len() - 1]
-//                })
-//                .unwrap_or("");
-//            dbg!(&line);
-//            dbg!(&indent);
-//            let next_line = 
-//        }
-//    }
-//    //text.replace("\\\\", "\\\\\n").to_string()
-//    text.to_string()
-//}
+fn add_line_breaks(text: &str) -> (String, bool) {
+    let re_break = Regex::new(r"\\\\.*\S").unwrap();
+    let re_indent = Regex::new(r"^\s*\S").unwrap();
+    let re_first_non_white = Regex::new(r"\S.*").unwrap();
+    let re_to_break = Regex::new(r"^[^\\]*\\\\").unwrap();
+    let mut new_text = String::new();
+    let mut finished: bool = true;
+    for line in text.lines() {
+        if re_break.is_match(line) {
+            finished = false;
+            let indent = re_indent.find(line)
+                .map_or("", |m| {
+                    let s = m.as_str();
+                    &s[..s.len() - 1]
+                });
+            let next_line_long = re_break.find(line)
+                .map_or("", |m| {
+                    let s = m.as_str();
+                    &s[2..]
+                });
+            let next_line = re_first_non_white.find(next_line_long)
+                .map_or("", |m| m.as_str());
+            let this_line = re_to_break.find(line)
+                .map_or("", |m| m.as_str());
+            dbg!(&line);
+            dbg!(&indent);
+            dbg!(&next_line);
+            dbg!(&this_line);
+            new_text.push_str(this_line);
+            new_text.push('\n');
+            new_text.push_str(indent);
+            new_text.push_str(next_line);
+            new_text.push('\n');
+        } else {
+            new_text.push_str(line);
+            new_text.push('\n');
+        }
+    }
+    (new_text, finished)
+}
 
 // Get the starting positions of all delims
 fn get_positions(text: &str) -> Vec<Vec<usize>> {
@@ -111,7 +129,19 @@ fn format_table_line(line: &str, offsets_delims_row: &[usize]) -> String {
 
 // Format a single table
 fn format_table(text: &str) -> String {
-    let clean_text = remove_double_spaces(text);
+    let mut clean_text = remove_double_spaces(text);
+
+    // add line breaks
+    let mut finished: bool;
+    (clean_text, finished) = add_line_breaks(&clean_text);
+    let max_line_break_attempts = 10;
+    for _attempt in 0..max_line_break_attempts {
+        if finished {
+            break
+        }
+        (clean_text, finished) = add_line_breaks(&clean_text);
+    }
+
     let positions = get_positions(&clean_text);
     let new_positions = get_new_positions(&positions);
     let offsets = get_offsets(&positions, &new_positions);
