@@ -1,9 +1,9 @@
 //! Formatting tables
 
-use itertools::Itertools;
-use regex::Regex;
 use crate::format::State;
 use crate::regexes::{TABLES_BEGIN, TABLES_END};
+use itertools::Itertools;
+use regex::Regex;
 
 // Remove all double spaces from the table
 fn remove_double_spaces(text: &str) -> String {
@@ -11,7 +11,7 @@ fn remove_double_spaces(text: &str) -> String {
     re.replace_all(text, "$1 ").to_string()
 }
 
-// Add line breaks after "\\" 
+// Add line breaks after "\\"
 fn add_line_breaks(text: &str) -> (String, bool) {
     let re_break = Regex::new(r"\\\\.*\S").unwrap();
     let re_indent = Regex::new(r"^\s*\S").unwrap();
@@ -22,20 +22,18 @@ fn add_line_breaks(text: &str) -> (String, bool) {
     for line in text.lines() {
         if re_break.is_match(line) {
             finished = false;
-            let indent = re_indent.find(line)
-                .map_or("", |m| {
-                    let s = m.as_str();
-                    &s[..s.len() - 1]
-                });
-            let next_line_long = re_break.find(line)
-                .map_or("", |m| {
-                    let s = m.as_str();
-                    &s[2..]
-                });
-            let next_line = re_first_non_white.find(next_line_long)
+            let indent = re_indent.find(line).map_or("", |m| {
+                let s = m.as_str();
+                &s[..s.len() - 1]
+            });
+            let next_line_long = re_break.find(line).map_or("", |m| {
+                let s = m.as_str();
+                &s[2..]
+            });
+            let next_line = re_first_non_white
+                .find(next_line_long)
                 .map_or("", |m| m.as_str());
-            let this_line = re_to_break.find(line)
-                .map_or("", |m| m.as_str());
+            let this_line = re_to_break.find(line).map_or("", |m| m.as_str());
             dbg!(&line);
             dbg!(&indent);
             dbg!(&next_line);
@@ -137,7 +135,7 @@ fn format_table(text: &str) -> String {
     let max_line_break_attempts = 10;
     for _attempt in 0..max_line_break_attempts {
         if finished {
-            break
+            break;
         }
         (clean_text, finished) = add_line_breaks(&clean_text);
     }
@@ -216,7 +214,6 @@ pub fn format_tables(text: &str) -> String {
 
     new_text
 }
-
 
 /// Information on the table state of a line
 #[derive(Clone, Debug)]

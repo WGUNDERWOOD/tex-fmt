@@ -1,4 +1,4 @@
-default: test doc clippy format shellcheck shellinstall wasm
+default: test doc clippy format shellcheck shellinstall wasm todo
 
 all: default prof binary logo ctan perf latex
 
