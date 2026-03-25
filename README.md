@@ -271,7 +271,7 @@ tex-fmt can be run before every git commit using
 ```yaml
 repos:
   - repo: https://github.com/WGUNDERWOOD/tex-fmt
-    rev: v0.5.6
+    rev: v0.5.7
     hooks:
       - id: tex-fmt
 ```
@@ -299,7 +299,9 @@ including as much information as you can. Documentation of internals
 can be accessed by cloning this repository and running `cargo doc`,
 or by visiting the [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page.
 
-Alternatively, you can
+Alternatively, you can become a
+[GitHub sponsor](https://github.com/sponsors/WGUNDERWOOD)
+or
 [Buy Me a Coffee](https://buymeacoffee.com/wgunderwood)!
 
 ## Limitations

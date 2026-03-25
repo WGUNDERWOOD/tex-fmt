@@ -45,6 +45,7 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand --args 'Print arguments passed to tex-fmt and exit'
             cand -r 'Recursively search for files to format'
             cand --recursive 'Recursively search for files to format'
+            cand --format-tables 'Format tables'
             cand -h 'Print help'
             cand --help 'Print help'
             cand -V 'Print version'

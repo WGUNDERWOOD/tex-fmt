@@ -1,22 +1,22 @@
 #+title: tex-fmt
 * Tasks
 * Release process
-** Checkout main branch
-** Update release notes in NEWS.md
-*** git log --oneline --no-merges vX.X.X..main
-** Update version number in Cargo.toml to vY.Y.Y
-** Update version number for pre-commit in README
-** Update year in LICENSE
-** Update Nix flake and lock
-*** just nix
-*** nix develop
-** Update Rust version
-*** just upgrade
-*** Update bindgen in CI GitHub action file
-** Run tests
-*** just
-*** just perf
-*** Update performance results in README.md
+** DONE Checkout main branch
+** DONE Update release notes in NEWS.md
+*** DONE git log --oneline --no-merges vX.X.X..main
+** DONE Update version number in Cargo.toml to vY.Y.Y
+** DONE Update version number for pre-commit in README
+** DONE Update year in LICENSE
+** DONE Update Nix flake and lock
+*** DONE just nix
+*** DONE nix develop
+** DONE Update Rust version
+*** DONE just upgrade
+*** DONE Update bindgen version in CI GitHub action file from Cargo.toml
+** DONE Run tests
+*** DONE just
+*** DONE just perf
+*** DONE Update performance results in README.md
 ** Push to GitHub and check action tests pass
 ** Create a git tag
 *** git tag vY.Y.Y
