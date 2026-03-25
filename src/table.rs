@@ -1,5 +1,6 @@
 //! Formatting tables
 
+use crate::LINE_END;
 use crate::format::State;
 use crate::regexes::{TABLES_BEGIN, TABLES_END};
 use itertools::Itertools;
@@ -35,13 +36,13 @@ fn add_line_breaks(text: &str) -> (String, bool) {
                 .map_or("", |m| m.as_str());
             let this_line = re_to_break.find(line).map_or("", |m| m.as_str());
             new_text.push_str(this_line);
-            new_text.push('\n');
+            new_text.push_str(LINE_END);
             new_text.push_str(indent);
             new_text.push_str(next_line);
-            new_text.push('\n');
+            new_text.push_str(LINE_END);
         } else {
             new_text.push_str(line);
-            new_text.push('\n');
+            new_text.push_str(LINE_END);
         }
     }
     (new_text, finished)
@@ -143,7 +144,7 @@ fn format_table(text: &str) -> String {
     for (linum, line) in clean_text.lines().enumerate() {
         let new_line = format_table_line(line, &offsets[linum]);
         new_text.push_str(&new_line);
-        new_text.push('\n');
+        new_text.push_str(LINE_END);
     }
     new_text
 }
@@ -181,15 +182,15 @@ pub fn format_tables(text: &str) -> String {
     }
 
     let first_table_begin = table_positions[0].0;
-    let mut new_text: String = text.lines().take(first_table_begin).join("\n");
-    new_text.push('\n');
+    let mut new_text: String = text.lines().take(first_table_begin).join(LINE_END);
+    new_text.push_str(LINE_END);
 
     for (t, table_position) in table_positions.iter().enumerate() {
         // format each table
         let begin = table_position.0;
         let end = table_position.1;
         let table_text: String =
-            text.lines().skip(begin).take(end - begin + 1).join("\n");
+            text.lines().skip(begin).take(end - begin + 1).join(LINE_END);
         let new_table_text = format_table(&table_text);
         new_text.push_str(&new_table_text);
 
@@ -203,9 +204,9 @@ pub fn format_tables(text: &str) -> String {
             .lines()
             .skip(end + 1)
             .take(next_table_begin - end - 1)
-            .join("\n");
+            .join(LINE_END);
         new_text.push_str(&next_text);
-        new_text.push('\n');
+        new_text.push_str(LINE_END);
     }
 
     new_text
