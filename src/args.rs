@@ -53,6 +53,8 @@ pub struct Args {
     pub files: Vec<PathBuf>,
     /// Recursive search for files
     pub recursive: bool,
+    /// Enable table formatting
+    pub format_tables: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -87,7 +89,7 @@ pub struct OptionArgs {
     pub verbatims: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub no_indent_envs: Vec<String>,
-    #[merge(strategy = merge::vec::append)]
+    #[merge(strategy = merge_wrap_chars)]
     pub wrap_chars: Vec<char>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub verbosity: Option<LevelFilter>,
@@ -97,6 +99,15 @@ pub struct OptionArgs {
     pub files: Vec<PathBuf>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub recursive: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub format_tables: Option<bool>,
+}
+
+fn merge_wrap_chars(left: &mut Vec<char>, right: Vec<char>) {
+    if !left.is_empty() {
+        return;
+    }
+    *left = right;
 }
 
 /// Character to use for indentation
@@ -157,6 +168,7 @@ impl Default for OptionArgs {
             arguments: Some(false),
             files: vec![],
             recursive: Some(false),
+            format_tables: Some(false),
         }
     }
 }
@@ -184,6 +196,7 @@ impl OptionArgs {
             arguments: None,
             files: vec![],
             recursive: None,
+            format_tables: None,
         }
     }
 }
@@ -191,12 +204,18 @@ impl OptionArgs {
 /// Get all arguments from CLI, config file, and defaults, and merge them
 #[must_use]
 pub fn get_args() -> Args {
+    // get args from CLI
     let mut args: OptionArgs = get_cli_args(None);
+
     let config = get_config(&args);
     let config_args: Option<OptionArgs> = get_config_args(config);
+
+    // merge config_args into args
     if let Some(c) = config_args {
         args.merge(c);
     }
+
+    // merge default args into args
     args.merge(OptionArgs::default());
     Args::from(args)
 }
@@ -240,6 +259,7 @@ impl Args {
             arguments: args.arguments.unwrap(),
             files: args.files,
             recursive: args.recursive.unwrap(),
+            format_tables: args.format_tables.unwrap(),
         }
     }
 
@@ -393,6 +413,7 @@ impl fmt::Display for Args {
         display_args_list(&self.verbatims, "verbatims", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
         display_args_list(&wrap_chars, "wrap-chars", f)?;
+        display_arg_line(f, "format-tables", &self.format_tables.to_string())?;
         display_args_list(
             &self
                 .files

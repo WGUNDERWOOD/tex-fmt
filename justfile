@@ -1,4 +1,4 @@
-default: test doc clippy format shellcheck shellinstall wasm
+default: test doc clippy format shellcheck shellinstall wasm todo
 
 all: default prof binary logo ctan perf latex
 
@@ -71,7 +71,7 @@ nix:
   @nix flake update
 
 todo:
-  @rg -g '!justfile' todo
+  @rg -g '!justfile' todo || true
 
 logo:
   @cd extra && python logo.py

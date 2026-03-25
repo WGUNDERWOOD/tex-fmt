@@ -189,6 +189,7 @@ tex-fmt --recursive                # recursively format files in current directo
 tex-fmt --recursive dir/           # recursively format files in dir
 tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1 if overwritten
 tex-fmt --nowrap file.tex          # do not wrap long lines
+tex-fmt --format-tables file.tex   # format tables (align ampersands)
 tex-fmt --stdin                    # read from stdin and print to stdout
 tex-fmt --help                     # view help information
 ```
@@ -356,6 +357,7 @@ The following arguments can be passed on the command line.
 | `--wraplen <N>`        | `-l`  | `80`    | Line length for wrapping |
 | `--tabsize <N>`        | `-t`  | `2`     | Number of characters to use as tab size |
 | `--usetabs`            |       |         | Use tabs instead of spaces for indentation |
+| `--format-tables`      |       |         | Format tables |
 | `--stdin`              | `-s`  |         | Process stdin as a single file, output to stdout |
 | `--config <PATH>`      |       |         | Path to config file |
 | `--noconfig`           |       |         | Do not read any config file |
@@ -383,6 +385,7 @@ The first example in each row is the default value.
 | `wrapmin`        | int      | `70`, `90`             | Target minimum length for line wrapping |
 | `tabsize`        | int      | `2`, `4`               | Number of characters to use as tab size |
 | `tabchar`        | str      | `"space"`, `"tab"`     | Character to use for indentation |
+| `format-tables`  | bool     | `false`                | Format tables |
 | `stdin`          | bool     | `false`                | Process stdin as a single file, output to stdout |
 | `lists`          | arr[str] | `[]`, `["myitemize"]`  | Extra list environments to be formatted as `itemize` |
 | `verbatims`      | arr[str] | `[]`, `["myverbatim"]` | Extra verbatim environments |

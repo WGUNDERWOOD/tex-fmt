@@ -1,11 +1,11 @@
 % !TeX root = main.tex
 \chapter{线性映射}
 \section{线性映射的向量空间}
-% TODO:  Problems to do: 11; 13; 14; 16; 17
+% Problems to do: 11; 13; 14; 16; 17
 初学线性代数常犯的错误是，在了解矩阵与线性变换的一一对应后，便不愿再思考线性映射的本质，这对于线性代数精髓的掌握，是极为不利的。
 \begin{quote}
     ``我的经验是，如果抛开矩阵的话，可将一个原本用矩阵完成的证明缩短 50\%.''
-    % TODO: Better quotation
+    % Better quotation
     \hfill --- Emil Artin\footnote{摘自LADR, 3c}
 \end{quote}
 \subsubsection{什么不是线性映射？}
@@ -68,10 +68,10 @@ counterexample}
     f(x+y) = f(x) + f(y) \qquad \forall x,y \in \R
 \]
 有非线性解。这就是大名鼎鼎的Cauchy方程! （看到这里可能会唤醒你数分I死去的回忆）
-% TODO: Input roman characters
-% TODO：Solution to Cauchy equation
-% TODO: How to reference problems?
-% TODO: Environment for problems
+% Input roman characters
+% ：Solution to Cauchy equation
+% How to reference problems?
+% Environment for problems
 
 线性映射的有趣例子包括:
 \begin{itemize}
@@ -181,7 +181,7 @@ counterexample}
         \dim V = \dim \nullspace T + \dim \range T
     \]
 \end{theorem}
-% TODO: Add Proofs
+% Add Proofs
 本书中先取零空间的基向量并扩充为整个空间的基，再证明扩充得到的向量经过线性变换后构成值域的一组基向量。
 相比于高等代数中取值域基的逆向量并在值域与定义域中反复横跳的证明方法而言，
 书中的证明避免了对线性相关的技巧性讨论，自然而符合直觉。
@@ -252,7 +252,7 @@ counterexample}
 % 可逆线性变换的逆也是线性变换，保持数乘和加法结构。这说明可逆线性变换本身就是一个同构。
 \section{向量空间的积与商}
 \subsection{把子空间放大}
-% TODO:  reference to section 2
+% reference to section 2
 书接上回，我们早就知道线性空间的和能够放大线性空间，同样，直积也可以放大线性空间。
 更一般的，直积可以看作是一种普通的拓展代数系统的方式。
 
@@ -271,7 +271,7 @@ counterexample}
 线性空间的直和与直积同构。虽然高维空间下子空间和的维数会变得非常复杂，但直和的维数始终是各子空间维数之和。
 （考虑线性映射\(\Gamma: V_{1} \times \dots \times V_{m} \to V_{1}
 + \dots + V_{m}\)）
-% TODO:  Add reference to an exercise
+% Add reference to an exercise
 
 \subsection{把线性空间缩小}
 商空间的内容与商群、商环中的内容几乎可以一一对应:
@@ -294,7 +294,7 @@ counterexample}
 
 但商空间的性质却比商群、商环更为美妙: 线性空间对于任意子空间\(U\)都可以取商空间。而群只能对正规子群做商，
 环只能对理想做商，甚至于环做商的对象---理想---甚至不是子环。
-% TODO: Add reference
+% Add reference
 
 太大的代数结构我们看不全，太小的代数结构我们看不清。直积允许我们放大代数结构，而商空间则允许我们缩小代数结构。
 在某种意义上，求商空间可以直接看做直积的逆运算
@@ -317,7 +317,7 @@ counterexample}
         \dim \L(V_{m},W)\\
     \end{align*}
 \end{proof}
-% TODO: I want to add a matrix here to illustrate the proof
+% I want to add a matrix here to illustrate the proof
 这道题的证明是简单的。但却启示我们向量空间直积的线性映射空间同构于线性映射空间的直积，
 其实是在告诉我们可以矩阵按列组合/分块的几何意义是\hl{向量空间做直积/商}。
 
@@ -366,10 +366,10 @@ counterexample}
 
 \section{对偶}
 %! 这一章的解读可能与对偶空间正确的理解相差甚远，请读者仔细甄别
-% TODO: Make That a readable warning
-% TODO: 共轭，对偶，都是什么意思
-% TODO: Better reference
-% TODO：what is the difference between quote and quotation
+% Make That a readable warning
+% 共轭，对偶，都是什么意思
+% Better reference
+% ：what is the difference between quote and quotation
 
 \begin{quote}
     Duality in Mathematics is not a theorem, but a ``principle''
@@ -380,7 +380,7 @@ counterexample}
 在我看来，对偶空间就是在研究如何使转置矩阵有意义.\footnote{共轭、对偶、伴随具体都是什么意思，
 我也不太清楚\UseVerb{confused}}
 
-% TODO:  Add reference
+% Add reference
 在前面我们早有介绍，向量可以写作矩阵的形式。可是向量怎么能看作线性变换呢？我们实际上是将\(V\)
 上向量看作线性变换：\[
     \L(\F,V):
