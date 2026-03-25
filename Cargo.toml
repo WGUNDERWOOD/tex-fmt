@@ -32,6 +32,7 @@ colored = "2.2.0"
 dirs = "5.0.1"
 env_logger = "0.11.9"
 ignore = "0.4.25"
+itertools = "0.14.0"
 js-sys = { version = "0.3.91", optional = true }
 log = "0.4.29"
 merge = "0.2.0"

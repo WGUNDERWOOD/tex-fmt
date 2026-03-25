@@ -7,6 +7,7 @@ use crate::logging::{record_file_log, Log};
 use crate::read::{read, read_stdin};
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERBS};
 use crate::subs;
+use crate::table::{format_tables, is_inside_table, Table};
 use crate::verbatim::{get_verbatim, Verbatim};
 use crate::wrap::{apply_wrap, needs_wrap};
 use crate::write::process_output;
@@ -106,7 +107,12 @@ pub fn format_file(
 
                 // Wrap the line before applying the indent, and loop back
                 // if the line needed wrapping.
-                if needs_wrap(line.trim_start(), indent_length, args) {
+                if needs_wrap(
+                    line.trim_start(),
+                    indent_length,
+                    args,
+                    &temp_state,
+                ) {
                     let wrapped_lines = apply_wrap(
                         line.trim_start(),
                         indent_length,
@@ -161,6 +167,11 @@ pub fn format_file(
         record_file_log(logs, Warn, file, &msg);
     }
 
+    // Format tables
+    if args.format_tables {
+        new_text = format_tables(&new_text);
+    }
+
     new_text = subs::remove_trailing_spaces(&new_text);
     new_text = subs::remove_trailing_blank_lines(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
@@ -175,8 +186,8 @@ fn get_ends(v: &[String]) -> Vec<String> {
     v.iter().map(|l| format!("\\end{{{l}}}")).collect()
 }
 
-/// Sets the `ignore` and `verbatim` flags in the given [State] based on
-/// `line` and returns whether `line` should be ignored by formatting.
+/// Sets the `ignore`, `verbatim` and `table` flags in the given [State] based
+/// on `line` and returns whether `line` should be ignored by formatting.
 fn set_ignore_and_report(
     line: &str,
     temp_state: &mut State,
@@ -197,6 +208,7 @@ fn set_ignore_and_report(
         verbatims_begin,
         verbatims_end,
     );
+    temp_state.table = is_inside_table(line, temp_state);
 
     temp_state.verbatim.visual || temp_state.ignore.visual
 }
@@ -232,6 +244,8 @@ pub struct State {
     pub linum_last_zero_indent: usize,
     /// Line number in the new file of the first negatively indented line
     pub linum_first_negative_indent: Option<usize>,
+    /// Table status of the current line
+    pub table: Table,
 }
 
 impl State {
@@ -246,6 +260,7 @@ impl State {
             verbatim: Verbatim::new(),
             linum_last_zero_indent: 1,
             linum_first_negative_indent: None,
+            table: Table::new(),
         }
     }
 }
