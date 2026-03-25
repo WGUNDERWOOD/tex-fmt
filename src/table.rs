@@ -1,8 +1,8 @@
 //! Formatting tables
 
-use crate::LINE_END;
 use crate::format::State;
 use crate::regexes::{TABLES_BEGIN, TABLES_END};
+use crate::LINE_END;
 use itertools::Itertools;
 use regex::Regex;
 
@@ -182,15 +182,19 @@ pub fn format_tables(text: &str) -> String {
     }
 
     let first_table_begin = table_positions[0].0;
-    let mut new_text: String = text.lines().take(first_table_begin).join(LINE_END);
+    let mut new_text: String =
+        text.lines().take(first_table_begin).join(LINE_END);
     new_text.push_str(LINE_END);
 
     for (t, table_position) in table_positions.iter().enumerate() {
         // format each table
         let begin = table_position.0;
         let end = table_position.1;
-        let table_text: String =
-            text.lines().skip(begin).take(end - begin + 1).join(LINE_END);
+        let table_text: String = text
+            .lines()
+            .skip(begin)
+            .take(end - begin + 1)
+            .join(LINE_END);
         let new_table_text = format_table(&table_text);
         new_text.push_str(&new_table_text);
 
