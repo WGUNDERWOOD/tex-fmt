@@ -71,7 +71,7 @@ nix:
   @nix flake update
 
 todo:
-  @rg -g '!justfile' todo
+  @rg -g '!justfile' todo || true
 
 logo:
   @cd extra && python logo.py
