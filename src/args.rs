@@ -53,6 +53,8 @@ pub struct Args {
     pub files: Vec<PathBuf>,
     /// Recursive search for files
     pub recursive: bool,
+    /// Enable table formatting
+    pub format_tables: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -97,6 +99,8 @@ pub struct OptionArgs {
     pub files: Vec<PathBuf>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub recursive: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub format_tables: Option<bool>,
 }
 
 /// Character to use for indentation
@@ -157,6 +161,7 @@ impl Default for OptionArgs {
             arguments: Some(false),
             files: vec![],
             recursive: Some(false),
+            format_tables: Some(false),
         }
     }
 }
@@ -184,6 +189,7 @@ impl OptionArgs {
             arguments: None,
             files: vec![],
             recursive: None,
+            format_tables: None,
         }
     }
 }
@@ -240,6 +246,7 @@ impl Args {
             arguments: args.arguments.unwrap(),
             files: args.files,
             recursive: args.recursive.unwrap(),
+            format_tables: args.format_tables.unwrap(),
         }
     }
 
@@ -393,6 +400,7 @@ impl fmt::Display for Args {
         display_args_list(&self.verbatims, "verbatims", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
         display_args_list(&wrap_chars, "wrap-chars", f)?;
+        display_arg_line(f, "format-tables", &self.format_tables.to_string())?;
         display_args_list(
             &self
                 .files

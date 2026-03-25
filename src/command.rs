@@ -132,4 +132,10 @@ pub fn get_cli_command() -> Command {
                 .action(SetTrue)
                 .help("Recursively search for files to format")
         )
+        .arg(
+            Arg::new("format-tables")
+                .long("format-tables")
+                .action(SetTrue)
+                .help("Format tables")
+        )
 }

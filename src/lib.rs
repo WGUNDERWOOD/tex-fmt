@@ -17,6 +17,7 @@ pub mod read;
 pub mod regexes;
 pub mod search;
 pub mod subs;
+pub mod table;
 pub mod verbatim;
 pub mod wrap;
 pub mod write;
