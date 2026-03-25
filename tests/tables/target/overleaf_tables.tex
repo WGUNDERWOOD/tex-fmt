@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{multirow}
+
+\begin{document}
+
+\begin{center}
+  \begin{tabular}{||c c c c||}
+    \hline
+    Col1 & Col2 & Col2  & Col3 \\[0.5ex]
+    \hline\hline
+    1    & 6    & 87837 & 787 \\
+    \hline
+    2    & 7    & 78    & 5415 \\
+    \hline
+    3    & 545  & 778   & 7507 \\
+    \hline
+    4    & 545  & 18744 & 7560 \\
+    \hline
+    5    & 88   & 788   & 6344 \\[1ex]
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}|p{3cm}| }
+  \hline
+  \multicolumn{4}{|c|}{Country List} \\
+  \hline
+  Country Name or Area Name& ISO ALPHA 2 Code &ISO ALPHA 3 Code&ISO numeric Code\\
+  \hline
+  Afghanistan              & AF               &AFG             & 004\\
+  Aland Islands            & AX               & ALA            &248\\
+  Albania                  &AL                & ALB            & 008\\
+  Algeria                  &DZ                & DZA            & 012\\
+  American Samoa           & AS               & ASM            &016\\
+  Andorra                  & AD               & AND            &020\\
+  Angola                   & AO               & AGO            &024\\
+  \hline
+\end{tabular}
+
+\end{document}
