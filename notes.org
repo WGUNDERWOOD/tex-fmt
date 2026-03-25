@@ -1,8 +1,5 @@
 #+title: tex-fmt
 * Tasks
-** TODO Handle verbatim material inside tables
-** TODO Ignore \makecell command contents in tables
-** TODO Handle \multicolumn material in tables
 * Release process
 ** Checkout main branch
 ** Update release notes in NEWS.md
