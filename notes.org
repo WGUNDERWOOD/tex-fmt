@@ -17,29 +17,29 @@
 *** DONE just
 *** DONE just perf
 *** DONE Update performance results in README.md
-** Push to GitHub and check action tests pass
-** Create a git tag
-*** git tag vY.Y.Y
-*** git push --tags
-*** Can delete remote tags with git push --delete origin vY.Y.Y
-** Publish to crates.io
-*** cargo package --list
-*** cargo publish
-*** Pass --allow-dirty if notes.org has changed
-** Publish GitHub release with notes from NEWS.md
-*** No need to add a title
-*** GitHub binaries published automatically with actions
-** Submit to CTAN
-*** Update version, update, announcement in ctan/latex-formatter.pkg
-*** Update ctan/README.md
-*** Update LaTeX docs at ctan/latex-formatter.tex
-*** cd ctan
-*** just ctan
-*** gh release download vY.Y.Y -D latex-formatter/bin
-*** tar -czf latex-formatter.tar.gz latex-formatter
-*** Validate with ctan-o-mat latex-formatter.pkg
-*** Submit with ctan-o-mat --submit latex-formatter.pkg
-** Publish in nixpkgs
+** DONE Push to GitHub and check action tests pass
+** DONE Create a git tag
+*** DONE git tag vY.Y.Y
+*** DONE git push --tags
+*** DONE Can delete remote tags with git push --delete origin vY.Y.Y
+** DONE Publish to crates.io
+*** DONE cargo package --list
+*** DONE cargo publish
+*** DONE Pass --allow-dirty if files have changed
+** DONE Publish GitHub release with notes from NEWS.md
+*** DONE No need to add a title
+*** DONE GitHub binaries published automatically with actions
+** DONE Submit to CTAN
+*** DONE Update version, update, announcement in ctan/latex-formatter.pkg
+*** DONE Update ctan/README.md
+*** DONE Update LaTeX docs at ctan/latex-formatter.tex
+*** DONE cd ctan
+*** DONE just ctan
+*** DONE gh release download vY.Y.Y -D latex-formatter/bin
+*** DONE tar -czf latex-formatter.tar.gz latex-formatter
+*** DONE Validate with ctan-o-mat latex-formatter.pkg
+*** DONE Submit with ctan-o-mat --submit latex-formatter.pkg
+** TODO Publish in nixpkgs
 *** Go to nixpkgs fork directory
 *** git checkout master
 *** git fetch upstream
@@ -57,7 +57,7 @@
 *** git push --set-upstream origin HEAD
 *** Go to GitHub and create a pull request
 *** Submit pull request and check relevant boxes
-** Tidy repository
+** TODO Tidy repository
 *** Commit any new changes to NEWS.md or notes.org
 * CLI and config structure
 *** args.rs

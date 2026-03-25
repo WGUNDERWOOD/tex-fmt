@@ -1,5 +1,5 @@
 \pkg{latex-formatter}
-\version{0.5.6}
+\version{0.5.7}
 \author{William George Underwood}
 \email{wg.underwood13@gmail.com}
 \uploader{William George Underwood}
@@ -7,9 +7,9 @@
 \license{mit}
 \repository{https://github.com/WGUNDERWOOD/tex-fmt}
 \bugtracker{https://github.com/WGUNDERWOOD/tex-fmt/issues}
-\update{false}
+\update{true}
 \topic{code-layout}
 \summary{LaTeX formatter written in Rust}
 \description{This package provides the `tex-fmt` command line tool for formatting LaTeX source files. Binaries are included for Linux, MacOS and Windows.}
-\announcement{This package provides the `tex-fmt` command line tool for formatting LaTeX source files. Binaries are included for Linux, MacOS and Windows.}
+\announcement{New --format-tables option and various bug fixes.}
 \file{latex-formatter.tar.gz}
