@@ -1,6 +1,6 @@
 //! Formatting tables
 
-use crate::format::State;
+use crate::format::{Pattern, State};
 use crate::regexes::{TABLES_BEGIN, TABLES_END};
 use crate::LINE_END;
 use itertools::Itertools;
@@ -244,9 +244,9 @@ impl Default for Table {
 
 // Check if a line is inside a table
 #[must_use]
-pub fn is_inside_table(line: &str, state: &State) -> Table {
-    let begin = contains_table_begin(line);
-    let end = contains_table_end(line);
+pub fn is_inside_table(line: &str, state: &State, pattern: &Pattern) -> Table {
+    let begin = pattern.contains_env_begin && contains_table_begin(line);
+    let end = pattern.contains_env_end && contains_table_end(line);
     let actual: bool;
     let visual: bool;
     if begin {

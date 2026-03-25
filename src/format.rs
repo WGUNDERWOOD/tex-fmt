@@ -208,7 +208,7 @@ fn set_ignore_and_report(
         verbatims_begin,
         verbatims_end,
     );
-    temp_state.table = is_inside_table(line, temp_state);
+    temp_state.table = is_inside_table(line, temp_state, pattern);
 
     temp_state.verbatim.visual || temp_state.ignore.visual
 }
