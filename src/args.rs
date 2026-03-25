@@ -89,7 +89,7 @@ pub struct OptionArgs {
     pub verbatims: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub no_indent_envs: Vec<String>,
-    #[merge(strategy = merge::vec::append)]
+    #[merge(strategy = merge_wrap_chars)]
     pub wrap_chars: Vec<char>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub verbosity: Option<LevelFilter>,
@@ -101,6 +101,13 @@ pub struct OptionArgs {
     pub recursive: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub format_tables: Option<bool>,
+}
+
+fn merge_wrap_chars(left: &mut Vec<char>, right: Vec<char>) {
+    if !left.is_empty() {
+        return;
+    }
+    *left = right;
 }
 
 /// Character to use for indentation
@@ -197,12 +204,18 @@ impl OptionArgs {
 /// Get all arguments from CLI, config file, and defaults, and merge them
 #[must_use]
 pub fn get_args() -> Args {
+    // get args from CLI
     let mut args: OptionArgs = get_cli_args(None);
+
     let config = get_config(&args);
     let config_args: Option<OptionArgs> = get_config_args(config);
+
+    // merge config_args into args
     if let Some(c) = config_args {
         args.merge(c);
     }
+
+    // merge default args into args
     args.merge(OptionArgs::default());
     Args::from(args)
 }

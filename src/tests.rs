@@ -207,12 +207,12 @@ fn test_all() {
 #[ignore = "no specific subset of tests to run"]
 fn test_subset() {
     let test_names = [
-        //"wrap_chars",
+        "wrap_chars",
         //"cv",
         //"short_document",
         //"wrap",
         //"verb",
-        "tables",
+        //"tables",
     ];
     let mut pass = true;
     let test_dirs = fs::read_dir("./tests/").unwrap().filter(|d| {
