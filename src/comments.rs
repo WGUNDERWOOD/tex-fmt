@@ -7,8 +7,17 @@ use crate::format::Pattern;
 pub fn find_comment_index(line: &str, pattern: &Pattern) -> Option<usize> {
     // Often there is no '%' so check this first
     if pattern.contains_comment {
+
+        // Check for url or href
+        //let char_indices = line.char_indices();
+        //let url_patterns = [r"\url", r"\href"];
+        //for url_pattern in url_patterns {
+            //for (i, _) in line.match_indices(url_pattern) {
+            //}
+        //}
+
         let mut prev_c = ' ';
-        for (i, c) in line.char_indices() {
+        for (i, c) in char_indices {
             if c == '%' && prev_c != '\\' {
                 return Some(i);
             }
