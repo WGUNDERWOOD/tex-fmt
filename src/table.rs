@@ -13,7 +13,7 @@ fn remove_double_spaces(text: &str) -> String {
 
 // Add line breaks after "\\"
 fn add_line_breaks(text: &str) -> (String, bool) {
-    let re_break = Regex::new(r"\\\\.*\S").unwrap();
+    let re_break = Regex::new(r"\\\\ .*\S").unwrap();
     let re_indent = Regex::new(r"^\s*\S").unwrap();
     let re_first_non_white = Regex::new(r"\S.*").unwrap();
     let re_to_break = Regex::new(r"^[^\\]*\\\\").unwrap();
@@ -34,10 +34,6 @@ fn add_line_breaks(text: &str) -> (String, bool) {
                 .find(next_line_long)
                 .map_or("", |m| m.as_str());
             let this_line = re_to_break.find(line).map_or("", |m| m.as_str());
-            dbg!(&line);
-            dbg!(&indent);
-            dbg!(&next_line);
-            dbg!(&this_line);
             new_text.push_str(this_line);
             new_text.push('\n');
             new_text.push_str(indent);
