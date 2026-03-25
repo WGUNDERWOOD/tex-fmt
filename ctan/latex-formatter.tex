@@ -3,7 +3,7 @@
 \usepackage{float}
 \usepackage[a4paper,margin=1.2in]{geometry}
 
-\title{The latex-formatter CTAN package \\ v0.5.6}
+\title{The latex-formatter CTAN package \\ v0.5.7}
 \author{William G.\ Underwood}
 
 \begin{document}
@@ -97,6 +97,7 @@ tex-fmt --recursive dir/           # recursively format files in dir
 tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1
                                    # if overwritten
 tex-fmt --nowrap file.tex          # do not wrap long lines
+tex-fmt --format-tables file.tex   # format tables (align ampersands)
 tex-fmt --stdin                    # read from stdin and print to stdout
 tex-fmt --help                     # view help information
 \end{verbatim}
@@ -231,6 +232,7 @@ The following arguments can be passed on the command line.
       Number of characters to use as tab size \\
       \texttt{--usetabs}            &       &         & Use tabs
       instead of spaces for indentation \\
+      \texttt{--format-tables}      &       &         & Format tables \\
       \texttt{--stdin}              & \texttt{-s}  &         &
       Process stdin as a single file, output to stdout \\
       \texttt{--config <PATH>}      &       &         & Path to config file \\
@@ -283,6 +285,8 @@ The first example in each row is the default value.
       & Number of characters to use as tab size \\
       \texttt{tabchar}        & str      & \texttt{"space"},
       \texttt{"tab"}     & Character to use for indentation \\
+      \texttt{format-tables}  & bool     & \texttt{false}
+      & Format tables \\
       \texttt{stdin}          & bool     & \texttt{false}
       & Process stdin as a single file, \\
       & & & output to stdout \\
