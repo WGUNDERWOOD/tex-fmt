@@ -18,6 +18,7 @@ exclude = [
     "completion/*",
     "man/*",
     "notes.org",
+    "ctan/*"
 ]
 
 [features]
