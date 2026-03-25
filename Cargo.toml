@@ -1,6 +1,6 @@
 [package]
 name = "tex-fmt"
-version = "0.5.6"
+version = "0.5.7"
 authors = ["William George Underwood"]
 license = "MIT"
 repository = "https://github.com/WGUNDERWOOD/tex-fmt"
@@ -30,7 +30,7 @@ clap_complete = "4.6.0"
 clap_mangen = "0.2.33"
 colored = "2.2.0"
 dirs = "5.0.1"
-env_logger = "0.11.9"
+env_logger = "0.11.10"
 ignore = "0.4.25"
 itertools = "0.14.0"
 js-sys = { version = "0.3.91", optional = true }

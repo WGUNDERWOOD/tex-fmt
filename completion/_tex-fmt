@@ -42,6 +42,7 @@ _tex-fmt() {
 '--args[Print arguments passed to tex-fmt and exit]' \
 '-r[Recursively search for files to format]' \
 '--recursive[Recursively search for files to format]' \
+'--format-tables[Format tables]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '-V[Print version]' \
