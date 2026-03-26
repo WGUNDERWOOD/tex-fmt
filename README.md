@@ -14,6 +14,7 @@ https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
 
 An extremely fast LaTeX formatter written in Rust.
+Indentation, line wrapping and other formatting for LaTeX source code.
 Try it out now in your
 [browser](https://wgunderwood.github.io/tex-fmt/)!
 
