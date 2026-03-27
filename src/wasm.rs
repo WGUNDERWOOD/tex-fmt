@@ -1,8 +1,8 @@
 //! Web assembly implementation
 
+use clap::crate_version;
 use js_sys::{Object, Reflect};
 use merge::Merge;
-use clap::crate_version;
 use std::path::PathBuf;
 use wasm_bindgen::prelude::*;
 
