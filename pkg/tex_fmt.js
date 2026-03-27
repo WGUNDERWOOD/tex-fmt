@@ -19,6 +19,14 @@ export function main(text, config) {
     return ret;
 }
 
+/**
+ * @returns {any}
+ */
+export function version() {
+    const ret = wasm.version();
+    return ret;
+}
+
 function __wbg_get_imports() {
     const import0 = {
         __proto__: null,
