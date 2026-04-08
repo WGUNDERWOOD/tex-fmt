@@ -30,8 +30,8 @@ const SPLITTING: [&str; 6] = [
 ];
 
 /// Match table commands
-pub const TABLES_BEGIN: [&str; 1] = ["\\begin{tabular}"];
-pub const TABLES_END: [&str; 1] = ["\\end{tabular}"];
+pub const TABLES_BEGIN: [&str; 2] = ["\\begin{tabular}", "\\begin{tabularx}"];
+pub const TABLES_END: [&str; 2] = ["\\end{tabular}", "\\end{tabularx}"];
 
 // A static `String` which is a regex to match any of [`SPLITTING_COMMANDS`].
 static SPLITTING_STRING: LazyLock<String> =
