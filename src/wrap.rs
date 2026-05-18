@@ -60,10 +60,15 @@ fn is_inside_verb(
     verb_start: Option<usize>,
     verb_end: Option<usize>,
 ) -> bool {
-    if contains_verb {
-        (verb_start.unwrap() <= i_byte) && (i_byte <= verb_end.unwrap())
-    } else {
-        false
+    if !contains_verb {
+        return false;
+    }
+    // For some verb-like commands (e.g. `\mintinline{...}{...}`) we cannot
+    // locate a `|` / `+` delimiter, so `verb_end` may be `None`. Treat that
+    // as "no protected region" rather than panicking.
+    match (verb_start, verb_end) {
+        (Some(start), Some(end)) => start <= i_byte && i_byte <= end,
+        _ => false,
     }
 }
 
