@@ -39,7 +39,7 @@ log = "0.4.29"
 merge = "0.2.0"
 regex = "1.12.3"
 similar = "2.7.0"
-toml = "0.8.23"
+toml = "0.9"
 wasm-bindgen = { version = "0.2.114", optional = true }
 web-time = "1.1.0"
 
