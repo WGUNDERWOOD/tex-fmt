@@ -30,8 +30,13 @@ const SPLITTING: [&str; 6] = [
 ];
 
 /// Match table commands
-pub const TABLES_BEGIN: [&str; 2] = ["\\begin{tabular}", "\\begin{tabularx}"];
-pub const TABLES_END: [&str; 2] = ["\\end{tabular}", "\\end{tabularx}"];
+const TABLES: [&str; 4] = ["tabular", "tabularx", "longtable", "xltabular"];
+pub static TABLES_BEGIN: LazyLock<[String; 4]> = LazyLock::new(|| {
+    std::array::from_fn(|s| format!("\\begin{{{}}}", TABLES[s]))
+});
+pub static TABLES_END: LazyLock<[String; 4]> = LazyLock::new(|| {
+    std::array::from_fn(|s| format!("\\end{{{}}}", TABLES[s]))
+});
 
 // A static `String` which is a regex to match any of [`SPLITTING_COMMANDS`].
 static SPLITTING_STRING: LazyLock<String> =
