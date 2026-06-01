@@ -53,7 +53,11 @@ fn get_positions(text: &str) -> Vec<Vec<usize>> {
     text.lines()
         .map(|l| {
             let mut prev = None;
-            l.char_indices()
+            // Index by character, not byte offset, so delimiters following
+            // multi-byte characters (e.g. accented letters) still align when
+            // the offsets are applied per character below (#130).
+            l.chars()
+                .enumerate()
                 .filter_map(|(i, c)| {
                     let is_match = c == '&' && prev != Some('\\');
                     prev = Some(c);
