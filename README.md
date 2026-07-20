@@ -344,6 +344,9 @@ Visual Studio plugin, uses latexindent as the backend
 - [LLF](https://repo.or.cz/llf.git).
 Lua script, many configuration options
 
+- [Badness](https://badness.dev). 
+Rust-based, opinionated, also a language server and linter
+
 ## Options
 
 ### Command line options
