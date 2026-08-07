@@ -15,7 +15,7 @@ fn remove_double_spaces(text: &str) -> String {
 // Add line breaks after "\\"
 fn add_line_breaks(text: &str) -> (String, bool) {
     let re_break = Regex::new(r"\\\\ .*\S").unwrap();
-    let re_indent = Regex::new(r"^\s*\S").unwrap();
+    let re_indent = Regex::new(r"^\s*").unwrap();
     let re_first_non_white = Regex::new(r"\S.*").unwrap();
     let re_to_break = Regex::new(r"^[^\\]*\\\\").unwrap();
     let mut new_text = String::new();
@@ -23,10 +23,7 @@ fn add_line_breaks(text: &str) -> (String, bool) {
     for line in text.lines() {
         if re_break.is_match(line) {
             finished = false;
-            let indent = re_indent.find(line).map_or("", |m| {
-                let s = m.as_str();
-                &s[..s.len() - 1]
-            });
+            let indent = re_indent.find(line).map_or("", |m| m.as_str());
             let next_line_long = re_break.find(line).map_or("", |m| {
                 let s = m.as_str();
                 &s[2..]
@@ -53,7 +50,8 @@ fn get_positions(text: &str) -> Vec<Vec<usize>> {
     text.lines()
         .map(|l| {
             let mut prev = None;
-            l.char_indices()
+            l.chars()
+                .enumerate()
                 .filter_map(|(i, c)| {
                     let is_match = c == '&' && prev != Some('\\');
                     prev = Some(c);
