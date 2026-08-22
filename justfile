@@ -1,4 +1,4 @@
-default: test doc clippy format shellcheck shellinstall wasm
+default: test doc clippy format shellcheck shellinstall wasm todo
 
 all: default prof binary logo ctan perf latex
 
@@ -71,7 +71,7 @@ nix:
   @nix flake update
 
 todo:
-  @rg -g '!justfile' todo
+  @rg -g '!justfile' todo || true
 
 logo:
   @cd extra && python logo.py
@@ -80,3 +80,14 @@ logo:
   @cd extra && magick -background none card.svg -resize 1280x640\! card.png
   @cd extra && inkscape -w 2560 -h 1280 card.svg -o card.png
   @cd extra && rm -f logo.png card.svg
+
+clean:
+  @cargo clean
+  @rm -fv result
+  @rm -fv extra/perf.data extra/perf.data.old
+  @rm -fv extra/flamegraph.svg extra/card.png
+  @rm -fv extra/hyperfine-*.csv
+  @rm -rfv web/pkg/
+  @rm -rfv ctan/latex-formatter/
+  @rm -fv ctan/latex-formatter.pdf
+  @rm -fv ctan/latex-formatter.tar.gz

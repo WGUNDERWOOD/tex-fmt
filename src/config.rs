@@ -167,6 +167,9 @@ pub fn get_config_args(
         arguments: None,
         files: vec![],
         recursive: None,
+        format_tables: config
+            .get("format-tables")
+            .map(|x| x.as_bool().unwrap()),
         wrap_by_visual_len: config
             .get("wrap-by-visual-len")
             .map(|x| x.as_bool().unwrap()),

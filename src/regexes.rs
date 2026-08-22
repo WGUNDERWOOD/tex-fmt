@@ -15,6 +15,7 @@ pub const ENV_END: &str = "\\end{";
 
 /// Acceptable LaTeX file extensions
 pub const EXTENSIONS: [&str; 4] = ["tex", "bib", "sty", "cls"];
+
 /// Match a LaTeX \verb|...|
 pub const VERBS: [&str; 3] = ["\\verb|", "\\verb+", "\\mintinline"];
 
@@ -27,6 +28,15 @@ const SPLITTING: [&str; 6] = [
     r"\\chapter\*?\{",
     r"\\part\*?\{",
 ];
+
+/// Match table commands
+const TABLES: [&str; 4] = ["tabular", "tabularx", "longtable", "xltabular"];
+pub static TABLES_BEGIN: LazyLock<[String; 4]> = LazyLock::new(|| {
+    std::array::from_fn(|s| format!("\\begin{{{}}}", TABLES[s]))
+});
+pub static TABLES_END: LazyLock<[String; 4]> = LazyLock::new(|| {
+    std::array::from_fn(|s| format!("\\end{{{}}}", TABLES[s]))
+});
 
 // A static `String` which is a regex to match any of [`SPLITTING_COMMANDS`].
 static SPLITTING_STRING: LazyLock<String> =

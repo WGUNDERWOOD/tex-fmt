@@ -14,6 +14,7 @@ https://shields.io/badge/license-MIT-blue.svg)](
 https://mit-license.org/)
 
 An extremely fast LaTeX formatter written in Rust.
+Indentation, line wrapping and other formatting for LaTeX source code.
 Try it out now in your
 [browser](https://wgunderwood.github.io/tex-fmt/)!
 
@@ -189,6 +190,7 @@ tex-fmt --recursive                # recursively format files in current directo
 tex-fmt --recursive dir/           # recursively format files in dir
 tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1 if overwritten
 tex-fmt --nowrap file.tex          # do not wrap long lines
+tex-fmt --format-tables file.tex   # format tables (align ampersands)
 tex-fmt --stdin                    # read from stdin and print to stdout
 tex-fmt --help                     # view help information
 ```
@@ -270,7 +272,7 @@ tex-fmt can be run before every git commit using
 ```yaml
 repos:
   - repo: https://github.com/WGUNDERWOOD/tex-fmt
-    rev: v0.5.6
+    rev: v0.5.7
     hooks:
       - id: tex-fmt
 ```
@@ -298,7 +300,9 @@ including as much information as you can. Documentation of internals
 can be accessed by cloning this repository and running `cargo doc`,
 or by visiting the [docs.rs](https://docs.rs/tex-fmt/latest/tex_fmt/) page.
 
-Alternatively, you can
+Alternatively, you can become a
+[GitHub sponsor](https://github.com/sponsors/WGUNDERWOOD)
+or
 [Buy Me a Coffee](https://buymeacoffee.com/wgunderwood)!
 
 ## Limitations
@@ -340,6 +344,9 @@ Visual Studio plugin, uses latexindent as the backend
 - [LLF](https://repo.or.cz/llf.git).
 Lua script, many configuration options
 
+- [Badness](https://badness.dev). 
+Rust-based, opinionated, also a language server and linter
+
 ## Options
 
 ### Command line options
@@ -356,6 +363,7 @@ The following arguments can be passed on the command line.
 | `--wraplen <N>`        | `-l`  | `80`    | Line length for wrapping |
 | `--tabsize <N>`        | `-t`  | `2`     | Number of characters to use as tab size |
 | `--usetabs`            |       |         | Use tabs instead of spaces for indentation |
+| `--format-tables`      |       |         | Format tables |
 | `--stdin`              | `-s`  |         | Process stdin as a single file, output to stdout |
 | `--config <PATH>`      |       |         | Path to config file |
 | `--noconfig`           |       |         | Do not read any config file |
@@ -385,6 +393,7 @@ The first example in each row is the default value.
 | `wrapmin`        | int      | `70`, `90`             | Target minimum length for line wrapping |
 | `tabsize`        | int      | `2`, `4`               | Number of characters to use as tab size |
 | `tabchar`        | str      | `"space"`, `"tab"`     | Character to use for indentation |
+| `format-tables`  | bool     | `false`                | Format tables |
 | `stdin`          | bool     | `false`                | Process stdin as a single file, output to stdout |
 | `lists`          | arr[str] | `[]`, `["myitemize"]`  | Extra list environments to be formatted as `itemize` |
 | `verbatims`      | arr[str] | `[]`, `["myverbatim"]` | Extra verbatim environments |

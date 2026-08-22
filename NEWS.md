@@ -1,3 +1,13 @@
+# v0.5.7
+
+- New `--format-tables` option to align ampersands and insert line breaks in table environments.
+- Now `" "` must be explicitly passed to `wrap-chars` to enable line wrapping at spaces.
+- Allow for `\verb+...+` syntax.
+- Use `usize` for `wraplen` and `wrapmin` to permit wrapping at longer line lengths.
+- Upload `latex-formatter` package to CTAN.
+- Ensure `wasm` feature is built for the web app.
+- Fix bug in recursive search when file extensions are missing.
+
 # v0.5.6
 
 - Gate web functionality behind a crate feature.

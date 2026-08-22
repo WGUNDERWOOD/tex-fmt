@@ -115,6 +115,11 @@
       margin-left: 12px;
       font-size: 18px;
     }
+    .version{
+      color: var(--col-mid);
+      margin-left: 4px;
+      font-size: 20px;
+    }
     @media (max-width: 800px) {
       .logo {
         display: none;
@@ -129,7 +134,10 @@
 
     <!-- Header text -->
     <div class=headerText>
-      <h1> tex-fmt </h1>
+      <h1> tex-fmt
+          <span id="version" class="version">
+          </span>
+      </h1>
       <h2> An extremely fast LaTeX formatter </h2>
       <div>
         <button id="formatButton">Format</button>
@@ -142,6 +150,9 @@
     <img class=logo
       src="https://github.com/WGUNDERWOOD/tex-fmt/raw/main/extra/logo.svg"
       alt="tex-fmt" align="right" width=180 />
+
+    <!-- Version -->
+    <div id="version"> </div>
 
   </div>
 

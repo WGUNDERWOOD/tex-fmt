@@ -26,9 +26,9 @@ pub struct Args {
     /// Wrap long lines
     pub wrap: bool,
     /// Maximum allowed line length
-    pub wraplen: u8,
+    pub wraplen: usize,
     /// Wrap lines longer than this
-    pub wrapmin: u8,
+    pub wrapmin: usize,
     /// Number of characters to use as tab size
     pub tabsize: u8,
     /// Characters to use for indentation
@@ -53,6 +53,8 @@ pub struct Args {
     pub files: Vec<PathBuf>,
     /// Recursive search for files
     pub recursive: bool,
+    /// Enable table formatting
+    pub format_tables: bool,
     /// Use visual length instead of character count when wrapping
     pub wrap_by_visual_len: bool,
     /// Allow wrap at CJK characters
@@ -72,9 +74,9 @@ pub struct OptionArgs {
     #[merge(strategy= merge::option::overwrite_none)]
     pub wrap: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
-    pub wraplen: Option<u8>,
+    pub wraplen: Option<usize>,
     #[merge(strategy= merge::option::overwrite_none)]
-    pub wrapmin: Option<u8>,
+    pub wrapmin: Option<usize>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub tabsize: Option<u8>,
     #[merge(strategy= merge::option::overwrite_none)]
@@ -91,7 +93,7 @@ pub struct OptionArgs {
     pub verbatims: Vec<String>,
     #[merge(strategy = merge::vec::append)]
     pub no_indent_envs: Vec<String>,
-    #[merge(strategy = merge::vec::append)]
+    #[merge(strategy = merge_wrap_chars)]
     pub wrap_chars: Vec<char>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub verbosity: Option<LevelFilter>,
@@ -102,9 +104,18 @@ pub struct OptionArgs {
     #[merge(strategy= merge::option::overwrite_none)]
     pub recursive: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
+    pub format_tables: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
     pub wrap_by_visual_len: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub wrap_cjk: Option<bool>,
+}
+
+fn merge_wrap_chars(left: &mut Vec<char>, right: Vec<char>) {
+    if !left.is_empty() {
+        return;
+    }
+    *left = right;
 }
 
 /// Character to use for indentation
@@ -165,6 +176,7 @@ impl Default for OptionArgs {
             arguments: Some(false),
             files: vec![],
             recursive: Some(false),
+            format_tables: Some(false),
             wrap_by_visual_len: Some(false),
             wrap_cjk: Some(false),
         }
@@ -194,6 +206,7 @@ impl OptionArgs {
             arguments: None,
             files: vec![],
             recursive: None,
+            format_tables: None,
             wrap_by_visual_len: None,
             wrap_cjk: None,
         }
@@ -203,12 +216,18 @@ impl OptionArgs {
 /// Get all arguments from CLI, config file, and defaults, and merge them
 #[must_use]
 pub fn get_args() -> Args {
+    // get args from CLI
     let mut args: OptionArgs = get_cli_args(None);
+
     let config = get_config(&args);
     let config_args: Option<OptionArgs> = get_config_args(config);
+
+    // merge config_args into args
     if let Some(c) = config_args {
         args.merge(c);
     }
+
+    // merge default args into args
     args.merge(OptionArgs::default());
     Args::from(args)
 }
@@ -252,6 +271,7 @@ impl Args {
             arguments: args.arguments.unwrap(),
             files: args.files,
             recursive: args.recursive.unwrap(),
+            format_tables: args.format_tables.unwrap(),
             wrap_by_visual_len: args.wrap_by_visual_len.unwrap(),
             wrap_cjk: args.wrap_cjk.unwrap(),
         }
@@ -413,6 +433,7 @@ impl fmt::Display for Args {
         display_args_list(&self.verbatims, "verbatims", f)?;
         display_args_list(&self.no_indent_envs, "no-indent-envs", f)?;
         display_args_list(&wrap_chars, "wrap-chars", f)?;
+        display_arg_line(f, "format-tables", &self.format_tables.to_string())?;
         display_args_list(
             &self
                 .files

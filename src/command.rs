@@ -44,7 +44,7 @@ pub fn get_cli_command() -> Command {
                 .short('l')
                 .long("wraplen")
                 .value_name("N")
-                .value_parser(value_parser!(u8))
+                .value_parser(value_parser!(usize))
                 .help("Line length for wrapping [default: 80]"),
         )
         .arg(
@@ -131,6 +131,12 @@ pub fn get_cli_command() -> Command {
                 .long("recursive")
                 .action(SetTrue)
                 .help("Recursively search for files to format")
+        )
+        .arg(
+            Arg::new("format-tables")
+                .long("format-tables")
+                .action(SetTrue)
+                .help("Format tables")
         )
         .arg(
             Arg::new("wrap-by-visual-len")

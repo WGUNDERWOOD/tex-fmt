@@ -1,5 +1,6 @@
 //! Web assembly implementation
 
+use clap::crate_version;
 use js_sys::{Object, Reflect};
 use merge::Merge;
 use std::path::PathBuf;
@@ -37,4 +38,12 @@ pub fn main(text: &str, config: &str) -> JsValue {
     Reflect::set(&js_object, &"output".into(), &new_text.into()).unwrap();
     Reflect::set(&js_object, &"logs".into(), &logs.into()).unwrap();
     js_object.into()
+}
+
+#[wasm_bindgen]
+#[must_use]
+pub fn version() -> JsValue {
+    let version = crate_version!();
+    let formatted_version = format!("v{}", version);
+    JsValue::from_str(&formatted_version)
 }

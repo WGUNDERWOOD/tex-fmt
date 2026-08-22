@@ -68,7 +68,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
         print: get_flag(&arg_matches, "print"),
         fail_on_change: get_flag(&arg_matches, "fail-on-change"),
         wrap,
-        wraplen: arg_matches.get_one::<u8>("wraplen").copied(),
+        wraplen: arg_matches.get_one::<usize>("wraplen").copied(),
         wrapmin: None,
         tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
         tabchar,
@@ -87,6 +87,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
             .map(PathBuf::from)
             .collect::<Vec<PathBuf>>(),
         recursive: get_flag(&arg_matches, "recursive"),
+        format_tables: get_flag(&arg_matches, "format-tables"),
         wrap_by_visual_len: get_flag(&arg_matches, "wrap-by-visual-len"),
         wrap_cjk: get_flag(&arg_matches, "wrap-cjk"),
     };

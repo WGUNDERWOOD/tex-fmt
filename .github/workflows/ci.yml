@@ -65,7 +65,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: jetli/wasm-bindgen-action@v0.2.0
         with:
-          version: '0.2.100'
+          version: '0.2.114'
       - name: Build wasm
         run: cargo build -r -F wasm --lib --target wasm32-unknown-unknown
       - name: Bind wasm
@@ -105,10 +105,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v31
+    - name: Restore and save Nix store
+      uses: nix-community/cache-nix-action@v7
       with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-        nix_path: nixpkgs=channel:nixos-unstable
-    - uses: DeterminateSystems/magic-nix-cache-action@main
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+        restore-prefixes-first-match: nix-${{ runner.os }}-
+        gc-max-store-size-linux: 1G
+        purge: true
+        purge-prefixes: nix-${{ runner.os }}-
+        purge-created: 0
+        purge-last-accessed: P1DT12H
+        purge-primary-key: never
     - run: nix build
     - run: nix flake check --all-systems

@@ -39,13 +39,14 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
             line.chars().count()
         } + indent_length
             > args.wraplen.into())
+        && !(state.table.visual && args.format_tables)
 }
 
 fn is_cjk_wrap_point(
     c: char,
     next_c: Option<char>,
 ) -> bool {
-    is_cjk_char(c) 
+    is_cjk_char(c)
         // Next char not prohibited at start
         && match next_c {
             Some(c) => !CJK_CHARS_PROHIBITED_AT_START.contains(&c),
@@ -110,10 +111,15 @@ fn is_inside_verb(
     verb_start: Option<usize>,
     verb_end: Option<usize>,
 ) -> bool {
-    if contains_verb {
-        (verb_start.unwrap() <= i_byte) && (i_byte <= verb_end.unwrap())
-    } else {
-        false
+    if !contains_verb {
+        return false;
+    }
+    // For some verb-like commands (e.g. `\mintinline{...}{...}`) we cannot
+    // locate a `|` / `+` delimiter, so `verb_end` may be `None`. Treat that
+    // as "no protected region" rather than panicking.
+    match (verb_start, verb_end) {
+        (Some(start), Some(end)) => start <= i_byte && i_byte <= end,
+        _ => false,
     }
 }
 
@@ -134,7 +140,7 @@ fn find_wrap_point(
 
     let verb_end = get_verb_end(verb_start, line);
     let mut after_non_percent = verb_start == Some(0);
-    let wrap_boundary = usize::from(args.wrapmin) - indent_length;
+    let wrap_boundary = args.wrapmin - indent_length;
     let line_len = line.len();
 
     let mut current_width = 0;
@@ -209,7 +215,7 @@ pub fn apply_wrap<'a>(
                 line.get(..=p).map_or(0, unicode_width::UnicodeWidthStr::width)
             } else {
                 p
-            }) <= args.wraplen.into()
+            }) <= args.wraplen
         } => {}
         _ => {
             record_line_log(

@@ -1,5 +1,5 @@
 // Import wasm
-import init, { main } from './pkg/tex_fmt.js';
+import init, { main, version } from './pkg/tex_fmt.js';
 
 // Initialize wasm
 (async () => {
@@ -48,3 +48,9 @@ document.getElementById('copyButton').addEventListener(
     }
   }
 );
+
+// Version number
+(async () => {
+  await init();
+  document.getElementById('version').innerText = version();
+})();

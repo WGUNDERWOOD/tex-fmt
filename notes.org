@@ -12,6 +12,7 @@
 *** nix develop
 ** Update Rust version
 *** just upgrade
+*** Update bindgen version in CI GitHub action file from Cargo.toml
 ** Run tests
 *** just
 *** just perf
@@ -24,7 +25,7 @@
 ** Publish to crates.io
 *** cargo package --list
 *** cargo publish
-*** Pass --allow-dirty if notes.org has changed
+*** Pass --allow-dirty if files have changed
 ** Publish GitHub release with notes from NEWS.md
 *** No need to add a title
 *** GitHub binaries published automatically with actions
