@@ -52,9 +52,9 @@ fn is_cjk_wrap_point(
             Some(c) => !CJK_CHARS_PROHIBITED_AT_START.contains(&c),
             None => true,
         }
-        // this char not prohibited at end
+        // This char not prohibited at end
         && !CJK_CHARS_PROHIBITED_AT_END.contains(&c)
-        // colon followed by opening quotes is not a wrap point
+        // Colon followed by opening quotes is not a wrap point
         && !matches!((c, next_c), ('：', Some('“' | '「' | '『' | '‘')))
 }
 
@@ -84,7 +84,7 @@ fn is_wrap_point(
     line_len: usize,
     args: &Args,
 ) -> bool {
-    // wrap at CJK characters if enabled, it will ignore wrap_chars constraint
+    // Wrap at CJK characters if enabled, it will ignore wrap_chars constraint
     ((args.wrap_cjk && is_cjk_wrap_point(c, next_c)) ||
     // Character c must be a valid wrapping character
     args.wrap_chars.contains(&c))
@@ -144,7 +144,7 @@ fn find_wrap_point(
     let line_len = line.len();
 
     let mut current_width = 0;
-    // peekable iterator over char indices
+    // Peekable iterator over char indices
     let mut chars_iter = line.char_indices().peekable();
 
     while let Some((i_byte, c)) = chars_iter.next() {
@@ -154,7 +154,7 @@ fn find_wrap_point(
         } else {
             1
         };
-        // stop if we have exceeded the wrap boundary and found a wrap point
+        // Stop if we have exceeded the wrap boundary and found a wrap point
         if current_width >= wrap_boundary && wrap_point.is_some() {
             break;
         }
@@ -165,7 +165,7 @@ fn find_wrap_point(
         if is_wrap_point(i_byte, c, prev_c, next_c, inside_verb, line_len, args)
             && after_non_percent {
             // Get index of the byte after which
-            // line break will be inserted.
+            // a line break will be inserted.
             // Note this may not be a valid char index.
             let wrap_byte = i_byte + c.len_utf8() - 1;
             // Don't wrap here if this is the end of the line anyway
@@ -210,7 +210,7 @@ pub fn apply_wrap<'a>(
 
     match wrap_point {
         Some(p) if {
-            // caluculate line visual length if wrap_by_visual_len is enabled
+            // Calculate line visual length if wrap_by_visual_len is enabled
             (if args.wrap_by_visual_len {
                 line.get(..=p).map_or(0, unicode_width::UnicodeWidthStr::width)
             } else {
