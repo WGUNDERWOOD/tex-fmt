@@ -17,7 +17,7 @@ fn add_line_breaks(text: &str) -> (String, bool) {
     let re_break = Regex::new(r"\\\\ .*\S").unwrap();
     let re_indent = Regex::new(r"^\s*\S").unwrap();
     let re_first_non_white = Regex::new(r"\S.*").unwrap();
-    let re_to_break = Regex::new(r"^[^\\]*\\\\").unwrap();
+    let re_to_break = Regex::new(r"^.*?\\\\").unwrap();
     let mut new_text = String::new();
     let mut finished: bool = true;
     for line in text.lines() {
