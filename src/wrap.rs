@@ -31,14 +31,14 @@ const CJK_CHARS_PROHIBITED_AT_END: &[char] = &[
 
 /// Check if a line needs wrapping
 #[must_use]
-pub fn needs_wrap(line: &str, indent_length: usize, args: &Args) -> bool {
+pub fn needs_wrap(line: &str, indent_length: usize, args: &Args, state: &State) -> bool {
     args.wrap
         && (if args.wrap_by_visual_len {
             line.width()
         } else {
             line.chars().count()
         } + indent_length
-            > args.wraplen.into())
+            > args.wraplen)
         && !(state.table.visual && args.format_tables)
 }
 

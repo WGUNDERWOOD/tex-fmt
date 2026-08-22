@@ -1,0 +1,2 @@
+--wrap-cjk
+--wrap-by-visual-len
