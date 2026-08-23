@@ -49,6 +49,8 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
             [CompletionResult]::new('-r', '-r', [CompletionResultType]::ParameterName, 'Recursively search for files to format')
             [CompletionResult]::new('--recursive', '--recursive', [CompletionResultType]::ParameterName, 'Recursively search for files to format')
             [CompletionResult]::new('--format-tables', '--format-tables', [CompletionResultType]::ParameterName, 'Format tables')
+            [CompletionResult]::new('--wrap-by-visual-len', '--wrap-by-visual-len', [CompletionResultType]::ParameterName, 'Use visual length instead of character count when wrapping')
+            [CompletionResult]::new('--wrap-cjk', '--wrap-cjk', [CompletionResultType]::ParameterName, 'Allow wrap at CJK characters')
             [CompletionResult]::new('-h', '-h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', '--help', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('-V', '-V ', [CompletionResultType]::ParameterName, 'Print version')

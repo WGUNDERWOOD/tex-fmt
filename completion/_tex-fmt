@@ -43,6 +43,8 @@ _tex-fmt() {
 '-r[Recursively search for files to format]' \
 '--recursive[Recursively search for files to format]' \
 '--format-tables[Format tables]' \
+'--wrap-by-visual-len[Use visual length instead of character count when wrapping]' \
+'--wrap-cjk[Allow wrap at CJK characters]' \
 '-h[Print help]' \
 '--help[Print help]' \
 '-V[Print version]' \

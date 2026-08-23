@@ -4,7 +4,7 @@
 .SH NAME
 tex\-fmt \- LaTeX formatter written in Rust
 .SH SYNOPSIS
-\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-f\fR|\fB\-\-fail\-on\-change\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-\-config\fR] [\fB\-\-noconfig\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-r\fR|\fB\-\-recursive\fR] [\fB\-\-format\-tables\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIfiles\fR] 
+\fBtex\-fmt\fR [\fB\-c\fR|\fB\-\-check\fR] [\fB\-p\fR|\fB\-\-print\fR] [\fB\-f\fR|\fB\-\-fail\-on\-change\fR] [\fB\-n\fR|\fB\-\-nowrap\fR] [\fB\-l\fR|\fB\-\-wraplen\fR] [\fB\-t\fR|\fB\-\-tabsize\fR] [\fB\-\-usetabs\fR] [\fB\-s\fR|\fB\-\-stdin\fR] [\fB\-\-config\fR] [\fB\-\-noconfig\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-\-trace\fR] [\fB\-\-completion\fR] [\fB\-\-man\fR] [\fB\-\-args\fR] [\fB\-r\fR|\fB\-\-recursive\fR] [\fB\-\-format\-tables\fR] [\fB\-\-wrap\-by\-visual\-len\fR] [\fB\-\-wrap\-cjk\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIfiles\fR] 
 .SH DESCRIPTION
 LaTeX formatter written in Rust
 .SH OPTIONS
@@ -78,6 +78,12 @@ Recursively search for files to format
 .TP
 \fB\-\-format\-tables\fR
 Format tables
+.TP
+\fB\-\-wrap\-by\-visual\-len\fR
+Use visual length instead of character count when wrapping
+.TP
+\fB\-\-wrap\-cjk\fR
+Allow wrap at CJK characters
 .TP
 \fB\-h\fR, \fB\-\-help\fR
 Print help
