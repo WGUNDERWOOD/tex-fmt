@@ -155,7 +155,7 @@ fn find_wrap_point(
             1
         };
         // Stop if we have exceeded the wrap boundary and found a wrap point
-        if current_width >= wrap_boundary && wrap_point.is_some() {
+        if current_width > wrap_boundary && wrap_point.is_some() {
             break;
         }
         // Special wrapping for lines containing \verb|...|
