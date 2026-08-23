@@ -90,3 +90,45 @@ jobs:
           gh release upload ${{ github.ref_name }} $(find . -iname tex-fmt*.tar.gz)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  npm:
+    if: github.event_name == 'release'
+    name: npm publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: npm/package-lock.json
+      - uses: jetli/wasm-bindgen-action@v0.2.0
+        with:
+          version: '0.2.114'
+      - name: Check release version
+        working-directory: npm
+        run: npm run check:version
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+      - name: Build npm package
+        run: npm run build --prefix npm
+      - name: Optimize browser wasm
+        uses: NiklasEi/wasm-opt-action@v2
+        with:
+          options: -Oz
+          file: npm/pkg/web/tex_fmt_bg.wasm
+          output: npm/pkg/web/tex_fmt_bg.wasm
+      - name: Test npm entry points
+        run: npm test --prefix npm
+      - name: Test packed npm package
+        run: npm run test:package --prefix npm
+      - name: Publish to npm
+        working-directory: npm
+        run: npm publish --access public

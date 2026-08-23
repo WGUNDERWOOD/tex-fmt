@@ -11,6 +11,9 @@ perf.data*
 *.png
 cachegrind.out
 /web/pkg
+/npm/pkg
+/npm/LICENSE
+/npm/*.tgz
 /ctan/latex-formatter/
 *.tar.gz
 *.aux

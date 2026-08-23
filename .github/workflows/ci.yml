@@ -55,7 +55,7 @@ jobs:
       - name: Build
         run: cross build --target ${{ matrix.target }}
   wasm:
-    name: Cargo wasm build
+    name: npm WebAssembly package
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,21 +63,28 @@ jobs:
         with:
           targets: wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: npm/package-lock.json
       - uses: jetli/wasm-bindgen-action@v0.2.0
         with:
           version: '0.2.114'
-      - name: Build wasm
-        run: cargo build -r -F wasm --lib --target wasm32-unknown-unknown
-      - name: Bind wasm
-        run: |
-          wasm-bindgen --target web --out-dir web/pkg \
-            target/wasm32-unknown-unknown/release/tex_fmt.wasm
-      - name: Optimize wasm
+      - name: Build npm package
+        run: npm run build --prefix npm
+      - name: Optimize browser wasm
         uses: NiklasEi/wasm-opt-action@v2
         with:
           options: -Oz
-          file: web/pkg/tex_fmt_bg.wasm
-          output: web/pkg/tex_fmt_bg.wasm
+          file: npm/pkg/web/tex_fmt_bg.wasm
+          output: npm/pkg/web/tex_fmt_bg.wasm
+      - name: Update web app wasm
+        run: cp npm/pkg/web/tex_fmt_bg.wasm web/pkg/tex_fmt_bg.wasm
+      - name: Test npm entry points
+        run: npm test --prefix npm
+      - name: Test packed npm package
+        run: npm run test:package --prefix npm
       - name: Upload wasm
         if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4

@@ -1,0 +1,69 @@
+{
+  "name": "tex-fmt",
+  "version": "0.5.7",
+  "description": "LaTeX formatter compiled to WebAssembly",
+  "license": "MIT",
+  "author": "William George Underwood",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WGUNDERWOOD/tex-fmt.git",
+    "directory": "npm"
+  },
+  "homepage": "https://github.com/WGUNDERWOOD/tex-fmt#readme",
+  "bugs": "https://github.com/WGUNDERWOOD/tex-fmt/issues",
+  "keywords": [
+    "latex",
+    "formatter",
+    "wasm",
+    "webassembly"
+  ],
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "node.cjs",
+    "node.mjs",
+    "pkg",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./node.cjs",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "node": {
+        "import": "./node.mjs",
+        "require": "./node.cjs"
+      },
+      "browser": "./index.js",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./web": {
+      "types": "./pkg/web/tex_fmt.d.ts",
+      "import": "./pkg/web/tex_fmt.js",
+      "default": "./pkg/web/tex_fmt.js"
+    },
+    "./node": {
+      "types": "./index.d.ts",
+      "import": "./node.mjs",
+      "require": "./node.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check:version": "node scripts/check-version.mjs",
+    "test": "node scripts/test.mjs",
+    "test:package": "node scripts/test-package.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
