@@ -85,6 +85,24 @@ Install the [stable release](https://crates.io/crates/tex-fmt) with
 cargo install tex-fmt
 ```
 
+### npm (WebAssembly)
+
+Use tex-fmt from Node.js or a browser bundler with the WebAssembly package:
+
+``` shell
+npm install tex-fmt
+```
+
+``` javascript
+import { format } from "tex-fmt";
+
+const result = format("\\section{Hello}\nText\n", "");
+console.log(result.output);
+```
+
+In browsers, call the exported `init()` function once before formatting. See
+the [npm package documentation](npm/README.md) for all entry points.
+
 Install from [GitHub](https://github.com/WGUNDERWOOD/tex-fmt) with
 
 ```shell
