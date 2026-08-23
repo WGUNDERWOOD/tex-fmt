@@ -20,7 +20,7 @@ pub const COMMENT_LINE_START: &str = "% ";
 const CJK_CHARS_PROHIBITED_AT_START: &[char] = &[
     '·', '’', '”', '†', '‡', '›', '℃', '：', '、', '。', '〃', '〉', '》',
     '」', '』', '〕', '〗', '〞', '﹘', '﹚', '﹜', '！', '＂', '％', '＇',
-    '）', '，', '．', '：', '；', '？', '］', '｝', '～', '…', '―'
+    '）', '，', '．', '：', '；', '？', '］', '｝', '～', '…', '―',
 ];
 
 // CJK characters that should not appear at the end of a line
@@ -31,7 +31,12 @@ const CJK_CHARS_PROHIBITED_AT_END: &[char] = &[
 
 /// Check if a line needs wrapping
 #[must_use]
-pub fn needs_wrap(line: &str, indent_length: usize, args: &Args, state: &State) -> bool {
+pub fn needs_wrap(
+    line: &str,
+    indent_length: usize,
+    args: &Args,
+    state: &State,
+) -> bool {
     args.wrap
         && (if args.wrap_by_visual_len {
             line.width()
@@ -42,10 +47,7 @@ pub fn needs_wrap(line: &str, indent_length: usize, args: &Args, state: &State) 
         && !(state.table.visual && args.format_tables)
 }
 
-fn is_cjk_wrap_point(
-    c: char,
-    next_c: Option<char>,
-) -> bool {
+fn is_cjk_wrap_point(c: char, next_c: Option<char>) -> bool {
     is_cjk_char(c)
         // Next char not prohibited at start
         && match next_c {
@@ -163,7 +165,8 @@ fn find_wrap_point(
             is_inside_verb(i_byte, contains_verb, verb_start, verb_end);
         let next_c = chars_iter.peek().map(|(_, c)| *c);
         if is_wrap_point(i_byte, c, prev_c, next_c, inside_verb, line_len, args)
-            && after_non_percent {
+            && after_non_percent
+        {
             // Get index of the byte after which
             // a line break will be inserted.
             // Note this may not be a valid char index.
@@ -209,14 +212,16 @@ pub fn apply_wrap<'a>(
     let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
-        Some(p) if {
-            // Calculate line visual length if wrap_by_visual_len is enabled
-            (if args.wrap_by_visual_len {
-                line.get(..=p).map_or(0, unicode_width::UnicodeWidthStr::width)
-            } else {
-                p
-            }) <= args.wraplen
-        } => {}
+        Some(p)
+            if {
+                // Calculate line visual length if wrap_by_visual_len is enabled
+                (if args.wrap_by_visual_len {
+                    line.get(..=p)
+                        .map_or(0, unicode_width::UnicodeWidthStr::width)
+                } else {
+                    p
+                }) <= args.wraplen
+            } => {}
         _ => {
             record_line_log(
                 logs,
