@@ -16,17 +16,41 @@ pub const TEXT_LINE_START: &str = "";
 /// String slice to start wrapped comment lines
 pub const COMMENT_LINE_START: &str = "% ";
 
-// CJK characters that should not appear at the start of a line
+// CJK characters that should not appear at the start of a line. See
+// https://en.wikipedia.org/wiki/Line_breaking_rules_in_East_Asian_languages
+// https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.kinsoku?view=openxml-3.0.1
 const CJK_CHARS_PROHIBITED_AT_START: &[char] = &[
-    '·', '’', '”', '†', '‡', '›', '℃', '：', '、', '。', '〃', '〉', '》',
-    '」', '』', '〕', '〗', '〞', '﹘', '﹚', '﹜', '！', '＂', '％', '＇',
-    '）', '，', '．', '：', '；', '？', '］', '｝', '～', '…', '―',
+    // Simplified Chinese
+    '!', '%', ')', ',', '.', ':', ';', '?', ']', '}', '¢', '°', '·', '\'', '"',
+    '†', '‡', '›', '℃', '∶', '、', '。', '〃', '〆', '〕', '〗', '〞', '﹚',
+    '﹜', '！', '＂', '％', '＇', '）', '，', '．', '：', '；', '？', '］',
+    '｝', '～', '>', '¨', 'ˇ', 'ˉ', '―', '‖', '’', '”', '…', '‰', '′', '″',
+    '〉', '》', '」', '』', '】', '︶', '︺', '︾', '﹀', '﹄', '﹞', '｀',
+    '｜', '￠', // + Traditional Chinese
+    '–', '—', ' ', '•', '︰', '︱', '︲', '︳', '﹐', '﹑', '﹒', '﹔', '﹕',
+    '﹖', '﹘', '︸', '︼', '﹂', '﹗', '､', '‥', '‧', '╴', '︴', '﹏',
+    // + Japanese
+    '〙', '〟', '｠', '»', 'ヽ', 'ヾ', 'ー', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ッ',
+    'ャ', 'ュ', 'ョ', 'ヮ', 'ヵ', 'ヶ', 'ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'っ',
+    'ゃ', 'ゅ', 'ょ', 'ゎ', 'ゕ', 'ゖ', 'ㇰ', 'ㇱ', 'ㇲ', 'ㇳ', 'ㇴ', 'ㇵ',
+    'ㇶ', 'ㇷ', 'ㇸ', 'ㇹ', 'ㇺ', 'ㇻ', 'ㇼ', 'ㇽ', 'ㇾ', 'ㇿ', '々', '〻',
+    '‐', '゠', '〜', '‼', '⁇', '⁈', '⁉', '・', '゛', '゜', 'ゝ', 'ゞ', '｡',
+    '｣', '･', 'ｧ', 'ｨ', 'ｩ', 'ｪ', 'ｫ', 'ｬ', 'ｭ', 'ｮ', 'ｯ', 'ｰ', 'ﾞ',
+    'ﾟ',
+    // + Korean
+    // (All of them are included above)
 ];
 
 // CJK characters that should not appear at the end of a line
 const CJK_CHARS_PROHIBITED_AT_END: &[char] = &[
-    '£', '§', '¨', '«', '‘', '“', '〈', '《', '「', '『', '〔', '〖', '〝',
-    '﹙', '﹛', '（', '［', '｛', '￥', '$',
+    // Simplified Chinese
+    '$', '(', '£', '¥', '·', '\'', '"', '〈', '《', '「', '『', '【', '〔',
+    '〖', '〝', '﹙', '﹛', '＄', '（', '．', '［', '｛', '￡', '￥', '[', '{',
+    '‘', '“', '﹝', // + Traditional Chinese
+    '‵', '︴', '︵', '︷', '︹', '︻', '︽', '︿', '﹁', '﹃', '﹏',
+    // + Japanese
+    '〘', '｟', '«', '—', '‥', '〳', '〴', '〵', '｢', // + Korean
+    '\\', '￦',
 ];
 
 /// Check if a line needs wrapping
@@ -60,20 +84,56 @@ fn is_cjk_wrap_point(c: char, next_c: Option<char>) -> bool {
         && !matches!((c, next_c), ('：', Some('“' | '「' | '『' | '‘')))
 }
 
+// See https://www.unicode.org/charts/
 fn is_cjk_char(c: char) -> bool {
     matches!(c,
         // CJK Unified Ideographs
         '\u{4E00}'..='\u{9FFF}'
-        // CJK Unified Ideographs Extension A
+        // CJK Unified Ideographs Extension A–J
         | '\u{3400}'..='\u{4DBF}'
+        | '\u{20000}'..='\u{2A6DF}'
+        | '\u{2A700}'..='\u{2B81F}'
+        | '\u{2B820}'..='\u{2EBEF}'
+        | '\u{2EBF0}'..='\u{2EE5F}'
+        | '\u{30000}'..='\u{3347F}'
+        // CJK Compatibility Ideographs
+        | '\u{F900}'..='\u{FAFF}'
         // Hiragana
         | '\u{3040}'..='\u{309F}'
         // Katakana
         | '\u{30A0}'..='\u{30FF}'
+        // Katakana Phonetic Extensions
+        | '\u{31F0}'..='\u{31FF}'
         // Hangul Syllables
         | '\u{AC00}'..='\u{D7AF}'
+        // Hangul Jamo
+        | '\u{1100}'..='\u{11FF}'
+        // Compatibility Jamo
+        | '\u{3131}'..='\u{318E}'
+        // Hangul Jamo Extended A and B
+        | '\u{A960}'..='\u{A97F}'
+        | '\u{D7B0}'..='\u{D7FF}'
         // CJK Symbols and Punctuation
         | '\u{3000}'..='\u{303F}'
+        // Halfwidth and Fullwidth Forms
+        // This chart includes fullwidth letters (ＬＩＫＥ　ＴＨＩＳ)
+        // and fullwidth numbers (１２３４５６７８９０)
+        // that should not be included.
+        | '\u{FF01}'..='\u{FF0F}'
+        | '\u{FF1A}'..='\u{FF20}'
+        | '\u{FF3B}'..='\u{FF40}'
+        | '\u{FF5B}'..='\u{FF65}'
+        | '\u{FF61}'..='\u{FFBE}'
+        | '\u{FFC2}'..='\u{FFC7}'
+        | '\u{FFCA}'..='\u{FFCF}'
+        | '\u{FFD2}'..='\u{FFD7}'
+        | '\u{FFDA}'..='\u{FFDC}'
+        // Vertical Forms
+        | '\u{FE10}'..='\u{FE19}'
+        // CJK Compatibility Forms
+        | '\u{FE30}'..='\u{FE4F}'
+        // Small Form Variants
+        | '\u{FE50}'..='\u{FE6F}'
     )
 }
 
