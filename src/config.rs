@@ -170,6 +170,10 @@ pub fn get_config_args(
         format_tables: config
             .get("format-tables")
             .map(|x| x.as_bool().unwrap()),
+        wrap_by_visual_len: config
+            .get("wrap-by-visual-len")
+            .map(|x| x.as_bool().unwrap()),
+        wrap_cjk: config.get("wrap-cjk").map(|x| x.as_bool().unwrap()),
     };
     Some(args)
 }

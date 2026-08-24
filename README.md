@@ -373,6 +373,8 @@ The following arguments can be passed on the command line.
 | `--completion <SHELL>` |       |         | Generate a shell completion script |
 | `--man`                |       |         | Generate a man page |
 | `--args`               |       |         | View arguments passed to tex-fmt |
+| `--wrap-by-visual-len` |       |         | Use visual length instead of character count when wrapping |
+| `--wrap-cjk`           |       |         | Allow wrap at Chinese, Japanese and Korean characters |
 | `--help`               | `-h`  |         | Print help |
 | `--version`            | `-V`  |         | Print version |
 
@@ -397,4 +399,6 @@ The first example in each row is the default value.
 | `verbatims`      | arr[str] | `[]`, `["myverbatim"]` | Extra verbatim environments |
 | `no-indent-envs` | arr[str] | `[]`, `["mydocument"]` | Environments which are not indented |
 | `wrap-chars`     | arr[str] | `[]`, `["。"]`         | Characters after which lines may be wrapped |
+| `wrap-by-visual-len` | bool | `false`                | Use visual length instead of character count when wrapping |
+| `wrap-cjk`       | bool     | `false`                | Allow wrap at Chinese, Japanese and Korean characters |
 | `verbosity`      | str      | `"warn"`, `"error"`    | Verbosity level for terminal logging |

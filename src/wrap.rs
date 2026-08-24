@@ -8,11 +8,50 @@ use crate::regexes::VERBS;
 use log::Level;
 use log::LevelFilter;
 use std::path::Path;
+use unicode_width::UnicodeWidthChar;
+use unicode_width::UnicodeWidthStr;
 
 /// String slice to start wrapped text lines
 pub const TEXT_LINE_START: &str = "";
 /// String slice to start wrapped comment lines
 pub const COMMENT_LINE_START: &str = "% ";
+
+// CJK characters that should not appear at the start of a line. See
+// https://en.wikipedia.org/wiki/Line_breaking_rules_in_East_Asian_languages
+// https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.kinsoku?view=openxml-3.0.1
+const CJK_CHARS_PROHIBITED_AT_START: &[char] = &[
+    // Simplified Chinese
+    '!', '%', ')', ',', '.', ':', ';', '?', ']', '}', '¢', '°', '·', '\'', '"',
+    '†', '‡', '›', '℃', '∶', '、', '。', '〃', '〆', '〕', '〗', '〞', '﹚',
+    '﹜', '！', '＂', '％', '＇', '）', '，', '．', '：', '；', '？', '］',
+    '｝', '～', '>', '¨', 'ˇ', 'ˉ', '―', '‖', '’', '”', '…', '‰', '′', '″',
+    '〉', '》', '」', '』', '】', '︶', '︺', '︾', '﹀', '﹄', '﹞', '｀',
+    '｜', '￠', // + Traditional Chinese
+    '–', '—', ' ', '•', '︰', '︱', '︲', '︳', '﹐', '﹑', '﹒', '﹔', '﹕',
+    '﹖', '﹘', '︸', '︼', '﹂', '﹗', '､', '‥', '‧', '╴', '︴', '﹏',
+    // + Japanese
+    '〙', '〟', '｠', '»', 'ヽ', 'ヾ', 'ー', 'ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ッ',
+    'ャ', 'ュ', 'ョ', 'ヮ', 'ヵ', 'ヶ', 'ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'っ',
+    'ゃ', 'ゅ', 'ょ', 'ゎ', 'ゕ', 'ゖ', 'ㇰ', 'ㇱ', 'ㇲ', 'ㇳ', 'ㇴ', 'ㇵ',
+    'ㇶ', 'ㇷ', 'ㇸ', 'ㇹ', 'ㇺ', 'ㇻ', 'ㇼ', 'ㇽ', 'ㇾ', 'ㇿ', '々', '〻',
+    '‐', '゠', '〜', '‼', '⁇', '⁈', '⁉', '・', '゛', '゜', 'ゝ', 'ゞ', '｡',
+    '｣', '･', 'ｧ', 'ｨ', 'ｩ', 'ｪ', 'ｫ', 'ｬ', 'ｭ', 'ｮ', 'ｯ', 'ｰ', 'ﾞ',
+    'ﾟ',
+    // + Korean
+    // (All of them are included above)
+];
+
+// CJK characters that should not appear at the end of a line
+const CJK_CHARS_PROHIBITED_AT_END: &[char] = &[
+    // Simplified Chinese
+    '$', '(', '£', '¥', '·', '\'', '"', '〈', '《', '「', '『', '【', '〔',
+    '〖', '〝', '﹙', '﹛', '＄', '（', '．', '［', '｛', '￡', '￥', '[', '{',
+    '‘', '“', '﹝', // + Traditional Chinese
+    '‵', '︴', '︵', '︷', '︹', '︻', '︽', '︿', '﹁', '﹃', '﹏',
+    // + Japanese
+    '〘', '｟', '«', '—', '‥', '〳', '〴', '〵', '｢', // + Korean
+    '\\', '￦',
+];
 
 /// Check if a line needs wrapping
 #[must_use]
@@ -23,20 +62,94 @@ pub fn needs_wrap(
     state: &State,
 ) -> bool {
     args.wrap
-        && (line.chars().count() + indent_length > args.wraplen)
+        && (if args.wrap_by_visual_len {
+            line.width()
+        } else {
+            line.chars().count()
+        } + indent_length
+            > args.wraplen)
         && !(state.table.visual && args.format_tables)
+}
+
+fn is_cjk_wrap_point(c: char, next_c: Option<char>) -> bool {
+    is_cjk_char(c)
+        // Next char not prohibited at start
+        && match next_c {
+            Some(c) => !CJK_CHARS_PROHIBITED_AT_START.contains(&c),
+            None => true,
+        }
+        // This char not prohibited at end
+        && !CJK_CHARS_PROHIBITED_AT_END.contains(&c)
+        // Colon followed by opening quotes is not a wrap point
+        && !matches!((c, next_c), ('：', Some('“' | '「' | '『' | '‘')))
+}
+
+// See https://www.unicode.org/charts/
+fn is_cjk_char(c: char) -> bool {
+    matches!(c,
+        // CJK Unified Ideographs
+        '\u{4E00}'..='\u{9FFF}'
+        // CJK Unified Ideographs Extension A–J
+        | '\u{3400}'..='\u{4DBF}'
+        | '\u{20000}'..='\u{2A6DF}'
+        | '\u{2A700}'..='\u{2B81F}'
+        | '\u{2B820}'..='\u{2EBEF}'
+        | '\u{2EBF0}'..='\u{2EE5F}'
+        | '\u{30000}'..='\u{3347F}'
+        // CJK Compatibility Ideographs
+        | '\u{F900}'..='\u{FAFF}'
+        // Hiragana
+        | '\u{3040}'..='\u{309F}'
+        // Katakana
+        | '\u{30A0}'..='\u{30FF}'
+        // Katakana Phonetic Extensions
+        | '\u{31F0}'..='\u{31FF}'
+        // Hangul Syllables
+        | '\u{AC00}'..='\u{D7AF}'
+        // Hangul Jamo
+        | '\u{1100}'..='\u{11FF}'
+        // Compatibility Jamo
+        | '\u{3131}'..='\u{318E}'
+        // Hangul Jamo Extended A and B
+        | '\u{A960}'..='\u{A97F}'
+        | '\u{D7B0}'..='\u{D7FF}'
+        // CJK Symbols and Punctuation
+        | '\u{3000}'..='\u{303F}'
+        // Halfwidth and Fullwidth Forms
+        // This chart includes fullwidth letters (ＬＩＫＥ　ＴＨＩＳ)
+        // and fullwidth numbers (１２３４５６７８９０)
+        // that should not be included.
+        | '\u{FF01}'..='\u{FF0F}'
+        | '\u{FF1A}'..='\u{FF20}'
+        | '\u{FF3B}'..='\u{FF40}'
+        | '\u{FF5B}'..='\u{FF65}'
+        | '\u{FF61}'..='\u{FFBE}'
+        | '\u{FFC2}'..='\u{FFC7}'
+        | '\u{FFCA}'..='\u{FFCF}'
+        | '\u{FFD2}'..='\u{FFD7}'
+        | '\u{FFDA}'..='\u{FFDC}'
+        // Vertical Forms
+        | '\u{FE10}'..='\u{FE19}'
+        // CJK Compatibility Forms
+        | '\u{FE30}'..='\u{FE4F}'
+        // Small Form Variants
+        | '\u{FE50}'..='\u{FE6F}'
+    )
 }
 
 fn is_wrap_point(
     i_byte: usize,
     c: char,
     prev_c: Option<char>,
+    next_c: Option<char>,
     inside_verb: bool,
     line_len: usize,
     args: &Args,
 ) -> bool {
+    // Wrap at CJK characters if enabled, it will ignore wrap_chars constraint
+    ((args.wrap_cjk && is_cjk_wrap_point(c, next_c)) ||
     // Character c must be a valid wrapping character
-    args.wrap_chars.contains(&c)
+    args.wrap_chars.contains(&c))
         // Must not be preceded by '\'
         && prev_c != Some('\\')
         // Do not break inside a \verb|...|
@@ -92,25 +205,40 @@ fn find_wrap_point(
     let wrap_boundary = args.wrapmin - indent_length;
     let line_len = line.len();
 
-    for (i_char, (i_byte, c)) in line.char_indices().enumerate() {
-        if i_char >= wrap_boundary && wrap_point.is_some() {
+    let mut current_width = 0;
+    // Peekable iterator over char indices
+    let mut chars_iter = line.char_indices().peekable();
+
+    while let Some((i_byte, c)) = chars_iter.next() {
+        // cumulative character width
+        current_width += if args.wrap_by_visual_len {
+            c.width().unwrap_or(0)
+        } else {
+            1
+        };
+        // Stop if we have exceeded the wrap boundary and found a wrap point
+        if current_width > wrap_boundary && wrap_point.is_some() {
             break;
         }
         // Special wrapping for lines containing \verb|...|
         let inside_verb =
             is_inside_verb(i_byte, contains_verb, verb_start, verb_end);
-        if is_wrap_point(i_byte, c, prev_c, inside_verb, line_len, args) {
-            if after_non_percent {
-                // Get index of the byte after which
-                // line break will be inserted.
-                // Note this may not be a valid char index.
-                let wrap_byte = i_byte + c.len_utf8() - 1;
-                // Don't wrap here if this is the end of the line anyway
-                if wrap_byte + 1 < line_len {
-                    wrap_point = Some(wrap_byte);
-                }
+        let next_c = chars_iter.peek().map(|(_, c)| *c);
+        if is_wrap_point(i_byte, c, prev_c, next_c, inside_verb, line_len, args)
+            && after_non_percent
+        {
+            // Get index of the byte after which
+            // a line break will be inserted.
+            // Note this may not be a valid char index.
+            let wrap_byte = i_byte + c.len_utf8() - 1;
+            // Don't wrap here if this is the end of the line anyway
+            if wrap_byte + 1 < line_len {
+                wrap_point = Some(wrap_byte);
             }
-        } else if c != '%' {
+        }
+        // Unlike English,
+        // a CJK character can be both a wrap point and a non-% character
+        if c != '%' {
             after_non_percent = true;
         }
         prev_c = Some(c);
@@ -144,7 +272,16 @@ pub fn apply_wrap<'a>(
     let comment_index = find_comment_index(line, pattern);
 
     match wrap_point {
-        Some(p) if p <= args.wraplen => {}
+        Some(p)
+            if {
+                // Calculate line visual length if wrap_by_visual_len is enabled
+                (if args.wrap_by_visual_len {
+                    line.get(..=p)
+                        .map_or(0, unicode_width::UnicodeWidthStr::width)
+                } else {
+                    p
+                }) <= args.wraplen
+            } => {}
         _ => {
             record_line_log(
                 logs,

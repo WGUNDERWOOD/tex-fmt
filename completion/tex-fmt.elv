@@ -46,6 +46,8 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand -r 'Recursively search for files to format'
             cand --recursive 'Recursively search for files to format'
             cand --format-tables 'Format tables'
+            cand --wrap-by-visual-len 'Use visual length instead of character count when wrapping'
+            cand --wrap-cjk 'Allow wrap at CJK characters'
             cand -h 'Print help'
             cand --help 'Print help'
             cand -V 'Print version'

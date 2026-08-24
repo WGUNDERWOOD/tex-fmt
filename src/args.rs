@@ -55,6 +55,10 @@ pub struct Args {
     pub recursive: bool,
     /// Enable table formatting
     pub format_tables: bool,
+    /// Use visual length instead of character count when wrapping
+    pub wrap_by_visual_len: bool,
+    /// Allow wrap at CJK characters
+    pub wrap_cjk: bool,
 }
 
 /// Arguments using Options to track CLI/config file/default values
@@ -101,6 +105,10 @@ pub struct OptionArgs {
     pub recursive: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub format_tables: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub wrap_by_visual_len: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub wrap_cjk: Option<bool>,
 }
 
 fn merge_wrap_chars(left: &mut Vec<char>, right: Vec<char>) {
@@ -169,6 +177,8 @@ impl Default for OptionArgs {
             files: vec![],
             recursive: Some(false),
             format_tables: Some(false),
+            wrap_by_visual_len: Some(false),
+            wrap_cjk: Some(false),
         }
     }
 }
@@ -197,6 +207,8 @@ impl OptionArgs {
             files: vec![],
             recursive: None,
             format_tables: None,
+            wrap_by_visual_len: None,
+            wrap_cjk: None,
         }
     }
 }
@@ -260,6 +272,8 @@ impl Args {
             files: args.files,
             recursive: args.recursive.unwrap(),
             format_tables: args.format_tables.unwrap(),
+            wrap_by_visual_len: args.wrap_by_visual_len.unwrap(),
+            wrap_cjk: args.wrap_cjk.unwrap(),
         }
     }
 
@@ -397,6 +411,12 @@ impl fmt::Display for Args {
         display_arg_line(f, "wrap", &self.wrap.to_string())?;
         display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
+        display_arg_line(f, "wrap-cjk", &self.wrap_cjk.to_string())?;
+        display_arg_line(
+            f,
+            "wrap-by-visual-len",
+            &self.wrap_by_visual_len.to_string(),
+        )?;
         display_arg_line(f, "tabsize", &self.tabsize.to_string())?;
         display_arg_line(f, "tabchar", &self.tabchar.to_string())?;
         display_arg_line(f, "stdin", &self.stdin.to_string())?;
