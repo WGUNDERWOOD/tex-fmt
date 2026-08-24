@@ -100,10 +100,10 @@ pub fn format_file(
                     &no_indent_envs_end,
                 );
 
-                #[allow(clippy::cast_possible_wrap)]
-                let indent_length =
-                    usize::try_from(indent.visual * args.tabsize as i8)
-                        .expect("Visual indent is non-negative.");
+                let indent_length = usize::try_from(
+                    i16::from(indent.visual) * i16::from(args.tabsize),
+                )
+                .expect("Visual indent is non-negative.");
 
                 // Wrap the line before applying the indent, and loop back
                 // if the line needed wrapping.

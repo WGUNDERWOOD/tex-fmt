@@ -89,6 +89,11 @@ fn find_wrap_point(
 
     let verb_end = get_verb_end(verb_start, line);
     let mut after_non_percent = verb_start == Some(0);
+    // If the indentation alone reaches the wrap column, the line cannot be
+    // made any shorter by wrapping, so don't attempt to.
+    if indent_length >= args.wrapmin {
+        return None;
+    }
     let wrap_boundary = args.wrapmin - indent_length;
     let line_len = line.len();
 
