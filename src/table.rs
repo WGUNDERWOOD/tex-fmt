@@ -162,12 +162,19 @@ fn find_table_positions(text: &str) -> Vec<(usize, usize)> {
     let mut table_positions = vec![];
     let mut begin: usize = 0;
     let mut end: usize;
+    let mut depth: usize = 0;
     for (linum, line) in text.lines().enumerate() {
         if contains_table_begin(line) {
-            begin = linum;
-        } else if contains_table_end(line) {
-            end = linum;
-            table_positions.push((begin, end));
+            if depth == 0 {
+                begin = linum;
+            }
+            depth += 1;
+        } else if contains_table_end(line) && depth > 0 {
+            depth -= 1;
+            if depth == 0 {
+                end = linum;
+                table_positions.push((begin, end));
+            }
         }
     }
     table_positions
