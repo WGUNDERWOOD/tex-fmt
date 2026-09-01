@@ -89,6 +89,17 @@ fn find_wrap_point(
 
     let verb_end = get_verb_end(verb_start, line);
     let mut after_non_percent = verb_start == Some(0);
+
+    // Indentation alone can reach or exceed wrapmin under deep nesting
+    // (many nested environments, and/or a large --tabsize). When it does,
+    // there's no room left to look for a wrap point: `args.wrapmin -
+    // indent_length` would underflow, and even a saturated boundary of 0
+    // only produces a word-by-word shredding of the line with one warning
+    // per word. Give up cleanly instead - apply_wrap's existing "Line
+    // cannot be wrapped" warning already covers this, once per line.
+    if indent_length >= args.wrapmin {
+        return None;
+    }
     let wrap_boundary = args.wrapmin - indent_length;
     let line_len = line.len();
 
@@ -170,4 +181,43 @@ pub fn apply_wrap<'a>(
         let next_line = &line[p + 1..];
         [this_line, next_line_start, next_line]
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::args::Args;
+    use crate::format::Pattern;
+
+    /// This is the exact repro that used to underflow `args.wrapmin -
+    /// indent_length` (panicking under overflow checks, or handing back a
+    /// garbage boundary otherwise): default wraplen/wrapmin, and an
+    /// indentation deep enough to reach past wrapmin on its own.
+    #[test]
+    fn gives_up_cleanly_when_indent_alone_exceeds_wrapmin() {
+        let args = Args::default();
+        assert_eq!(args.wrapmin, 70);
+        let line = "word ".repeat(10);
+        let pattern = Pattern::new(&line);
+
+        // indent_length (72) > wrapmin (70): used to underflow.
+        let result = find_wrap_point(&line, 72, &args, &pattern);
+        assert_eq!(result, None);
+
+        // Exactly equal to wrapmin also has no room left.
+        let result = find_wrap_point(&line, 70, &args, &pattern);
+        assert_eq!(result, None);
+    }
+
+    /// Sanity check that normal (shallow-indent) wrapping is unaffected:
+    /// a wrap point should still be found at a word boundary.
+    #[test]
+    fn finds_a_wrap_point_when_indent_is_small() {
+        let args = Args::default();
+        let line = "word ".repeat(20);
+        let pattern = Pattern::new(&line);
+
+        let result = find_wrap_point(&line, 0, &args, &pattern);
+        assert!(result.is_some());
+    }
 }

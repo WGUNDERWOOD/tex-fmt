@@ -1,0 +1,2 @@
+--tabsize 8
+--wraplen 80
