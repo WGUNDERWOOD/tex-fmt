@@ -4,12 +4,13 @@ use crate::args::Args;
 use crate::logging::{record_file_log, Log};
 use log::Level::{Error, Info};
 use std::fs;
+use std::io;
 use std::path::Path;
 
 /// Write a formatted file to disk
-fn write_file(file: &Path, text: &str) {
-    let filepath = file.canonicalize().unwrap();
-    fs::write(filepath, text).expect("Could not write the file");
+fn write_file(file: &Path, text: &str) -> io::Result<()> {
+    let filepath = file.canonicalize()?;
+    fs::write(filepath, text)
 }
 
 /// Handle the newly formatted file
@@ -26,7 +27,15 @@ pub fn process_output(
         record_file_log(logs, Error, file, "Incorrect formatting.");
         return 1;
     } else if text != new_text {
-        write_file(file, new_text);
+        if let Err(e) = write_file(file, new_text) {
+            record_file_log(
+                logs,
+                Error,
+                file,
+                &format!("Could not write file: {e}"),
+            );
+            return 1;
+        }
         if args.fail_on_change {
             record_file_log(logs, Info, file, "Fixed incorrect formatting.");
             return 1;
