@@ -1,40 +1,39 @@
 //! Formatting tables
 
 use crate::format::{Pattern, State};
-use crate::regexes::{TABLES_BEGIN, TABLES_END};
+use crate::regexes::{
+    RE_TABLE_DOUBLE_SPACE, RE_TABLE_FIRST_NON_WHITE, RE_TABLE_INDENT,
+    RE_TABLE_LINE_BREAK, RE_TABLE_TO_BREAK, TABLES_BEGIN, TABLES_END,
+};
 use crate::LINE_END;
 use itertools::Itertools;
-use regex::Regex;
 
 // Remove all double spaces from the table
 fn remove_double_spaces(text: &str) -> String {
-    let re = Regex::new(r"(\S) {2,}").unwrap();
-    re.replace_all(text, "$1 ").to_string()
+    RE_TABLE_DOUBLE_SPACE.replace_all(text, "$1 ").to_string()
 }
 
 // Add line breaks after "\\"
 fn add_line_breaks(text: &str) -> (String, bool) {
-    let re_break = Regex::new(r"\\\\ .*\S").unwrap();
-    let re_indent = Regex::new(r"^\s*\S").unwrap();
-    let re_first_non_white = Regex::new(r"\S.*").unwrap();
-    let re_to_break = Regex::new(r"^[^\\]*\\\\").unwrap();
     let mut new_text = String::new();
     let mut finished: bool = true;
     for line in text.lines() {
-        if re_break.is_match(line) {
+        if RE_TABLE_LINE_BREAK.is_match(line) {
             finished = false;
-            let indent = re_indent.find(line).map_or("", |m| {
+            let indent = RE_TABLE_INDENT.find(line).map_or("", |m| {
                 let s = m.as_str();
                 &s[..s.len() - 1]
             });
-            let next_line_long = re_break.find(line).map_or("", |m| {
-                let s = m.as_str();
-                &s[2..]
-            });
-            let next_line = re_first_non_white
+            let next_line_long =
+                RE_TABLE_LINE_BREAK.find(line).map_or("", |m| {
+                    let s = m.as_str();
+                    &s[2..]
+                });
+            let next_line = RE_TABLE_FIRST_NON_WHITE
                 .find(next_line_long)
                 .map_or("", |m| m.as_str());
-            let this_line = re_to_break.find(line).map_or("", |m| m.as_str());
+            let this_line =
+                RE_TABLE_TO_BREAK.find(line).map_or("", |m| m.as_str());
             new_text.push_str(this_line);
             new_text.push_str(LINE_END);
             new_text.push_str(indent);
