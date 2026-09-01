@@ -11,17 +11,29 @@ use crate::config::get_config_args;
 use crate::format::format_file;
 use crate::logging::{format_logs, Log};
 
+/// Build the JS return object holding just an error message
+fn error_object(message: &str) -> JsValue {
+    let js_object = Object::new();
+    Reflect::set(&js_object, &"output".into(), &JsValue::from_str("")).unwrap();
+    Reflect::set(&js_object, &"logs".into(), &JsValue::from_str(message))
+        .unwrap();
+    js_object.into()
+}
+
 /// Main function for WASM interface with JS
 ///
 /// # Panics
 ///
-/// This function panics if the config cannot be parsed
+/// This function panics if the JS return object cannot be constructed
 #[wasm_bindgen]
 #[must_use]
 pub fn main(text: &str, config: &str) -> JsValue {
     // Get args
     let config = Some((PathBuf::new(), String::new(), config.to_string()));
-    let mut args: OptionArgs = get_config_args(config).unwrap();
+    let mut args: OptionArgs = match get_config_args(config) {
+        Ok(args) => args.unwrap_or_else(OptionArgs::new),
+        Err(message) => return error_object(&message),
+    };
     args.merge(OptionArgs::default());
     let mut args = Args::from(args);
     args.stdin = true;

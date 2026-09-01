@@ -202,13 +202,16 @@ impl OptionArgs {
 }
 
 /// Get all arguments from CLI, config file, and defaults, and merge them
-#[must_use]
-pub fn get_args() -> Args {
+///
+/// # Errors
+///
+/// Returns an error message if the config file cannot be read or parsed.
+pub fn get_args() -> Result<Args, String> {
     // get args from CLI
     let mut args: OptionArgs = get_cli_args(None);
 
-    let config = get_config(&args);
-    let config_args: Option<OptionArgs> = get_config_args(config);
+    let config = get_config(&args)?;
+    let config_args: Option<OptionArgs> = get_config_args(config)?;
 
     // merge config_args into args
     if let Some(c) = config_args {
@@ -217,7 +220,7 @@ pub fn get_args() -> Args {
 
     // merge default args into args
     args.merge(OptionArgs::default());
-    Args::from(args)
+    Ok(Args::from(args))
 }
 
 impl Args {
