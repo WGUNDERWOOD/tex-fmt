@@ -31,8 +31,8 @@ fn test_file(
 
     // Merge arguments from config file
     args.config = config_file.cloned();
-    let config = get_config(&args);
-    let config_args = get_config_args(config);
+    let config = get_config(&args).unwrap();
+    let config_args = get_config_args(config).unwrap();
     if let Some(c) = config_args {
         args.merge(c);
     }
@@ -229,4 +229,125 @@ fn test_subset() {
         pass &= run_tests_in_dir(&test_dir.unwrap());
     }
     assert!(pass);
+}
+
+/// Run `get_config_args` on raw config file contents, as if read from disk
+fn get_config_args_from_str(
+    contents: &str,
+) -> Result<Option<OptionArgs>, String> {
+    let config = Some((
+        PathBuf::from("tex-fmt.toml"),
+        "tex-fmt.toml".to_string(),
+        contents.to_string(),
+    ));
+    get_config_args(config)
+}
+
+#[test]
+fn test_config_wraplen_wrong_type() {
+    let result = get_config_args_from_str("wraplen = \"80\"\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("wraplen"));
+}
+
+#[test]
+fn test_config_wrap_chars_empty_string() {
+    let result = get_config_args_from_str("wrap-chars = [\"\"]\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("wrap-chars"));
+}
+
+#[test]
+fn test_config_wrap_chars_too_long() {
+    let result = get_config_args_from_str("wrap-chars = [\"ab\"]\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("wrap-chars"));
+}
+
+#[test]
+fn test_config_check_wrong_type() {
+    let result = get_config_args_from_str("check = \"yes\"\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("check"));
+}
+
+#[test]
+fn test_config_invalid_toml_syntax() {
+    let result = get_config_args_from_str("this is not valid toml [[[");
+    assert!(result.is_err());
+}
+
+#[test]
+fn test_config_valid() {
+    let result = get_config_args_from_str(
+        "wraplen = 80\ncheck = true\nwrap-chars = [\" \", \",\"]\n",
+    );
+    let args = result.unwrap().unwrap();
+    assert_eq!(args.wraplen, Some(80));
+    assert_eq!(args.check, Some(true));
+    assert_eq!(args.wrap_chars, vec![' ', ',']);
+}
+
+#[test]
+fn test_config_tabsize_out_of_range() {
+    // tabsize is a u8; 300 doesn't fit.
+    let result = get_config_args_from_str("tabsize = 300\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("tabsize"));
+}
+
+#[test]
+fn test_config_wraplen_float() {
+    let result = get_config_args_from_str("wraplen = 80.5\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("wraplen"));
+}
+
+#[test]
+fn test_config_wraplen_negative() {
+    // wraplen is a usize; negative doesn't fit.
+    let result = get_config_args_from_str("wraplen = -1\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("wraplen"));
+}
+
+#[test]
+fn test_config_unreadable_file() {
+    // get_config (not get_config_args): exercises the file-read error path
+    // directly, since get_config_args_from_str always hands back contents
+    // that were already "read" successfully.
+    let mut option_args = OptionArgs::new();
+    option_args.config =
+        Some(PathBuf::from("/nonexistent/dir/tex-fmt.toml"));
+    let result = get_config(&option_args);
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("failed to read"));
+}
+
+#[test]
+fn test_config_lists_wrong_type() {
+    let result = get_config_args_from_str("lists = \"itemize\"\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("lists"));
+}
+
+#[test]
+fn test_config_lists_non_string_entry() {
+    let result = get_config_args_from_str("lists = [\"itemize\", 5]\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("lists"));
+}
+
+#[test]
+fn test_config_verbosity_unrecognized() {
+    let result = get_config_args_from_str("verbosity = \"debug\"\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("verbosity"));
+}
+
+#[test]
+fn test_config_tabchar_unrecognized() {
+    let result = get_config_args_from_str("tabchar = \"spaces\"\n");
+    let message = result.expect_err("expected an error, not a panic");
+    assert!(message.contains("tabchar"));
 }

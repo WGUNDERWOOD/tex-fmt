@@ -8,13 +8,26 @@
 #![warn(clippy::pedantic)]
 #![allow(clippy::multiple_crate_versions)]
 
+use log::LevelFilter;
 use std::process::ExitCode;
 use tex_fmt::args::get_args;
 use tex_fmt::format::run;
 use tex_fmt::logging::{init_logger, print_logs, Log};
 
 fn main() -> ExitCode {
-    let mut args = get_args();
+    let mut args = match get_args() {
+        Ok(args) => args,
+        Err(message) => {
+            // Verbosity isn't resolved yet, so fall back to the default.
+            // There's no single file this error is about (it may span
+            // several candidate config paths), so print it directly rather
+            // than through record_file_log/print_logs, which always renders
+            // a (possibly empty) file name before the message.
+            init_logger(LevelFilter::Warn);
+            log::error!("tex-fmt: {message}");
+            return ExitCode::from(1);
+        }
+    };
     init_logger(args.verbosity);
 
     let mut logs = Vec::<Log>::new();
