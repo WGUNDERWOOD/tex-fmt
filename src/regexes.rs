@@ -83,3 +83,25 @@ pub static RE_SPLITTING_SHARED_LINE_CAPTURE: LazyLock<Regex> =
         )
         .unwrap()
     });
+
+// Regex to match a non-space followed by 2+ spaces
+pub static RE_TABLE_DOUBLE_SPACE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(\S) {2,}").unwrap());
+
+// Regex to match "\\" followed by a space and more non-whitespace text on
+// the same line (i.e. a line break with content after it worth moving down)
+pub static RE_TABLE_LINE_BREAK: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\\\\ .*\S").unwrap());
+
+// Regex to match a line's leading whitespace plus its first non-whitespace
+// character, so the indent alone can be sliced off by the caller
+pub static RE_TABLE_INDENT: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^\s*\S").unwrap());
+
+// Regex to match from the first non-whitespace character onward
+pub static RE_TABLE_FIRST_NON_WHITE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\S.*").unwrap());
+
+// Regex to match up to and including the first "\\" on a line
+pub static RE_TABLE_TO_BREAK: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^[^\\]*\\\\").unwrap());
