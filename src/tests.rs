@@ -3,6 +3,7 @@ use crate::cli::*;
 use crate::config::*;
 use crate::format::format_file;
 use crate::logging::*;
+use crate::write::process_output;
 use colored::Colorize;
 use merge::Merge;
 use similar::{ChangeTag, TextDiff};
@@ -229,4 +230,70 @@ fn test_subset() {
         pass &= run_tests_in_dir(&test_dir.unwrap());
     }
     assert!(pass);
+}
+
+/// Cleans up a temp file on drop, including on panic/early return, and
+/// restores write permission first so removal doesn't itself fail.
+#[cfg(unix)]
+struct TempFileGuard(PathBuf);
+
+#[cfg(unix)]
+impl Drop for TempFileGuard {
+    fn drop(&mut self) {
+        use std::os::unix::fs::PermissionsExt;
+        let writable = std::fs::Permissions::from_mode(0o644);
+        let _ = fs::set_permissions(&self.0, writable);
+        let _ = fs::remove_file(&self.0);
+    }
+}
+
+/// Writing to a read-only file should report an error, not panic
+#[test]
+#[cfg(unix)]
+fn test_write_readonly_file_does_not_panic() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let path = std::env::temp_dir().join(format!(
+        "tex-fmt-test-readonly-{}-{:?}.tex",
+        std::process::id(),
+        std::thread::current().id()
+    ));
+    fs::write(&path, "old content").unwrap();
+    let _guard = TempFileGuard(path.clone());
+
+    let readonly = std::fs::Permissions::from_mode(0o444);
+    fs::set_permissions(&path, readonly).unwrap();
+
+    let mut option_args = OptionArgs::new();
+    option_args.merge(OptionArgs::default());
+    let args = Args::from(option_args);
+
+    let mut logs = Vec::<Log>::new();
+    let exit_code =
+        process_output(&args, &path, "old content", "new content", &mut logs);
+
+    // Restore permissions so the contents can be inspected; the guard also
+    // restores them on drop, so this is safe to call again there.
+    let writable = std::fs::Permissions::from_mode(0o644);
+    fs::set_permissions(&path, writable).unwrap();
+    let file_contents = fs::read_to_string(&path).unwrap();
+
+    if file_contents == "old content" {
+        // The write was actually blocked: assert the failure is reported
+        // cleanly instead of panicking.
+        assert_eq!(exit_code, 1);
+        assert!(logs.iter().any(|l| l.level == log::Level::Error));
+    } else {
+        // Permission bits weren't enforced (e.g. running as root, or a
+        // filesystem/container that ignores them) - the read-only scenario
+        // wasn't actually exercised. Still assert the write succeeded
+        // cleanly rather than silently asserting nothing.
+        eprintln!(
+            "test_write_readonly_file_does_not_panic: read-only permission \
+             was not enforced (likely running as root); skipping the \
+             failure-path assertions, only checking the write succeeded"
+        );
+        assert_eq!(file_contents, "new content");
+        assert_eq!(exit_code, 0);
+    }
 }
