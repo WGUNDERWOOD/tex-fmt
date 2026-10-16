@@ -45,26 +45,66 @@ fn is_wrap_point(
         && (i_byte + 1 < line_len)
 }
 
-fn get_verb_end(verb_byte_start: Option<usize>, line: &str) -> Option<usize> {
-    verb_byte_start.map(|v| {
-        line[v..]
-            .match_indices(['|', '+'])
-            .nth(1)
-            .map(|(i, _)| i + v)
-    })?
+/// Find the byte index of the closing delimiter of a verb command
+/// starting at byte index `start`, such as
+/// `\verb|...|`, `\lstinline[opts]{...}` or `\mintinline{lang}|...|`.
+/// If no closing delimiter is found, the verb is assumed to extend
+/// to the end of the line.
+fn get_verb_end(start: usize, line: &str) -> usize {
+    let last = line.len().saturating_sub(1);
+    // Skip the command name
+    let name_len = line[start + 1..]
+        .find(|c: char| !c.is_ascii_alphabetic())
+        .unwrap_or(line.len() - start - 1);
+    let name = &line[start + 1..start + 1 + name_len];
+    let mut pos = start + 1 + name_len;
+    // Skip an optional star or [options] argument
+    if line[pos..].starts_with('*') {
+        pos += 1;
+    }
+    if line[pos..].starts_with('[') {
+        match line[pos..].find(']') {
+            Some(i) => pos += i + 1,
+            None => return last,
+        }
+    }
+    // Skip the {language} argument of \mintinline
+    if name == "mintinline" && line[pos..].starts_with('{') {
+        match line[pos..].find('}') {
+            Some(i) => pos += i + 1,
+            None => return last,
+        }
+    }
+    // Find the matching closing delimiter
+    let Some(open) = line[pos..].chars().next() else {
+        return last;
+    };
+    let close = if open == '{' { '}' } else { open };
+    let body = pos + open.len_utf8();
+    line[body..].find(close).map_or(last, |i| body + i)
 }
 
-fn is_inside_verb(
-    i_byte: usize,
-    contains_verb: bool,
-    verb_start: Option<usize>,
-    verb_end: Option<usize>,
-) -> bool {
-    if contains_verb {
-        (verb_start.unwrap() <= i_byte) && (i_byte <= verb_end.unwrap())
-    } else {
-        false
+/// Find the byte ranges of all verb commands in a line
+fn get_verb_ranges(line: &str) -> Vec<(usize, usize)> {
+    let mut starts: Vec<usize> = VERBS
+        .iter()
+        .flat_map(|&x| line.match_indices(x).map(|(i, _)| i))
+        .collect();
+    starts.sort_unstable();
+    let mut ranges: Vec<(usize, usize)> = vec![];
+    for start in starts {
+        if ranges.last().is_some_and(|&(_, end)| start <= end) {
+            continue;
+        }
+        ranges.push((start, get_verb_end(start, line)));
     }
+    ranges
+}
+
+fn is_inside_verb(i_byte: usize, verb_ranges: &[(usize, usize)]) -> bool {
+    verb_ranges
+        .iter()
+        .any(|&(start, end)| start <= i_byte && i_byte <= end)
 }
 
 /// Find the best place to break a long line.
@@ -79,11 +119,12 @@ fn find_wrap_point(
     let mut prev_c: Option<char> = None;
     let contains_verb =
         pattern.contains_verb && VERBS.iter().any(|x| line.contains(x));
-    let verb_start: Option<usize> = contains_verb
-        .then(|| VERBS.iter().filter_map(|&x| line.find(x)).min().unwrap());
-
-    let verb_end = get_verb_end(verb_start, line);
-    let mut after_non_percent = verb_start == Some(0);
+    let verb_ranges = if contains_verb {
+        get_verb_ranges(line)
+    } else {
+        vec![]
+    };
+    let mut after_non_percent = verb_ranges.first().map(|r| r.0) == Some(0);
     let wrap_boundary = args.wrapmin - indent_length;
     let line_len = line.len();
 
@@ -92,8 +133,7 @@ fn find_wrap_point(
             break;
         }
         // Special wrapping for lines containing \verb|...|
-        let inside_verb =
-            is_inside_verb(i_byte, contains_verb, verb_start, verb_end);
+        let inside_verb = is_inside_verb(i_byte, &verb_ranges);
         if is_wrap_point(i_byte, c, prev_c, inside_verb, line_len, args) {
             if after_non_percent {
                 // Get index of the byte after which

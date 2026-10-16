@@ -3,6 +3,31 @@
 \usepackage{listings}
 
 \begin{document}
-  \lstinline|long code long code long code long code long code long code long code long code|
-  \lstinline+long code long code long code long code long code long code long code long code+
+
+% Do not break a line inside \lstinline in any of its forms
+
+\lstinline{long code long code long code long code long code long code long code long code}
+
+\lstinline|long code long code long code long code long code long code long code long code|
+
+\lstinline+long code long code long code long code long code long code long code long code+
+
+\lstinline[language=Python]|long code long code long code long code long code long code long|
+
+\lstinline[language=Python]{long code long code long code long code long code long code long}
+
+% Ok to break a line before or after \lstinline
+
+Some words in a sentence \lstinline{code code code code code code code code code code code}
+
+\lstinline!code code code code code code code code code! some words in a long sentence
+
+% Also protect \mintinline with a language argument
+
+Some words \mintinline{python}|code code code code code code code code code code code code|
+
+% Protect every verb on a line, not just the first
+
+Words \verb|a b| and then some more words \lstinline{code code code code code code code code}
+
 \end{document}
