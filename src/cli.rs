@@ -70,6 +70,7 @@ pub fn get_cli_args(matches: Option<ArgMatches>) -> OptionArgs {
         wrap,
         wraplen: arg_matches.get_one::<usize>("wraplen").copied(),
         wrapmin: None,
+        wrap_indent: get_flag(&arg_matches, "wrap-indent"),
         tabsize: arg_matches.get_one::<u8>("tabsize").copied(),
         tabchar,
         stdin: get_flag(&arg_matches, "stdin"),

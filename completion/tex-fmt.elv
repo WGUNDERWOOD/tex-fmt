@@ -32,6 +32,7 @@ set edit:completion:arg-completer[tex-fmt] = {|@words|
             cand --fail-on-change 'Format files and return non-zero exit code if files are modified'
             cand -n 'Do not wrap long lines'
             cand --nowrap 'Do not wrap long lines'
+            cand --wrap-indent 'Indent continuation lines of wrapped lines'
             cand --usetabs 'Use tabs instead of spaces for indentation'
             cand -s 'Process stdin as a single file, output to stdout'
             cand --stdin 'Process stdin as a single file, output to stdout'

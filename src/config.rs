@@ -152,6 +152,7 @@ pub fn get_config_args(
         wrapmin: config
             .get("wrapmin")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),
+        wrap_indent: config.get("wrap-indent").map(|x| x.as_bool().unwrap()),
         tabsize: config
             .get("tabsize")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),

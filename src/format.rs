@@ -3,16 +3,17 @@
 use crate::args::{Args, TabChar};
 use crate::ignore::{get_ignore, Ignore};
 use crate::indent::{apply_indent, calculate_indent, Indent};
-use crate::logging::{record_file_log, Log};
+use crate::logging::{record_file_log, record_line_log, Log};
 use crate::read::{read, read_stdin};
 use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, RE_SPLITTING, VERBS};
 use crate::subs;
 use crate::table::{format_tables, is_inside_table, Table};
 use crate::verbatim::{get_verbatim, Verbatim};
-use crate::wrap::{apply_wrap, needs_wrap};
+use crate::wrap::{apply_wrap, is_wrap_continuation, needs_wrap};
 use crate::write::process_output;
 use crate::LINE_END;
-use log::Level::{Info, Warn};
+use log::Level::{Info, Trace, Warn};
+use log::LevelFilter;
 use std::iter::zip;
 use std::path::{Path, PathBuf};
 
@@ -38,6 +39,8 @@ pub fn format_file(
     let mut state = State::new();
     let mut queue: Vec<(usize, String)> = vec![];
     let mut new_text = String::with_capacity(2 * old_text.len());
+    let mut prev_line = String::new();
+    let mut prev_pattern = Pattern::new(&prev_line);
 
     // Select the character used for indentation.
     let indent_char = match args.tabchar {
@@ -87,7 +90,7 @@ pub fn format_file(
 
                 // Calculate the indent based on the current state
                 // and the patterns in the line.
-                let indent = calculate_indent(
+                let mut indent = calculate_indent(
                     &line,
                     &mut temp_state,
                     logs,
@@ -99,6 +102,31 @@ pub fn format_file(
                     &no_indent_envs_begin,
                     &no_indent_envs_end,
                 );
+
+                // Continuations of wrapped lines get one extra level of
+                // indentation to make the wrap visually evident. This is
+                // decided before wrapping so that the extra indent counts
+                // towards the wrap length of this line.
+                if is_wrap_continuation(
+                    &line,
+                    &prev_line,
+                    &prev_pattern,
+                    args,
+                    &pattern,
+                ) {
+                    if args.verbosity == LevelFilter::Trace {
+                        record_line_log(
+                            logs,
+                            Trace,
+                            file,
+                            temp_state.linum_new,
+                            temp_state.linum_old,
+                            &line,
+                            "Indenting wrapped line continuation.",
+                        );
+                    }
+                    indent.visual += 1;
+                }
 
                 #[allow(clippy::cast_possible_wrap)]
                 let indent_length =
@@ -142,6 +170,8 @@ pub fn format_file(
             state = temp_state;
             new_text.push_str(&line);
             new_text.push_str(LINE_END);
+            prev_line = line;
+            prev_pattern = pattern;
             state.linum_new += 1;
         } else if let Some((linum_old, line)) = old_lines.next() {
             queue.push((linum_old, line.to_string()));

@@ -115,8 +115,10 @@ fn get_back(
     back
 }
 
-/// Calculate delimiter-based indent and dedent together for performance
-fn get_diff_back_delim(line: &str) -> (i8, i8) {
+/// Calculate delimiter-based indent and dedent together for performance.
+/// The first element is the number of unclosed delimiters on the line.
+#[must_use]
+pub fn get_diff_back_delim(line: &str) -> (i8, i8) {
     let mut diff: i8 = 0;
     let mut back: i8 = 0;
     for c in line.chars() {

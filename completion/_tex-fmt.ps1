@@ -35,6 +35,7 @@ Register-ArgumentCompleter -Native -CommandName 'tex-fmt' -ScriptBlock {
             [CompletionResult]::new('--fail-on-change', '--fail-on-change', [CompletionResultType]::ParameterName, 'Format files and return non-zero exit code if files are modified')
             [CompletionResult]::new('-n', '-n', [CompletionResultType]::ParameterName, 'Do not wrap long lines')
             [CompletionResult]::new('--nowrap', '--nowrap', [CompletionResultType]::ParameterName, 'Do not wrap long lines')
+            [CompletionResult]::new('--wrap-indent', '--wrap-indent', [CompletionResultType]::ParameterName, 'Indent continuation lines of wrapped lines')
             [CompletionResult]::new('--usetabs', '--usetabs', [CompletionResultType]::ParameterName, 'Use tabs instead of spaces for indentation')
             [CompletionResult]::new('-s', '-s', [CompletionResultType]::ParameterName, 'Process stdin as a single file, output to stdout')
             [CompletionResult]::new('--stdin', '--stdin', [CompletionResultType]::ParameterName, 'Process stdin as a single file, output to stdout')

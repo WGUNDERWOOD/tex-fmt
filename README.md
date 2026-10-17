@@ -242,6 +242,35 @@ To disable the formatter for a block, use `% tex-fmt: off` and `% tex-fmt: on`.
 Verbatim environments including `verbatim`, `Verbatim`, `lstlisting`
 and `minted` are automatically skipped.
 
+### Indenting wrapped lines
+
+By default, the continuation lines produced by wrapping a long line
+are indented to the same level as the line they came from.
+Pass `--wrap-indent` on the command line, or set `wrap-indent = true`
+in `tex-fmt.toml`, to indent them one extra level instead.
+
+``` tex
+\documentclass{article}
+
+\begin{document}
+
+This line is too long because it has more than eighty characters
+  inside it, so its continuation is indented one extra level.
+
+\end{document}
+```
+
+A line is treated as a continuation whenever appending its first word
+to the line above would exceed the wrapping target `wrapmin`,
+which is exactly when tex-fmt would have wrapped there.
+Lines which were wrapped by hand are therefore indented in the same
+way as lines wrapped by tex-fmt, and the output is stable under
+repeated formatting.
+Comment lines, alignment rows containing `&`, `\intertext` lines,
+and lines following a line break `\\`, a comment, or a complete
+command such as `\section{...}` always start a fresh line and are
+never indented as continuations.
+
 ### Ignoring files in recursive mode
 
 Recursive searches with `--recursive` or `-r` will
@@ -361,6 +390,7 @@ The following arguments can be passed on the command line.
 | `--recursive`          | `-r`  |         | Recursively search for files to format |
 | `--nowrap`             | `-n`  |         | Do not wrap long lines |
 | `--wraplen <N>`        | `-l`  | `80`    | Line length for wrapping |
+| `--wrap-indent`        |       |         | Indent continuation lines of wrapped lines |
 | `--tabsize <N>`        | `-t`  | `2`     | Number of characters to use as tab size |
 | `--usetabs`            |       |         | Use tabs instead of spaces for indentation |
 | `--format-tables`      |       |         | Format tables |
@@ -389,6 +419,7 @@ The first example in each row is the default value.
 | `wrap`           | bool     | `true`                 | Wrap long lines |
 | `wraplen`        | int      | `80`, `100`            | Line length for wrapping |
 | `wrapmin`        | int      | `70`, `90`             | Target minimum length for line wrapping |
+| `wrap-indent`    | bool     | `false`                | Indent continuation lines of wrapped lines |
 | `tabsize`        | int      | `2`, `4`               | Number of characters to use as tab size |
 | `tabchar`        | str      | `"space"`, `"tab"`     | Character to use for indentation |
 | `format-tables`  | bool     | `false`                | Format tables |

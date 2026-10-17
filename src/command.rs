@@ -48,6 +48,12 @@ pub fn get_cli_command() -> Command {
                 .help("Line length for wrapping [default: 80]"),
         )
         .arg(
+            Arg::new("wrap-indent")
+                .long("wrap-indent")
+                .action(SetTrue)
+                .help("Indent continuation lines of wrapped lines"),
+        )
+        .arg(
             Arg::new("tabsize")
                 .short('t')
                 .long("tabsize")

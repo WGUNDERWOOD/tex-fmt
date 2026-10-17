@@ -1,0 +1,91 @@
+\documentclass{article}
+
+\begin{document}
+
+% long line wrapped onto three lines
+This line is too long because it has more than eighty characters
+  inside it. Therefore it should be split, and since it is still too
+  long it should be split again.
+
+% already wrapped by hand, the continuation is kept
+This line was wrapped by hand with each of its lines about seventy chars
+  long so the second line is a continuation of the first one here.
+
+% after a short line the next line starts fresh
+Short line.
+This line starts fresh because it could not have been wrapped from
+  the one above.
+
+% a continuation line never exceeds the wrap length
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  cccccccccccccccccccccccccccccccccccccc
+
+% inside an environment
+\begin{theorem}
+  This line is too long because it has more than eighty characters
+    inside it. Therefore it should be split.
+\end{theorem}
+
+% list items
+\begin{itemize}
+  \item This item is too long because it has more than eighty
+      characters inside it. Therefore it should be split.
+  \item Short item
+    with a manual break.
+\end{itemize}
+
+% section title
+\section{A very long section title that goes on and on and on until
+  it needs wrapping}
+
+% text after a complete sectioning command starts fresh
+\subsection{A section title that is long but fits on one line nicely}
+Text after the heading must not be indented.
+
+% text after a complete environment begin starts fresh
+\begin{theorem}[A theorem title that is long but fits on one line ok]
+  Text inside the environment must not be extra indented.
+\end{theorem}
+
+% comment line wrapped
+% This comment is too long because it has more than eighty characters
+% inside it. Therefore it should be split.
+
+% text with trailing comment
+This line is too long because it has more than eighty characters
+  inside it. % Therefore it should be split.
+
+% text after a long comment starts fresh
+% This comment is just under seventy characters long and then there is
+text which must not be indented.
+
+% rows ending in line breaks start fresh
+\begin{gather}
+  a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} = b \\
+  a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} = c \\[4pt]
+  a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} = d \\*
+  a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} = e
+\end{gather}
+
+% alignment rows start fresh
+\begin{align}
+  a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} +
+  a_{11} + a_{12} &= b \\
+  &= c
+\end{align}
+
+% intertext lines start fresh
+\begin{align}
+  a_1 + a_2 + a_3 + a_4 + a_5 + a_6 + a_7 + a_8 + a_9 + a_{10} &= b
+  \intertext{and then}
+  c &= d
+\end{align}
+
+% long lines with brackets
+(This line is too long because it has more than eighty characters
+    inside it. Therefore it should be split. It also needs splitting
+    onto multiple lines, and the middle lines should be indented due to
+  these brackets.)
+
+\end{document}

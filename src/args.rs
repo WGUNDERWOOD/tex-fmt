@@ -29,6 +29,8 @@ pub struct Args {
     pub wraplen: usize,
     /// Wrap lines longer than this
     pub wrapmin: usize,
+    /// Indent continuation lines of wrapped lines
+    pub wrap_indent: bool,
     /// Number of characters to use as tab size
     pub tabsize: u8,
     /// Characters to use for indentation
@@ -73,6 +75,8 @@ pub struct OptionArgs {
     pub wraplen: Option<usize>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub wrapmin: Option<usize>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub wrap_indent: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub tabsize: Option<u8>,
     #[merge(strategy= merge::option::overwrite_none)]
@@ -155,6 +159,7 @@ impl Default for OptionArgs {
             wrap: Some(true),
             wraplen: Some(80),
             wrapmin: None,
+            wrap_indent: Some(false),
             tabsize: Some(2),
             tabchar: Some(TabChar::Space),
             stdin: Some(false),
@@ -183,6 +188,7 @@ impl OptionArgs {
             wrap: None,
             wraplen: None,
             wrapmin: None,
+            wrap_indent: None,
             tabsize: None,
             tabchar: None,
             stdin: None,
@@ -247,6 +253,7 @@ impl Args {
             wrap: args.wrap.unwrap(),
             wraplen: args.wraplen.unwrap(),
             wrapmin,
+            wrap_indent: args.wrap_indent.unwrap(),
             tabsize: args.tabsize.unwrap(),
             tabchar: args.tabchar.unwrap(),
             stdin: args.stdin.unwrap(),
@@ -397,6 +404,7 @@ impl fmt::Display for Args {
         display_arg_line(f, "wrap", &self.wrap.to_string())?;
         display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
+        display_arg_line(f, "wrap-indent", &self.wrap_indent.to_string())?;
         display_arg_line(f, "tabsize", &self.tabsize.to_string())?;
         display_arg_line(f, "tabchar", &self.tabchar.to_string())?;
         display_arg_line(f, "stdin", &self.stdin.to_string())?;

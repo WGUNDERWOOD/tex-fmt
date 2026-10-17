@@ -3,6 +3,7 @@
 use crate::args::Args;
 use crate::comments::find_comment_index;
 use crate::format::{Pattern, State};
+use crate::indent::get_diff_back_delim;
 use crate::logging::{record_line_log, Log};
 use crate::regexes::VERBS;
 use log::Level;
@@ -117,6 +118,104 @@ fn find_wrap_point(
     }
 
     wrap_point
+}
+
+/// Check if a line contains a character not preceded by a backslash
+fn contains_unescaped(line: &str, target: char) -> bool {
+    let mut prev_c: Option<char> = None;
+    for c in line.chars() {
+        if c == target && prev_c != Some('\\') {
+            return true;
+        }
+        prev_c = Some(c);
+    }
+    false
+}
+
+/// Check if a line ends with a LaTeX line break: `\\`, `\\*`,
+/// `\\[length]` or `\\*[length]`.
+fn ends_with_line_break(line: &str) -> bool {
+    let mut line = line.trim_end();
+    if line.ends_with(']') {
+        match line.rfind('[') {
+            Some(i) => line = &line[..i],
+            None => return false,
+        }
+    }
+    line.strip_suffix('*').unwrap_or(line).ends_with("\\\\")
+}
+
+/// Check if a line is a complete structural command, such as a
+/// `\begin{...}` or `\section{...}` with balanced brackets, which
+/// cannot have been wrapped onto the following line.
+fn is_complete_structural(line: &str, pattern: &Pattern) -> bool {
+    pattern.contains_splitting
+        && !pattern.contains_item
+        && get_diff_back_delim(line).0 <= 0
+}
+
+/// Check if a line is the continuation of a wrapped previous line.
+///
+/// A line counts as a continuation when appending its first unbreakable
+/// chunk to the previous line would overflow the wrap boundary, which is
+/// exactly the condition under which [`find_wrap_point`] breaks a line
+/// there. Because this holds both for freshly wrapped lines and for
+/// already-wrapped lines read from disk, the extra indentation given to
+/// continuations survives reformatting.
+///
+/// Lines which conventionally start fresh are never continuations:
+/// structural lines containing splitting patterns, comment lines,
+/// alignment rows containing an unescaped `&`, `\intertext` lines, and
+/// lines following a line break `\\`, a comment, or a complete
+/// structural command.
+#[must_use]
+pub fn is_wrap_continuation(
+    line: &str,
+    prev_line: &str,
+    prev_pattern: &Pattern,
+    args: &Args,
+    pattern: &Pattern,
+) -> bool {
+    if !args.wrap_indent || !args.wrap || pattern.contains_splitting {
+        return false;
+    }
+
+    // The previous line cannot have been wrapped onto this one.
+    let prev = prev_line.trim_end();
+    if prev.is_empty()
+        || ends_with_line_break(prev)
+        || contains_unescaped(prev, '%')
+        || is_complete_structural(prev, prev_pattern)
+    {
+        return false;
+    }
+
+    // This line starts fresh by convention.
+    let trimmed = line.trim_start();
+    if trimmed.is_empty()
+        || trimmed.starts_with('%')
+        || trimmed.starts_with("\\intertext{")
+        || trimmed.starts_with("\\shortintertext{")
+        || contains_unescaped(trimmed, '&')
+    {
+        return false;
+    }
+
+    // Measure the first unbreakable chunk of this line.
+    let mut chunk_len: usize = 0;
+    let mut prev_c: Option<char> = None;
+    for c in trimmed.chars() {
+        if args.wrap_chars.contains(&c) && prev_c != Some('\\') {
+            break;
+        }
+        chunk_len += 1;
+        prev_c = Some(c);
+    }
+
+    // Joining this chunk onto the previous line would overflow. The break
+    // consumed a space that trailing-space removal strips from the previous
+    // line, so the boundary case is >= rather than >.
+    prev.chars().count() + 1 + chunk_len >= args.wrapmin
 }
 
 /// Wrap a long line into a short prefix and a suffix
