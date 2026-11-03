@@ -192,6 +192,42 @@ fn run_tests_in_dir(test_dir: &fs::DirEntry) -> bool {
     pass
 }
 
+fn format_with_defaults(text: &str) -> String {
+    let mut args = OptionArgs::new();
+    args.merge(OptionArgs::default());
+    let args = Args::from(args);
+    let mut logs = Vec::<Log>::new();
+    format_file(text, &PathBuf::from("<test>"), &args, &mut logs)
+}
+
+#[test]
+fn test_line_endings_lf() {
+    let text = "\\begin{itemize}\n\\item a\n\\end{itemize}\n";
+    let formatted = "\\begin{itemize}\n  \\item a\n\\end{itemize}\n";
+    assert_eq!(format_with_defaults(text), formatted);
+}
+
+#[test]
+fn test_line_endings_crlf() {
+    let text = "\\begin{itemize}\r\n\\item a\r\n\\end{itemize}\r\n";
+    let formatted = "\\begin{itemize}\r\n  \\item a\r\n\\end{itemize}\r\n";
+    assert_eq!(format_with_defaults(text), formatted);
+}
+
+#[test]
+fn test_line_endings_mixed_take_the_first() {
+    assert_eq!(format_with_defaults("a\r\nb\nc\n"), "a\r\nb\r\nc\r\n");
+    assert_eq!(format_with_defaults("a\nb\r\nc\r\n"), "a\nb\nc\n");
+}
+
+#[test]
+fn test_line_endings_none_are_native() {
+    assert_eq!(
+        format_with_defaults("a"),
+        format!("a{}", crate::NATIVE_LINE_END)
+    );
+}
+
 #[test]
 fn test_all() {
     let mut pass = true;

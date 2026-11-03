@@ -11,7 +11,7 @@ use crate::table::{format_tables, is_inside_table, Table};
 use crate::verbatim::{get_verbatim, Verbatim};
 use crate::wrap::{apply_wrap, needs_wrap};
 use crate::write::process_output;
-use crate::LINE_END;
+use crate::{LINE_END, NATIVE_LINE_END};
 use log::Level::{Info, Warn};
 use std::iter::zip;
 use std::path::{Path, PathBuf};
@@ -30,8 +30,12 @@ pub fn format_file(
 ) -> String {
     record_file_log(logs, Info, file, "Formatting started.");
 
+    // Keep the line ending the file already uses, and format with LINE_END
+    let line_end = detect_line_end(old_text);
+    let old_text = old_text.replace("\r\n", LINE_END);
+
     // Clean the source file and zip its lines with line numbers
-    let old_text = clean_text(old_text, args);
+    let old_text = clean_text(&old_text, args);
     let mut old_lines = zip(1.., old_text.lines());
 
     // Initialise
@@ -174,8 +178,20 @@ pub fn format_file(
 
     new_text = subs::remove_trailing_spaces(&new_text);
     new_text = subs::remove_trailing_blank_lines(&new_text);
+    if line_end != LINE_END {
+        new_text = new_text.replace(LINE_END, line_end);
+    }
     record_file_log(logs, Info, file, "Formatting complete.");
     new_text
+}
+
+/// Returns the first line ending in `text`, or the native one if it has none
+fn detect_line_end(text: &str) -> &'static str {
+    match text.find('\n') {
+        Some(i) if text[..i].ends_with('\r') => "\r\n",
+        Some(_) => "\n",
+        None => NATIVE_LINE_END,
+    }
 }
 
 fn get_begins(v: &[String]) -> Vec<String> {

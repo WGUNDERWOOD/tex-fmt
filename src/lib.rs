@@ -28,10 +28,13 @@ pub mod wasm;
 #[cfg(test)]
 pub mod tests;
 
-#[cfg(any(target_family = "unix", target_family = "wasm"))]
-/// Line ending for unix
+/// Line ending used while formatting
 const LINE_END: &str = "\n";
 
+#[cfg(any(target_family = "unix", target_family = "wasm"))]
+/// Line ending for unix, used for input without a line ending
+const NATIVE_LINE_END: &str = "\n";
+
 #[cfg(target_family = "windows")]
-/// Line ending for Windows
-const LINE_END: &str = "\r\n";
+/// Line ending for Windows, used for input without a line ending
+const NATIVE_LINE_END: &str = "\r\n";
