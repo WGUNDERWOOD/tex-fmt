@@ -8,7 +8,9 @@ use crate::regexes::{ENV_BEGIN, ENV_END, ITEM, VERBS};
 use core::cmp::max;
 use log::Level;
 use log::LevelFilter;
+use std::iter::Peekable;
 use std::path::Path;
+use std::str::Chars;
 
 /// Opening delimiters
 const OPENS: [char; 3] = ['{', '(', '['];
@@ -115,16 +117,72 @@ fn get_back(
     back
 }
 
-/// Calculate delimiter-based indent and dedent together for performance
+/// Count the delimiters on a line, in order
+///
+/// `\left` and `\right` count as an opening and a closing delimiter,
+/// whichever delimiter follows them, and that delimiter is not counted
+/// again. So `\left\{ ... \right.` and `\left[ ... \right)` are balanced,
+/// as in LaTeX, where `\left` must be matched by `\right`.
 fn get_diff_back_delim(line: &str) -> (i8, i8) {
     let mut diff: i8 = 0;
     let mut back: i8 = 0;
-    for c in line.chars() {
-        diff -= i8::from(OPENS.contains(&c));
-        diff += i8::from(CLOSES.contains(&c));
+    let mut chars = line.chars().peekable();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            match read_left_right(&mut chars) {
+                Some(LeftRight::Left) => diff -= 1,
+                Some(LeftRight::Right) => diff += 1,
+                None => {}
+            }
+        } else {
+            diff -= i8::from(OPENS.contains(&c));
+            diff += i8::from(CLOSES.contains(&c));
+        }
         back = max(diff, back);
     }
     (-diff, back)
+}
+
+/// A `\left` or a `\right`
+enum LeftRight {
+    Left,
+    Right,
+}
+
+/// Read the command after a backslash; for `\left` and `\right`, also skip
+/// the delimiter which follows
+///
+/// An escaped backslash `\\` is skipped. Other escaped characters, such as
+/// `\{`, are left to be counted as before.
+fn read_left_right(chars: &mut Peekable<Chars>) -> Option<LeftRight> {
+    if chars.next_if_eq(&'\\').is_some() {
+        return None;
+    }
+    let mut name = String::new();
+    while let Some(c) = chars.next_if(char::is_ascii_alphabetic) {
+        name.push(c);
+    }
+    let command = match name.as_str() {
+        "left" => LeftRight::Left,
+        "right" => LeftRight::Right,
+        _ => return None,
+    };
+    skip_delimiter(chars);
+    Some(command)
+}
+
+/// Skip the delimiter after `\left` or `\right`: a control word such as
+/// `\langle`, a control symbol such as `\{` or `\|`, or a character such
+/// as `(` or `.`
+fn skip_delimiter(chars: &mut Peekable<Chars>) {
+    while chars.next_if(|c| c.is_whitespace()).is_some() {}
+    if chars.next() == Some('\\') {
+        if chars.next_if(char::is_ascii_alphabetic).is_some() {
+            while chars.next_if(char::is_ascii_alphabetic).is_some() {}
+        } else {
+            chars.next();
+        }
+    }
 }
 
 /// Calculate indentation properties of the current line
