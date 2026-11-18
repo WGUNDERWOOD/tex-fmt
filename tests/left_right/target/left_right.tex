@@ -1,0 +1,40 @@
+\documentclass{article}
+
+\begin{document}
+
+% \left and \right pair whatever their delimiters (#72, #79, #133)
+\begin{equation*}
+  f(x) = \left\{
+    \begin{array}{ll}
+      1 & x > 0 \\
+      0 & \text{otherwise}
+    \end{array}
+  \right.
+\end{equation*}
+
+Inline $\left\{ x \right.$ and $\left. \frac{d}{dx} g \right|_{x=0}$.
+
+\begin{equation*}
+  \left[
+    0, 1
+  \right)
+  \cup
+  \left|
+    \frac{a}{b}
+  \right|
+  + \left\langle u,
+  v \right\rangle
+  + \left\| w
+  \right\|
+\end{equation*}
+
+% Commands which only start with left or right
+$a \leftarrow b$ and $\rightarrow$ here.
+
+% A multi-line set indents like a group
+A set $S = \{s_1,
+s_2\}$ in this paragraph.
+
+This paragraph is not indented.
+
+\end{document}
