@@ -190,6 +190,7 @@ tex-fmt --recursive                # recursively format files in current directo
 tex-fmt --recursive dir/           # recursively format files in dir
 tex-fmt --fail-on-change file.tex  # format file.tex and return exit-code 1 if overwritten
 tex-fmt --nowrap file.tex          # do not wrap long lines
+tex-fmt --sentence-lines file.tex  # put each prose sentence on its own line
 tex-fmt --format-tables file.tex   # format tables (align ampersands)
 tex-fmt --stdin                    # read from stdin and print to stdout
 tex-fmt --help                     # view help information
@@ -218,6 +219,62 @@ To ignore all config files, use the `--noconfig` flag.
 Note for contributors: this repository's configuration file will be
 automatically applied if tex-fmt is run from within the repository.
 Use `--noconfig` or `--config <PATH>` to avoid this.
+
+### One sentence per line
+
+Use `--sentence-lines`, or set `sentence-lines = true` in `tex-fmt.toml`, to
+join wrapped prose in `.tex` files or on standard input. Long sentences stay on
+one line regardless of the configured wrap width. Other file types use their
+normal formatting and wrapping settings.
+
+Blank lines separate paragraphs. Only ASCII `.`, `!`, and `?` mark sentence
+ends, followed by whitespace or the end of a run, including after closing
+quotes and parentheses. Sentence mode joins wrapped lines with a space and is
+therefore not recommended for prose that uses other terminators such as `。`.
+English-only abbreviation heuristics keep `Dr. Smith`, `Figs. 2 and 3`, and
+`no. 12` together. Initials, dotted acronyms, and degrees such as `Ph.D.` stay
+with the following word, including in `B. R. Coles` and `p.m. Tomorrow`. A
+sentence ending in a single capital letter, such as `vitamin C.` or `so do I.`,
+joins the next sentence because tex-fmt cannot distinguish the final letter
+from an initial. A sentence ending in `no.` joins the next sentence when it
+begins with a number because tex-fmt reads `no.` as an abbreviation for
+“number”. After `etc.` or `al.`, a capitalized next word starts a sentence.
+Ordinary sentences can start with lowercase letters or numbers.
+
+Use `sentence-abbreviations` for additional unconditional no-break exceptions.
+Entries are case-insensitive and accept either `"Dept"` or `"Dept."`.
+
+```toml
+sentence-lines = true
+sentence-abbreviations = ["Dept", "Approx."]
+sentence-skip-commands = ["mydirective"]
+sentence-environments = ["frame", "minipage", "mytheorem"]
+```
+
+#### Custom commands and environments
+
+Macros are never expanded. Words outside command arguments identify prose. A
+command followed by prose can start a run. A line containing only a command can
+join unfinished prose when the following line contains prose in the same
+paragraph. This also means a solitary layout command such as `\vspace`,
+`\caption`, `\label`, `\includegraphics`, or `\centering` between two parts of
+an unfinished sentence can join them. List such commands in
+`sentence-skip-commands` to keep them on their own lines. Paragraph, sectioning,
+and definition commands always bound runs. Structural commands split onto new
+lines only at existing whitespace, so packed commands stay together.
+
+Punctuation inside braces, balanced optional arguments, and maths is protected.
+An unmatched `[` after a control word is treated as prose. Lines containing
+comments, inline code, explicit line breaks, or multiline groups or maths are
+protected from sentence reflow. Verbatim and ignored blocks remain protected.
+Environments declared in the file with `\newtheorem`, `\newtheorem*`, or
+`\declaretheorem` are recognized as prose. Use `sentence-environments` for
+additional environments with prose bodies. Bodies declared with
+`\newenvironment` need this setting to opt into reflow. For an item-like macro
+whose items have no final punctuation, add its name to `sentence-skip-commands`
+to keep those lines separate. A literal TOML entry such as
+`sentence-abbreviations = ['\etal']` keeps a period immediately after that
+control word with the following prose.
 
 ### Disabling the formatter
 
@@ -360,6 +417,7 @@ The following arguments can be passed on the command line.
 | `--fail-on-change`     | `-f`  |         | Fail if files are modified |
 | `--recursive`          | `-r`  |         | Recursively search for files to format |
 | `--nowrap`             | `-n`  |         | Do not wrap long lines |
+| `--sentence-lines`     |       |         | Put each prose sentence on its own line |
 | `--wraplen <N>`        | `-l`  | `80`    | Line length for wrapping |
 | `--tabsize <N>`        | `-t`  | `2`     | Number of characters to use as tab size |
 | `--usetabs`            |       |         | Use tabs instead of spaces for indentation |
@@ -387,6 +445,10 @@ The first example in each row is the default value.
 | `print`          | bool     | `false`                | Print to stdout, do not modify files |
 | `fail-on-change` | bool     | `false`                | Fail if files are modified |
 | `wrap`           | bool     | `true`                 | Wrap long lines |
+| `sentence-lines`         | bool     | `false`                | Put each prose sentence on its own line |
+| `sentence-abbreviations` | arr[str] | `[]`, `["Dept."]`      | Additional abbreviations which do not end sentences |
+| `sentence-skip-commands` | arr[str] | `[]`, `["mydirective"]` | Additional commands which bound sentence reflow |
+| `sentence-environments`  | arr[str] | `[]`, `["mytheorem"]`  | Additional environments with prose bodies |
 | `wraplen`        | int      | `80`, `100`            | Line length for wrapping |
 | `wrapmin`        | int      | `70`, `90`             | Target minimum length for line wrapping |
 | `tabsize`        | int      | `2`, `4`               | Number of characters to use as tab size |

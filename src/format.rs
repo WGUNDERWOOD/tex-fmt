@@ -12,9 +12,20 @@ use crate::verbatim::{get_verbatim, Verbatim};
 use crate::wrap::{apply_wrap, needs_wrap};
 use crate::write::process_output;
 use crate::LINE_END;
+use itertools::Either;
 use log::Level::{Info, Warn};
+use std::borrow::Cow;
 use std::iter::zip;
 use std::path::{Path, PathBuf};
+
+fn sentence_mode_applies(file: &Path, args: &Args) -> bool {
+    args.sentence_lines
+        && (args.stdin
+            || file == Path::new("<stdin>")
+            || file
+                .extension()
+                .is_some_and(|ext| ext.eq_ignore_ascii_case("tex")))
+}
 
 /// Central function to format a file
 ///
@@ -28,11 +39,23 @@ pub fn format_file(
     args: &Args,
     logs: &mut Vec<Log>,
 ) -> String {
+    let sentence_lines = sentence_mode_applies(file, args);
     record_file_log(logs, Info, file, "Formatting started.");
 
     // Clean the source file and zip its lines with line numbers
     let old_text = clean_text(old_text, args);
-    let mut old_lines = zip(1.., old_text.lines());
+    let mut old_lines = if sentence_lines {
+        Either::Left(
+            crate::sentence::reflow(&old_text, args)
+                .into_iter()
+                .map(|line| (line.number, Cow::Owned(line.text))),
+        )
+    } else {
+        Either::Right(
+            zip(1.., old_text.lines())
+                .map(|(n, line)| (n, Cow::Borrowed(line))),
+        )
+    };
 
     // Initialise
     let mut state = State::new();
@@ -76,7 +99,9 @@ pub fn format_file(
             ) {
                 // Check if the line should be split because of a pattern
                 // that should begin on a new line.
-                if subs::needs_split(&line, &pattern) {
+                // Sentence mode applied structural splits to untouched lines
+                // before laying out the prose exposed by those splits.
+                if !sentence_lines && subs::needs_split(&line, &pattern) {
                     // Split the line into two...
                     let (this_line, next_line) =
                         subs::split_line(&line, &temp_state, file, args, logs);
@@ -100,19 +125,18 @@ pub fn format_file(
                     &no_indent_envs_end,
                 );
 
-                #[allow(clippy::cast_possible_wrap)]
-                let indent_length =
-                    usize::try_from(indent.visual * args.tabsize as i8)
-                        .expect("Visual indent is non-negative.");
+                let indent_length = indent.width(args.tabsize);
 
                 // Wrap the line before applying the indent, and loop back
                 // if the line needed wrapping.
-                if needs_wrap(
-                    line.trim_start(),
-                    indent_length,
-                    args,
-                    &temp_state,
-                ) {
+                if !sentence_lines
+                    && needs_wrap(
+                        line.trim_start(),
+                        indent_length,
+                        args,
+                        &temp_state,
+                    )
+                {
                     let wrapped_lines = apply_wrap(
                         line.trim_start(),
                         indent_length,
@@ -144,7 +168,7 @@ pub fn format_file(
             new_text.push_str(LINE_END);
             state.linum_new += 1;
         } else if let Some((linum_old, line)) = old_lines.next() {
-            queue.push((linum_old, line.to_string()));
+            queue.push((linum_old, line.into_owned()));
         } else {
             break;
         }
@@ -173,6 +197,9 @@ pub fn format_file(
     }
 
     new_text = subs::remove_trailing_spaces(&new_text);
+    if sentence_lines {
+        new_text = subs::remove_extra_newlines(&new_text);
+    }
     new_text = subs::remove_trailing_blank_lines(&new_text);
     record_file_log(logs, Info, file, "Formatting complete.");
     new_text

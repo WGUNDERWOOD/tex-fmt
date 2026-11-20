@@ -89,7 +89,8 @@ fn find_wrap_point(
 
     let verb_end = get_verb_end(verb_start, line);
     let mut after_non_percent = verb_start == Some(0);
-    let wrap_boundary = args.wrapmin - indent_length;
+    // Deep indentation can already exceed the entire target line width.
+    let wrap_boundary = args.wrapmin.saturating_sub(indent_length);
     let line_len = line.len();
 
     for (i_char, (i_byte, c)) in line.char_indices().enumerate() {

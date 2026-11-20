@@ -146,6 +146,21 @@ pub fn get_config_args(
             .get("fail-on-change")
             .map(|x| x.as_bool().unwrap()),
         wrap: config.get("wrap").map(|x| x.as_bool().unwrap()),
+        sentence_lines: config
+            .get("sentence-lines")
+            .map(|x| x.as_bool().unwrap()),
+        sentence_abbreviations: parse_array_string(
+            "sentence-abbreviations",
+            &config,
+        ),
+        sentence_skip_commands: parse_array_string(
+            "sentence-skip-commands",
+            &config,
+        ),
+        sentence_environments: parse_array_string(
+            "sentence-environments",
+            &config,
+        ),
         wraplen: config
             .get("wraplen")
             .map(|x| x.as_integer().unwrap().try_into().unwrap()),

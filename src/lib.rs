@@ -16,6 +16,7 @@ pub mod logging;
 pub mod read;
 pub mod regexes;
 pub mod search;
+mod sentence;
 pub mod subs;
 pub mod table;
 pub mod verbatim;

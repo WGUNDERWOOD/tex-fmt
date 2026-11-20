@@ -1,0 +1,386 @@
+\begin{document}
+Dr. Smith measured 3.14 units in report.tex.
+This sentence spans two source lines.
+Another sentence!
+
+A new paragraph with \(x. y\) and \ref{fig.one}.
+A final sentence.
+
+First.
+Second.
+\begin{custom}
+  Raw. Text.
+\end{custom}
+
+% Dotted degrees
+She earned a Ph.D. in physics.
+Next sentence.
+
+He holds a B.Sc. and an M.Sc. degree.
+Next sentence.
+
+% Plural abbreviation roles
+Read etcs.
+lowercase follows.
+
+Read als.
+lowercase follows.
+
+See Refs. [1, 2] and Thms. 3 and 4 for details.
+Next sentence.
+
+The Drs. Smith and Jones agreed.
+Next sentence.
+
+See Nos. 3 and 4 for details.
+Next sentence.
+
+See Eq. (3), Fig. 2 and No. 12.
+Next sentence.
+
+Close the tabs.
+Then we stop.
+
+% Sentence case: prose brackets
+The interval [0,1) is useful.
+Next one.
+
+Another paragraph.
+Second sentence.
+
+The interval (0,1] is useful.
+Next one.
+
+The interval [0,1] is useful.
+Next one.
+
+[0,1) starts this sentence.
+Next one.
+
+See \ref{interval} [0,1).
+Next sentence.
+
+After.
+Next.
+
+The \LaTeX [0,1) notation is useful.
+Next.
+
+\TeX
+
+[0,1) is useful.
+Next.
+
+% Sentence case: optional arguments
+A \cite[see p. 2]{key} helps.
+Next sentence.
+
+A \cite[
+see p. 2]{key} helps.
+After.
+Next.
+
+A \cite[see p. 2]{key} helps.
+After.
+Next.
+
+A \cite[see {the ] and [ symbols. here} p. 2]{key} helps.
+Next sentence.
+
+A \cite[Author][see p. 2]{key} helps.
+Next sentence.
+
+% Sentence case: protected boundaries
+A \footnote{
+  First. Second.
+
+Third. Fourth.}
+After.
+Next.
+
+Before% comment. Another sentence.
+after.
+Next sentence.
+
+\[
+  x. y
+\]
+After.
+Next.
+
+$$x. y$$
+After.
+Next.
+
+\section{First. Second.}
+After.
+Next.
+
+% tex-fmt: off
+Raw [ text. More.
+% tex-fmt: on
+After.
+Next.
+
+% Sentence case: protected regions
+Code \verb!{ $. }! stays. Together.
+After.
+Next.
+
+Code \mintinline{c}|{ $. }| stays. Together.
+After.
+Next.
+
+Text \footnote{First.
+Second.}
+After.
+Next.
+
+Text $x.
+y$ ends.
+After.
+Next.
+
+Escaped \% is text.
+Next.
+
+Keep this \\ line. Another.
+Last sentence.
+
+\begin{equation}
+  a. b
+\end{equation}
+After.
+Next.
+
+\begin{verbatim}
+{ $ Raw. Text.
+\end{verbatim}
+After.
+Next.
+
+\begin{custom}
+  \verb|\end{custom}|
+  \é Raw. Text.
+  Raw. Text.
+\end{custom}
+After.
+Next.
+
+% Sentence case: punctuation
+Dr. Smith and J. Doe read Fig. 2 in report.tex at 3.14 units.
+"Done!"
+Really?
+Yes... perhaps.
+
+“Bonjour!”
+Déjà vu.
+¿Otra frase?
+Sí.
+
+% Sentence case: items
+\begin{itemize}
+  \item First sentence.
+    Second sentence.
+  \item Third sentence.
+    Fourth.
+\end{itemize}
+
+% Sentence case: long sentence
+This sentence deliberately exceeds the default eighty character limit and must remain together on one output line.
+
+% Sentence case: edited sentence
+First sentence.
+Middle sentence.
+Last sentence.
+
+First sentence.
+Changed middle sentence with extra words.
+Last sentence.
+
+% Sentence case: names
+J. R. R. Tolkien wrote this.
+Next sentence.
+
+É. Cartan proved this.
+Next sentence.
+
+Researchers described spin glass systems \parencite{CannellaMydosh1972,Sherrington2014}.
+The term spin glass is attributed to B. R. Coles around 1970, who characterised this behaviour.
+The terminology later appeared in the work of Philip W. Anderson.
+
+% Sentence case: mixed inline regions and skip directive
+Use $x. y$ and \(z. w\), then \ref{file.name} and \url{https://example.org/a.b}.
+Next sentence.
+
+This line [ has $ raw. Next. % tex-fmt: skip
+After.
+Next.
+
+% Sentence case: contextual abbreviations
+The answer is no.
+We then stop.
+The answer is no. 42 participants continued.
+Another sentence.
+See Eq. (3) for details.
+Next sentence.
+See No. 12 for details.
+Next sentence.
+See no. 12 for details.
+Next sentence.
+We used tools, materials, etc. during the experiment.
+Next sentence.
+See Thm. 2 and Lem. 3 for details.
+Next sentence.
+See Prop. 4, Def. 5, Cor. 6, Tab. 7 and Ref. 8.
+Next sentence.
+See Appendix A. The proof follows.
+The U.S. Government agreed.
+Next sentence.
+Complete.
+eBay supplied the equipment.
+42 participants took part.
+
+% Sentence case: punctuation commands followed by prose brackets
+The result is \ldots [0,1).
+Next sentence.
+
+Another paragraph.
+Second sentence.
+
+As stated by \enquote{the author}, this works.
+Next sentence.
+
+A symbol is \textsuperscript{First. Second.} in prose.
+Next sentence.
+
+We used \gls{spinGlass} in this sentence.
+Next sentence.
+
+% Sentence case: name initials before a verb
+Tony G. spoke about this.
+Next sentence.
+Philip W. described this.
+Next sentence.
+The answer is B. We continued.
+
+% Sentence case: standalone command calls
+\myinline{payload}
+\anotherinline{payload}
+Fresh sentence.
+Next one.
+
+% Sentence case: structural commands bound incomplete prose
+A fragment without a final period
+\caption{A caption without a final period}
+\label{fig:one}
+\includegraphics{figure.pdf}
+\centering
+Fresh sentence.
+Next one.
+
+% Sentence case: a command followed by prose starts a run
+\enquote{The author} said this.
+Next sentence.
+
+% Sentence case: filenames are not dotted initials
+Read report.tex.
+Jones provided it.
+Read archive.name.tex.
+tomorrow we continue.
+% Command-only lines between sentences
+End of paragraph.
+\vspace{1em}
+Next sentence.
+
+End of paragraph.
+\bigskip
+Next sentence.
+
+End of paragraph.
+\newpage
+Next sentence.
+
+End of paragraph.
+\bibliography{x}
+Next sentence.
+
+“End!”
+\vspace{1em}
+Next sentence.
+
+(End?)
+\vspace{1em}
+Next sentence.
+
+% Primitive directives between unfinished prose lines
+Unfinished text
+\input{x}
+More text.
+
+Unfinished text
+\include{x}
+More text.
+
+Unfinished text
+\catcode65=11
+More text.
+
+Unfinished text
+\def\x{value}
+More text.
+
+Unfinished text
+\gdef\x{value}
+More text.
+
+Unfinished text
+\edef\x{value}
+More text.
+
+Unfinished text
+\xdef\x{value}
+More text.
+
+% Custom macros with default sentence settings
+\newenvironment{local}{}{}
+\begin{local}
+  First. Second.
+\end{local}
+
+\begin{itemize}
+    \myitem First \myitem Second
+\end{itemize}
+
+We use \mycmd[opt]{arg} here.
+Next.
+
+Authors \etal.
+Next sentence.
+
+Authors etal.
+Next sentence.
+
+An arbitrary \macro [0,1) works.
+Next sentence.
+
+\newtheorem{localnumbered}{Local}
+\begin{localnumbered}
+  First.
+  Second.
+\end{localnumbered}
+
+\newtheorem*{localstar}{Local}
+\begin{localstar}
+  First.
+  Second.
+\end{localstar}
+
+% note: The existing indenter counts the ] inside braces, so this body
+% starts at column zero.
+\declaretheorem[title={a ] b}]{localdeclared}
+\begin{localdeclared}
+First.
+Second.
+\end{localdeclared}
+\end{document}

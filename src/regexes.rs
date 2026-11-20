@@ -55,6 +55,11 @@ pub static RE_TRAIL: LazyLock<Regex> =
 pub static RE_SPLITTING: LazyLock<RegexSet> =
     LazyLock::new(|| RegexSet::new(SPLITTING).unwrap());
 
+// Positions of the ordinary structural commands, for splitting a sentence-mode
+// line in one pass without inserting whitespace inside an input token.
+pub(crate) static SPLIT_COMMAND: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(&SPLITTING_STRING).unwrap());
+
 // Matches splitting commands with non-whitespace characters before it.
 pub static RE_SPLITTING_SHARED_LINE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(

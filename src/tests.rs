@@ -230,3 +230,18 @@ fn test_subset() {
     }
     assert!(pass);
 }
+
+#[test]
+fn default_mode_deep_nesting() {
+    let mut input = "\\begin{nested}\n".repeat(140);
+    input.push_str("Deep content.\n");
+    input.push_str(&"\\end{nested}\n".repeat(140));
+    let args = Args::default();
+    let path = std::path::Path::new("deep.tex");
+    let output = format_file(&input, path, &args, &mut vec![]);
+    let indent = " ".repeat(140 * usize::from(args.tabsize));
+    let mut body = output.lines().skip(140);
+    assert_eq!(body.next(), Some(format!("{indent}Deep").as_str()));
+    assert_eq!(body.next(), Some(format!("{indent}content.").as_str()));
+    assert_eq!(format_file(&output, path, &args, &mut vec![]), output);
+}

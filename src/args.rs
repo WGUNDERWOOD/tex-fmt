@@ -25,6 +25,14 @@ pub struct Args {
     pub fail_on_change: bool,
     /// Wrap long lines
     pub wrap: bool,
+    /// Put each prose sentence on its own line, ignoring line width
+    pub sentence_lines: bool,
+    /// Additional abbreviations which do not end sentences
+    pub sentence_abbreviations: Vec<String>,
+    /// Additional commands which bound sentence reflow
+    pub sentence_skip_commands: Vec<String>,
+    /// Additional environments whose bodies contain prose
+    pub sentence_environments: Vec<String>,
     /// Maximum allowed line length
     pub wraplen: usize,
     /// Wrap lines longer than this
@@ -69,6 +77,14 @@ pub struct OptionArgs {
     pub fail_on_change: Option<bool>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub wrap: Option<bool>,
+    #[merge(strategy= merge::option::overwrite_none)]
+    pub sentence_lines: Option<bool>,
+    #[merge(strategy = merge::vec::append)]
+    pub sentence_abbreviations: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub sentence_skip_commands: Vec<String>,
+    #[merge(strategy = merge::vec::append)]
+    pub sentence_environments: Vec<String>,
     #[merge(strategy= merge::option::overwrite_none)]
     pub wraplen: Option<usize>,
     #[merge(strategy= merge::option::overwrite_none)]
@@ -153,6 +169,10 @@ impl Default for OptionArgs {
             print: Some(false),
             fail_on_change: Some(false),
             wrap: Some(true),
+            sentence_lines: Some(false),
+            sentence_abbreviations: vec![],
+            sentence_skip_commands: vec![],
+            sentence_environments: vec![],
             wraplen: Some(80),
             wrapmin: None,
             tabsize: Some(2),
@@ -181,6 +201,10 @@ impl OptionArgs {
             print: None,
             fail_on_change: None,
             wrap: None,
+            sentence_lines: None,
+            sentence_abbreviations: vec![],
+            sentence_skip_commands: vec![],
+            sentence_environments: vec![],
             wraplen: None,
             wrapmin: None,
             tabsize: None,
@@ -245,6 +269,10 @@ impl Args {
             print: args.print.unwrap(),
             fail_on_change: args.fail_on_change.unwrap(),
             wrap: args.wrap.unwrap(),
+            sentence_lines: args.sentence_lines.unwrap(),
+            sentence_abbreviations: args.sentence_abbreviations,
+            sentence_skip_commands: args.sentence_skip_commands,
+            sentence_environments: args.sentence_environments,
             wraplen: args.wraplen.unwrap(),
             wrapmin,
             tabsize: args.tabsize.unwrap(),
@@ -395,6 +423,26 @@ impl fmt::Display for Args {
         display_arg_line(f, "print", &self.print.to_string())?;
         display_arg_line(f, "fail-on-change", &self.print.to_string())?;
         display_arg_line(f, "wrap", &self.wrap.to_string())?;
+        display_arg_line(
+            f,
+            "sentence-lines",
+            &self.sentence_lines.to_string(),
+        )?;
+        display_args_list(
+            &self.sentence_abbreviations,
+            "sentence-abbreviations",
+            f,
+        )?;
+        display_args_list(
+            &self.sentence_skip_commands,
+            "sentence-skip-commands",
+            f,
+        )?;
+        display_args_list(
+            &self.sentence_environments,
+            "sentence-environments",
+            f,
+        )?;
         display_arg_line(f, "wraplen", &self.wraplen.to_string())?;
         display_arg_line(f, "wrapmin", &self.wrapmin.to_string())?;
         display_arg_line(f, "tabsize", &self.tabsize.to_string())?;
