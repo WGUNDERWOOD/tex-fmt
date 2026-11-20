@@ -9,7 +9,7 @@ use std::path::Path;
 #[derive(Clone, Debug)]
 pub struct Verbatim {
     /// The verbatim depth of a line
-    pub actual: i8,
+    pub actual: isize,
     /// Whether the line is in a verbatim environment
     pub visual: bool,
 }
@@ -68,7 +68,7 @@ fn get_verbatim_diff(
     pattern: &Pattern,
     verbatims_begin: &[String],
     verbatims_end: &[String],
-) -> i8 {
+) -> isize {
     if pattern.contains_env_begin
         && verbatims_begin.iter().any(|r| line.contains(r))
     {

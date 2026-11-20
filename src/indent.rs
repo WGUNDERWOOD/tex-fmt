@@ -19,12 +19,16 @@ const CLOSES: [char; 3] = ['}', ')', ']'];
 #[derive(Debug, Clone)]
 pub struct Indent {
     /// The indentation level of a line
-    pub actual: i8,
+    pub actual: isize,
     /// The visual indentation level of a line
-    pub visual: i8,
+    pub visual: isize,
 }
 
 impl Indent {
+    pub(crate) fn width(&self, tabsize: u8) -> usize {
+        usize::try_from(self.visual).unwrap_or_default() * usize::from(tabsize)
+    }
+
     /// Construct a new indentation state
     #[must_use]
     pub const fn new() -> Self {
@@ -49,26 +53,26 @@ fn get_diff(
     lists_end: &[String],
     no_indent_envs_begin: &[String],
     no_indent_envs_end: &[String],
-) -> i8 {
+) -> isize {
     // Do not indent if line contains \verb|...|
     if pattern.contains_verb && VERBS.iter().any(|x| line.contains(x)) {
         return 0;
     }
 
     // Indentation for environments
-    let mut diff: i8 = 0;
+    let mut diff: isize = 0;
     if pattern.contains_env_begin && line.contains(ENV_BEGIN) {
         if no_indent_envs_begin.iter().any(|r| line.contains(r)) {
             return 0;
         }
         diff += 1;
-        diff += i8::from(lists_begin.iter().any(|r| line.contains(r)));
+        diff += isize::from(lists_begin.iter().any(|r| line.contains(r)));
     } else if pattern.contains_env_end && line.contains(ENV_END) {
         if no_indent_envs_end.iter().any(|r| line.contains(r)) {
             return 0;
         }
         diff -= 1;
-        diff -= i8::from(lists_end.iter().any(|r| line.contains(r)));
+        diff -= isize::from(lists_end.iter().any(|r| line.contains(r)));
     }
 
     diff
@@ -81,12 +85,12 @@ fn get_back(
     state: &State,
     lists_end: &[String],
     no_indent_envs_end: &[String],
-) -> i8 {
+) -> isize {
     // Only need to dedent if indentation is present
     if state.indent.actual == 0 {
         return 0;
     }
-    let mut back: i8 = 0;
+    let mut back: isize = 0;
 
     // Don't apply any indenting if a \verb|...| is present
     if pattern.contains_verb && VERBS.iter().any(|x| line.contains(x)) {
@@ -116,12 +120,12 @@ fn get_back(
 }
 
 /// Calculate delimiter-based indent and dedent together for performance
-fn get_diff_back_delim(line: &str) -> (i8, i8) {
-    let mut diff: i8 = 0;
-    let mut back: i8 = 0;
+fn get_diff_back_delim(line: &str) -> (isize, isize) {
+    let mut diff: isize = 0;
+    let mut back: isize = 0;
     for c in line.chars() {
-        diff -= i8::from(OPENS.contains(&c));
-        diff += i8::from(CLOSES.contains(&c));
+        diff -= isize::from(OPENS.contains(&c));
+        diff += isize::from(CLOSES.contains(&c));
         back = max(diff, back);
     }
     (-diff, back)
@@ -255,8 +259,7 @@ pub fn apply_indent(
     }
 
     // If line is correctly indented, return it directly
-    #[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)]
-    let n_indent_chars = (indent.visual * args.tabsize as i8) as usize;
+    let n_indent_chars = indent.width(args.tabsize);
     if first_non_whitespace == Some(n_indent_chars) {
         return line.into();
     }

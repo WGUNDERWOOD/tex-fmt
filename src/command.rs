@@ -40,6 +40,12 @@ pub fn get_cli_command() -> Command {
                 .help("Do not wrap long lines"),
         )
         .arg(
+            Arg::new("sentence-lines")
+                .long("sentence-lines")
+                .action(SetTrue)
+                .help("Put each prose sentence on its own line, ignoring line width"),
+        )
+        .arg(
             Arg::new("wraplen")
                 .short('l')
                 .long("wraplen")

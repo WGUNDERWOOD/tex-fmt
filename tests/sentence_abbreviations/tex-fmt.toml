@@ -1,0 +1,4 @@
+sentence-lines = true
+sentence-abbreviations = ["Custom.", "Dept", '\etal']
+sentence-skip-commands = ["myblock", "myitem"]
+sentence-environments = ["frame", "minipage", "mytheorem", "verbatim", "local"]
